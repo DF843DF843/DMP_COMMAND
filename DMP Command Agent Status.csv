@@ -1,0 +1,12 @@
+﻿"Title","AgentDisplayName","CurrentStatus","LastUpdateTimestamp","LastRunTimestamp","LastSuccessTimestamp","LastRunResult","LastRunDurationSec","LastFailureTimestamp","LastFailureStep","LastFailureMessage","LastWarningTimestamp","LastWarningStep","LastWarningMessage","OperationMode","WorkflowPath","DomainsExtracted","EmailsProcessedTotal","EmailsProcessed_ND","EmailsProcessed_DIS","EmailsProcessed_DNES","EmailsProcessed_DEE","AgentKey","EmergencyReportPresent","WorkbookValidationPassed","CurrentIndicatorMode","LastRunId","LastStatusUpdateSource","StatusSeverity","LastHeartbeatTimestamp","StatusMessage"
+"Agent_01","Domains Extraction","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Agent_01",,,,,,,,
+"Agent_02","E-Mail Inbox Treatment","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Agent_02",,,,,,,,
+"Agent_03_01","Emergency Report Management","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Agent_03_01",,,,,,,,
+"Agent_03_02","Status Check","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Agent_03_02",,,,,,,,
+"Agent_03_03","YES File Management","Operational","7/30/2026 2:27 PM","7/30/2026 2:27 PM","7/30/2026 2:27 PM","Succeeded","13.73","7/30/2026 2:22 PM","SCOPE_AuditTrail_Write","Agent 3.03 error handling triggered. AuditTrail write or status processing failed. RequestedAction=Create",,,,"PROD_NODMP","Agent3_YesFileManagement","0","0","0","0",,,"Agent_03_03",,,"Present","08584161924476800246145876624CU03","Agent_03_03","Information","7/30/2026 2:27 PM","YES file management completed successfully. Decision=yes_file_already_existing | RequestedAction=Create"
+"Audit","Audit Infrastructure","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Audit",,,,,,,,
+"Counter","Counter Infrastructure","Unknown",,,,,,,,,,,,,,"0","0","0","0",,,"Counter",,,,,,,,
+"EmergencyReport","Emergency Report Infrastructure","Unknown",,,,,,,,,,,,,,"0","0","0","0","0","0","EmergencyReport",,,,,,,,
+"ExternalDomains","External Domains Infrastructure","Unknown",,,,,,,,,,,,,,"0","0","0","0","0","0","ExternalDomains",,,,,,,,
+"InternalDomains","Internal Domains Infrastructure","Unknown",,,,,,,,,,,,,,"0","0","0","0","0","0","InternalDomains",,,,,,,,
+"YesFile","YES File Infrastructure","Operational","7/30/2026 2:27 PM","7/30/2026 2:27 PM","7/30/2026 2:27 PM","Succeeded","14.01",,,,,,,"PROD_NODMP","Agent3_YesFileManagement","0","0","0","0","0","0","YesFile",,,"Present","08584161924476800246145876624CU03","Agent_03_03","Information","7/30/2026 2:27 PM","YES indicator file is present."
