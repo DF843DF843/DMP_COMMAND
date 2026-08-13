@@ -1,0 +1,3247 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedsharepointonline_626f1"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_excelonlinebusiness": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedexcelonlinebusiness_d3ed5"
+        },
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "c352eed9-6466-4d5a-ba3c-01b33d79069a"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "VAR_RealDMPIndicatorFileName": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Real DMP Indicator File Name",
+                "type": "string",
+                "value": "Yes.txt"
+              }
+            ]
+          },
+          "description": "Stores indicator file name."
+        },
+        "VAR_RealDMPIndicatorFolder": {
+          "runAfter": {
+            "VAR_RealDMPIndicatorFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Real DMP Indicator Folder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP"
+              }
+            ]
+          },
+          "description": "Stores indicator folder."
+        },
+        "VAR_IsRealDMP": {
+          "runAfter": {
+            "VAR_RealDMPIndicatorFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a2d545df-b536-40b1-aa3a-f81f11261457"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsRealDMP",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores checked DMP mode."
+        },
+        "RESPOND_Status": {
+          "runAfter": {
+            "SCOPE_StatusRow_Update": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4c5ea720-8666-4d87-bb54-db5500fcedc0"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isrealdmp": {
+                  "title": "IsRealDMP",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "emergencyreportexists": {
+                  "title": "EmergencyReportExists",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "internaldomainsexists": {
+                  "title": "InternalDomainsExists",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "externaldomainsexists": {
+                  "title": "ExternalDomainsExists",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "counterexists": {
+                  "title": "CounterExists",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "audittrailexists": {
+                  "title": "AuditTrailExists",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
+                },
+                "internaldomainscount": {
+                  "title": "InternalDomainsCount",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "externaldomainscount": {
+                  "title": "ExternalDomainsCount",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "counternodmp": {
+                  "title": "CounterNoDMP",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "counterinternalsender": {
+                  "title": "CounterInternalSender",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "counternoteffected": {
+                  "title": "CounterNotEffected",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "countereffected": {
+                  "title": "CounterEffected",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "auditrunsummarycount": {
+                  "title": "AuditRunSummaryCount",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "auditwarningcount": {
+                  "title": "AuditWarningCount",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "auditfailedcount": {
+                  "title": "AuditFailedCount",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "auditlastruntimestamp": {
+                  "title": "AuditLastRunTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastsuccesstimestamp": {
+                  "title": "AuditLastSuccessTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastfailedtimestamp": {
+                  "title": "AuditLastFailedTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "emergencyreportlastmodified": {
+                  "title": "EmergencyReportLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "internaldomainslastmodified": {
+                  "title": "InternalDomainsLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "externaldomainslastmodified": {
+                  "title": "ExternalDomainsLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "counterlastmodified": {
+                  "title": "CounterLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastmodified": {
+                  "title": "AuditLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "isrealdmplastmodified": {
+                  "title": "IsRealDMPLastModified",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastsuccessfulruntimestamp": {
+                  "title": "AuditLastSuccessfulRunTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastfailedruntimestamp": {
+                  "title": "AuditLastFailedRunTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastwarningtimestamp": {
+                  "title": "AuditLastWarningTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastfailuretimestamp": {
+                  "title": "AuditLastFailureTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "auditlastauditeventtimestamp": {
+                  "title": "AuditLastAuditEventTimestamp",
+                  "x-ms-dynamically-added": true,
+                  "type": "string",
+                  "format": "date"
+                },
+                "currentoperationmode": {
+                  "title": "CurrentOperationMode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "isrealdmp": "@variables('IsRealDMP')",
+              "emergencyreportexists": "@variables('EmergencyReportExists')",
+              "internaldomainsexists": "@variables('InternalDomainsExists')",
+              "externaldomainsexists": "@variables('ExternalDomainsExists')",
+              "counterexists": "@variables('CounterExists')",
+              "audittrailexists": "@variables('AuditTrailExists')",
+              "internaldomainscount": "@variables('InternalDomainsCount')",
+              "externaldomainscount": "@variables('ExternalDomainsCount')",
+              "counternodmp": "@variables('CounterNoDMP')",
+              "counterinternalsender": "@variables('CounterInternalSender')",
+              "counternoteffected": "@variables('CounterNotEffected')",
+              "countereffected": "@variables('CounterEffected')",
+              "auditrunsummarycount": "@variables('AuditRunSummaryCount')",
+              "auditwarningcount": "@variables('AuditWarningCount')",
+              "auditfailedcount": "@variables('AuditFailedCount')",
+              "auditlastruntimestamp": "@{variables('AuditLastRunTimestamp')}",
+              "auditlastsuccesstimestamp": "@{variables('AuditLastSuccessTimestamp')}",
+              "auditlastfailedtimestamp": "@{variables('AuditLastFailedTimestamp')}",
+              "emergencyreportlastmodified": "@{variables('EmergencyReportLastModified')}",
+              "internaldomainslastmodified": "@{variables('InternalDomainsLastModified')}",
+              "externaldomainslastmodified": "@{variables('ExternalDomainsLastModified')}",
+              "counterlastmodified": "@{variables('CounterLastModified')}",
+              "auditlastmodified": "@{variables('AuditLastModified')}",
+              "isrealdmplastmodified": "@{variables('IsRealDMPLastModified')}",
+              "auditlastsuccessfulruntimestamp": "@{variables('AuditLastSuccessTimestamp')}",
+              "auditlastfailedruntimestamp": "@{variables('AuditLastFailedTimestamp')}",
+              "auditlastwarningtimestamp": "@{variables('AuditLastWarningTimestamp')}",
+              "auditlastfailuretimestamp": "@{variables('AuditLastFailureTimestamp')}",
+              "auditlastauditeventtimestamp": "@{variables('AuditLastAuditEventTimestamp')}",
+              "currentoperationmode": "@{variables('OperationMode')}"
+            }
+          },
+          "description": "Returns Control Board status."
+        },
+        "VAR_InternalDomainsExists": {
+          "runAfter": {
+            "VAR_InternalDomainsFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "474dac72-59dc-42ec-9d4d-31951c495cd6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InternalDomainsExists",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores Internal Domains File status."
+        },
+        "VAR_CounterExists": {
+          "runAfter": {
+            "VAR_CounterPathEffectedMember": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "00a19c45-e18b-4bc3-a0f0-135ae17b9de0"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterExists",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores Counter File status."
+        },
+        "VAR_AuditTrailExists": {
+          "runAfter": {
+            "VAR_AuditTableName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0d407bbe-2ea7-4878-8b68-650358e62879"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditTrailExists",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores Audit Trail File status."
+        },
+        "VAR_ExternalDomainsCount": {
+          "runAfter": {
+            "VAR_ExternalDomainsExists": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5beedd7a-af1c-427f-bc9e-4ccb7e8d253d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExternalDomainsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Contains the number of external domains used for Agent2."
+        },
+        "VAR_EmergencyReportExists": {
+          "runAfter": {
+            "VAR_EmergencyReportLastModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "40ff0b08-e980-4e12-84fb-99beb715eab6"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EmergencyReportExists",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores Emergency Report File status."
+        },
+        "VAR_InternalDomainsCount": {
+          "runAfter": {
+            "VAR_InternalDomainsExists": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "025e851b-06a7-4ff7-9d16-a3e764386b5a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InternalDomainsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Contains the number of internal domains used for Agent2."
+        },
+        "VAR_ExternalDomainsExists": {
+          "runAfter": {
+            "VAR_ExternalDomainsFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "47a5233f-b404-4247-84ee-0237cb07c15c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExternalDomainsExists",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores External Domains File status."
+        },
+        "VAR_CounterNoDMP": {
+          "runAfter": {
+            "VAR_CounterExists": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a58ef480-c2ad-4a34-92fb-d7af52662d96"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterNoDMP",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of No DMP Flow Emails processed."
+        },
+        "VAR_CounterInternalSender": {
+          "runAfter": {
+            "VAR_CounterNoDMP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "adde41e0-3a96-4f40-9ae5-135d5f89179c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterInternalSender",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of Internal Sender Flow Emails processed."
+        },
+        "VAR_CounterNotEffected": {
+          "runAfter": {
+            "VAR_CounterInternalSender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "de3fd98b-2028-49a8-9363-bc8bb0d4b115"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterNotEffected",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of Not effected Sender Flow Emails processed."
+        },
+        "VAR_CounterEffected": {
+          "runAfter": {
+            "VAR_CounterNotEffected": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "667457cd-6fcd-4817-90f4-fb184c551b92"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterEffected",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of Effected Member Flow Emails processed."
+        },
+        "VAR_AuditRunSummaryCount": {
+          "runAfter": {
+            "VAR_AuditLastAuditEventTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "543b81b9-5622-40e1-8583-09bce32fdcd7"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditRunSummaryCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of audit flows."
+        },
+        "VAR_AuditWarningCount": {
+          "runAfter": {
+            "VAR_AuditRunSummaryCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3f34e89c-ee6e-4ba7-a3c3-17605c7595fa"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditWarningCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of audit entries of flows with status \"warning\"."
+        },
+        "VAR_AuditFailedCount": {
+          "runAfter": {
+            "VAR_AuditWarningCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d419e45e-ef68-43e9-a905-5af3cd5c42a3"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditFailedCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Number of audit entries of flows with status \"failed\"."
+        },
+        "VAR_AuditLastRunTimestamp": {
+          "runAfter": {
+            "VAR_AuditLastAuditEventSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5c118839-bfdb-47d5-8285-ef8f7f61cc8f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastRunTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Timestamp of last recorded audit trail"
+        },
+        "VAR_EmergencyReportFolder": {
+          "runAfter": {
+            "VAR_InternalDomainsLastModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EmergencyReportFolder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent/Emergency_Report_Storage"
+              }
+            ]
+          },
+          "description": "Stores Emergency Report folder."
+        },
+        "VAR_EmergencyReportFileName": {
+          "runAfter": {
+            "VAR_EmergencyReportFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EmergencyReportFileName",
+                "type": "string",
+                "value": "Emergency Report.xlsx"
+              }
+            ]
+          },
+          "description": "Stores Emergency Report file name."
+        },
+        "VAR_InternalDomainsFolder": {
+          "runAfter": {
+            "VAR_IsRealDMPLastModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InternalDomainsFolder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent/Internal_Domains_Storage"
+              }
+            ]
+          },
+          "description": "Stores Internal Domains folder."
+        },
+        "VAR_InternalDomainsFileName": {
+          "runAfter": {
+            "VAR_InternalDomainsFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InternalDomainsFileName",
+                "type": "string",
+                "value": "Internal_Domains.txt"
+              }
+            ]
+          },
+          "description": "Stores Internal Domains file name."
+        },
+        "VAR_ExternalDomainsFolder": {
+          "runAfter": {
+            "VAR_EmergencyReportExists": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExternalDomainsFolder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent/External_Domains_Storage"
+              }
+            ]
+          },
+          "description": "Stores External Domains folder."
+        },
+        "VAR_ExternalDomainsFileName": {
+          "runAfter": {
+            "VAR_ExternalDomainsFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExternalDomainsFileName",
+                "type": "string",
+                "value": "External_Domains.txt"
+              }
+            ]
+          },
+          "description": "Stores External Domains file name."
+        },
+        "VAR_CounterFolder": {
+          "runAfter": {
+            "VAR_ExternalDomainsLastModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterFolder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent"
+              }
+            ]
+          },
+          "description": "Stores Counter folder."
+        },
+        "VAR_CounterFileName": {
+          "runAfter": {
+            "VAR_CounterFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterFileName",
+                "type": "string",
+                "value": "Counter.xlsx"
+              }
+            ]
+          },
+          "description": "Stores Counter file name."
+        },
+        "VAR_AuditTrailFolder": {
+          "runAfter": {
+            "VAR_CounterLastModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditTrailFolder",
+                "type": "string",
+                "value": "/Shared Documents/Email Hotline/AI_Agent"
+              }
+            ]
+          },
+          "description": "Stores Audit Trail folder."
+        },
+        "VAR_AuditTrailFileName": {
+          "runAfter": {
+            "VAR_AuditTrailFolder": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditTrailFileName",
+                "type": "string",
+                "value": "AuditTrail.xlsx"
+              }
+            ]
+          },
+          "description": "Stores Audit Trail file name."
+        },
+        "SCOPE_External_Domains": {
+          "actions": {
+            "GET_ExternalDomains_Metadata": {
+              "metadata": {
+                "operationMetadataId": "e93fa524-716a-4562-a5d7-48c618475fd8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\nvariables('ExternalDomainsFolder'),\r\n  '/',\r\n variables('ExternalDomainsFileName')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileMetadataByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Checks whether the External Domains reference file exists.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status\n- External domains file health check"
+            },
+            "IF_ExternalDomains_File_Exists": {
+              "actions": {
+                "GET_ExternalDomains_Content": {
+                  "runAfter": {
+                    "SET_ExternalDomainsLastModified": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "17cac4ac-7ebf-43a3-9ea6-1295f0132d96"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "path": "@concat(\r\n    variables('ExternalDomainsFolder'),\r\n    '/',\r\n    variables('ExternalDomainsFileName')\r\n)",
+                      "inferContentType": true
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetFileContentByPath"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the External Domains reference file.\n\nUsed for:\n- External domain validation\n- DMP COMMAND monitoring\n- Control Board statistics\n\nReturns the complete External_Domains.txt content."
+                },
+                "CMP_ExternalDomainsText": {
+                  "runAfter": {
+                    "GET_ExternalDomains_Content": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "9d03f56c-5990-4f29-a769-ae2b5e8b281e"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('GET_ExternalDomains_Content')",
+                  "description": "Converts the External Domains file content into plain text.\n\nUsed for:\n- Domain counting\n- Operational monitoring\n- Control Board statistics"
+                },
+                "SET_ExternalDomainsCount": {
+                  "runAfter": {
+                    "CMP_ExternalDomainsText": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "b5c224d3-0273-4481-9d35-7122eaaa918a"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ExternalDomainsCount",
+                    "value": "@if(empty(trim(outputs('CMP_ExternalDomainsText'))),0,length(split(trim(outputs('CMP_ExternalDomainsText')),decodeUriComponent('%0A'))))"
+                  },
+                  "description": "Counts all External Domain entries.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
+                },
+                "SET_ExternalDomainsLastModified": {
+                  "runAfter": {
+                    "SET_ExternalDomainsExists_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "45a18809-ab90-4923-b880-5e6f39590ce1"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ExternalDomainsLastModified",
+                    "value": "@outputs('GET_ExternalDomains_Metadata')?['body/LastModified']"
+                  },
+                  "description": "Stores the SharePoint Last Modified timestamp of the External Domains reference file.\n\nUsed for:\n- Control Board display\n- File freshness monitoring\n- Operational validation"
+                },
+                "SET_ExternalDomainsExists_True": {
+                  "metadata": {
+                    "operationMetadataId": "161ab303-f4b8-43b3-a386-23bc7c62af4d"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ExternalDomainsExists",
+                    "value": true
+                  },
+                  "description": "Marks the External Domains reference file as available."
+                }
+              },
+              "runAfter": {
+                "GET_ExternalDomains_Metadata": [
+                  "Succeeded",
+                  "TimedOut",
+                  "Skipped",
+                  "Failed"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_ExternalDomainsExists_False": {
+                    "metadata": {
+                      "operationMetadataId": "66928dc8-bd17-4dbb-99a8-8e78ffe05d5b"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ExternalDomainsExists",
+                      "value": false
+                    },
+                    "description": "Marks the External Domains reference file as missing."
+                  },
+                  "SET_ExternalDomainsCount_Zero": {
+                    "runAfter": {
+                      "SET_ExternalDomainsExists_False": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "9a06216e-9674-44f9-ae8c-f6e5da44129f"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ExternalDomainsCount",
+                      "value": 0
+                    },
+                    "description": "Resets the External Domains count when the reference file is missing."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@actions('GET_ExternalDomains_Metadata').status",
+                      "Succeeded"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "54256080-63bd-4b88-8bff-fd784e85c862"
+              },
+              "type": "If",
+              "description": "Routes processing depending on whether the External Domains reference file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
+            }
+          },
+          "runAfter": {
+            "SCOPE_Internal_Domains": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0099e1dd-4da7-438e-888a-8126a6cf0dbc"
+          },
+          "type": "Scope",
+          "description": "Checks External Domains reference file and updates status metrics."
+        },
+        "SCOPE_Counter": {
+          "actions": {
+            "GET_Counter_Metadata": {
+              "metadata": {
+                "operationMetadataId": "cd521db9-7865-48e1-bb54-36b637495bbf"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\n variables('CounterFolder'),\r\n  '/',\r\n  variables('CounterFileName')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileMetadataByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Checks if Counter File exists."
+            },
+            "Counter_File_does_exist": {
+              "actions": {
+                "GET_Counter_NoDMP": {
+                  "runAfter": {
+                    "SET_CounterLastModified": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "937ba70f-89c1-49ef-a54f-5f3ea08652b8",
+                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
+                      "table": "@variables('DMP E-Mail Counter Table Name')",
+                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
+                      "id": "@variables('CounterPathNoDMP')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the No DMP workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Workflow volume overview"
+                },
+                "SET_Counter_NoDMP": {
+                  "runAfter": {
+                    "GET_Counter_NoDMP": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2e2f850e-aad1-4401-8214-f4c00a2ade46"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterNoDMP",
+                    "value": "@int(float(coalesce(body('GET_Counter_NoDMP')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                  }
+                },
+                "GET_Counter_InternalSender": {
+                  "runAfter": {
+                    "SET_Counter_NoDMP": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "0aae5aee-eec7-4291-b5b0-8c707a4b8b61",
+                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
+                      "table": "@variables('DMP E-Mail Counter Table Name')",
+                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
+                      "id": "@variables('CounterPathInternalSender')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the DMP internal Sender workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Internal sender workflow statistics"
+                },
+                "SET_Counter_InternalSender": {
+                  "runAfter": {
+                    "GET_Counter_InternalSender": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "19b85050-0752-4491-be0a-2bd7ccdcd00f"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterInternalSender",
+                    "value": "@int(float(coalesce(body('GET_Counter_InternalSender')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                  },
+                  "description": "Stores the current DMP internal Sender workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
+                },
+                "GET_Counter_NotEffected": {
+                  "runAfter": {
+                    "SET_Counter_InternalSender": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ca64c43b-89e8-4c1b-9c16-9ca5db4ec5ba",
+                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
+                      "table": "@variables('DMP E-Mail Counter Table Name')",
+                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
+                      "id": "@variables('CounterPathNotEffected')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the DMP not effected Sender workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Not effected sender workflow statistics"
+                },
+                "SET_Counter_NotEffected": {
+                  "runAfter": {
+                    "GET_Counter_NotEffected": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "407bf99a-461c-44f2-9120-16bdc696f94b"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterNotEffected",
+                    "value": "@int(float(coalesce(body('GET_Counter_NotEffected')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                  },
+                  "description": "Stores the current DMP not effected Sender workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
+                },
+                "GET_Counter_EffectedMember": {
+                  "runAfter": {
+                    "SET_Counter_NotEffected": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3a72bb35-a8f8-43d3-9bf6-de69d439fca4",
+                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
+                      "table": "@variables('DMP E-Mail Counter Table Name')",
+                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
+                      "id": "@variables('CounterPathEffectedMember')"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the DMP effected Member workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Effected member workflow statistics"
+                },
+                "SET_Counter_Effected": {
+                  "runAfter": {
+                    "GET_Counter_EffectedMember": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "338ddf44-abec-40f2-9748-092bf320a6a5"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterEffected",
+                    "value": "@int(float(coalesce(body('GET_Counter_EffectedMember')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                  },
+                  "description": "Stores the current DMP effected Member workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
+                },
+                "SET_CounterLastModified": {
+                  "runAfter": {
+                    "SET_Counter_File_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bbb0ad59-7389-455d-a957-340ee49f852a"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterLastModified",
+                    "value": "@outputs('GET_Counter_Metadata')?['body/LastModified']"
+                  }
+                },
+                "SET_Counter_File_True": {
+                  "metadata": {
+                    "operationMetadataId": "56a03d93-ba82-4362-8951-86b280cf7428"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CounterExists",
+                    "value": true
+                  },
+                  "description": "Counter File exists."
+                }
+              },
+              "runAfter": {
+                "GET_Counter_Metadata": [
+                  "Succeeded",
+                  "TimedOut",
+                  "Skipped",
+                  "Failed"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_Counter_File_False": {
+                    "metadata": {
+                      "operationMetadataId": "ae5356fe-89e9-4aab-a413-956567b8402d"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "CounterExists",
+                      "value": false
+                    },
+                    "description": "Counter File doesn't exists."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@actions('GET_Counter_Metadata').status",
+                      "Succeeded"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "68eac766-bdaf-4e88-8c73-2e1264f48ddd"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "SCOPE_DMPMode": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3256ad50-3c99-4ff4-a48c-e3e18f5255b4"
+          },
+          "type": "Scope",
+          "description": "Checks Counter workbook."
+        },
+        "SCOPE_Audit_Trail": {
+          "actions": {
+            "GET_Audit_Trail_File_Metadata": {
+              "metadata": {
+                "operationMetadataId": "a242f9b1-75b6-4680-9fc7-7eed57f2bf9b"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\n variables('AuditTrailFolder'),\r\n  '/',\r\n  variables('AuditTrailFileName')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileMetadataByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Checks if Audit Trail File exists."
+            },
+            "Audit_Trail_File_does_exist": {
+              "actions": {
+                "SET_AuditLastModified": {
+                  "runAfter": {
+                    "SET_Audit_Trail_File_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "98da730c-4f15-41c8-a3a1-e27a6df61cb6"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "AuditLastModified",
+                    "value": "@outputs('GET_Audit_Trail_File_Metadata')?['body/LastModified']"
+                  },
+                  "description": "Stores the SharePoint Last Modified timestamp of AuditTrail.xlsx."
+                },
+                "SET_Audit_Trail_File_True": {
+                  "metadata": {
+                    "operationMetadataId": "8b9e1a46-d302-45ef-9bf6-a6492d461322"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "AuditTrailExists",
+                    "value": true
+                  },
+                  "description": "Audit Trail File exists."
+                }
+              },
+              "runAfter": {
+                "GET_Audit_Trail_File_Metadata": [
+                  "Succeeded",
+                  "TimedOut",
+                  "Skipped",
+                  "Failed"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_Audit_Trail_File_False": {
+                    "metadata": {
+                      "operationMetadataId": "1bd4367f-a0ab-4ca4-b9b9-e5ac1f62e458"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AuditTrailExists",
+                      "value": false
+                    },
+                    "description": "Audit Trail File doesn't exists."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@actions('GET_Audit_Trail_File_Metadata').status",
+                      "Succeeded"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2613b6e9-889e-4b8a-9f2a-40c243e45dcb"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "SCOPE_EmergencyReport": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "304b1e0a-08b4-4818-9fdd-1648c6b42b46"
+          },
+          "type": "Scope",
+          "description": "Checks Audit Trail workbook."
+        },
+        "SCOPE_EmergencyReport": {
+          "actions": {
+            "GET_EmergencyReport_Metadata": {
+              "metadata": {
+                "operationMetadataId": "1d01e5a1-7acd-48c7-a271-4253b992fd0f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\n variables('EmergencyReportFolder'),\r\n  '/',\r\n  variables('EmergencyReportFileName')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileMetadataByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Checks if Emergency Report exists."
+            },
+            "Emergency_Report_does_exist": {
+              "actions": {
+                "SET_EmergencyReportLastModified": {
+                  "runAfter": {
+                    "SET_Emergency_Report_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "67dc1447-16f4-4486-8a78-64806d391d6d"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "EmergencyReportLastModified",
+                    "value": "@outputs('GET_EmergencyReport_Metadata')?['body/LastModified']"
+                  }
+                },
+                "SET_Emergency_Report_True": {
+                  "metadata": {
+                    "operationMetadataId": "a3aa49b0-b052-45d6-8158-0ec414604e7a"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "EmergencyReportExists",
+                    "value": true
+                  },
+                  "description": "Emergency Report exists."
+                }
+              },
+              "runAfter": {
+                "GET_EmergencyReport_Metadata": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_Emergency_Report_False_": {
+                    "metadata": {
+                      "operationMetadataId": "c87565a6-49d2-44e6-b30f-7d2641627cfe"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "EmergencyReportExists",
+                      "value": false
+                    },
+                    "description": "Emergency Report doesn't exists."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@actions('GET_EmergencyReport_Metadata').status",
+                      "Succeeded"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "7ddf3aad-b697-48ab-a813-f9cfaa54bbb6"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "SCOPE_Counter": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aaf93a06-a388-4d32-9ba3-cfeb747f16b6"
+          },
+          "type": "Scope",
+          "description": "Checks Emergency Report availability."
+        },
+        "SCOPE_DMPMode": {
+          "actions": {
+            "SET_IsRealDMP_From_OperationMode": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "IsRealDMP",
+                "value": "@endsWith(variables('OperationMode'), '_DMP')"
+              },
+              "description": "Derives the Real DMP status directly from the central CurrentOperationMode configuration value, replacing the retired Yes.txt file check."
+            },
+            "SET_IsRealDMPLastModified_From_Config": {
+              "runAfter": {
+                "SET_IsRealDMP_From_OperationMode": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "IsRealDMPLastModified",
+                "value": "@coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['Modified'], '')"
+              },
+              "description": "Stores the last-modified timestamp of the CurrentOperationMode configuration entry, replacing the retired Yes.txt file's last-modified metadata."
+            }
+          },
+          "runAfter": {
+            "SCOPE_External_Domains": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "52a6b4bd-da93-4204-a806-9eb05f1bd814"
+          },
+          "type": "Scope",
+          "description": "Derives the current Real DMP mode from the central configuration (CurrentOperationMode) instead of checking the retired Yes.txt indicator file."
+        },
+        "VAR_EmergencyReportLastModified": {
+          "runAfter": {
+            "VAR_EmergencyReportFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EmergencyReportLastModified",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores last modified timestamp of Emergency Report."
+        },
+        "VAR_InternalDomainsLastModified": {
+          "runAfter": {
+            "VAR_InternalDomainsCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b77b6adf-e9af-4365-8929-b452312c4723"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InternalDomainsLastModified",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Time of last internal domains file modification"
+        },
+        "VAR_ExternalDomainsLastModified": {
+          "runAfter": {
+            "VAR_ExternalDomainsCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "623e4eaa-4cf2-4097-aaa9-a389f8c30fdb"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ExternalDomainsLastModified",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Time of last external domains file modification"
+        },
+        "VAR_CounterLastModified": {
+          "runAfter": {
+            "VAR_CounterEffected": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8388eeb2-ebb6-4823-a072-ad7a1b529897"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterLastModified",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Time of last counter file modification"
+        },
+        "VAR_AuditModified": {
+          "runAfter": {
+            "VAR_AuditLastRunTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62bcf352-c84c-49e6-9908-161484a4d10d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastModified",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Time of last audit file modification"
+        },
+        "VAR_CounterTableName": {
+          "runAfter": {
+            "VAR_CounterFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DMP E-Mail Counter Table Name",
+                "type": "string",
+                "value": "DMP_Email_Counter"
+              }
+            ]
+          },
+          "description": "Stores the Excel table name used for the DMP workflow counter file.\n\nAligned with Agent 2.\n\nUsed for:\n- Reading workflow counter rows\n- DMP COMMAND status reporting\n- Control Board counter display"
+        },
+        "VAR_CounterTableColumnPath": {
+          "runAfter": {
+            "VAR_CounterTableName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DMP E-Mail Counter Table Column Name Path",
+                "type": "string",
+                "value": "Workflow"
+              }
+            ]
+          },
+          "description": "Stores the Excel table key column used to identify workflow counter rows.\n\nAligned with Agent 2.\n\nDefault = Workflow\n\nUsed for:\n- Reading the No DMP counter row\n- Reading the DMP internal Sender counter row\n- Reading the DMP not effected Sender counter row"
+        },
+        "VAR_CounterTableColumnCounter": {
+          "runAfter": {
+            "VAR_CounterTableColumnPath": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DMP E-Mail Counter Table Column Name Counter",
+                "type": "string",
+                "value": "Number_Processed_Emails"
+              }
+            ]
+          },
+          "description": "Stores the Excel table value column used for workflow counter values.\n\nAligned with Agent 2.\n\nDefault = Number_Processed_Emails\n\nUsed for:\n- Reading processed e-mail counts per workflow path\n- Returning counter values to DMP COMMAND"
+        },
+        "VAR_CounterPathNoDMP": {
+          "runAfter": {
+            "VAR_CounterTableColumnCounter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterPathNoDMP",
+                "type": "string",
+                "value": "No DMP"
+              }
+            ]
+          },
+          "description": "Stores the workflow path key for the No DMP counter row.\n\nAligned with Agent 2 workflow path naming.\n\nUsed for:\n- Reading the No DMP row from Counter.xlsx\n- Returning CounterNoDMP to DMP COMMAND"
+        },
+        "VAR_CounterPathInternalSender": {
+          "runAfter": {
+            "VAR_CounterPathNoDMP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterPathInternalSender",
+                "type": "string",
+                "value": "DMP internal Sender"
+              }
+            ]
+          },
+          "description": "Stores the workflow path key for the DMP internal Sender counter row.\n\nAligned with Agent 2 workflow path naming.\n\nUsed for:\n- Reading the DMP internal Sender row from Counter.xlsx\n- Returning CounterInternalSender to DMP COMMAND"
+        },
+        "VAR_CounterPathNotEffected": {
+          "runAfter": {
+            "VAR_CounterPathInternalSender": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterPathNotEffected",
+                "type": "string",
+                "value": "DMP not effected Sender"
+              }
+            ]
+          },
+          "description": "Stores the workflow path key for the DMP not effected Sender counter row.\n\nAligned with Agent 2 workflow path naming.\n\nUsed for:\n- Reading the DMP not effected Sender row from Counter.xlsx\n- Returning CounterNotEffected to DMP COMMAND"
+        },
+        "VAR_CounterPathEffectedMember": {
+          "runAfter": {
+            "VAR_CounterPathNotEffected": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CounterPathEffectedMember",
+                "type": "string",
+                "value": "DMP effected Member"
+              }
+            ]
+          },
+          "description": "Stores the workflow path key for the DMP effected Member counter row.\n\nAligned with Agent 2 workflow path naming.\n\nUsed for:\n- Reading the DMP effected Member row from Counter.xlsx\n- Returning CounterEffected to DMP COMMAND"
+        },
+        "SCOPE_Internal_Domains": {
+          "actions": {
+            "GET_InternalDomains_Metadata": {
+              "metadata": {
+                "operationMetadataId": "baa460bf-aab5-480e-a3a8-cc26d7f79311"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\nvariables('InternalDomainsFolder'),\r\n  '/',\r\n variables('InternalDomainsFileName')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileMetadataByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Checks whether the Internal Domains reference file exists.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status\n- Internal domains file health check"
+            },
+            "IF_InternalDomains_File_Exists": {
+              "actions": {
+                "GET_InternalDomains_Content": {
+                  "runAfter": {
+                    "SET_InternalDomainsLastModified": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "fe9ede67-1956-4b8d-8c80-7ce21aa8882e"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "path": "@concat(\r\n    variables('InternalDomainsFolder'),\r\n    '/',\r\n    variables('InternalDomainsFileName')\r\n)",
+                      "inferContentType": true
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetFileContentByPath"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads the Internal Domains reference file.\n\nUsed for:\n- Internal domain validation\n- DMP COMMAND monitoring\n- Control Board statistics\n\nReturns the complete Internal_Domains.txt content."
+                },
+                "CMP_InternalDomainsText": {
+                  "runAfter": {
+                    "GET_InternalDomains_Content": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "bde6cd8e-c23f-4031-81f9-0fa5b479e0c1"
+                  },
+                  "type": "Compose",
+                  "inputs": "@body('GET_InternalDomains_Content')",
+                  "description": "Converts the Internal Domains file content into plain text.\n\nUsed for:\n- Domain counting\n- Operational monitoring\n- Control Board statistics"
+                },
+                "SET_InternalDomainsCount": {
+                  "runAfter": {
+                    "CMP_InternalDomainsText": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "34385a1b-919a-43c4-893e-89675eb3b2e1"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "InternalDomainsCount",
+                    "value": "@if(empty(trim(outputs('CMP_InternalDomainsText'))),0,length(split(trim(outputs('CMP_InternalDomainsText')),decodeUriComponent('%0A'))))"
+                  },
+                  "description": "Counts all Internal Domain entries.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
+                },
+                "SET_InternalDomainsLastModified": {
+                  "runAfter": {
+                    "SET_InternalDomainsExists_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f20da9e0-eb77-4077-9287-5c4f472ca89c"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "InternalDomainsLastModified",
+                    "value": "@outputs('GET_InternalDomains_Metadata')?['body/LastModified']"
+                  },
+                  "description": "Stores the SharePoint Last Modified timestamp of the Internal Domains reference file.\n\nUsed for:\n- Control Board display\n- File freshness monitoring\n- Operational validation"
+                },
+                "SET_InternalDomainsExists_True": {
+                  "metadata": {
+                    "operationMetadataId": "fdd33ec7-0d5d-43bc-ad37-2785b3d9d0a2"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "InternalDomainsExists",
+                    "value": true
+                  },
+                  "description": "Marks the Internal Domains reference file as available."
+                }
+              },
+              "runAfter": {
+                "GET_InternalDomains_Metadata": [
+                  "Succeeded",
+                  "TimedOut",
+                  "Skipped",
+                  "Failed"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_InternalDomainsExists_False": {
+                    "metadata": {
+                      "operationMetadataId": "eedc0b3f-23bb-409f-958f-59b06c3f9883"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "InternalDomainsExists",
+                      "value": false
+                    },
+                    "description": "Marks the Internal Domains reference file as missing."
+                  },
+                  "SET_InternalDomainsCount_Zero": {
+                    "runAfter": {
+                      "SET_InternalDomainsExists_False": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "b5bd1d82-7fcb-4869-95da-cd755658e2e6"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "InternalDomainsCount",
+                      "value": 0
+                    },
+                    "description": "Resets the Internal Domains count when the reference file is missing."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@actions('GET_InternalDomains_Metadata').status",
+                      "Succeeded"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "63799da6-1d0a-42f2-a937-7982eaeb3d70"
+              },
+              "type": "If",
+              "description": "Routes processing depending on whether the Internal Domains reference file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
+            }
+          },
+          "runAfter": {
+            "SET_AuditStatusFailed_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "69b6b0ed-1209-46ca-8dbe-cfc948d6e9dd"
+          },
+          "type": "Scope",
+          "description": "Checks Internal Domains reference file and updates status metrics."
+        },
+        "VAR_AuditTableName": {
+          "runAfter": {
+            "VAR_AuditTrailFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditTableName",
+                "type": "string",
+                "value": "AuditTrail"
+              }
+            ]
+          },
+          "description": "Stores the Excel table name used for the central audit trail.\n\nAligned with Agent 1 and Agent 2.\n\nUsed for:\n- Reading audit trail rows\n- Counting run summary entries\n- Counting warning and failed audit entries\n- Returning audit health data to DMP COMMAND"
+        },
+        "VAR_AuditColumnStepName": {
+          "runAfter": {
+            "VAR_AuditTrailExists": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditColumnStepName",
+                "type": "string",
+                "value": "StepName"
+              }
+            ]
+          },
+          "description": "Stores the audit trail column name used to identify RunSummary entries.\n\nUsed for:\n- Counting run summary rows\n- DMP COMMAND audit health display"
+        },
+        "VAR_AuditColumnStepStatus": {
+          "runAfter": {
+            "VAR_AuditStatusFailed": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditColumnStepStatus",
+                "type": "string",
+                "value": "StepStatus"
+              }
+            ]
+          },
+          "description": "Stores the audit trail column name used to identify warning and failed audit entries.\n\nUsed for:\n- Counting warning entries\n- Counting failed entries\n- DMP COMMAND audit health display"
+        },
+        "VAR_AuditColumnTimestampUtc": {
+          "runAfter": {
+            "VAR_AuditColumnStepStatus": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditColumnTimestampUtc",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the audit trail timestamp column name.\n\nUsed for:\n- Determining the latest audit run timestamp\n- DMP COMMAND audit freshness display"
+        },
+        "VAR_AuditStepNameRunSummary": {
+          "runAfter": {
+            "VAR_AuditColumnStepName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditStepNameRunSummary",
+                "type": "string",
+                "value": "RunSummary"
+              }
+            ]
+          },
+          "description": "Stores the audit StepName value used for run summary rows.\n\nUsed for:\n- Counting completed flow run summaries\n- DMP COMMAND audit health display"
+        },
+        "VAR_AuditStatusWarning": {
+          "runAfter": {
+            "VAR_AuditStatusSucceeded": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditStatusWarning",
+                "type": "string",
+                "value": "Warning"
+              }
+            ]
+          },
+          "description": "Stores the audit StepStatus value used for warning entries.\n\nUsed for:\n- Counting audit warning entries\n- DMP COMMAND health status"
+        },
+        "VAR_AuditStatusFailed": {
+          "runAfter": {
+            "VAR_AuditStatusWarning": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditStatusFailed",
+                "type": "string",
+                "value": "Failed"
+              }
+            ]
+          },
+          "description": "Stores the audit StepStatus value used for failed entries.\n\nUsed for:\n- Counting audit failed entries\n- DMP COMMAND health status"
+        },
+        "VAR_AuditStatusSucceeded": {
+          "runAfter": {
+            "VAR_AuditStepNameRunSummary": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditStatusSucceeded",
+                "type": "string",
+                "value": "Succeeded"
+              }
+            ]
+          },
+          "description": "Stores the audit StepStatus value used for successful RunSummary entries.\n\nUsed for:\n- AuditLastSuccessTimestamp\n- DMP COMMAND audit health display\n- Operational monitoring"
+        },
+        "VAR_AuditLastSuccessTimestamp": {
+          "runAfter": {
+            "VAR_AuditColumnTimestampUtc": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastSuccessTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the timestamp of the latest successful RunSummary entry.\n\nUsed for:\n- DMP COMMAND Audit Trail card\n- Audit health monitoring\n- Operational freshness display"
+        },
+        "VAR_AuditLastFailedTimestamp": {
+          "runAfter": {
+            "VAR_AuditLastSuccessTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastFailedTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the timestamp of the latest failed RunSummary entry.\n\nUsed for:\n- DMP COMMAND Audit Trail card\n- Audit health monitoring\n- Operational failure visibility"
+        },
+        "VAR_AuditLastRunSerial": {
+          "runAfter": {
+            "VAR_AuditFailedCount": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f3909e64-76bb-4cb4-8c9a-941d794ed243"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastRunSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest Excel serial timestamp found in RunSummary audit rows.\n\nUsed for:\n- Determining AuditLastRunTimestamp\n- DMP COMMAND audit freshness display"
+        },
+        "VAR_AuditLastSuccessSerial": {
+          "runAfter": {
+            "VAR_AuditLastRunSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4d6b61c8-82b5-4693-96ca-ce3301c22686"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastSuccessSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest Excel serial timestamp found in successful RunSummary audit rows.\n\nUsed for:\n- Determining AuditLastSuccessTimestamp\n- DMP COMMAND audit health display"
+        },
+        "VAR_AuditLastFailedSerial": {
+          "runAfter": {
+            "VAR_AuditLastSuccessSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb14e701-7f2f-4998-b6a6-a9b1a5f7ff53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastFailedSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest Excel serial timestamp found in failed RunSummary audit rows.\n\nUsed for:\n- Determining AuditLastFailedTimestamp\n- DMP COMMAND audit failure visibility"
+        },
+        "VAR_IsRealDMPLastModified": {
+          "runAfter": {
+            "VAR_IsRealDMP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3c4f6ea2-ad6a-44f5-929c-4811cd52fd1f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsRealDMPLastModified",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d1ffd235-b553-475f-9fe0-69c363cd8949"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+              "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
+              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'RealDMPIndicatorFileName' or Title eq 'RealDMPIndicatorFolder' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent302' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Loads active Agent 3.02 status configuration items."
+        },
+        "FILTER_Config_CurrentOperationMode": {
+          "runAfter": {
+            "GET_DMP_Command_Configuration": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0bdaa073-a93c-44de-a7c4-21c2803c83e6"
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "where": "@equals(item()?['Title'],'CurrentOperationMode')"
+          },
+          "description": "Finds current DMP COMMAND operation mode."
+        },
+        "VAR_ConfigObject": {
+          "runAfter": {
+            "SET_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "65e5d6cb-ec6f-4353-8583-65330e7b6347"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ConfigObject",
+                "type": "object",
+                "value": "@json('{}')"
+              }
+            ]
+          },
+          "description": "Stores resolved status configuration values."
+        },
+        "APPLY_TO_EACH_ConfigItem": {
+          "foreach": "@body('GET_DMP_Command_Configuration')?['value']",
+          "actions": {
+            "CMP_ConfigValue_CurrentItem": {
+              "metadata": {
+                "operationMetadataId": "6dd59156-84ad-4b41-94ab-37937c380856"
+              },
+              "type": "Compose",
+              "inputs": "@if(\r\n  equals(variables('OperationMode'), 'PROD_NODMP'),\r\n  items('APPLY_TO_EACH_ConfigItem')?['Value_PROD_NODMP'],\r\n  if(\r\n    equals(variables('OperationMode'), 'PROD_DMP'),\r\n    items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_PROD_x0028_DMP_x0029'],\r\n    if(\r\n      equals(variables('OperationMode'), 'SIMU_NODMP'),\r\n      items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_SIMU_x0028_NODMP_x00'],\r\n      items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_SIMU_x0028_DMP_x0029']\r\n    )\r\n  )\r\n)",
+              "description": "Selects configuration value for current operation mode."
+            },
+            "CMP_ConfigObject_Updated": {
+              "runAfter": {
+                "CMP_ConfigValue_CurrentItem": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "49609f0f-71f7-4d9c-81b2-8e07ffc9be3c"
+              },
+              "type": "Compose",
+              "inputs": "@if(\r\n  empty(coalesce(items('APPLY_TO_EACH_ConfigItem')?['Title'], '')),\r\n  variables('ConfigObject'),\r\n  setProperty(\r\n    variables('ConfigObject'),\r\n    string(items('APPLY_TO_EACH_ConfigItem')?['Title']),\r\n    coalesce(outputs('CMP_ConfigValue_CurrentItem'), '')\r\n  )\r\n)",
+              "description": "Adds resolved item value to status configuration object."
+            },
+            "SET_ConfigObject": {
+              "runAfter": {
+                "CMP_ConfigObject_Updated": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "9feb5304-7d05-43d6-953d-949d61e649ef"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ConfigObject",
+                "value": "@outputs('CMP_ConfigObject_Updated')"
+              },
+              "description": "Stores updated status configuration object."
+            }
+          },
+          "runAfter": {
+            "VAR_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "050c87a9-ce6e-438b-a9b5-960901dc1919"
+          },
+          "type": "Foreach",
+          "description": "Builds status configuration object."
+        },
+        "SET_RealDMPIndicatorFileName_From_Config": {
+          "runAfter": {
+            "APPLY_TO_EACH_ConfigItem": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3be25fa8-1e21-4e00-9726-fabd9db8d1c9"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Real DMP Indicator File Name",
+            "value": "@coalesce(variables('ConfigObject')?['RealDMPIndicatorFileName'], 'Yes.txt')"
+          }
+        },
+        "SET_RealDMPIndicatorFolder_From_Config": {
+          "runAfter": {
+            "SET_RealDMPIndicatorFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f7a3b1b0-1f44-444d-9b5c-4c963f2b6aa0"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "Real DMP Indicator Folder",
+            "value": "@coalesce(variables('ConfigObject')?['RealDMPIndicatorFolder'], '/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP')"
+          }
+        },
+        "SET_EmergencyReportFolder_From_Config": {
+          "runAfter": {
+            "SET_EmergencyReportFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3352a45c-a600-4b15-af11-af48c1f45abe"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "EmergencyReportFolder",
+            "value": "@coalesce(variables('ConfigObject')?['EmergencyReportTargetFolder'], '/Shared Documents/Email Hotline/AI_Agent/Emergency_Report_Storage')"
+          }
+        },
+        "SET_EmergencyReportFileName_From_Config": {
+          "runAfter": {
+            "SET_RealDMPIndicatorFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "03dcfb9d-ac22-4cab-a604-1520940ea279"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "EmergencyReportFileName",
+            "value": "@coalesce(variables('ConfigObject')?['EmergencyReportFileName'], 'Emergency Report.xlsx')"
+          }
+        },
+        "SET_InternalDomainsFolder_From_Config": {
+          "runAfter": {
+            "SET_InternalDomainsFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "eef81013-0b53-4e89-a25a-089ababc96a4"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "InternalDomainsFolder",
+            "value": "@coalesce(variables('ConfigObject')?['InternalDomainsStorageFolder'], '/Shared Documents/Email Hotline/AI_Agent/Internal_Domains_Storage')"
+          }
+        },
+        "SET_InternalDomainsFileName_From_Config": {
+          "runAfter": {
+            "SET_EmergencyReportFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5a94489e-5594-4c20-86da-c319fa805051"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "InternalDomainsFileName",
+            "value": "@coalesce(variables('ConfigObject')?['InternalDomainsFileName'], 'Internal_Domains.txt')"
+          }
+        },
+        "SET_ExternalDomainsFolder_From_Config": {
+          "runAfter": {
+            "SET_ExternalDomainsFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "78bdb5dc-b03a-4c08-bdbf-fcfc7644706f"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "ExternalDomainsFolder",
+            "value": "@coalesce(variables('ConfigObject')?['ExternalDomainsStorageFolder'], '/Shared Documents/Email Hotline/AI_Agent/External_Domains_Storage')"
+          }
+        },
+        "SET_ExternalDomainsFileName_From_Config": {
+          "runAfter": {
+            "SET_InternalDomainsFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5805a984-c6b5-4f1e-a212-5c07a3922bcb"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "ExternalDomainsFileName",
+            "value": "@coalesce(variables('ConfigObject')?['ExternalDomainsFileName'], 'External_Domains.txt')"
+          }
+        },
+        "SET_CounterFolder_From_Config": {
+          "runAfter": {
+            "SET_CounterFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "77dafb5f-5010-49e6-9c9f-b1b563b2c43d"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterFolder",
+            "value": "@coalesce(variables('ConfigObject')?['CounterFolder'], '/Shared Documents/Email Hotline/AI_Agent')"
+          }
+        },
+        "SET_CounterFileName_From_Config": {
+          "runAfter": {
+            "SET_ExternalDomainsFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "05b1a0bc-06ef-4cb1-85a8-1f587877b0c0"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterFileName",
+            "value": "@coalesce(variables('ConfigObject')?['CounterFileName'], 'Counter.xlsx')"
+          }
+        },
+        "SET_CounterTableName_From_Config": {
+          "runAfter": {
+            "SET_CounterFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c0f9c733-4e0a-4dd6-a0ba-86bb47a02d6f"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "DMP E-Mail Counter Table Name",
+            "value": "@coalesce(\r\n    variables('ConfigObject')?['CounterTableName'],\r\n    'DMP_Email_Counter'\r\n)"
+          }
+        },
+        "SET_CounterTableColumnPath_From_Config": {
+          "runAfter": {
+            "SET_CounterTableName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4befc68f-a247-4950-a4d4-50ec732557a8"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "DMP E-Mail Counter Table Column Name Path",
+            "value": "@coalesce(variables('ConfigObject')?['CounterTableColumnNamePath'], 'Workflow')"
+          }
+        },
+        "SET_CounterTableColumnCounter_From_Config": {
+          "runAfter": {
+            "SET_CounterTableColumnPath_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "329da0d9-1a81-4130-a1e7-d92f3cc15b1d"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "DMP E-Mail Counter Table Column Name Counter",
+            "value": "@coalesce(variables('ConfigObject')?['CounterTableColumnNameCounter'], 'Number_Processed_Emails')"
+          }
+        },
+        "SET_CounterPathNoDMP_From_Config": {
+          "runAfter": {
+            "SET_CounterTableColumnCounter_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d5fc9428-e4cb-4c7c-8c55-26d7a09b36d4"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterPathNoDMP",
+            "value": "@coalesce(variables('ConfigObject')?['CounterPathNoDMP'], 'No DMP')"
+          }
+        },
+        "SET_CounterPathInternalSender_From_Config": {
+          "runAfter": {
+            "SET_CounterPathNoDMP_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "ffd557a9-668d-4989-9dba-f7c146765881"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterPathInternalSender",
+            "value": "@coalesce(variables('ConfigObject')?['CounterPathInternalSender'], 'DMP internal Sender')"
+          }
+        },
+        "SET_CounterPathNotEffected_From_Config": {
+          "runAfter": {
+            "SET_CounterPathInternalSender_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "43839386-e575-4713-9dff-3951ffd592f3"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterPathNotEffected",
+            "value": "@coalesce(variables('ConfigObject')?['CounterPathNotEffected'], 'DMP not effected Sender')"
+          }
+        },
+        "SET_CounterPathEffectedMember_From_Config": {
+          "runAfter": {
+            "SET_CounterPathNotEffected_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4b840806-02d3-436b-b6ee-28e7d1283d38"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CounterPathEffectedMember",
+            "value": "@coalesce(variables('ConfigObject')?['CounterPathEffectedMember'], 'DMP effected Member')"
+          }
+        },
+        "SET_AuditTrailFolder_From_Config": {
+          "runAfter": {
+            "SET_AuditTrailFileName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a9443943-f240-47ec-bff2-b9c40927f27d"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditTrailFolder",
+            "value": "@coalesce(variables('ConfigObject')?['DMPSharePointRootFolder'], '/Shared Documents/Email Hotline/AI_Agent')"
+          }
+        },
+        "SET_AuditTrailFileName_From_Config": {
+          "runAfter": {
+            "SET_CounterPathEffectedMember_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb7401fe-6e90-4a9f-ba72-a81a3480d140"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditTrailFileName",
+            "value": "@coalesce(variables('ConfigObject')?['AuditFileName'], 'AuditTrail.xlsx')"
+          }
+        },
+        "SET_AuditTableName_From_Config": {
+          "runAfter": {
+            "SET_AuditTrailFolder_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "dd0cf5e6-8c24-49ce-8f9d-3b1f55240634"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditTableName",
+            "value": "@coalesce(variables('ConfigObject')?['AuditTableName'], 'AuditTrail')"
+          }
+        },
+        "SET_AuditColumnStepName_From_Config": {
+          "runAfter": {
+            "SET_AuditTableName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c580dda5-bf17-4cbe-a81a-3b3a25d5090d"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditColumnStepName",
+            "value": "@coalesce(variables('ConfigObject')?['AuditColumnStepName'], 'StepName')"
+          }
+        },
+        "SET_AuditColumnStepStatus_From_Config": {
+          "runAfter": {
+            "SET_AuditColumnStepName_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a25e632d-bd21-4a07-8a3d-386cd2333c71"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditColumnStepStatus",
+            "value": "@coalesce(variables('ConfigObject')?['AuditColumnStepStatus'], 'StepStatus')"
+          }
+        },
+        "SET_AuditColumnTimestampUtc_From_Config": {
+          "runAfter": {
+            "SET_AuditColumnStepStatus_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "319029a1-6b89-46bf-b085-ae250c33c37c"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditColumnTimestampUtc",
+            "value": "@coalesce(variables('ConfigObject')?['AuditColumnTimestampUtc'], 'TimestampUtc')"
+          }
+        },
+        "SET_AuditStepNameRunSummary_From_Config": {
+          "runAfter": {
+            "SET_AuditColumnTimestampUtc_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c150e57e-a490-4300-addf-901ae08ce136"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditStepNameRunSummary",
+            "value": "@coalesce(variables('ConfigObject')?['AuditStepNameRunSummary'], 'RunSummary')"
+          }
+        },
+        "SET_OperationMode": {
+          "runAfter": {
+            "FILTER_Config_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "28386e9e-f908-412c-8e37-ac3e5984c2ef"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "OperationMode",
+            "value": "@coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], 'PROD_NODMP')"
+          }
+        },
+        "SET_AuditStatusSucceeded_From_Config": {
+          "runAfter": {
+            "SET_AuditStepNameRunSummary_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7e77b2e8-55b3-4604-a492-7b8f67af9fd4"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditStatusSucceeded",
+            "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeSucceeded'], 'Succeeded')"
+          }
+        },
+        "SET_AuditStatusWarning_From_Config": {
+          "runAfter": {
+            "SET_AuditStatusSucceeded_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aa9df9bc-3147-49ef-ad52-7236e3241a7b"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditStatusWarning",
+            "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeWarning'], 'Warning')"
+          }
+        },
+        "SET_AuditStatusFailed_From_Config": {
+          "runAfter": {
+            "SET_AuditStatusWarning_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4a44ecf3-8066-43c8-8a20-8f5f50056f0d"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditStatusFailed",
+            "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeFailed'], 'Failed')"
+          }
+        },
+        "VAR_StatusCheckAuditCardEnabled": {
+          "runAfter": {
+            "VAR_AuditModified": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "5e6d68f1-bc5b-4d8b-b3b8-7495417d1e23"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusCheckAuditCardEnabled",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "VAR_StatusCheckCounterCardEnabled": {
+          "runAfter": {
+            "VAR_StatusCheckAuditCardEnabled": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2f0e5b7f-4909-4afb-9d8a-190388805688"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusCheckCounterCardEnabled",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "VAR_StatusCheckDomainsCardEnabled": {
+          "runAfter": {
+            "VAR_StatusCheckCounterCardEnabled": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63ed5a60-9c38-4682-b8a4-ac087a8c1b64"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusCheckDomainsCardEnabled",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "VAR_StatusCheckEmergencyReportCardEnabled": {
+          "runAfter": {
+            "VAR_StatusCheckDomainsCardEnabled": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f50ce367-50d4-4f78-ba5b-d1ab1521e478"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusCheckEmergencyReportCardEnabled",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          }
+        },
+        "VAR_OperationMode": {
+          "runAfter": {
+            "VAR_StatusAgentKey": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d9c697bf-85eb-4d09-8d0b-a19c5492dcf1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationMode",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores current DMP COMMAND operation mode."
+        },
+        "VAR_AuditLastWarningSerial": {
+          "runAfter": {
+            "VAR_AuditLastFailedSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb14e701-7f2f-4998-b6a6-a9b1a5f7ff53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastWarningSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest normalized timestamp key found in warning audit rows.\nUsed for:\n- Determining AuditLastWarningTimestamp\n- DMP COMMAND audit warning visibility"
+        },
+        "VAR_AuditLastWarningTimestamp": {
+          "runAfter": {
+            "VAR_AuditLastFailedTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastWarningTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the timestamp of the latest warning audit record.\n\nUsed for:\n- DMP COMMAND Audit Trail card\n- Audit health monitoring\n- Operational failure visibility"
+        },
+        "VAR_AuditLastFailureTimestamp": {
+          "runAfter": {
+            "VAR_AuditLastWarningTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastFailureTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the timestamp of the latest failed audit event.\n\nUsed for:\n- DMP COMMAND Audit Trail card\n- Audit health monitoring\n- Operational failure visibility"
+        },
+        "VAR_AuditLastAuditEventTimestamp": {
+          "runAfter": {
+            "VAR_AuditLastFailureTimestamp": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastAuditEventTimestamp",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the timestamp of the latest audit event in the complete AuditTrail table.\n\nUsed for:\n- DMP COMMAND Audit Trail card\n- Audit health monitoring\n- Operational failure visibility"
+        },
+        "VAR_AuditLastFailureSerial": {
+          "runAfter": {
+            "VAR_AuditLastWarningSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb14e701-7f2f-4998-b6a6-a9b1a5f7ff53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastFailureSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest normalized timestamp key found in failed audit rows.\nUsed for:\n- Determining AuditLastWarningTimestamp\n- DMP COMMAND audit warning visibility"
+        },
+        "VAR_AuditLastAuditEventSerial": {
+          "runAfter": {
+            "VAR_AuditLastFailureSerial": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "cb14e701-7f2f-4998-b6a6-a9b1a5f7ff53"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditLastAuditEventSerial",
+                "type": "float",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Stores the highest normalized timestamp key found in all audit rows.\nUsed for:\n- Determining AuditLastWarningTimestamp\n- DMP COMMAND audit warning visibility"
+        },
+        "VAR_StatusListName": {
+          "runAfter": {
+            "VAR_StatusCheckEmergencyReportCardEnabled": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6d309a9b-029d-436d-849e-ad15e0d2047b"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusListName",
+                "type": "string",
+                "value": "DMP Command Agent Status"
+              }
+            ]
+          },
+          "description": "Stores the SharePoint list used by DMP COMMAND to display current operational status information."
+        },
+        "VAR_StatusAgentKey": {
+          "runAfter": {
+            "VAR_StatusListName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "935ac7b5-855f-44ec-9b2a-21a71af01d60"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusAgentKey",
+                "type": "string",
+                "value": "Agent_03_02"
+              }
+            ]
+          },
+          "description": "Stores the unique dashboard identifier of Agent 3.02."
+        },
+        "SCOPE_StatusRow_Update": {
+          "actions": {
+            "GET_StatusRow_Agent_3.02": {
+              "metadata": {
+                "operationMetadataId": "65672b00-7742-45f5-b890-5118f9eafb5f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "@variables('StatusListName')",
+                  "$filter": "AgentKey eq 'Agent_03_02'",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Agent_03_02 dashboard status row.\n"
+            },
+            "UPDATE_StatusRow_Agent_3.02": {
+              "runAfter": {
+                "GET_StatusRow_Agent_3.02": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e2f6e5-5e3d-4557-ac8d-235655899ffe"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "id": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['ID']",
+                  "item/AgentDisplayName": "Status Check",
+                  "item/CurrentStatus/Value": "Operational",
+                  "item/LastUpdateTimestamp": "@utcNow()",
+                  "item/LastRunTimestamp": "@utcNow()\r\n",
+                  "item/LastSuccessTimestamp": "@utcNow()",
+                  "item/LastRunResult/Value": "Succeeded",
+                  "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
+                  "item/LastFailureTimestamp": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureTimestamp']",
+                  "item/LastFailureStep": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureStep']",
+                  "item/LastFailureMessage": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureMessage']",
+                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningTimestamp']",
+                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningStep']",
+                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningMessage']",
+                  "item/OperationMode/Value": "@variables('OperationMode')",
+                  "item/WorkflowPath": "@coalesce(\r\n  variables('ConfigObject')?['WorkflowPathAgent302'],\r\n  'Agent3_StatusCheck'\r\n)",
+                  "item/AgentKey": "Agent_03_02",
+                  "item/CurrentIndicatorMode": "@if(\r\n  equals(variables('IsRealDMP'), true),\r\n  'Present',\r\n  'Absent'\r\n)",
+                  "item/LastRunId": "@workflow()?['run']?['name']",
+                  "item/LastStatusUpdateSource": "Agent_03_02",
+                  "item/StatusSeverity/Value": "Information",
+                  "item/LastHeartbeatTimestamp": "@utcNow()",
+                  "item/StatusMessage": "@concat(\r\n  'Status check completed. AuditTrailExists=',\r\n  string(variables('AuditTrailExists')),\r\n  ' | CounterExists=',\r\n  string(variables('CounterExists')),\r\n  ' | EmergencyReportExists=',\r\n  string(variables('EmergencyReportExists')),\r\n  ' | InternalDomainsExists=',\r\n  string(variables('InternalDomainsExists')),\r\n  ' | ExternalDomainsExists=',\r\n  string(variables('ExternalDomainsExists')),\r\n  ' | IsRealDMP=',\r\n  string(variables('IsRealDMP'))\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Updates the operational dashboard status for Agent 3.02 after completing the current infrastructure status check."
+            }
+          },
+          "runAfter": {
+            "SCOPE_Audit_Trail": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ],
+            "SCOPE_EmergencyReport": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ],
+            "SCOPE_Counter": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ],
+            "SCOPE_DMPMode": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ],
+            "SCOPE_External_Domains": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ],
+            "SCOPE_Internal_Domains": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3a63719-19f6-47c1-a5da-8d4a4a5450a9"
+          },
+          "type": "Scope",
+          "description": "Updates DMP COMMAND dashboard status rows for Agent 3.02 and related infrastructure components."
+        },
+        "VAR_RunStartTicks": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunStartTicks",
+                "type": "integer",
+                "value": "@ticks(utcNow())\r\n"
+              }
+            ]
+          },
+          "description": "Stores run start time for duration calculation."
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

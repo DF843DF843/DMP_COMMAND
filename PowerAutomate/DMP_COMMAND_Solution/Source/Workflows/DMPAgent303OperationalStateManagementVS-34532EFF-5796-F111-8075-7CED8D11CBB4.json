@@ -1,0 +1,787 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedsharepointonline_626f1"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_excelonlinebusiness": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedexcelonlinebusiness_d3ed5"
+        },
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedoffice365_63b83"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "99df5a3a-339f-413e-8caa-293fa9e4b050"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "InitiatedBy",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Eingabe eingeben",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "RequestedAction",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Eingabe eingeben",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1"
+              ]
+            }
+          },
+          "description": "Creates or deletes the Real DMP indicator file Yes.txt."
+        }
+      },
+      "actions": {
+        "VAR_RunStartTicks": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunStartTicks",
+                "type": "integer",
+                "value": "@ticks(utcNow())"
+              }
+            ]
+          },
+          "description": "Stores run start time."
+        },
+        "VAR_AuditOutcome": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditOutcome",
+                "type": "string",
+                "value": "Started"
+              }
+            ]
+          },
+          "description": "Stores run outcome."
+        },
+        "VAR_AuditEvents": {
+          "runAfter": {
+            "VAR_AuditOutcome": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditEvents",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "description": "Buffers audit events."
+        },
+        "VAR_StepCounter": {
+          "runAfter": {
+            "VAR_AuditEvents": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StepCounter",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Counts audit steps."
+        },
+        "VAR_RunPrefix": {
+          "runAfter": {
+            "VAR_StepCounter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunPrefix",
+                "type": "string",
+                "value": "YESCTRL"
+              }
+            ]
+          },
+          "description": "Stores run outcome."
+        },
+        "VAR_WorkflowPath": {
+          "runAfter": {
+            "VAR_RunPrefix": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WorkflowPath",
+                "type": "string",
+                "value": "Agent3_OperationalStateManagement"
+              }
+            ]
+          },
+          "description": "Identifies Agent 3 path."
+        },
+        "VAR_RequestedAction": {
+          "runAfter": {
+            "VAR_WorkflowPath": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RequestedAction",
+                "type": "string",
+                "value": "@triggerBody()?['text_1']"
+              }
+            ]
+          },
+          "description": "New desired CurrentOperationMode value (e.g. PROD_DMP)."
+        },
+        "VAR_InitiatedBy": {
+          "runAfter": {
+            "VAR_RequestedAction": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InitiatedBy",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          },
+          "description": "User who started action."
+        },
+        "VAR_AlertEmailRecipient": {
+          "runAfter": {
+            "VAR_InitiatedBy": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertEmailRecipient",
+                "type": "string",
+                "value": "DMP_Communication_Agent_Team@deutsche-boerse.com"
+              }
+            ]
+          },
+          "description": "Notification recipient.\n"
+        },
+        "RESPOND_Result": {
+          "runAfter": {
+            "SCOPE_AuditTrail_Write": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "title": "Success",
+                  "type": "boolean",
+                  "x-ms-content-hint": "BOOLEAN",
+                  "x-ms-dynamically-added": true
+                },
+                "auditoutcome": {
+                  "title": "AuditOutcome",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "requestedaction": {
+                  "title": "RequestedAction",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "newoperationmode": {
+                  "title": "NewOperationMode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "success": "@equals(variables('AuditOutcome'),'Succeeded')",
+              "auditoutcome": "@{variables('AuditOutcome')}",
+              "requestedaction": "@{variables('RequestedAction')}",
+              "newoperationmode": "@{variables('RequestedAction')}"
+            }
+          },
+          "description": "Returns execution result to Power Apps."
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_StatusAgentKey": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+              "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
+              "$filter": "Active eq 'Yes' and (((Scope eq 'Global') and (Title eq 'CurrentOperationMode' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox')) or (Scope eq 'Agent3_03') or (Scope eq 'Agent3_All'))",
+              "$orderby": "Title asc",
+              "$top": 5000
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Loads active DMP COMMAND configuration items."
+        },
+        "FILTER_Config_CurrentOperationMode": {
+          "runAfter": {
+            "GET_DMP_Command_Configuration": [
+              "Succeeded"
+            ]
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "where": "@equals(item()?['Title'],'CurrentOperationMode')"
+          },
+          "description": "Finds current DMP COMMAND operation mode."
+        },
+        "VAR_OperationMode": {
+          "runAfter": {
+            "FILTER_Config_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationMode",
+                "type": "string",
+                "value": "@coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], 'PROD_NODMP')"
+              }
+            ]
+          },
+          "description": "Stores current DMP COMMAND operation mode."
+        },
+        "Select_ConfigEntries": {
+          "runAfter": {
+            "VAR_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "select": "@concat(\n  ',',\n  '\"',\n  replace(coalesce(item()?['Title'], ''), '\"', concat(decodeUriComponent('%5C'), '\"')),\n  '\":\"',\n  replace(\n    replace(\n      replace(\n        replace(\n          coalesce(\n            if(\n              equals(variables('OperationMode'), 'PROD_NODMP'),\n              item()?['Value_PROD_NODMP'],\n              if(\n                equals(variables('OperationMode'), 'PROD_DMP'),\n                item()?['Value_x002d_PROD_x0028_DMP_x0029'],\n                if(\n                  equals(variables('OperationMode'), 'SIMU_NODMP'),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_NODMP_x0029'], item()?['Value_x002d_SIMU_x0028_NODMP_x00']),\n                  item()?['Value_x002d_SIMU_x0028_DMP_x0029']\n                )\n              )\n            ),\n            ''\n          ),\n          decodeUriComponent('%5C'),\n          concat(decodeUriComponent('%5C'), decodeUriComponent('%5C'))\n        ),\n        '\"',\n        concat(decodeUriComponent('%5C'), '\"')\n      ),\n      decodeUriComponent('%0D'),\n      ''\n    ),\n    decodeUriComponent('%0A'),\n    concat(decodeUriComponent('%5C'), 'n')\n  ),\n  '\"'\n)"
+          },
+          "description": "Maps each configuration row to a mode-resolved JSON key-value fragment, replacing the slow per-row loop with a single non-looping data operation."
+        },
+        "CMP_ConfigJsonText": {
+          "runAfter": {
+            "Select_ConfigEntries": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('{\"dummy\":\"\"', join(body('Select_ConfigEntries'), ''), '}')",
+          "description": "Completes the configuration JSON text by wrapping all resolved property fragments in braces."
+        },
+        "CMP_ConfigObject": {
+          "runAfter": {
+            "CMP_ConfigJsonText": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@json(outputs('CMP_ConfigJsonText'))",
+          "description": "Converts the generated configuration JSON text into the central configuration object for this run."
+        },
+        "SET_WorkflowPath_From_Config": {
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "WorkflowPath",
+            "value": "@coalesce(\r\n  outputs('CMP_ConfigObject')?['WorkflowPathAgent303'],\r\n  'Agent3_OperationalStateManagement'\r\n)\r\n"
+          },
+          "description": "Sets WorkflowPath from configuration object."
+        },
+        "SET_AlertEmailRecipient_From_Config": {
+          "runAfter": {
+            "SET_WorkflowPath_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertEmailRecipient",
+            "value": "@coalesce(\n  outputs('CMP_ConfigObject')?['AlertEmailRecipient'],\n  'DMP_Communication_Agent_Team@deutsche-boerse.com'\n)"
+          },
+          "description": "Sets AlertEmailRecipient from configuration object."
+        },
+        "UPDATE_ConfigRow_CurrentOperationMode": {
+          "runAfter": {
+            "SET_AlertEmailRecipient_From_Config": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+              "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
+              "id": "@first(body('FILTER_Config_CurrentOperationMode'))?['ID']",
+              "item/CurrentValue": "@variables('RequestedAction')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PatchItem"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Writes the new Operating State selected in the Power App back to the central configuration."
+        },
+        "SET_AuditOutcome_Succeeded": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditOutcome",
+            "value": "Succeeded"
+          },
+          "description": "Marks the run outcome as successful after the configuration update."
+        },
+        "AUDIT_ConfigUpdate_Success": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditEvents",
+            "value": {
+              "TimestampUtc": "@{utcNow()}",
+              "RunId": "@{workflow()?['run']?['name']}",
+              "MessageId": "",
+              "WorkflowPath": "@{variables('WorkflowPath')}",
+              "StepName": "UpdateOperationMode",
+              "StepStatus": "Succeeded",
+              "Flow ID": "",
+              "KeyOutput": "@{if(\r\n  equals(coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], ''), variables('RequestedAction')),\r\n  'No change - requested operational mode already active',\r\n  concat('Switch from ', coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], '(unknown)'), ' to ', variables('RequestedAction'))\r\n)}",
+              "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')}",
+              "ActionType": "Write",
+              "Direction": "Internal",
+              "Recipient": "DMP COMMAND GUI",
+              "SubjectOut": "",
+              "TargetMessageId": "",
+              "TargetFolderName": "",
+              "TargetFolderId": "",
+              "MatchedDomain": "",
+              "Decision": "operation_mode_updated",
+              "Sender": "@{variables('InitiatedBy')}",
+              "SenderDomain": ""
+            }
+          },
+          "description": "Buffers the successful Operating State update as an audit event."
+        },
+        "AUDIT_ConfigUpdate_Failure": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Failed",
+              "TimedOut",
+              "Skipped"
+            ]
+          },
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditEvents",
+            "value": {
+              "TimestampUtc": "@{utcNow()}",
+              "RunId": "@{workflow()?['run']?['name']}",
+              "MessageId": "",
+              "WorkflowPath": "@{variables('WorkflowPath')}",
+              "StepName": "UpdateOperationMode",
+              "StepStatus": "Failed",
+              "Flow ID": "",
+              "KeyOutput": "No mode change w/failure",
+              "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')}",
+              "ActionType": "Write",
+              "Direction": "Internal",
+              "Recipient": "DMP COMMAND GUI",
+              "SubjectOut": "",
+              "TargetMessageId": "",
+              "TargetFolderName": "",
+              "TargetFolderId": "",
+              "MatchedDomain": "",
+              "Decision": "operation_mode_update_failed",
+              "Sender": "@{variables('InitiatedBy')}",
+              "SenderDomain": ""
+            }
+          },
+          "description": "Buffers the failed Operating State update as an audit event."
+        },
+        "SET_AuditOutcome_Failed": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Failed",
+              "TimedOut",
+              "Skipped"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditOutcome",
+            "value": "Failed"
+          },
+          "description": "Marks the run outcome as failed when the configuration update did not succeed."
+        },
+        "SCOPE_AuditTrail_Write": {
+          "runAfter": {
+            "SET_AuditOutcome_Succeeded": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SET_AuditOutcome_Failed": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Scope",
+          "description": "Writes buffered audit events and updates the Agent_03_03 dashboard status record.",
+          "actions": {
+            "WRITE_RunSummary_To_AuditTrail": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                  "dateTimeFormat": "ISO 8601",
+                  "item/TimestampUtc": "@utcNow()",
+                  "item/RunId": "@workflow()?['run']?['name']",
+                  "item/WorkflowPath": "@variables('WorkflowPath')",
+                  "item/StepName": "RunSummary",
+                  "item/StepStatus": "@variables('AuditOutcome')",
+                  "item/KeyOutput": "@if(\r\n  equals(coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], ''), variables('RequestedAction')),\r\n  'No change - requested operational mode already active',\r\n  concat('Switch from ', coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], '(unknown)'), ' to ', variables('RequestedAction'))\r\n)",
+                  "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000),'0.00')",
+                  "item/ActionType": "Summary",
+                  "item/Direction": "Internal",
+                  "item/Recipient": "DMP COMMAND GUI",
+                  "item/Decision": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'run_completed',\r\n  'run_failed'\r\n)",
+                  "item/Sender": "@variables('InitiatedBy')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "AddRowV2"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Writes the final Agent 3.03 run summary to the central audit trail after the configuration update has completed."
+            },
+            "LOOP_AuditEvents": {
+              "foreach": "@variables('AuditEvents')",
+              "type": "Foreach",
+              "description": "Processes audit buffer.",
+              "actions": {
+                "WRITE_AuditEvent": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                      "dateTimeFormat": "ISO 8601",
+                      "item/TimestampUtc": "@item()?['TimestampUtc']",
+                      "item/RunId": "@item()?['RunId']",
+                      "item/MessageId": "@item()?['MessageId']",
+                      "item/WorkflowPath": "@item()?['WorkflowPath']",
+                      "item/StepName": "@item()?['StepName']",
+                      "item/StepStatus": "@item()?['StepStatus']",
+                      "item/Flow ID": "@item()?['Flow ID']",
+                      "item/KeyOutput": "@item()?['KeyOutput']",
+                      "item/DurationSec": "@item()?['DurationSec']",
+                      "item/ActionType": "@item()?['ActionType']",
+                      "item/Direction": "@item()?['Direction']",
+                      "item/Recipient": "@item()?['Recipient']",
+                      "item/SubjectOut": "@item()?['SubjectOut']",
+                      "item/TargetMessageId": "@item()?['TargetMessageId']",
+                      "item/TargetFolderName": "@item()?['TargetFolderName']",
+                      "item/TargetFolderId": "@item()?['TargetFolderId']",
+                      "item/MatchedDomain": "@item()?['MatchedDomain']",
+                      "item/Decision": "@item()?['Decision']",
+                      "item/Sender": "@item()?['Sender']",
+                      "item/SenderDomain": "@item()?['SenderDomain']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "AddRowV2"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Writes audit event."
+                }
+              }
+            },
+            "GET_StatusRow_Agent_3.03": {
+              "runAfter": {
+                "LOOP_AuditEvents": [
+                  "Succeeded"
+                ],
+                "WRITE_RunSummary_To_AuditTrail": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "$filter": "AgentKey eq 'Agent_03_03'",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Agent_03_03 dashboard status record from DMP Command Agent Status."
+            },
+            "UPDATE_StatusRow_Agent_3.03": {
+              "runAfter": {
+                "GET_StatusRow_Agent_3.03": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "id": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['ID']",
+                  "item/Title": "Agent_03_03",
+                  "item/AgentDisplayName": "Operational State Management",
+                  "item/CurrentStatus/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Operational',\r\n  'Failed'\r\n)",
+                  "item/LastUpdateTimestamp": "@utcNow()",
+                  "item/LastRunTimestamp": "@utcNow()",
+                  "item/LastSuccessTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  utcNow(),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastSuccessTimestamp']\r\n)",
+                  "item/LastRunResult/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Succeeded',\r\n  'Failed'\r\n)",
+                  "item/LastRunDurationSec": "@formatNumber(\r\n  div(\r\n    float(\r\n      sub(\r\n        ticks(utcNow()),\r\n        variables('RunStartTicks')\r\n      )\r\n    ),\r\n    10000000\r\n  ),\r\n  '0.00'\r\n)",
+                  "item/LastFailureTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureTimestamp'],\r\n  utcNow()\r\n)",
+                  "item/LastFailureStep": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureStep'],\r\n  'UpdateOperationMode'\r\n)",
+                  "item/LastFailureMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureMessage'],\r\n  concat(\r\n    'Agent 3.03 did not complete with Succeeded. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)",
+                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningTimestamp']",
+                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningStep']",
+                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningMessage']",
+                  "item/OperationMode/Value": "@variables('OperationMode')",
+                  "item/WorkflowPath": "@variables('WorkflowPath')",
+                  "item/LastRunId": "@workflow()?['run']?['name']",
+                  "item/LastStatusUpdateSource": "Agent_03_03",
+                  "item/StatusSeverity/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Information',\r\n  'Critical'\r\n)",
+                  "item/LastHeartbeatTimestamp": "@utcNow()",
+                  "item/StatusMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  concat(\r\n    'Operating State updated successfully. NewOperationMode=',\r\n    variables('RequestedAction')\r\n  ),\r\n  concat(\r\n    'Operating State update failed or ended without confirmed success. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Updates the Agent_03_03 dashboard status record with the current run outcome."
+            }
+          }
+        },
+        "VAR_StatusListName": {
+          "runAfter": {
+            "VAR_AlertEmailRecipient": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusListName",
+                "type": "string",
+                "value": "DMP Command Agent Status"
+              }
+            ]
+          },
+          "description": "Stores the SharePoint list used by DMP COMMAND to display current operational status information.\n"
+        },
+        "VAR_StatusAgentKey": {
+          "runAfter": {
+            "VAR_StatusListName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "82af128e-f6f2-4f15-aa99-58af297b5bb1"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusAgentKey",
+                "type": "string",
+                "value": "Agent_03_03"
+              }
+            ]
+          },
+          "description": "Stores the unique dashboard identifier of Agent 3.03.\n"
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,50 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+App:
+  Properties:
+    OnStart: |-
+      =//Variables Declaration
+      Set(varConfirmVisible,false);
+      Set(varPendingAction,"");
+      Set(varIsRealDMP,false);
+      Set(varRequestedMode,false);
+      Set(varSuppressToggleEvents,false);
+      Set(varStartDMPStatusRefresh,false);
+
+      Set(varEmergencyReportExists,false);
+      Set(varEmergencyReportLastModified,"");
+
+      Set(varInternalDomainsExists,false);
+      Set(varInternalDomainsCount,0);
+      Set(varInternalDomainsLastModified,"");
+
+      Set(varExternalDomainsExists,false);
+      Set(varExternalDomainsCount,0);
+      Set(varExternalDomainsLastModified,"");
+
+      Set(varCounterExists,false);
+      Set(varCounterNoDMP,0);
+      Set(varCounterInternalSender,0);
+      Set(varCounterNotEffected,0);
+      Set(varCounterEffected,0);
+      Set(varCounterLastModified,"");
+
+      Set(varAuditTrailExists,false);
+      Set(varAuditRunSummaryCount,0);
+      Set(varAuditWarningCount,0);
+      Set(varAuditFailedCount,0);
+      Set(varAuditLastRunTimestamp,"");
+      Set(varAuditLastSuccessTimestamp,"");
+      Set(varAuditLastFailedTimestamp,"");
+      Set(varAuditLastModified,"");
+
+      Set(varEmergencyReportUploadResult,Blank());
+      Set(varDarkMode,true)
+    StartScreen: =scrHome
+    Theme: =PowerAppsTheme

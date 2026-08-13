@@ -1,0 +1,2434 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedsharepointonline_626f1"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_excelonlinebusiness": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedexcelonlinebusiness_d3ed5"
+        },
+        "api": {
+          "name": "shared_excelonlinebusiness"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedoffice365_63b83"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "df86ed25-ab93-46e0-90c5-e9aad7199fc1"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "InitiatedBy",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Eingabe eingeben",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "file": {
+                  "title": "EmergencyReportFile",
+                  "type": "object",
+                  "x-ms-dynamically-added": true,
+                  "description": "",
+                  "x-ms-content-hint": "FILE",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentBytes": {
+                      "type": "string",
+                      "format": "byte"
+                    }
+                  }
+                }
+              },
+              "required": [
+                "text"
+              ]
+            }
+          },
+          "description": "Called from DMP COMMAND.  Receives an Excel file selected by the user. Validates the file. Stores it as \"Emergency Report.xlsx\" in the Emergency_Report_Storage folder. Overwrites existing file if present. Creates audit trail entries. Sends alert e-ma"
+        }
+      },
+      "actions": {
+        "VAR_RunStartTicks": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunStartTicks",
+                "type": "integer",
+                "value": "@ticks(utcNow())"
+              }
+            ]
+          },
+          "description": "Stores the start timestamp of the current flow run.\n\nUsed for:\n- Audit duration calculations\n- Processing duration measurements\n- Run summary statistics\n\nNaming convention aligned with Agent 1.\n\nExample:\n2026-07-07 09:42:15 UTC"
+        },
+        "VAR_AuditEvents": {
+          "runAfter": {
+            "VAR_AuditOutcome": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditEvents",
+                "type": "array"
+              }
+            ]
+          },
+          "description": "Stores structured audit events before writing them to AuditTrail.xlsx.\n\nContains:\n\n- TimestampUtc\n- WorkflowPath\n- StepName\n- StepStatus\n- User\n- SourceFileName\n- TargetFileName\n- TargetFolder\n- DurationSec\n- Decision\n\nWritten to AuditTrail.xlsx at the end"
+        },
+        "VAR_StepCounter": {
+          "runAfter": {
+            "VAR_AuditEvents": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StepCounter",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Default = 0\n\nStores sequential process step numbers.\n\nUsed to generate:\nEMREPORT-001\nEMREPORT-002\nEMREPORT-003\n\nProvides chronological order within AuditTrail.xlsx."
+        },
+        "VAR_InitiatedBy": {
+          "runAfter": {
+            "VAR_SourceFileName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InitiatedBy",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          }
+        },
+        "VAR_SourceFileName": {
+          "runAfter": {
+            "VAR_StepCounter": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SourceFileName",
+                "type": "string",
+                "value": "@triggerBody()?['file']?['name']"
+              }
+            ]
+          },
+          "description": "Stores the original uploaded file name received from Power Apps.\nUsed for:\n\n- Extension validation\n- Audit trail\n- Alert mails\n- Power Apps response messages"
+        },
+        "SCOPE_Validation": {
+          "actions": {
+            "CMP_SourceFileName": {
+              "metadata": {
+                "operationMetadataId": "c3f67a30-e44c-4a8c-8308-2bf29f4d2e21"
+              },
+              "type": "Compose",
+              "inputs": "@triggerBody()?['file']?['name']",
+              "description": "Extracts the original filename received from Power Apps.\n\nUsed for:\n- Extension validation\n- Audit trail\n- Error handling\n- Success logging"
+            },
+            "CMP_FileExtension": {
+              "runAfter": {
+                "SET_SourceFileName": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5dc1e779-d114-42e3-83ff-492c7ef24ace"
+              },
+              "type": "Compose",
+              "inputs": "@toLower(last(split(outputs('CMP_SourceFileName'), '.')))",
+              "description": "Extracts the uploaded file extension from the source filename.\nUsed for:\n\n- File type validation\n- Upload rejection\n- User feedback\n- Audit trail"
+            },
+            "IF_FileType_Is_valid": {
+              "actions": {
+                "SCOPE_ProcessEmergencyReport": {
+                  "actions": {
+                    "SCOPE_WorkbookValidation": {
+                      "actions": {
+                        "LIST_Worksheets_WorkFile": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                              "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                              "file": "@body('CREATE_WorkFile')?['Id']"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                              "connectionName": "shared_excelonlinebusiness",
+                              "operationId": "GetAllWorksheets"
+                            },
+                            "authentication": {
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                              "type": "Raw"
+                            }
+                          },
+                          "description": "Reads all worksheets from the newly uploaded Emergency Report workbook."
+                        },
+                        "IF_WorkbookReadable": {
+                          "actions": {
+                            "FILTER_EmergencyContactsWorksheet": {
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@body('LIST_Worksheets_WorkFile')?['value']",
+                                "where": "@equals(item()?['name'], trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName'])))"
+                              },
+                              "description": "Finds the required Emergency Contacts worksheet within the uploaded workbook's worksheet list."
+                            },
+                            "IF_EmergencyContactsWorksheetExists": {
+                              "actions": {
+                                "SET_AppResponseCode_(Success)": {
+                                  "runAfter": {
+                                    "CREATE_EmergencyReport": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "AppResponseCode",
+                                    "value": "OK"
+                                  },
+                                  "description": "Sets the Power Apps response code after successful validation, productive release, and cleanup."
+                                },
+                                "SET_AppResponseMessage_(Success)": {
+                                  "runAfter": {
+                                    "SET_AppResponseCode_(Success)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "AppResponseMessage",
+                                    "value": "Emergency Report uploaded successfully."
+                                  },
+                                  "description": "Sets the Power Apps success message after the Emergency Report was validated and released."
+                                },
+                                "SET_AppResponseStatus_(Success)": {
+                                  "runAfter": {
+                                    "SET_AppResponseMessage_(Success)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "AppResponseStatus",
+                                    "value": "SUCCESS"
+                                  },
+                                  "description": "Sets the Power Apps response status after successful processing."
+                                },
+                                "SET_AuditOutcome_(Success)": {
+                                  "runAfter": {
+                                    "SET_AppResponseStatus_(Success)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "AuditOutcome",
+                                    "value": "Succeeded"
+                                  },
+                                  "description": "Marks the Agent 3 run as succeeded after validation, productive release, and cleanup were completed."
+                                },
+                                "CREATE_EmergencyReport": {
+                                  "runAfter": {
+                                    "IF_EmergencyReportExists": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "e1bcbbc9-d8d4-4671-a33a-e35ac6a6f639"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                      "folderPath": "@trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))",
+                                      "name": "@trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))",
+                                      "body": "@triggerBody()?['file']?['contentBytes']"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
+                                      "operationId": "CreateFile"
+                                    },
+                                    "authentication": {
+                                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                      "type": "Raw"
+                                    }
+                                  },
+                                  "description": "Creates the productive Emergency Report after successful validation.\n\nExecuted only after:\n- workbook readability validation succeeded\n- required worksheet validation succeeded\n- existing productive file was removed if present\n\nThis file is consumed by Ag1",
+                                  "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                      "transferMode": "Chunked"
+                                    }
+                                  }
+                                },
+                                "IF_EmergencyReportExists": {
+                                  "actions": {
+                                    "DELETE_ExistingFile": {
+                                      "metadata": {
+                                        "operationMetadataId": "539b623d-bfac-4276-bed9-226b1de1a5c9"
+                                      },
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                          "id": "@outputs('GET_TargetFileMetadata')?['body/Id']"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                          "connectionName": "shared_sharepointonline",
+                                          "operationId": "DeleteFile"
+                                        },
+                                        "authentication": {
+                                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                          "type": "Raw"
+                                        }
+                                      },
+                                      "description": "Deletes the existing productive Emergency Report before releasing the validated workbook.\n\nExecuted only if the productive target file already exists."
+                                    }
+                                  },
+                                  "runAfter": {
+                                    "GET_TargetFileMetadata": [
+                                      "Succeeded",
+                                      "Failed",
+                                      "TimedOut"
+                                    ]
+                                  },
+                                  "else": {
+                                    "actions": {}
+                                  },
+                                  "expression": {
+                                    "and": [
+                                      {
+                                        "equals": [
+                                          "@actions('GET_TargetFileMetadata').status",
+                                          "Succeeded"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "cce907a4-d539-4a5f-ad90-9f03a791da93"
+                                  },
+                                  "type": "If",
+                                  "description": "Checks whether an existing productive Emergency Report must be removed before releasing the validated workbook."
+                                },
+                                "GET_TargetFileMetadata": {
+                                  "runAfter": {
+                                    "SET_WorkbookValidationPassed_(True)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "ab4d0550-d9ca-446c-9e39-5a0276f6687e"
+                                  },
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                      "path": "@concat(trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder'])), '/', trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName'])))"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
+                                      "operationId": "GetFileMetadataByPath"
+                                    },
+                                    "authentication": {
+                                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                      "type": "Raw"
+                                    }
+                                  },
+                                  "description": "Checks whether the productive Emergency Report already exists in the Agent 1 monitored target folder.\n\nThis action is executed only after successful workbook and worksheet validation."
+                                },
+                                "INC_StepCounter_(FileStored)": {
+                                  "runAfter": {
+                                    "SET_AuditOutcome_(Success)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "28278453-e39c-4766-9920-a375afab325e"
+                                  },
+                                  "type": "IncrementVariable",
+                                  "inputs": {
+                                    "name": "StepCounter",
+                                    "value": 1
+                                  },
+                                  "description": "Increments audit step."
+                                },
+                                "AUDIT_FileStored": {
+                                  "runAfter": {
+                                    "INC_StepCounter_(FileStored)": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "b3606e3a-b910-41d9-b4c8-46788c02a11d"
+                                  },
+                                  "type": "AppendToArrayVariable",
+                                  "inputs": {
+                                    "name": "AuditEvents",
+                                    "value": {
+                                      "TimestampUtc": "@{utcNow()}",
+                                      "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                                      "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' FileStored')}",
+                                      "StepStatus": "Succeeded",
+                                      "User": "@{variables('InitiatedBy')}",
+                                      "SourceFileName": "@{outputs('CMP_SourceFileName')}",
+                                      "TargetFileName": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}",
+                                      "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}"
+                                    }
+                                  },
+                                  "description": "Stores successful upload event."
+                                },
+                                "SET_WorkbookValidationPassed_(True)": {
+                                  "metadata": {
+                                    "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                  },
+                                  "type": "SetVariable",
+                                  "inputs": {
+                                    "name": "WorkbookValidationPassed",
+                                    "value": true
+                                  },
+                                  "description": "Marks the Emergency Report workbook validation as successful."
+                                }
+                              },
+                              "runAfter": {
+                                "FILTER_EmergencyContactsWorksheet": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "else": {
+                                "actions": {
+                                  "SET_AppResponseCode_(MissingWorksheet)": {
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AppResponseCode",
+                                      "value": "MISSING_WORKSHEET"
+                                    }
+                                  },
+                                  "SET_AppResponseMessage_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "SET_AppResponseCode_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AppResponseMessage",
+                                      "value": "Invalid Emergency Report. Worksheet '@{trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName']))}' was not found."
+                                    },
+                                    "description": "Sets the Power Apps response message for the missing-worksheet failure case."
+                                  },
+                                  "SET_AppResponseStatus_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "SET_AppResponseMessage_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AppResponseStatus",
+                                      "value": "FAILED"
+                                    }
+                                  },
+                                  "SET_AuditOutcome_(Failed)_-_MissingWorksheet": {
+                                    "runAfter": {
+                                      "SET_AppResponseStatus_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AuditOutcome",
+                                      "value": "Failed"
+                                    },
+                                    "description": "Sets the overall audit outcome to Failed because the uploaded workbook is invalid."
+                                  },
+                                  "SET_AlertMailSubject_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "SET_AuditOutcome_(Failed)_-_MissingWorksheet": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AlertMailSubject",
+                                      "value": "[Agent 3][FAILED] Emergency Report Upload - Missing Worksheet '@{trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName']))}'"
+                                    },
+                                    "description": "Builds the subject of the missing-worksheet alert mail so it can later be reused for the Sent Items lookup and move operation."
+                                  },
+                                  "AUDIT_MissingWorksheet": {
+                                    "runAfter": {
+                                      "MOVE_WorkFile_To_Rejected_(MissingWorksheet)": [
+                                        "Succeeded",
+                                        "TimedOut",
+                                        "Failed",
+                                        "Skipped"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "01UINNLKM4APUQLKBDD5D3D4MNSIHZDS37": "/Email Hotline/AI_Agent/AuditTrail.xlsx",
+                                      "tableId": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                                      "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD": "/Email Hotline/AI_Agent/AuditTrail.xlsx"
+                                    },
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                                        "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                                        "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                                        "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                                        "item/TimestampUtc": "@utcNow()",
+                                        "item/RunId": "@workflow()?['run']?['name']",
+                                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                                        "item/StepName": "EMREPORT-VALIDATE-MISSING-WORKSHEET",
+                                        "item/StepStatus": "Failed",
+                                        "item/KeyOutput": "Source=@{variables('SourceFileName')} | User=@{variables('InitiatedBy')} | Error=MISSING_WORKSHEET | Worksheet=",
+                                        "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))),10000000),'0.00')",
+                                        "item/ActionType": "Validate",
+                                        "item/Direction": "Internal",
+                                        "item/SubjectOut": "@variables('AlertMailSubject')",
+                                        "item/TargetFolderName": "@trim(string(outputs('CMP_ConfigObject')?['Agent3AlertFolderName']))",
+                                        "item/Decision": "emergency_report_missing_worksheet",
+                                        "item/Sender": "@triggerBody()?['text']",
+                                        "item/SenderDomain": "@last(split(triggerBody()?['text'],'@'))"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                                        "connectionName": "shared_excelonlinebusiness",
+                                        "operationId": "AddRowV2"
+                                      },
+                                      "authentication": {
+                                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                        "type": "Raw"
+                                      }
+                                    },
+                                    "description": "Writes an audit failure event for an uploaded Emergency Report missing the required worksheet."
+                                  },
+                                  "Delay_Before_Get_Sent_Email_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "MAIL_Alert_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "type": "Wait",
+                                    "inputs": {
+                                      "interval": {
+                                        "count": "@int(trim(string(outputs('CMP_ConfigObject')?['WaitSecondsBeforeSentMailSearch'])))",
+                                        "unit": "Second"
+                                      }
+                                    },
+                                    "description": "Waits before searching Sent Items so that the alert mail can be indexed and found reliably."
+                                  },
+                                  "Get_Sent_Email_By_Subject_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "Delay_Before_Get_Sent_Email_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/sentitems/messages?$filter=', encodeUriComponent(concat('contains(subject,''', replace(variables('AlertMailSubject'), '''', ''''''), ''')')), '&$top=1')",
+                                        "Method": "GET"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                        "connectionName": "shared_office365",
+                                        "operationId": "HttpRequest"
+                                      },
+                                      "retryPolicy": {
+                                        "type": "fixed",
+                                        "count": 3,
+                                        "interval": "PT5S"
+                                      },
+                                      "authentication": {
+                                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                        "type": "Raw"
+                                      }
+                                    },
+                                    "description": "Searches Sent Items for the Agent 3 missing worksheet alert mail using the exact subject stored in AlertMailSubject."
+                                  },
+                                  "SET_AlertMessageId__(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "Get_Sent_Email_By_Subject_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                      "name": "AlertMessageId",
+                                      "value": "@body('Get_Sent_Email_By_Subject_(MissingWorksheet)')?['value']?[0]?['id']"
+                                    }
+                                  },
+                                  "Move_Email_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "SET_AlertMessageId__(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "metadata": {
+                                      "operationMetadataId": "ac37cbbf-189a-4e3e-aaed-b01fb9fb0297"
+                                    },
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/messages/', variables('AlertMessageId'), '/move')",
+                                        "Method": "POST",
+                                        "CustomHeader1": "Content-Type: application/json",
+                                        "Body": "{\n  \"destinationId\": \"@{variables('AlertTargetFolderId')}\"\n}",
+                                        "ContentType": "application/json"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                        "connectionName": "shared_office365",
+                                        "operationId": "HttpRequest"
+                                      },
+                                      "retryPolicy": {
+                                        "type": "fixed",
+                                        "count": 3,
+                                        "interval": "PT5S"
+                                      },
+                                      "authentication": {
+                                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                        "type": "Raw"
+                                      }
+                                    },
+                                    "description": "Moves the Agent 3 alert mail from Sent Items to the Agent 3 Alerts folder."
+                                  },
+                                  "MOVE_WorkFile_To_Rejected_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "SET_AlertMailSubject_(MissingWorksheet)": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                        "parameters/sourceFileId": "@outputs('GET_WorkFileMetadata')?['body/Id']",
+                                        "parameters/destinationDataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                        "parameters/destinationFolderPath": "@trim(string(outputs('CMP_ConfigObject')?['RejectedFolderAgent3']))",
+                                        "parameters/nameConflictBehavior": 2
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                        "connectionName": "shared_sharepointonline",
+                                        "operationId": "MoveFileAsync"
+                                      },
+                                      "authentication": {
+                                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                        "type": "Raw"
+                                      }
+                                    },
+                                    "description": "Moves workbooks without the required worksheet to the Agent 3 rejected folder.\n\nPreserves validation evidence and audit traceability."
+                                  },
+                                  "MAIL_Alert_(MissingWorksheet)": {
+                                    "runAfter": {
+                                      "AUDIT_MissingWorksheet": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "type": "OpenApiConnection",
+                                    "inputs": {
+                                      "parameters": {
+                                        "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                                        "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                                        "emailMessage/Subject": "@variables('AlertMailSubject')",
+                                        "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Emergency Report upload rejected.</strong></b></p><p class=\"editor-paragraph\"><br>The uploaded file was not processed because the file doesn't contain the required worksheet '@{trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName']))}'.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Status:</strong></b> @{variables('AppResponseStatus')}<br><b><strong class=\"editor-text-bold\">Code:</strong></b> @{variables('AppResponseCode')}<br><b><strong class=\"editor-text-bold\">Message:</strong></b> @{variables('AppResponseMessage')}<br><b><strong class=\"editor-text-bold\">Uploaded file:</strong></b> @{variables('SourceFileName')}<br><b><strong class=\"editor-text-bold\">Expected file type:</strong></b> .xlsx<br><b><strong class=\"editor-text-bold\">Target file:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}<br><b><strong class=\"editor-text-bold\">Target folder:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}<br><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Triggered by:</strong></b> @{triggerBody()?['text']}<br><br>No Emergency Report was stored.</p>",
+                                        "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                                      },
+                                      "host": {
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                        "connectionName": "shared_office365",
+                                        "operationId": "SharedMailboxSendEmailV2"
+                                      },
+                                      "authentication": {
+                                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                        "type": "Raw"
+                                      }
+                                    },
+                                    "description": "Sends a warning mail when the uploaded workbook is readable but does not contain the mandatory worksheet.\n\nNo productive Emergency Report is released in this case."
+                                  }
+                                }
+                              },
+                              "expression": {
+                                "and": [
+                                  {
+                                    "greater": [
+                                      "@length(body('FILTER_EmergencyContactsWorksheet'))",
+                                      0
+                                    ]
+                                  }
+                                ]
+                              },
+                              "type": "If"
+                            }
+                          },
+                          "runAfter": {
+                            "LIST_Worksheets_WorkFile": [
+                              "Succeeded",
+                              "Failed",
+                              "TimedOut"
+                            ]
+                          },
+                          "else": {
+                            "actions": {
+                              "SET_AppResponseCode_(InvalidWorkbook)": {
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AppResponseCode",
+                                  "value": "INVALID_WORKBOOK"
+                                }
+                              },
+                              "SET_AppResponseMessage_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "SET_AppResponseCode_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AppResponseMessage",
+                                  "value": "Invalid Emergency Report. Workbook could not be read."
+                                },
+                                "description": "Sets the Power Apps response message for the invalid-workbook failure case."
+                              },
+                              "SET_AppResponseStatus_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "SET_AppResponseMessage_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AppResponseStatus",
+                                  "value": "FAILED"
+                                }
+                              },
+                              "SET_AuditOutcome_(Failed)_-_Invalid_Workbook": {
+                                "runAfter": {
+                                  "SET_AppResponseStatus_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AuditOutcome",
+                                  "value": "Failed"
+                                },
+                                "description": "Sets the overall audit outcome to Failed because the uploaded workbook is invalid."
+                              },
+                              "SET_AlertMailSubject_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "SET_AuditOutcome_(Failed)_-_Invalid_Workbook": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AlertMailSubject",
+                                  "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid Workbook"
+                                },
+                                "description": "Builds the subject of the invalid-workbook alert mail so it can later be reused for the Sent Items lookup and move operation."
+                              },
+                              "AUDIT_InvalidWorkbook": {
+                                "runAfter": {
+                                  "MOVE_WorkFile_To_Rejected_(InvalidWorkbook)": [
+                                    "Succeeded",
+                                    "TimedOut",
+                                    "Skipped",
+                                    "Failed"
+                                  ]
+                                },
+                                "metadata": {
+                                  "01UINNLKM4APUQLKBDD5D3D4MNSIHZDS37": "/Email Hotline/AI_Agent/AuditTrail.xlsx",
+                                  "tableId": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                                  "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD": "/Email Hotline/AI_Agent/AuditTrail.xlsx"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                                    "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                                    "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                                    "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                                    "dateTimeFormat": "ISO 8601",
+                                    "item/TimestampUtc": "@utcNow()",
+                                    "item/RunId": "@workflow()?['run']?['name']",
+                                    "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                                    "item/StepName": "EMREPORT-VALIDATE-INVALID-WORKBOOK",
+                                    "item/StepStatus": "Failed",
+                                    "item/KeyOutput": "Source=@{variables('SourceFileName')} | User=@{variables('InitiatedBy')} | Error=INVALID_WORKBOOK | WorkFile=@{variables('WorkFileName')}",
+                                    "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))),10000000),'0.00')",
+                                    "item/ActionType": "Validate",
+                                    "item/Direction": "Internal",
+                                    "item/SubjectOut": "@variables('AlertMailSubject')",
+                                    "item/TargetFolderName": "@trim(string(outputs('CMP_ConfigObject')?['Agent3AlertFolderName']))",
+                                    "item/Decision": "emergency_report_invalid_workbook",
+                                    "item/Sender": "@triggerBody()?['text']",
+                                    "item/SenderDomain": "@last(split(triggerBody()?['text'],'@'))"
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                                    "connectionName": "shared_excelonlinebusiness",
+                                    "operationId": "AddRowV2"
+                                  },
+                                  "authentication": {
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                    "type": "Raw"
+                                  }
+                                },
+                                "description": "Writes an audit failure event for an uploaded Emergency Report that could not be read as a valid workbook."
+                              },
+                              "Delay_Before_Get_Sent_Email_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "MAIL_Alert_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "type": "Wait",
+                                "inputs": {
+                                  "interval": {
+                                    "count": "@int(trim(string(outputs('CMP_ConfigObject')?['WaitSecondsBeforeSentMailSearch'])))",
+                                    "unit": "Second"
+                                  }
+                                },
+                                "description": "Waits before searching Sent Items so that the alert mail can be indexed and found reliably."
+                              },
+                              "Get_Sent_Email_By_Subject_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "Delay_Before_Get_Sent_Email_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/sentitems/messages?$filter=', encodeUriComponent(concat('contains(subject,''', replace(variables('AlertMailSubject'), '''', ''''''), ''')')), '&$top=1')",
+                                    "Method": "GET"
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                    "connectionName": "shared_office365",
+                                    "operationId": "HttpRequest"
+                                  },
+                                  "retryPolicy": {
+                                    "type": "fixed",
+                                    "count": 3,
+                                    "interval": "PT5S"
+                                  },
+                                  "authentication": {
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                    "type": "Raw"
+                                  }
+                                },
+                                "description": "Searches Sent Items for the Agent 3 invalid workbook alert mail using the exact subject stored in AlertMailSubject."
+                              },
+                              "SET_AlertMessageId__(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "Get_Sent_Email_By_Subject_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                                },
+                                "type": "SetVariable",
+                                "inputs": {
+                                  "name": "AlertMessageId",
+                                  "value": "@body('Get_Sent_Email_By_Subject_(InvalidWorkbook)')?['value']?[0]?['id']"
+                                }
+                              },
+                              "Move_Email_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "SET_AlertMessageId__(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "metadata": {
+                                  "operationMetadataId": "ac37cbbf-189a-4e3e-aaed-b01fb9fb0297"
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/messages/', variables('AlertMessageId'), '/move')",
+                                    "Method": "POST",
+                                    "CustomHeader1": "Content-Type: application/json",
+                                    "Body": "{\n  \"destinationId\": \"@{variables('AlertTargetFolderId')}\"\n}",
+                                    "ContentType": "application/json"
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                    "connectionName": "shared_office365",
+                                    "operationId": "HttpRequest"
+                                  },
+                                  "retryPolicy": {
+                                    "type": "fixed",
+                                    "count": 3,
+                                    "interval": "PT5S"
+                                  },
+                                  "authentication": {
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                    "type": "Raw"
+                                  }
+                                },
+                                "description": "Moves the Agent 3 alert mail from Sent Items to the Agent 3 Alerts folder."
+                              },
+                              "MOVE_WorkFile_To_Rejected_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "SET_AlertMailSubject_(InvalidWorkbook)": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                    "parameters/sourceFileId": "@outputs('GET_WorkFileMetadata')?['body/Id']",
+                                    "parameters/destinationDataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                    "parameters/destinationFolderPath": "@trim(string(outputs('CMP_ConfigObject')?['RejectedFolderAgent3']))",
+                                    "parameters/nameConflictBehavior": 2
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                    "connectionName": "shared_sharepointonline",
+                                    "operationId": "MoveFileAsync"
+                                  },
+                                  "authentication": {
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                    "type": "Raw"
+                                  }
+                                },
+                                "description": "Moves the uploaded workbook to the Agent 3 rejected folder.\n\nPreserves validation evidence and enables later investigation of invalid workbook submissions."
+                              },
+                              "MAIL_Alert_(InvalidWorkbook)": {
+                                "runAfter": {
+                                  "AUDIT_InvalidWorkbook": [
+                                    "Succeeded"
+                                  ]
+                                },
+                                "type": "OpenApiConnection",
+                                "inputs": {
+                                  "parameters": {
+                                    "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                                    "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                                    "emailMessage/Subject": "@variables('AlertMailSubject')",
+                                    "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Emergency Report upload rejected.</strong></b></p><p class=\"editor-paragraph\"><br>The uploaded file was not processed because the file is no valid Excel file.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Status:</strong></b> @{variables('AppResponseStatus')}<br><b><strong class=\"editor-text-bold\">Code:</strong></b> @{variables('AppResponseCode')}<br><b><strong class=\"editor-text-bold\">Message:</strong></b> @{variables('AppResponseMessage')}<br><b><strong class=\"editor-text-bold\">Uploaded file:</strong></b> @{variables('SourceFileName')}<br><b><strong class=\"editor-text-bold\">Expected file type:</strong></b> .xlsx<br><b><strong class=\"editor-text-bold\">Target file:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}<br><b><strong class=\"editor-text-bold\">Target folder:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}<br><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Triggered by:</strong></b> @{triggerBody()?['text']}<br><br>No Emergency Report was stored.</p>",
+                                    "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                                  },
+                                  "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                    "connectionName": "shared_office365",
+                                    "operationId": "SharedMailboxSendEmailV2"
+                                  },
+                                  "authentication": {
+                                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                    "type": "Raw"
+                                  }
+                                },
+                                "description": "Sends a warning mail when the uploaded Emergency Report has an invalid file content."
+                              }
+                            }
+                          },
+                          "expression": {
+                            "and": [
+                              {
+                                "equals": [
+                                  "@actions('LIST_Worksheets_WorkFile').status",
+                                  "Succeeded"
+                                ]
+                              }
+                            ]
+                          },
+                          "type": "If",
+                          "description": "Checks whether the temporary workbook can be read by Excel Online.\n\nIf the worksheet list action fails or times out, the uploaded file is treated as an invalid workbook."
+                        }
+                      },
+                      "type": "Scope",
+                      "description": "Validates whether the uploaded file is a readable Excel workbook and contains all mandatory worksheets."
+                    }
+                  },
+                  "runAfter": {
+                    "GET_WorkFileMetadata": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "e1300567-23ba-4907-a0f8-4693fc80f2b9"
+                  },
+                  "type": "Scope",
+                  "description": "Processes the uploaded Emergency Report.\n\nThis scope:\n- creates a temporary work file\n- validates workbook readability\n- validates the mandatory worksheet\n- releases the file to the productive target folder only after successful validation\n- prevents inval"
+                },
+                "SCOPE_Audit_Success": {
+                  "actions": {
+                    "SET_AuditOutcome_(Succeeded)": {
+                      "metadata": {
+                        "operationMetadataId": "7de65d38-b2d0-45cd-9253-b197513eed15"
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "AuditOutcome",
+                        "value": "Succeeded"
+                      },
+                      "description": "Marks flow as successful."
+                    }
+                  },
+                  "runAfter": {
+                    "SCOPE_WorkFileCleanup_CurrentRun": [
+                      "Failed",
+                      "Succeeded",
+                      "TimedOut"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "17c925f9-a633-4277-9e63-fe564f43515c"
+                  },
+                  "type": "Scope",
+                  "description": "Creates audit record after successful file storage."
+                },
+                "SCOPE_AuditTrail_Write": {
+                  "actions": {
+                    "LOOP_AuditEvents": {
+                      "foreach": "@variables('AuditEvents')",
+                      "actions": {
+                        "WRITE_AuditEvent": {
+                          "metadata": {
+                            "01UINNLKM4APUQLKBDD5D3D4MNSIHZDS37": "/Email Hotline/AI_Agent/AuditTrail.xlsx",
+                            "tableId": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                            "operationMetadataId": "16a0019b-2acd-4011-a1e0-b0e5ddca13c2",
+                            "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD": "/Email Hotline/AI_Agent/AuditTrail.xlsx"
+                          },
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                              "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                              "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                              "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                              "dateTimeFormat": "ISO 8601",
+                              "item/TimestampUtc": "@item()?['TimestampUtc']",
+                              "item/RunId": "@workflow()?['run']?['name']",
+                              "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                              "item/StepName": "@item()?['StepName']",
+                              "item/StepStatus": "@item()?['StepStatus']",
+                              "item/KeyOutput": "@concat( 'Source=', outputs('CMP_SourceFileName'), ' | Target=', trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName'])) )",
+                              "item/DurationSec": "@formatNumber( div( float( sub( ticks(utcNow()), variables('RunStartTicks') ) ), 10000000 ), '0.00' )",
+                              "item/ActionType": "Write",
+                              "item/Direction": "Internal",
+                              "item/TargetFolderName": "@trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))",
+                              "item/Decision": "emergency_report_uploaded",
+                              "item/Sender": "@variables('InitiatedBy')",
+                              "item/SenderDomain": "@last( split( variables('InitiatedBy'), '@' ) )"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                              "connectionName": "shared_excelonlinebusiness",
+                              "operationId": "AddRowV2"
+                            },
+                            "authentication": {
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                              "type": "Raw"
+                            }
+                          },
+                          "description": "Writes audit event to AuditTrail."
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "c84b9d0d-140b-4982-8ad6-9b1bf643119d"
+                      },
+                      "type": "Foreach",
+                      "description": "Processes buffered audit events."
+                    }
+                  },
+                  "runAfter": {
+                    "SCOPE_Audit_Success": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1787744c-6048-4648-a259-823a038b55b3"
+                  },
+                  "type": "Scope",
+                  "description": "Writes audit records."
+                },
+                "CREATE_WorkFile": {
+                  "metadata": {
+                    "operationMetadataId": "e1bcbbc9-d8d4-4671-a33a-e35ac6a6f639"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "folderPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkFolderAgent3']))",
+                      "name": "@variables('WorkFileName')",
+                      "body": "@triggerBody()?['file']?['contentBytes']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "CreateFile"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Creates a temporary validation workbook in the Agent 3 work folder.\n\nThe file is used only for:\n- workbook readability validation\n- worksheet validation\n- controlled processing\n\nThe file is not consumed by Agent 1 and must be deleted after processing.",
+                  "runtimeConfiguration": {
+                    "contentTransfer": {
+                      "transferMode": "Chunked"
+                    }
+                  }
+                },
+                "GET_WorkFileMetadata": {
+                  "runAfter": {
+                    "CREATE_WorkFile": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "path": "@outputs('CREATE_WorkFile')?['body/Path']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetFileMetadataByPath"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Retrieves SharePoint file metadata and identifier for the temporary Agent 3 work file.\n\nUsed for move, delete and audit operations."
+                },
+                "SCOPE_WorkFileCleanup_CurrentRun": {
+                  "actions": {
+                    "IF_CleanupRequired_CurrentRun": {
+                      "actions": {
+                        "HTTP_Recycle_WorkFile_CurrentRun": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                              "parameters/method": "POST",
+                              "parameters/uri": "@concat(\n  '_api/web/GetFileByServerRelativePath(decodedUrl=''',\n  replace(\n    concat(\n      '/teams/GO365_DMPCommunication',\n      trim(string(outputs('CMP_ConfigObject')?['WorkFolderAgent3'])),\n      '/',\n      variables('WorkFileName')\n    ),\n    '''',\n    ''''''\n  ),\n  ''')/Recycle()'\n)",
+                              "parameters/headers": {
+                                "Accept": "application/json;odata=nometadata",
+                                "Content-Type": "application/json;odata=nometadata"
+                              }
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "HttpRequest"
+                            },
+                            "authentication": {
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                              "type": "Raw"
+                            }
+                          },
+                          "description": "Recycles the current Agent 3.01 work file via SharePoint REST."
+                        },
+                        "INC_StepCounter_(CleanupRecycled)": {
+                          "runAfter": {
+                            "HTTP_Recycle_WorkFile_CurrentRun": [
+                              "TimedOut",
+                              "Failed"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "28278453-e39c-4766-9920-a375afab325e"
+                          },
+                          "type": "IncrementVariable",
+                          "inputs": {
+                            "name": "StepCounter",
+                            "value": 1
+                          },
+                          "description": "Increments audit step for recycled work file cleanup."
+                        },
+                        "INC_StepCounter_(CleanupStillLocked)": {
+                          "runAfter": {
+                            "HTTP_Recycle_WorkFile_CurrentRun": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "28278453-e39c-4766-9920-a375afab325e"
+                          },
+                          "type": "IncrementVariable",
+                          "inputs": {
+                            "name": "StepCounter",
+                            "value": 1
+                          },
+                          "description": "Increments audit step for unresolved work file cleanup."
+                        },
+                        "AUDIT_WorkFileCleanupStillLocked": {
+                          "runAfter": {
+                            "INC_StepCounter_(CleanupRecycled)": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "b3606e3a-b910-41d9-b4c8-46788c02a11d"
+                          },
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "AuditEvents",
+                            "value": {
+                              "TimestampUtc": "@{utcNow()}",
+                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                              "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' WorkFileCleanupStillLocked')}",
+                              "StepStatus": "Warning",
+                              "User": "@{variables('InitiatedBy')}",
+                              "SourceFileName": "@{variables('SourceFileName')}",
+                              "TargetFileName": "@{variables('WorkFileName')}",
+                              "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['WorkFolderAgent3']))}"
+                            }
+                          },
+                          "description": "Buffers warning audit event for still locked work file."
+                        },
+                        "AUDIT_WorkFileCleanupRecycled": {
+                          "runAfter": {
+                            "INC_StepCounter_(CleanupStillLocked)": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "b3606e3a-b910-41d9-b4c8-46788c02a11d"
+                          },
+                          "type": "AppendToArrayVariable",
+                          "inputs": {
+                            "name": "AuditEvents",
+                            "value": {
+                              "TimestampUtc": "@{utcNow()}",
+                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                              "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' WorkFileRecycledAfterLock')}",
+                              "StepStatus": "Warning",
+                              "User": "@{variables('InitiatedBy')}",
+                              "SourceFileName": "@{variables('SourceFileName')}",
+                              "TargetFileName": "@{variables('WorkFileName')}",
+                              "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['WorkFolderAgent3']))}"
+                            }
+                          },
+                          "description": "Buffers warning audit event for recycled work file cleanup."
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@variables('AppResponseStatus')",
+                              "SUCCESS"
+                            ]
+                          }
+                        ]
+                      },
+                      "type": "If"
+                    }
+                  },
+                  "runAfter": {
+                    "SCOPE_ProcessEmergencyReport": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Scope",
+                  "description": "Handles cleanup of the current Agent 3.01 work file only."
+                }
+              },
+              "runAfter": {
+                "CMP_FileExtension": [
+                  "Succeeded"
+                ]
+              },
+              "else": {
+                "actions": {
+                  "SET_AuditOutcome_(Failed)_-_Invalid_File_extension_": {
+                    "runAfter": {
+                      "SET_AppResponseStatus_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AuditOutcome",
+                      "value": "Failed"
+                    },
+                    "description": "Sets the overall audit outcome to Failed because the uploaded file extension is invalid."
+                  },
+                  "SET_AppResponseCode_(InvalidExtension)": {
+                    "metadata": {
+                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AppResponseCode",
+                      "value": "INVALID_EXTENSION"
+                    },
+                    "description": "Sets the machine-readable Power Apps response code for invalid file extensions."
+                  },
+                  "SET_AppResponseMessage_(InvalidExtension)": {
+                    "runAfter": {
+                      "SET_AppResponseCode_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AppResponseMessage",
+                      "value": "Invalid file type. Only .xlsx files are allowed."
+                    },
+                    "description": "Sets the user-readable Power Apps response message for invalid file extensions."
+                  },
+                  "SET_AppResponseStatus_(InvalidExtension)": {
+                    "runAfter": {
+                      "SET_AppResponseMessage_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AppResponseStatus",
+                      "value": "FAILED"
+                    },
+                    "description": "Sets the Power Apps response status for invalid file extensions."
+                  },
+                  "AUDIT_InvalidExtension": {
+                    "runAfter": {
+                      "SET_AlertMailSubject_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "01UINNLKM4APUQLKBDD5D3D4MNSIHZDS37": "/Email Hotline/AI_Agent/AuditTrail.xlsx",
+                      "tableId": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                      "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD": "/Email Hotline/AI_Agent/AuditTrail.xlsx"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                        "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                        "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                        "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                        "item/TimestampUtc": "@utcNow()",
+                        "item/RunId": "@workflow()?['run']?['name']",
+                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                        "item/StepName": "EMREPORT-VALIDATE-INVALID-EXTENSION",
+                        "item/StepStatus": "Failed",
+                        "item/KeyOutput": "Source=@{variables('SourceFileName')} | Error=Invalid file type | Allowed=.xlsx",
+                        "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))),10000000),'0.00')",
+                        "item/ActionType": "Validate",
+                        "item/Direction": "Internal",
+                        "item/SubjectOut": "@variables('AlertMailSubject')",
+                        "item/TargetFolderName": "@trim(string(outputs('CMP_ConfigObject')?['Agent3AlertFolderName']))",
+                        "item/Decision": "emergency_report_invalid_extension",
+                        "item/Sender": "@triggerBody()?['text']",
+                        "item/SenderDomain": "@last(split(triggerBody()?['text'],'@'))"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                        "connectionName": "shared_excelonlinebusiness",
+                        "operationId": "AddRowV2"
+                      },
+                      "authentication": {
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                        "type": "Raw"
+                      }
+                    },
+                    "description": "Writes an audit failure event for an uploaded Emergency Report with invalid file extension."
+                  },
+                  "Delay_Before_Get_Sent_Email_(InvalidExtension)": {
+                    "runAfter": {
+                      "MAIL_Alert_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "Wait",
+                    "inputs": {
+                      "interval": {
+                        "count": "@int(trim(string(outputs('CMP_ConfigObject')?['WaitSecondsBeforeSentMailSearch'])))",
+                        "unit": "Second"
+                      }
+                    },
+                    "description": "Waits before searching Sent Items so that the alert mail can be indexed and found reliably."
+                  },
+                  "Get_Sent_Email_By_Subject_(InvalidExtension)": {
+                    "runAfter": {
+                      "Delay_Before_Get_Sent_Email_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/sentitems/messages?$filter=', encodeUriComponent(concat('contains(subject,''', replace(variables('AlertMailSubject'), '''', ''''''), ''')')), '&$top=1')",
+                        "Method": "GET"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                        "connectionName": "shared_office365",
+                        "operationId": "HttpRequest"
+                      },
+                      "retryPolicy": {
+                        "type": "fixed",
+                        "count": 3,
+                        "interval": "PT5S"
+                      },
+                      "authentication": {
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                        "type": "Raw"
+                      }
+                    },
+                    "description": "Searches Sent Items for the Agent 3 invalid-file-type alert mail using the exact subject stored in AlertMailSubject."
+                  },
+                  "SET_AlertMessageId__(InvalidExtension)": {
+                    "runAfter": {
+                      "Get_Sent_Email_By_Subject_(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AlertMessageId",
+                      "value": "@body('Get_Sent_Email_By_Subject_(InvalidExtension)')?['value']?[0]?['id']"
+                    }
+                  },
+                  "Move_Email_(InvalidExtension)": {
+                    "runAfter": {
+                      "SET_AlertMessageId__(InvalidExtension)": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "ac37cbbf-189a-4e3e-aaed-b01fb9fb0297"
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/messages/', variables('AlertMessageId'), '/move')",
+                        "Method": "POST",
+                        "CustomHeader1": "Content-Type: application/json",
+                        "Body": "{\n  \"destinationId\": \"@{variables('AlertTargetFolderId')}\"\n}",
+                        "ContentType": "application/json"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                        "connectionName": "shared_office365",
+                        "operationId": "HttpRequest"
+                      },
+                      "retryPolicy": {
+                        "type": "fixed",
+                        "count": 3,
+                        "interval": "PT5S"
+                      },
+                      "authentication": {
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                        "type": "Raw"
+                      }
+                    },
+                    "description": "Moves the Agent 3 alert mail from Sent Items to the Agent 3 Alerts folder."
+                  },
+                  "MAIL_Alert_(InvalidExtension)": {
+                    "runAfter": {
+                      "AUDIT_InvalidExtension": [
+                        "Succeeded"
+                      ]
+                    },
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                      "parameters": {
+                        "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                        "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                        "emailMessage/Subject": "@variables('AlertMailSubject')",
+                        "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Emergency Report upload rejected.</strong></b></p><p class=\"editor-paragraph\"><br>The uploaded file was not processed because the file extension is invalid.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Status:</strong></b> @{variables('AppResponseStatus')}<br><b><strong class=\"editor-text-bold\">Code:</strong></b> @{variables('AppResponseCode')}<br><b><strong class=\"editor-text-bold\">Message:</strong></b> @{variables('AppResponseMessage')}<br><b><strong class=\"editor-text-bold\">Uploaded file:</strong></b> @{variables('SourceFileName')}<br><b><strong class=\"editor-text-bold\">Expected file type:</strong></b> .xlsx<br><b><strong class=\"editor-text-bold\">Target file:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}<br><b><strong class=\"editor-text-bold\">Target folder:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}<br><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Triggered by:</strong></b> @{triggerBody()?['text']}<br><br>No Emergency Report was stored.</p>",
+                        "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                      },
+                      "host": {
+                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                        "connectionName": "shared_office365",
+                        "operationId": "SharedMailboxSendEmailV2"
+                      },
+                      "authentication": {
+                        "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                        "type": "Raw"
+                      }
+                    },
+                    "description": "Sends a warning mail when the uploaded Emergency Report has an invalid file extension"
+                  },
+                  "SET_AlertMailSubject_(InvalidExtension)": {
+                    "runAfter": {
+                      "SET_AuditOutcome_(Failed)_-_Invalid_File_extension_": [
+                        "Succeeded"
+                      ]
+                    },
+                    "metadata": {
+                      "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+                    },
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "AlertMailSubject",
+                      "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid File Type"
+                    },
+                    "description": "Builds the subject of the invalid-file-type alert mail so it can later be reused for the Sent Items lookup and move operation."
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@outputs('CMP_FileExtension')",
+                      "xlsx"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "585b4a7e-185e-4021-9d9e-78ec0388e681"
+              },
+              "type": "If",
+              "description": "Checks whether the uploaded file has the required .xlsx extension."
+            },
+            "SET_SourceFileName": {
+              "runAfter": {
+                "CMP_SourceFileName": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "SourceFileName",
+                "value": "@outputs('CMP_SourceFileName')"
+              },
+              "description": "tores the uploaded source filename in a variable for consistent reuse."
+            }
+          },
+          "runAfter": {
+            "E-Mail_Folder_creation": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0b9a305a-0703-4400-a631-49978fb3b00a"
+          },
+          "type": "Scope",
+          "description": "Validates all mandatory inputs received from Power Apps.\nChecks:\n- File object received\n- User provided\n- Filename available\n- File extension is supported\nCurrent supported file type:\n- .xlsx\n\nInvalid files are rejected before any SharePoint action is exec"
+        },
+        "VAR_AlertEmailRecipient": {
+          "runAfter": {
+            "VAR_AlertTargetFolderId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertEmailRecipient",
+                "type": "string",
+                "value": "DMP_Communication_Agent_Team@deutsche-boerse.com"
+              }
+            ]
+          },
+          "description": "Default = DMP_Communication_Agent_Team@deutsche-boerse.com\nStores the central DMP communication agent alert recipient.\nAligned with the existing Agent 1 configuration baseline.\nUsed for:\n\nAgent 3 warning mails\nOperational support notification\nUpload valida"
+        },
+        "VAR_AppResponseCode": {
+          "runAfter": {
+            "VAR_AlertMessageId": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AppResponseCode",
+                "type": "string",
+                "value": "UNHANDLED_ERROR"
+              }
+            ]
+          },
+          "description": "Default = UNHANDLED_ERROR\n\nStores the machine-readable response code returned to Power Apps.\n\nUsed for:\n- Power Apps user feedback\n- Error handling\n- Audit correlation"
+        },
+        "VAR_AppResponseStatus": {
+          "runAfter": {
+            "VAR_AppResponseMessage": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AppResponseStatus",
+                "type": "string",
+                "value": "FAILED"
+              }
+            ]
+          },
+          "description": "Default = FAILED\n\nStores the processing result returned to Power Apps.\n\nPossible values:\n- SUCCESS\n- WARNING\n- FAILED\n\nUsed for:\n- Power Apps notification routing\n- Audit outcome mapping\n- User feedback"
+        },
+        "VAR_AppResponseMessage": {
+          "runAfter": {
+            "VAR_AppResponseCode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d0b35c14-7c32-450a-878d-e16f77b7049d"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AppResponseMessage",
+                "type": "string",
+                "value": "Emergency Report processing did not complete."
+              }
+            ]
+          },
+          "description": "Default = Emergency Report processing did not complete.\n\nStores the user-readable response message returned to Power Apps.\n\nUsed for:\n- Power Apps notification\n- Error explanation\n- Operational transparency"
+        },
+        "VAR_AlertMailSubject": {
+          "runAfter": {
+            "VAR_AlertEmailRecipient": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMailSubject",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the subject of the current Agent 3 alert mail.\nUsed for:\n\nSending alert mail\nLocating the sent mail\nMoving alert evidence to the Agent 3 alert folder"
+        },
+        "VAR_AlertMessageId": {
+          "runAfter": {
+            "VAR_AlertMailSubject": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMessageId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the message id of the sent Agent 3 alert mail after it has been located.\nUsed for:\n\nMoving sent alert mail\nAudit evidence\nOperational traceability"
+        },
+        "VAR_AuditOutcome": {
+          "runAfter": {
+            "VAR_WorkbookValidationPassed": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditOutcome",
+                "type": "string",
+                "value": "Started"
+              }
+            ]
+          },
+          "description": "Default = Started\n\nStores the overall outcome of the current Agent 3 execution.\n\nPossible values:\n- Started\n- Succeeded\n- Warning\n- Failed\n\nUsed for:\n- AuditTrail.xlsx\n- Run Summary\n- Alert decision logic"
+        },
+        "VAR_AlertTargetFolderId": {
+          "runAfter": {
+            "VAR_InitiatedBy": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertTargetFolderId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the Outlook folder id of the Agent 3 alert evidence folder.\nUsed for:\n\nMoving alert mails\nAgent 3 evidence handling\nOperational audit trail"
+        },
+        "E-Mail_Folder_creation": {
+          "actions": {
+            "Get_DMP_Mailbox_Parent_Folder_ID": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "4c27da51-20c9-4ffc-9849-6a4ac4619cc5"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders?$filter=displayName eq ''', trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName'])), '''')",
+                  "Method": "GET",
+                  "CustomHeader1": "ConsistencyLevel: eventual",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the processed-mails root folder so that Agent 3 subfolders can later be created and addressed."
+            },
+            "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": {
+              "metadata": {
+                "operationMetadataId": "6962e22c-c4d0-491b-9865-b09b80d54784"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the processed-mails root folder in the shared mailbox if it does not yet exist."
+            },
+            "Create_Mailbox_Subfolder_\"Agent_3_Alerts\"": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Parent_Folder_ID": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6962e22c-c4d0-491b-9865-b09b80d54784"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'], '/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['Agent3AlertFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the dedicated Agent 3 Alerts mailbox subfolder below the processed-mails root folder if it does not yet exist."
+            },
+            "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"Agent_3_Alerts\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a2ab826c-1746-45e9-8638-143e420ce2e6"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent3AlertFolderName'])),\n  ''''\n)",
+                  "Method": "GET",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 3,
+                  "interval": "PT5S"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the Agent 3 Alerts mailbox subfolder so that sent internal Agent 3 mails can later be moved there."
+            },
+            "SET_AlertTargetFolderId": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AlertTargetFolderId",
+                "value": "@body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"')?['value']?[0]?['id']"
+              },
+              "description": "Stores the mailbox folder ID of the Agent 3 Alerts folder.\nUsed for:\n- Moving sent alert mails\n- Audit evidence\n- Operational traceability"
+            }
+          },
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope"
+        },
+        "VAR_WorkbookValidationPassed": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "63336df3-468a-4d47-bcb4-337d86931c90"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WorkbookValidationPassed",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Stores the workbook validation result.\n\nPossible values:\n- true\n- false\n\nUsed for:\n- Workbook validation\n- Worksheet validation\n- App response logic\n- Audit decisions"
+        },
+        "VAR_WorkFileName": {
+          "runAfter": {
+            "VAR_AppResponseStatus": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WorkFileName",
+                "type": "string",
+                "value": "@concat(\n'WORK_',\nworkflow()?['run']?['name'],\n'.xlsx'\n)\n"
+              }
+            ]
+          },
+          "description": "Stores the temporary validation file name.\n\nThe file name is unique per flow run.\n\nUsed for:\n- Temporary workbook creation\n- Workbook validation\n- Worksheet validation\n- Cleanup after processing\n\nExample:\nWORK_<FlowRunId>.xlsx"
+        },
+        "RESPOND_To_PowerApps": {
+          "runAfter": {
+            "SCOPE_StatusRow_Update": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "responsecode": {
+                  "title": "ResponseCode",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "responsemessage": {
+                  "title": "ResponseMessage",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                },
+                "responsestatus": {
+                  "title": "ResponseStatus",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "responsecode": "@{variables('AppResponseCode')}",
+              "responsemessage": "@{variables('AppResponseMessage')}",
+              "responsestatus": "@{variables('AppResponseStatus')}"
+            }
+          },
+          "description": "Returns the Agent 3 processing result to DMP COMMAND.\n\nUsed for:\n- Power Apps success messages\n- Power Apps error messages\n- operational transparency\n- user feedback after upload processing"
+        },
+        "VAR_StatusListName": {
+          "runAfter": {
+            "VAR_WorkFileName": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusListName",
+                "type": "string",
+                "value": "DMP Command Agent Status"
+              }
+            ]
+          },
+          "description": "Stores the SharePoint list used by DMP COMMAND to display current operational status information."
+        },
+        "VAR_StatusAgentKey": {
+          "runAfter": {
+            "VAR_StatusListName": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "StatusAgentKey",
+                "type": "string",
+                "value": "Agent_03_01"
+              }
+            ]
+          },
+          "description": "Stores the unique dashboard identifier of Agent 3.01."
+        },
+        "SCOPE_StatusRow_Update": {
+          "actions": {
+            "GET_StatusRow_Agent_3.01": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "$filter": "AgentKey eq 'Agent_03_01'",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Agent_03_01 dashboard status row."
+            },
+            "GET_StatusRow_EmergencyReport": {
+              "runAfter": {
+                "GET_StatusRow_Agent_3.01": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "$filter": "AgentKey eq 'EmergencyReport'",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Emergency Report dashboard status row."
+            },
+            "UPDATE_StatusRow_Agent_3.01": {
+              "runAfter": {
+                "GET_StatusRow_EmergencyReport": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "id": "@first(body('GET_StatusRow_Agent_3.01')?['value'])?['ID']",
+                  "item/AgentDisplayName": "Emergency Report Management",
+                  "item/CurrentStatus/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Operational',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Failed'\r\n )\r\n)",
+                  "item/LastUpdateTimestamp": "@utcNow()",
+                  "item/LastRunTimestamp": "@utcNow()",
+                  "item/LastSuccessTimestamp": "@utcNow()",
+                  "item/LastRunResult/Value": "Succeeded",
+                  "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
+                  "item/OperationMode/Value": "@first(body('GET_StatusRow_Agent_3.01')?['value'])?['OperationMode']",
+                  "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                  "item/AgentKey": "Agent_03_01",
+                  "item/EmergencyReportPresent/Value": "@if(\r\n  equals(variables('AppResponseStatus'),'SUCCESS'),\r\n  'Yes',\r\n  'No'\r\n)",
+                  "item/WorkbookValidationPassed/Value": "@if(\r\n  variables('WorkbookValidationPassed'),\r\n  'Yes',\r\n  'No'\r\n)",
+                  "item/LastRunId": "@workflow()?['run']?['name']",
+                  "item/LastStatusUpdateSource": "Agent_03_01",
+                  "item/StatusSeverity/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Information',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Critical'\r\n )\r\n)",
+                  "item/LastHeartbeatTimestamp": "@utcNow()",
+                  "item/StatusMessage": "@concat(\r\n 'Emergency Report processing completed. Status=',\r\n variables('AppResponseStatus'),\r\n ' | Code=',\r\n variables('AppResponseCode'),\r\n ' | Message=',\r\n variables('AppResponseMessage')\r\n)\r\n"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Stores the operational dashboard status of Agent 3.01."
+            },
+            "For_each": {
+              "foreach": "@outputs('GET_StatusRow_EmergencyReport')?['body/value']",
+              "actions": {
+                "UPDATE_StatusRow_EmergencyReport": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                      "id": "@first(body('GET_StatusRow_EmergencyReport')?['value'])?['ID']\r\n",
+                      "item/AgentDisplayName": "Emergency Report Infrastructure",
+                      "item/CurrentStatus/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Operational',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Failed'\r\n )\r\n)",
+                      "item/LastUpdateTimestamp": "@utcNow()",
+                      "item/LastRunTimestamp": "@utcNow()",
+                      "item/LastSuccessTimestamp": "@utcNow()",
+                      "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
+                      "item/OperationMode/Value": "@variables('OperationMode')",
+                      "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                      "item/AgentKey": "EmergencyReport",
+                      "item/EmergencyReportPresent/Value": "@if(\r\n  equals(variables('AppResponseStatus'),'SUCCESS'),\r\n  'Yes',\r\n  'No'\r\n)",
+                      "item/WorkbookValidationPassed/Value": "@if(\r\n  variables('WorkbookValidationPassed'),\r\n  'Yes',\r\n  'No'\r\n)",
+                      "item/LastRunId": "@workflow()?['run']?['name']",
+                      "item/LastStatusUpdateSource": "Agent_03_01",
+                      "item/StatusSeverity/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Information',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Critical'\r\n )\r\n)",
+                      "item/LastHeartbeatTimestamp": "@utcNow()",
+                      "item/StatusMessage": "@if(\n equals(variables('AppResponseStatus'),'SUCCESS'),\n concat(\n  'Emergency Report is available. TargetFile=',\n  trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))\n ),\n concat(\n  'Emergency Report upload failed. Code=',\n  variables('AppResponseCode')\n )\n)"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PatchItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Stores the Emergency Report infrastructure status."
+                }
+              },
+              "runAfter": {
+                "UPDATE_StatusRow_Agent_3.01": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Foreach"
+            }
+          },
+          "runAfter": {
+            "SCOPE_Validation": [
+              "Succeeded",
+              "TimedOut",
+              "Skipped",
+              "Failed"
+            ]
+          },
+          "type": "Scope",
+          "description": "Updates DMP COMMAND dashboard status rows for Agent 3.01 and Emergency Report infrastructure."
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+              "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
+              "$filter": "Active eq 'Yes'",
+              "$top": 5000
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Loads active DMP COMMAND configuration items."
+        },
+        "VAR_OperationMode": {
+          "runAfter": {
+            "VAR_StatusAgentKey": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationMode",
+                "type": "string",
+                "value": "PROD_NODMP"
+              }
+            ]
+          },
+          "description": "Stores the current DMP COMMAND operating mode. Default value is PROD_NODMP until the value is resolved from configuration."
+        },
+        "FILTER_Config_CurrentOperationMode": {
+          "runAfter": {
+            "GET_DMP_Command_Configuration": [
+              "Succeeded"
+            ]
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "where": "@equals(item()?['Title'],'CurrentOperationMode')"
+          },
+          "description": "Finds the current DMP COMMAND operation mode configuration item."
+        },
+        "SET_OperationMode": {
+          "runAfter": {
+            "FILTER_Config_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "OperationMode",
+            "value": "@coalesce(first(body('Filter_Config_CurrentOperationMode'))?['CurrentValue'],'PROD_NODMP')"
+          },
+          "description": "Stores the current DMP COMMAND operation mode resolved from DMP Command Configuration."
+        },
+        "SCOPE_ErrorHandling": {
+          "actions": {
+            "SET_AuditOutcome_(Failed)": {
+              "metadata": {
+                "operationMetadataId": "4ee19243-74f2-42f4-b144-d515405a0778"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditOutcome",
+                "value": "Failed"
+              },
+              "description": "Marks run as failed."
+            },
+            "INC_StepCounter_(Failed)": {
+              "runAfter": {
+                "SET_AuditOutcome_(Failed)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e0fc25f0-556d-49e5-a919-cd8f93c96240"
+              },
+              "type": "IncrementVariable",
+              "inputs": {
+                "name": "StepCounter",
+                "value": 1
+              },
+              "description": "Increments audit step."
+            },
+            "AUDIT_Failure": {
+              "runAfter": {
+                "INC_StepCounter_(Failed)": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "2a275d4a-f43c-4f9a-b925-2dd64285247d"
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "AuditEvents",
+                "value": {
+                  "TimestampUtc": "@{utcNow()}",
+                  "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                  "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' Failed')}",
+                  "StepStatus": "Failed",
+                  "User": "@{variables('InitiatedBy')}",
+                  "SourceFileName": "@{outputs('CMP_SourceFileName')}",
+                  "TargetFileName": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}",
+                  "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}"
+                }
+              },
+              "description": "Stores failure event."
+            },
+            "MAIL_Alert_(Audit_Failure)": {
+              "runAfter": {
+                "SET_AlertMailSubject_(Audit_Failure)": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                  "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                  "emailMessage/Subject": "@variables('AlertMailSubject')",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Emergency Report processing failed.</strong></b><br></p><br><p class=\"editor-paragraph\">The uploaded Emergency Report could not be stored in the configured SharePoint target location. The file was not made available for Agent 1 processing. Please review the flow run details and correct the issue.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">User:</strong></b> @{variables('InitiatedBy')}<br><b><strong class=\"editor-text-bold\">Source File:</strong></b> @{outputs('CMP_SourceFileName')}<br><b><strong class=\"editor-text-bold\">Target File:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}<br><b><strong class=\"editor-text-bold\">Target Folder:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}<br><b><strong class=\"editor-text-bold\">RunId:</strong></b> @{workflow()?['run']?['name']}<br><br>This notification was generated automatically by DMP Agent 3 (Emergency Report Management).</p>",
+                  "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Sends technical failure alert from the shared DMP mailbox."
+            },
+            "SET_AlertMailSubject_(Audit_Failure)": {
+              "runAfter": {
+                "AUDIT_Failure": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ba3e1acb-ece6-412a-84e4-c8fe52cd73d3"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AlertMailSubject",
+                "value": "[Agent 3][FAILED] Emergency Report Upload - Technical Failure"
+              }
+            }
+          },
+          "runAfter": {
+            "SCOPE_Validation": [
+              "TimedOut",
+              "Failed"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d68d223e-309b-4b3a-9c0a-04269ebef4b3"
+          },
+          "type": "Scope",
+          "description": "Handles flow failures."
+        },
+        "Select_ConfigEntries": {
+          "runAfter": {
+            "SET_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "select": "@concat(\n  ',',\n  '\"',\n  replace(coalesce(item()?['Title'], ''), '\"', concat(decodeUriComponent('%5C'), '\"')),\n  '\":\"',\n  replace(\n    replace(\n      replace(\n        replace(\n          coalesce(\n            if(\n              equals(variables('OperationMode'), 'PROD_NODMP'),\n              item()?['Value_PROD_NODMP'],\n              if(\n                equals(variables('OperationMode'), 'PROD_DMP'),\n                item()?['Value_x002d_PROD_x0028_DMP_x0029'],\n                if(\n                  equals(variables('OperationMode'), 'SIMU_NODMP'),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_NODMP_x0029'], item()?['Value_x002d_SIMU_x0028_NODMP_x00']),\n                  item()?['Value_x002d_SIMU_x0028_DMP_x0029']\n                )\n              )\n            ),\n            ''\n          ),\n          decodeUriComponent('%5C'),\n          concat(decodeUriComponent('%5C'), decodeUriComponent('%5C'))\n        ),\n        '\"',\n        concat(decodeUriComponent('%5C'), '\"')\n      ),\n      decodeUriComponent('%0D'),\n      ''\n    ),\n    decodeUriComponent('%0A'),\n    concat(decodeUriComponent('%5C'), 'n')\n  ),\n  '\"'\n)"
+          },
+          "description": "Maps each configuration row to a mode-resolved JSON key-value fragment, replacing the slow per-row loop with a single non-looping data operation."
+        },
+        "CMP_ConfigJsonText": {
+          "runAfter": {
+            "Select_ConfigEntries": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('{\"dummy\":\"\"', join(body('Select_ConfigEntries'), ''), '}')",
+          "description": "Completes the configuration JSON text by wrapping all resolved property fragments in braces."
+        },
+        "CMP_ConfigObject": {
+          "runAfter": {
+            "CMP_ConfigJsonText": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@json(outputs('CMP_ConfigJsonText'))",
+          "description": "Converts the generated configuration JSON text into the central Agent 3.01 configuration object used throughout this flow."
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
