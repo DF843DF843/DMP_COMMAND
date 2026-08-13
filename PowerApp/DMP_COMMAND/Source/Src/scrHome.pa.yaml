@@ -771,7 +771,6 @@ Screens:
                                                 HoverFill: =RGBA(255,255,255,0.08)
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
                                                 BorderThickness: =1
-                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 Height: =28
                                                 Width: =60
@@ -789,7 +788,6 @@ Screens:
                                                 HoverFill: =RGBA(0,180,110,1)
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Semibold
                                                 Height: =28
@@ -851,7 +849,6 @@ Screens:
                                                 HoverFill: =RGBA(255,255,255,0.08)
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
                                                 BorderThickness: =1
-                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 Height: =28
                                                 Width: =60
@@ -869,7 +866,6 @@ Screens:
                                                 HoverFill: =RGBA(0,180,110,1)
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Semibold
                                                 Height: =28
@@ -902,7 +898,6 @@ Screens:
                                                       Size: =12
                                                       Align: =Align.Center
                                                       VerticalAlign: =VerticalAlign.Middle
-                                                      DropShadow: =DropShadow.Light
                                                       BorderStyle: =BorderStyle.None
                                                       BorderColor: =RGBA(0,0,0,0)
                                                 - attExternalDomainsReplace:
