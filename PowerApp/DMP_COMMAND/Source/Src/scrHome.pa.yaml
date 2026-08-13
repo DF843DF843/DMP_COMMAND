@@ -223,7 +223,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     Text: ="DMP COMMAND"
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Color: =RGBA(255,255,255,1)
                                     Font: =Font.'Segoe UI'
                                     FontWeight: =FontWeight.Bold
                                     Size: =19
@@ -251,13 +251,14 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutGap: =2
+                              LayoutGap: =18
                             Children:
                               - conKpiCritical:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
+                                    Width: =64
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -290,6 +291,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
+                                    Width: =78
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -322,6 +324,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
+                                    Width: =100
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -360,9 +363,9 @@ Screens:
                                     Size: =14
                                     Align: =Align.Center
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Height: =26
-                                    LayoutMinHeight: =26
-                                    LayoutMaxHeight: =26
+                                    Height: =44
+                                    LayoutMinHeight: =44
+                                    LayoutMaxHeight: =44
                                     Width: =74
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
@@ -435,6 +438,7 @@ Screens:
                               LayoutMaxHeight: =360
                               LayoutDirection: =LayoutDirection.Vertical
                               LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutJustifyContent: =LayoutJustifyContent.Center
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
                               RadiusBottomLeft: =18
@@ -443,205 +447,19 @@ Screens:
                               PaddingBottom: =16
                               PaddingLeft: =12
                               PaddingRight: =12
-                              LayoutGap: =10
                             Children:
-                              - lblHeartbeatTitle:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    Text: ="AGENT HEARTBEAT"
-                                    Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                                    Font: =Font.'Segoe UI'
-                                    FontWeight: =FontWeight.Semibold
-                                    Size: =11
-                                    Align: =Align.Left
-                                    Height: =18
-                                    Width: =Parent.Width
-                                    BorderStyle: =BorderStyle.None
-                                    BorderColor: =RGBA(0,0,0,0)
                               - imgHeartbeatWheel:
                                   Control: Image@2.2.3
                                   Properties:
-                                    Width: =180
-                                    Height: =180
+                                    Width: =328
+                                    Height: =328
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
                                     Image: |-
-                                      ="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='75.68 332.73' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='75.68 332.73' stroke-dashoffset='-81.68' stroke-linecap='round' transform='rotate(-90 90 90)'/><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='75.68 332.73' stroke-dashoffset='-163.36' stroke-linecap='round' transform='rotate(-90 90 90)'/><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,159,10)' stroke-width='20' stroke-dasharray='75.68 332.73' stroke-dashoffset='-245.04' stroke-linecap='round' transform='rotate(-90 90 90)'/><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='75.68 332.73' stroke-dashoffset='-326.73' stroke-linecap='round' transform='rotate(-90 90 90)'/><text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='rgb(0,206,125)'>98%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='rgb(200,195,225)'>SYSTEM HEALTH</text></svg>"
-                              - conHeartbeatLegend:
-                                  Control: GroupContainer@1.5.0
-                                  Variant: AutoLayout
-                                  Properties:
-                                    Fill: =RGBA(0,0,0,0)
-                                    LayoutDirection: =LayoutDirection.Horizontal
-                                    LayoutAlignItems: =LayoutAlignItems.Center
-                                    LayoutGap: =14
-                                    LayoutWrap: =true
-                                  Children:
-                                    - conLegendAgent1:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =6
-                                          Height: =22
-                                          LayoutMinHeight: =22
-                                          LayoutMaxHeight: =22
-                                        Children:
-                                          - dotLegendAgent1:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                Fill: =RGBA(0,206,125,1)
-                                                Width: =14
-                                                Height: =14
-                                                RadiusTopLeft: =7
-                                                RadiusTopRight: =7
-                                                RadiusBottomLeft: =7
-                                                RadiusBottomRight: =7
-                                          - lblLegendAgent1:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="Agent 1"
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Font: =Font.'Segoe UI'
-                                                Size: =11
-                                                Height: =18
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent2:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =6
-                                          Height: =22
-                                          LayoutMinHeight: =22
-                                          LayoutMaxHeight: =22
-                                        Children:
-                                          - dotLegendAgent2:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                Fill: =RGBA(0,206,125,1)
-                                                Width: =14
-                                                Height: =14
-                                                RadiusTopLeft: =7
-                                                RadiusTopRight: =7
-                                                RadiusBottomLeft: =7
-                                                RadiusBottomRight: =7
-                                          - lblLegendAgent2:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="Agent 2"
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Font: =Font.'Segoe UI'
-                                                Size: =11
-                                                Height: =18
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent3:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =6
-                                          Height: =22
-                                          LayoutMinHeight: =22
-                                          LayoutMaxHeight: =22
-                                        Children:
-                                          - dotLegendAgent3:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                Fill: =RGBA(0,206,125,1)
-                                                Width: =14
-                                                Height: =14
-                                                RadiusTopLeft: =7
-                                                RadiusTopRight: =7
-                                                RadiusBottomLeft: =7
-                                                RadiusBottomRight: =7
-                                          - lblLegendAgent3:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="Agent 3"
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Font: =Font.'Segoe UI'
-                                                Size: =11
-                                                Height: =18
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent4:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =6
-                                          Height: =22
-                                          LayoutMinHeight: =22
-                                          LayoutMaxHeight: =22
-                                        Children:
-                                          - dotLegendAgent4:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                Fill: =RGBA(255,159,10,1)
-                                                Width: =14
-                                                Height: =14
-                                                RadiusTopLeft: =7
-                                                RadiusTopRight: =7
-                                                RadiusBottomLeft: =7
-                                                RadiusBottomRight: =7
-                                          - lblLegendAgent4:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="Agent 4"
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Font: =Font.'Segoe UI'
-                                                Size: =11
-                                                Height: =18
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent5:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =6
-                                          Height: =22
-                                          LayoutMinHeight: =22
-                                          LayoutMaxHeight: =22
-                                        Children:
-                                          - dotLegendAgent5:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                Fill: =RGBA(0,206,125,1)
-                                                Width: =14
-                                                Height: =14
-                                                RadiusTopLeft: =7
-                                                RadiusTopRight: =7
-                                                RadiusBottomLeft: =7
-                                                RadiusBottomRight: =7
-                                          - lblLegendAgent5:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="Agent 5"
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Font: =Font.'Segoe UI'
-                                                Size: =11
-                                                Height: =18
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
+                                      =With(
+                                          { vColor: If(varSystemHealthPercent>=80,"rgb(0,206,125)",If(varSystemHealthPercent>=50,"rgb(255,159,10)","rgb(255,69,58)")) },
+                                          "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-opacity='0.18' stroke-width='20'/><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-width='20' stroke-dasharray='" & Text((varSystemHealthPercent/100)*408.407,"0.00","en-US") & " 408.407' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/><text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='" & vColor & "'>" & Text(varSystemHealthPercent,"0") & "%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='rgb(200,195,225)'>SYSTEM HEALTH</text></svg>"
+                                      )
                         - conMiddleColumn:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -953,6 +771,7 @@ Screens:
                                                 HoverFill: =RGBA(255,255,255,0.08)
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
                                                 BorderThickness: =1
+                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 Height: =28
                                                 Width: =60
@@ -970,6 +789,7 @@ Screens:
                                                 HoverFill: =RGBA(0,180,110,1)
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
+                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Semibold
                                                 Height: =28
@@ -1031,6 +851,7 @@ Screens:
                                                 HoverFill: =RGBA(255,255,255,0.08)
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
                                                 BorderThickness: =1
+                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 Height: =28
                                                 Width: =60
@@ -1048,6 +869,7 @@ Screens:
                                                 HoverFill: =RGBA(0,180,110,1)
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
+                                                DropShadow: =DropShadow.Light
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Semibold
                                                 Height: =28
@@ -1080,6 +902,7 @@ Screens:
                                                       Size: =12
                                                       Align: =Align.Center
                                                       VerticalAlign: =VerticalAlign.Middle
+                                                      DropShadow: =DropShadow.Light
                                                       BorderStyle: =BorderStyle.None
                                                       BorderColor: =RGBA(0,0,0,0)
                                                 - attExternalDomainsReplace:
@@ -1204,10 +1027,10 @@ Screens:
                                     Image: |-
                                       =With(
                                           {
-                                              vNoDMP: 52,
-                                              vDEE: 28,
-                                              vDIS: 12,
-                                              vDNES: 6
+                                              vNoDMP: varCounterNoDMP,
+                                              vDEE: varCounterEffected,
+                                              vDIS: varCounterInternalSender,
+                                              vDNES: varCounterNotEffected
                                           },
                                           With(
                                               { vTotal: Max(vNoDMP + vDEE + vDIS + vDNES, 1) },
@@ -1300,7 +1123,7 @@ Screens:
                         RadiusBottomRight: =12
                         PaddingTop: =2
                         PaddingBottom: =2
-                        PaddingLeft: =60
+                        PaddingLeft: =20
                         PaddingRight: =14
                         LayoutGap: =12
                       Children:
@@ -1320,7 +1143,7 @@ Screens:
                             Control: Label@2.5.1
                             Properties:
                               Text: ="●"
-                              Color: =RGBA(255,69,58,1)
+                              Color: =If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
                               Height: =16
@@ -1330,7 +1153,7 @@ Screens:
                         - lblInfoEmergencyReport:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Emergency Report  ·  Missing  ·  13:42:11"
+                              Text: ="Emergency Report  ·  " & If(varEmergencyReportExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "-", Text(varEmergencyReportLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1353,7 +1176,7 @@ Screens:
                             Control: Label@2.5.1
                             Properties:
                               Text: ="●"
-                              Color: =RGBA(0,206,125,1)
+                              Color: =If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
                               Height: =16
@@ -1363,7 +1186,7 @@ Screens:
                         - lblInfoInternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Internal Domains  ·  Operational  ·  10:21:17"
+                              Text: ="Internal Domains  ·  " & If(varInternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "-", Text(varInternalDomainsLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1386,7 +1209,7 @@ Screens:
                             Control: Label@2.5.1
                             Properties:
                               Text: ="●"
-                              Color: =RGBA(255,69,58,1)
+                              Color: =If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
                               Height: =16
@@ -1396,7 +1219,7 @@ Screens:
                         - lblInfoExternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="External Domains  ·  Missing  ·  10:21:17"
+                              Text: ="External Domains  ·  " & If(varExternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "-", Text(varExternalDomainsLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1419,7 +1242,7 @@ Screens:
                             Control: Label@2.5.1
                             Properties:
                               Text: ="●"
-                              Color: =RGBA(0,206,125,1)
+                              Color: =If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
                               Height: =16
@@ -1429,7 +1252,7 @@ Screens:
                         - lblInfoCounter:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Counter File  ·  Running  ·  14:10:05"
+                              Text: ="Counter File  ·  " & If(varCounterExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varCounterLastModified) Or varCounterLastModified="", "-", Text(varCounterLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1452,7 +1275,7 @@ Screens:
                             Control: Label@2.5.1
                             Properties:
                               Text: ="●"
-                              Color: =RGBA(0,206,125,1)
+                              Color: =If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
                               Height: =16
@@ -1462,7 +1285,7 @@ Screens:
                         - lblInfoAuditTrail:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Audit Trail File  ·  Operational  ·  14:37:40"
+                              Text: ="Audit Trail File  ·  " & If(varAuditTrailExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varAuditLastModified) Or varAuditLastModified="", "-", Text(varAuditLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5

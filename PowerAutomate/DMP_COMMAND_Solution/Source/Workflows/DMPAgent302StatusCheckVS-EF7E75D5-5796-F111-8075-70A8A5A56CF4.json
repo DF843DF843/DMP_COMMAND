@@ -50,51 +50,9 @@
         }
       },
       "actions": {
-        "VAR_RealDMPIndicatorFileName": {
-          "runAfter": {
-            "VAR_RunStartTicks": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Real DMP Indicator File Name",
-                "type": "string",
-                "value": "Yes.txt"
-              }
-            ]
-          },
-          "description": "Stores indicator file name."
-        },
-        "VAR_RealDMPIndicatorFolder": {
-          "runAfter": {
-            "VAR_RealDMPIndicatorFileName": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "c7b4ce85-15c8-48eb-968d-68cd5f30b75a"
-          },
-          "type": "InitializeVariable",
-          "inputs": {
-            "variables": [
-              {
-                "name": "Real DMP Indicator Folder",
-                "type": "string",
-                "value": "/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP"
-              }
-            ]
-          },
-          "description": "Stores indicator folder."
-        },
         "VAR_IsRealDMP": {
           "runAfter": {
-            "VAR_RealDMPIndicatorFolder": [
+            "VAR_RunStartTicks": [
               "Succeeded"
             ]
           },
@@ -2313,7 +2271,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'RealDMPIndicatorFileName' or Title eq 'RealDMPIndicatorFolder' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
+              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -2343,9 +2301,42 @@
           },
           "description": "Finds current DMP COMMAND operation mode."
         },
-        "VAR_ConfigObject": {
+        "Select_ConfigEntries": {
           "runAfter": {
             "SET_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "select": "@concat(\n  ',',\n  '\"',\n  replace(coalesce(item()?['Title'], ''), '\"', concat(decodeUriComponent('%5C'), '\"')),\n  '\":\"',\n  replace(\n    replace(\n      replace(\n        replace(\n          coalesce(\n            if(\n              equals(variables('OperationMode'), 'PROD_NODMP'),\n              item()?['Value_PROD_NODMP'],\n              if(\n                equals(variables('OperationMode'), 'PROD_DMP'),\n                item()?['Value_x002d_PROD_x0028_DMP_x0029'],\n                if(\n                  equals(variables('OperationMode'), 'SIMU_NODMP'),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_NODMP_x0029'], item()?['Value_x002d_SIMU_x0028_NODMP_x00']),\n                  item()?['Value_x002d_SIMU_x0028_DMP_x0029']\n                )\n              )\n            ),\n            ''\n          ),\n          decodeUriComponent('%5C'),\n          concat(decodeUriComponent('%5C'), decodeUriComponent('%5C'))\n        ),\n        '\"',\n        concat(decodeUriComponent('%5C'), '\"')\n      ),\n      decodeUriComponent('%0D'),\n      ''\n    ),\n    decodeUriComponent('%0A'),\n    concat(decodeUriComponent('%5C'), 'n')\n  ),\n  '\"'\n)"
+          },
+          "description": "Maps each configuration row to a mode-resolved JSON key-value fragment, replacing the slow per-row loop with a single non-looping data operation."
+        },
+        "CMP_ConfigJsonText": {
+          "runAfter": {
+            "Select_ConfigEntries": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('{\"dummy\":\"\"', join(body('Select_ConfigEntries'), ''), '}')",
+          "description": "Completes the configuration JSON text by wrapping all resolved property fragments in braces."
+        },
+        "CMP_ConfigObject": {
+          "runAfter": {
+            "CMP_ConfigJsonText": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@json(outputs('CMP_ConfigJsonText'))",
+          "description": "Converts the generated configuration JSON text into the central configuration object for this run."
+        },
+        "VAR_ConfigObject": {
+          "runAfter": {
+            "CMP_ConfigObject": [
               "Succeeded"
             ]
           },
@@ -2358,93 +2349,11 @@
               {
                 "name": "ConfigObject",
                 "type": "object",
-                "value": "@json('{}')"
+                "value": "@outputs('CMP_ConfigObject')"
               }
             ]
           },
-          "description": "Stores resolved status configuration values."
-        },
-        "APPLY_TO_EACH_ConfigItem": {
-          "foreach": "@body('GET_DMP_Command_Configuration')?['value']",
-          "actions": {
-            "CMP_ConfigValue_CurrentItem": {
-              "metadata": {
-                "operationMetadataId": "6dd59156-84ad-4b41-94ab-37937c380856"
-              },
-              "type": "Compose",
-              "inputs": "@if(\r\n  equals(variables('OperationMode'), 'PROD_NODMP'),\r\n  items('APPLY_TO_EACH_ConfigItem')?['Value_PROD_NODMP'],\r\n  if(\r\n    equals(variables('OperationMode'), 'PROD_DMP'),\r\n    items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_PROD_x0028_DMP_x0029'],\r\n    if(\r\n      equals(variables('OperationMode'), 'SIMU_NODMP'),\r\n      items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_SIMU_x0028_NODMP_x00'],\r\n      items('APPLY_TO_EACH_ConfigItem')?['Value_x002d_SIMU_x0028_DMP_x0029']\r\n    )\r\n  )\r\n)",
-              "description": "Selects configuration value for current operation mode."
-            },
-            "CMP_ConfigObject_Updated": {
-              "runAfter": {
-                "CMP_ConfigValue_CurrentItem": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "49609f0f-71f7-4d9c-81b2-8e07ffc9be3c"
-              },
-              "type": "Compose",
-              "inputs": "@if(\r\n  empty(coalesce(items('APPLY_TO_EACH_ConfigItem')?['Title'], '')),\r\n  variables('ConfigObject'),\r\n  setProperty(\r\n    variables('ConfigObject'),\r\n    string(items('APPLY_TO_EACH_ConfigItem')?['Title']),\r\n    coalesce(outputs('CMP_ConfigValue_CurrentItem'), '')\r\n  )\r\n)",
-              "description": "Adds resolved item value to status configuration object."
-            },
-            "SET_ConfigObject": {
-              "runAfter": {
-                "CMP_ConfigObject_Updated": [
-                  "Succeeded"
-                ]
-              },
-              "metadata": {
-                "operationMetadataId": "9feb5304-7d05-43d6-953d-949d61e649ef"
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "ConfigObject",
-                "value": "@outputs('CMP_ConfigObject_Updated')"
-              },
-              "description": "Stores updated status configuration object."
-            }
-          },
-          "runAfter": {
-            "VAR_ConfigObject": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "050c87a9-ce6e-438b-a9b5-960901dc1919"
-          },
-          "type": "Foreach",
-          "description": "Builds status configuration object."
-        },
-        "SET_RealDMPIndicatorFileName_From_Config": {
-          "runAfter": {
-            "APPLY_TO_EACH_ConfigItem": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "3be25fa8-1e21-4e00-9726-fabd9db8d1c9"
-          },
-          "type": "SetVariable",
-          "inputs": {
-            "name": "Real DMP Indicator File Name",
-            "value": "@coalesce(variables('ConfigObject')?['RealDMPIndicatorFileName'], 'Yes.txt')"
-          }
-        },
-        "SET_RealDMPIndicatorFolder_From_Config": {
-          "runAfter": {
-            "SET_RealDMPIndicatorFileName_From_Config": [
-              "Succeeded"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "f7a3b1b0-1f44-444d-9b5c-4c963f2b6aa0"
-          },
-          "type": "SetVariable",
-          "inputs": {
-            "name": "Real DMP Indicator Folder",
-            "value": "@coalesce(variables('ConfigObject')?['RealDMPIndicatorFolder'], '/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP')"
-          }
+          "description": "Stores resolved status configuration values, built via Select+Join instead of a per-row loop."
         },
         "SET_EmergencyReportFolder_From_Config": {
           "runAfter": {
@@ -2463,7 +2372,7 @@
         },
         "SET_EmergencyReportFileName_From_Config": {
           "runAfter": {
-            "SET_RealDMPIndicatorFolder_From_Config": [
+            "VAR_ConfigObject": [
               "Succeeded"
             ]
           },

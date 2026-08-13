@@ -46,6 +46,33 @@ App:
 
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
-      Set(varDarkMode,true)
+      Set(varDarkMode,true);
+
+      //Live status refresh from Agent 4 (Status Check) - falls back to the defaults above on error
+      Set(varStatusResult, IfError('DMPAgent3(StatusCheck)'.Run(), Blank()));
+      Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+      Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
+      Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+      Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
+      Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
+      Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+      Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
+      Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
+      Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+      Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
+      Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
+      Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
+      Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
+      Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+      Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+      Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+      Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+      Set(varAgentsHealthyCount,
+        CountIf(
+          [varEmergencyReportExists, varInternalDomainsExists, varExternalDomainsExists, varCounterExists, varAuditTrailExists],
+          Value = true
+        )
+      );
+      Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount/5)*100,0))
     StartScreen: =scrHome
     Theme: =PowerAppsTheme

@@ -58,6 +58,34 @@ Bei Einführung eines neuen Agenten (Nummer `N`, 2-stellig als `NN`):
 
 ---
 
+# ✅ Agent 4 (Status Check) Rebuild + Live-Datenanbindung Power App (2026-08-13)
+
+**Auslöser:** Nutzer-Prioritätsvorgabe „Sofort abarbeiten: Agent 4 (Status Check)" + gemeldete GUI-Probleme (Agent 2 Emails Processed nicht angeschlossen, Files-Anzeige nicht angeschlossen).
+
+## Durchgeführt
+- **RealDMP-Rollback:** War in einem früheren Durchgang bereits erledigt (`SET_IsRealDMP_From_OperationMode` leitet korrekt aus `CurrentOperationMode` ab). Nur noch totes Restgerüst gefunden und entfernt: `VAR_RealDMPIndicatorFileName`/`VAR_RealDMPIndicatorFolder` + `SET_RealDMPIndicatorFileName_From_Config`/`SET_RealDMPIndicatorFolder_From_Config` (keine Live-Datei-Prüfung mehr referenziert sie), plus die beiden toten `Title eq 'RealDMPIndicator...'`-Filter aus `$filter` entfernt.
+- **Select+Join-Migration (Finding 2) abgeschlossen:** Alte `APPLY_TO_EACH_ConfigItem`-Foreach-Schleife durch das bewährte `Select_ConfigEntries`/`CMP_ConfigJsonText`/`CMP_ConfigObject`-Muster (wie Agent 1/2/5) ersetzt. `VAR_ConfigObject` bleibt als Variable erhalten (`= outputs('CMP_ConfigObject')`), damit alle ~30 nachgelagerten `variables('ConfigObject')`-Referenzen unverändert funktionieren – kein Umbau an jeder einzelnen Stelle nötig.
+- **Zurückgestellt (bewusst, Zeit/Nutzen-Abwägung):** Die 9 toten Heartbeat-Statusvariablen (`AuditRunSummaryCount` etc., nie befüllt) wurden NICHT entfernt – rein kosmetisch, kein funktionales Risiko.
+- Gepackt und erfolgreich importiert.
+
+## Power App jetzt an echte Daten angebunden (statt statischer Demo-Werte)
+Der App fehlte kein Datenzugriff – der Connector `'DMPAgent3(StatusCheck)'` war bereits als Datenquelle registriert (per msapp-Inspektion gefunden), nur nie aufgerufen. `App.OnStart` ruft jetzt `IfError('DMPAgent3(StatusCheck)'.Run(), Blank())` auf und befüllt alle bereits vorher deklarierten (aber nie gesetzten) `varEmergencyReportExists`/`varCounterNoDMP`/etc.-Variablen daraus, mit Fallback auf die bisherigen Default-Werte bei Fehler (kein sichtbarer Error-Banner). Neu: `varAgentsHealthyCount`/`varSystemHealthPercent` (aus den 5 Exists-Flags abgeleitet).
+- **Files-Zeile:** alle 5 Status-Punkte + Info-Texte jetzt an `varXExists`/`varXLastModified` gebunden.
+- **Agent 2 - Emails Processed Ring:** `vNoDMP/vDEE/vDIS/vDNES` lesen jetzt `varCounterNoDMP`/`varCounterEffected`/`varCounterInternalSender`/`varCounterNotEffected` statt hartcodierter Werte (52/28/12/6).
+- **Agent Heartbeat:** komplett neu gestaltet (siehe GUI-Fixes unten).
+
+## GUI-Fixes (gleicher Durchgang, Nutzer-Feedback-Runde 2026-08-13)
+- **Heartbeat-Karte:** Titel-Label + 5er-Agenten-Legende entfernt, EIN großer Ring (328×328) füllt jetzt die komplette Karte, Farbe/Prozent dynamisch aus `varSystemHealthPercent`.
+- **"DMP COMMAND"-Überschrift im Light Mode unsichtbar:** Kopfleiste (`conTopHeader`) hat fixes dunkles Lila-Fill in beiden Modi, aber der Titel-Text war `If(varDarkMode, weiß, dunkel)` – dunkler Text auf dunklem Lila war unsichtbar. Fix: Farbe jetzt immer Weiß (wie der bereits korrekte Untertitel).
+- **KPI-Abstand Critical/Warnings/Agents Active + Versionsnummer-Ausrichtung:** feste Breiten (64/78/100) statt Auto-Breite pro KPI-Spalte gesetzt (der eigentliche Fehler war inkonsistente Auto-Breite, nicht der Gap-Wert), `lblVersionTag`-Höhe auf 44 (wie die KPI-Spalten) für exakte vertikale Zentrierung.
+- **Seitliche Scrollbar blockierte Replace-Button:** `conFilesRow` `PaddingLeft` war in einer früheren Runde auf 60 erhöht worden ("4cm nach rechts") – das verursachte einen Breitenüberlauf/horizontale Scrollbar. Zurückgesetzt auf 20.
+- **"Plastischer" Look für Maintenance-Domains-Buttons:** `DropShadow: =DropShadow.Light` auf alle 4 View/Edit-Buttons + den Replace-Fake-Button ergänzt (native Power-Apps-Eigenschaft für Tiefenwirkung bei Classic-Controls).
+
+## ⚠️ Bekannter, wiederkehrender Fallstrick: `pac solution import` deaktiviert Flows bei JEDEM Import
+Nicht nur beim ersten Mal – jeder Import deaktiviert den/die betroffenen Flow(s) erneut. Nutzer muss nach JEDEM Import (auch Wiederholungsimporten) kurz in Power Automate prüfen, ob die Flows wieder eingeschaltet sind.
+
+---
+
 # Grundsätzliche Architektur-Entscheidung: Operativer Zustand über 2 unabhängige Schalter (neu ab 2026-08-11, oberste Priorität, gilt für Power App + ALLE Agenten)
 
 **Entscheidung des Nutzers:** Im DMP-COMMAND-Frontend (Power App) sollen künftig **2 unabhängige Schalter** den operativen Zustand des Gesamtsystems bestimmen:
