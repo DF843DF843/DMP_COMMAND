@@ -326,7 +326,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (((Scope eq 'Global') and (Title eq 'CurrentOperationMode' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox')) or (Scope eq 'Agent5') or (Scope eq 'Agent3_All'))",
+              "$filter": "Active eq 'Yes' and (((Scope eq 'Global') and (Title eq 'CurrentOperationMode' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox')) or (Scope eq 'Agent 05'))",
               "$orderby": "Title asc",
               "$top": 5000
             },
