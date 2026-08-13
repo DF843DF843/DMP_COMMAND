@@ -12,7 +12,7 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 # ✅ Agenten-Umnummerierung abgeschlossen (2026-08-13): Agent 3.01/3.02/3.03 → Agent 3/4/5
 
-**Entscheidung des Nutzers (2026-08-13):** Durchgängige sequenzielle Nummerierung aller 5 Agenten statt der bisherigen Dezimalschreibweise, um unnötige Komplexität zu vermeiden. Zuordnung: Agent 1 bleibt 1, Agent 2 bleibt 2, **Agent 3.01 → Agent 3** (Emergency Report Management), **Agent 3.02 → Agent 4** (Status Check), **Agent 3.03 → Agent 5** (Operational State Management). Interne Schlüssel 2-stellig: `Agent_01`.."Agent_05" (AgentKey), Scope-Werte ohne Padding: `Agent1`.."Agent5" (passend zum bestehenden Muster von Agent1/Agent2).
+**Entscheidung des Nutzers (2026-08-13):** Durchgängige sequenzielle Nummerierung aller 5 Agenten statt der bisherigen Dezimalschreibweise, um unnötige Komplexität zu vermeiden. Zuordnung: Agent 1 bleibt 1, Agent 2 bleibt 2, **Agent 3.01 → Agent 3** (Emergency Report Management), **Agent 3.02 → Agent 4** (Status Check), **Agent 3.03 → Agent 5** (Operational State Management). Interne Schlüssel 2-stellig: `Agent_01`.."Agent_05" (AgentKey). Scope-Werte initial ohne Padding (`Agent1`.."Agent5"), am selben Tag noch auf das finale, einheitliche Muster `Agent 01`.."Agent 05" umgestellt (mit Leerzeichen, Zero-Padding) – siehe Abschnitt „Scope-Muster-Vereinheitlichung" unten.
 
 ## Durchgeführt (dateibasiert, via Power-Automate-Solution `DMP_COMMAND_Solution`)
 - Flow-Anzeigenamen umbenannt (`.json.data.xml` Name/LocalizedName): "DMP Agent 3 (Emergency Report Management)", "DMP Agent 4 (Status Check)", "DMP Agent 5 (Operational State Management)".
@@ -20,24 +20,41 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 - Gepackt und erfolgreich importiert.
 - Cross-Referenz-Check: Agent 1/2 referenzieren keine der umbenannten Agenten – keine weiteren Anpassungen dort nötig. Agent 3/4 nutzen Title-basierte statt Scope-basierte Config-Filter – dort keine Scope-Anpassung nötig.
 
-## ⚠️ Noch OFFEN – manuell in SharePoint nachzuziehen (konnte nicht automatisiert werden, kein Live-Zugriff)
-Folgende Änderungen an den **live** SharePoint-Listen wurden bewusst NICHT automatisch vorgenommen (kein direkter Schreibzugriff verfügbar) und müssen vom Nutzer nachgezogen werden:
+## ✅ SharePoint-Nacharbeit vom Nutzer selbst durchgeführt (bestätigt 2026-08-13, per frischem CSV-Export)
+Alle ursprünglich hier gelisteten manuellen SharePoint-Änderungen (Punkte 1-8, altes Muster `Agent3_01`/`Agent3_02`/`Agent3_03` → `Agent3`/`Agent4`/`Agent5`) wurden vom Nutzer eigenständig durchgeführt – SSO/MFA-Zugriff war für die KI aus Sicherheitsgründen nicht möglich (siehe Grund unten). Der Nutzer ist danach noch einen Schritt weitergegangen und hat den `Scope`-Wert **zusätzlich auf ein einheitliches 2-stelliges Muster `Agent 01`..`Agent 05` (mit Leerzeichen, Zero-Padding) umgestellt** – siehe neuen Abschnitt unten.
 
-**In `DMP Command Configuration`:**
-1. Zeile `WorkflowPathAgent301` → `ParameterName` umbenennen zu `WorkflowPathAgent3`, `Scope` von `Agent3_01` zu `Agent3`.
-2. Zeile `WorkflowPathAgent302` → `ParameterName` zu `WorkflowPathAgent4`, `Scope` von `Agent3_02` zu `Agent4`.
-3. Zeile `WorkflowPathAgent303` → `ParameterName` zu `WorkflowPathAgent5`, `Scope` von `Agent3_03` zu `Agent5`, `CurrentValue`/alle 4 Modus-Spalten von `Agent3_YesFileManagement`/`Agent3_OperationalStateManagement` zu `Agent5_OperationalStateManagement`.
-4. Alle übrigen Zeilen mit `Scope = Agent3_01` → `Agent3`; `Scope = Agent3_02` → `Agent4`; `Scope = Agent3_03` → `Agent5` (Zeilen vorher in der Liste filtern/identifizieren).
-5. **Offene Design-Frage:** Zeile `Agent3AlertFolderName` nutzt `Scope = Agent3_All` (geteilt zwischen den ehemaligen 3.01/3.02/3.03-Unteragenten). Da diese jetzt vollständig unabhängige Agenten 3/4/5 sind, ergibt "Agent3_All" konzeptionell keinen Sinn mehr – **bewusst unverändert gelassen**, da Agent 3 und Agent 4 ohnehin titelbasiert filtern (nicht scope-basiert) und Agent 5 den Wert `Agent3_All` weiterhin explizit in seinem Filter erwartet (unverändert gelassen). Empfehlung: Bei nächster Gelegenheit gemeinsam entscheiden, ob umbenannt (z. B. zu `Global` oder `SharedAgent345`) oder bewusst so belassen.
+**Grund für den ursprünglichen manuellen Umweg:** Direkter Browser-Zugriff auf SharePoint erforderte eine interaktive Anmeldung (SSO/MFA), die aus Sicherheitsgründen nicht durch die KI selbst durchgeführt werden darf.
 
-**In `DMP Command Agent Status`:**
-6. Zeile mit `AgentKey = Agent_03_01` → `Agent_03`, `AgentDisplayName` zu "Emergency Report Management".
-7. Zeile mit `AgentKey = Agent_03_02` → `Agent_04`, `AgentDisplayName` zu "Status Check".
-8. Zeile mit `AgentKey = Agent_03_03` → `Agent_05`, `AgentDisplayName` bereits "Operational State Management" (unverändert).
+---
 
-**Grund für die Verzögerung:** Direkter Browser-Zugriff auf SharePoint erforderte eine interaktive Anmeldung (SSO/MFA), die aus Sicherheitsgründen nicht durch die KI selbst durchgeführt werden darf.
+# ✅ Scope-Muster-Vereinheitlichung + Alert-Folder-Trennung + Namens-Designregel (2026-08-13)
 
+**Entscheidung des Nutzers:** Der `Scope`-Wert in `DMP Command Configuration` wird für ALLE Agenten (auch 1 und 2, bisher `Agent1`/`Agent2` ohne Leerzeichen/Padding) einheitlich auf `Agent 01`..`Agent 05` (2-stellig, mit Leerzeichen) umgestellt. Zusätzlich erhält jeder Agent (auch 3/4/5, vorher nur 1/2) einen eigenen dedizierten `AgentNAlertFolderName`-Parameter statt eines geteilten Scopes.
 
+## Durchgeführt
+- **CSV-Verifikation:** Frischer Export geprüft – alle 7 verwaisten Yes.txt-Ära-Parameter (`RequestedActionCreate/Delete`, `RealDMPIndicatorFileName/Folder`, `YesFileCreateSuccessMessage/DeleteSuccessMessage/FailureSubject`) sind vom Nutzer bereits gelöscht. `Scope`-Spalte durchgängig `Agent 01`..`Agent 05`/`Global`/`PowerApps` – keine Reste des alten Musters (`Agent1`, `Agent3_All`, etc.) mehr vorhanden.
+- **Flow-seitiger Scope-Filter-Fix (Agent 5, `GET_DMP_Command_Configuration`):** `Scope eq 'Agent5' or Scope eq 'Agent3_All'` → `Scope eq 'Agent 05'` (die alte `Agent3_All`-Design-Frage aus dem vorigen Abschnitt ist damit **aufgelöst**: durch die neuen dedizierten `Agent3/4/5AlertFolderName`-Parameter ist ein geteilter Scope nicht mehr nötig). Agent 1/2/3/4 filtern ohnehin nicht Scope-basiert (Agent 1/2/3 laden alle aktiven Zeilen, Agent 4 filtert Title-basiert) – dort war keine Anpassung nötig.
+- Gepackt und erfolgreich importiert (Flow danach vom Nutzer wieder aktiviert).
+- **Interne Aktionsnamen bereinigt** (Flow-JSONs Agent 3/4/5): `GET_StatusRow_Agent_3.0X`/`UPDATE_StatusRow_Agent_3.0X` → `GET_StatusRow_Agent_0X`/`UPDATE_StatusRow_Agent_0X` (reine Code-Hygiene, keine funktionale Änderung, JSON-Validität geprüft).
+- **Power-App-Legende bereinigt:** Agent-Heartbeat-Legende zeigte noch "Agent 3.01"/"3.02"/"3.03" (Controls `conLegendAgent301/302/303`) – umbenannt zu `conLegendAgent3/4/5`, sichtbarer Text zu "Agent 3"/"Agent 4"/"Agent 5". Gepackt nach `DMP_COMMAND_TEST.msapp` – Import über Power-Apps-Portal steht noch aus (Nutzer-Aktion).
+- **Dokumentation konsolidiert:** Alle veralteten/überholten Dateien im Documentation-Root nach `ARCHIVE/` verschoben (alte Workflow-HTML-Diagramme, alte Agent-3.01/02/03-JSON-Exports, alte Master-/Handover-Docx, veraltete Referenzdaten-Snapshots, redundanter PowerApp-Arbeitsordner). Git-Repo enthält jetzt ausschließlich die 5 aktuell gepflegten Dokumente (Backlog, 2 CSVs, Mission-Datei, Operations Manual).
+
+## ⚠️ Noch offen – bekannte Restartefakte in der CSV (nur Beschreibungstexte/Pfadwerte, nicht funktional kritisch)
+Bei der Verifikation gefunden, **nicht von der KI editiert** (CSV ist ausschließlich nutzergepflegt):
+- `EmergencyReportFileName`.Description nennt noch "Agent 3.01" (sollte "Agent 3" heißen).
+- `StatusCheckAuditCardEnabled`/`CounterCardEnabled`/`DomainsCardEnabled`/`EmergencyReportCardEnabled`.Description nennt noch "Agent 3.02" (sollte "Agent 4" heißen).
+- `RejectedFolderAgent3`/`WorkFolderAgent3` haben Pfadwerte im alten Stil (`Agent3_Rejected`, `Agent3_Work` – kein Zero-Padding/Leerzeichen). Da dies **echte SharePoint-Ordnernamen** sind, wäre eine Umbenennung eine tatsächliche Datei-Umbenennung in SharePoint (nicht nur Konfigurationswert) – bewusst nicht automatisch angefasst, Entscheidung beim Nutzer.
+
+## 🆕 Design-Regel: Namenskonvention für neue Agenten (ab 2026-08-13 verbindlich)
+Bei Einführung eines neuen Agenten (Nummer `N`, 2-stellig als `NN`):
+1. **Keine Dezimal-Unternummerierung mehr** (kein "Agent 3.01"-Stil) – fortlaufende Ganzzahl.
+2. **Anzeigename:** `DMP Agent N (<Zweck>)`.
+3. **`Scope`-Wert** (Configuration-Liste): `Agent NN` – 2-stellig, Zero-Padding, MIT Leerzeichen (z. B. `Agent 06`). `Global` für agentenübergreifende Parameter, `PowerApps` für reine GUI-Werte.
+4. **`AgentKey`** (Agent-Status-Liste): `Agent_NN` (Unterstrich, Zero-Padding) – bewusst ANDERES Format als der Scope-Wert, um beide Listen klar auseinanderzuhalten.
+5. **`WorkflowPathAgentN`-Wert:** `AgentNN_<PascalCaseZweck>` (z. B. `Agent06_NeuerZweck`).
+6. **Dedizierter Alert-Ordner:** jeder Agent, der Alert-/Fehler-Mails versendet, bekommt einen eigenen `AgentNAlertFolderName`-Parameter (Scope = eigener `Agent NN`-Scope), Wert `Agent NN Alerts`. Keine geteilten Alert-Ordner mehr über mehrere Agenten hinweg.
+7. **Interne Flow-Aktionsnamen** (z. B. `GET_StatusRow_...`, `UPDATE_StatusRow_...`): `_Agent_NN`-Suffix, konsistent mit dem AgentKey-Format.
+8. Alle 4 Modus-Spalten (PROD/SIMU × NODMP/DMP) müssen befüllt sein, auch wenn der Wert überall identisch ist.
 
 ---
 

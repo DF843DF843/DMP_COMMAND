@@ -3103,7 +3103,7 @@
         },
         "SCOPE_StatusRow_Update": {
           "actions": {
-            "GET_StatusRow_Agent_3.02": {
+            "GET_StatusRow_Agent_04": {
               "metadata": {
                 "operationMetadataId": "65672b00-7742-45f5-b890-5118f9eafb5f"
               },
@@ -3127,9 +3127,9 @@
               },
               "description": "Reads the Agent_04 dashboard status row.\n"
             },
-            "UPDATE_StatusRow_Agent_3.02": {
+            "UPDATE_StatusRow_Agent_04": {
               "runAfter": {
-                "GET_StatusRow_Agent_3.02": [
+                "GET_StatusRow_Agent_04": [
                   "Succeeded"
                 ]
               },
@@ -3141,7 +3141,7 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
-                  "id": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['ID']",
+                  "id": "@first(body('GET_StatusRow_Agent_04')?['value'])?['ID']",
                   "item/AgentDisplayName": "Status Check",
                   "item/CurrentStatus/Value": "Operational",
                   "item/LastUpdateTimestamp": "@utcNow()",
@@ -3149,12 +3149,12 @@
                   "item/LastSuccessTimestamp": "@utcNow()",
                   "item/LastRunResult/Value": "Succeeded",
                   "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
-                  "item/LastFailureTimestamp": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureTimestamp']",
-                  "item/LastFailureStep": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureStep']",
-                  "item/LastFailureMessage": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastFailureMessage']",
-                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningTimestamp']",
-                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningStep']",
-                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningMessage']",
+                  "item/LastFailureTimestamp": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastFailureTimestamp']",
+                  "item/LastFailureStep": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastFailureStep']",
+                  "item/LastFailureMessage": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastFailureMessage']",
+                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastWarningTimestamp']",
+                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastWarningStep']",
+                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_04')?['value'])?['LastWarningMessage']",
                   "item/OperationMode/Value": "@variables('OperationMode')",
                   "item/WorkflowPath": "@coalesce(\r\n  variables('ConfigObject')?['WorkflowPathAgent4'],\r\n  'Agent3_StatusCheck'\r\n)",
                   "item/AgentKey": "Agent_04",

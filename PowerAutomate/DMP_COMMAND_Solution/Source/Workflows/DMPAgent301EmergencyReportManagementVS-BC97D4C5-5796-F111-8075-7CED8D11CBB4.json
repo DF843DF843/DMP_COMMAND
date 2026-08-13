@@ -2066,7 +2066,7 @@
         },
         "SCOPE_StatusRow_Update": {
           "actions": {
-            "GET_StatusRow_Agent_3.01": {
+            "GET_StatusRow_Agent_03": {
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
@@ -2089,7 +2089,7 @@
             },
             "GET_StatusRow_EmergencyReport": {
               "runAfter": {
-                "GET_StatusRow_Agent_3.01": [
+                "GET_StatusRow_Agent_03": [
                   "Succeeded"
                 ]
               },
@@ -2113,7 +2113,7 @@
               },
               "description": "Reads the Emergency Report dashboard status row."
             },
-            "UPDATE_StatusRow_Agent_3.01": {
+            "UPDATE_StatusRow_Agent_03": {
               "runAfter": {
                 "GET_StatusRow_EmergencyReport": [
                   "Succeeded"
@@ -2124,7 +2124,7 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
-                  "id": "@first(body('GET_StatusRow_Agent_3.01')?['value'])?['ID']",
+                  "id": "@first(body('GET_StatusRow_Agent_03')?['value'])?['ID']",
                   "item/AgentDisplayName": "Emergency Report Management",
                   "item/CurrentStatus/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Operational',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Failed'\r\n )\r\n)",
                   "item/LastUpdateTimestamp": "@utcNow()",
@@ -2132,7 +2132,7 @@
                   "item/LastSuccessTimestamp": "@utcNow()",
                   "item/LastRunResult/Value": "Succeeded",
                   "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
-                  "item/OperationMode/Value": "@first(body('GET_StatusRow_Agent_3.01')?['value'])?['OperationMode']",
+                  "item/OperationMode/Value": "@first(body('GET_StatusRow_Agent_03')?['value'])?['OperationMode']",
                   "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                   "item/AgentKey": "Agent_03",
                   "item/EmergencyReportPresent/Value": "@if(\r\n  equals(variables('AppResponseStatus'),'SUCCESS'),\r\n  'Yes',\r\n  'No'\r\n)",
@@ -2196,7 +2196,7 @@
                 }
               },
               "runAfter": {
-                "UPDATE_StatusRow_Agent_3.01": [
+                "UPDATE_StatusRow_Agent_03": [
                   "Succeeded"
                 ]
               },

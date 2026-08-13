@@ -63,7 +63,7 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 **Trigger:** Manual/on-demand (Power Automate manual trigger), typically run after a new Emergency Report is uploaded (see Agent 3).
 
 **Process:**
-1. Loads active configuration rows scoped to `Agent1` and `Global`.
+1. Loads all active configuration rows in one read (no per-agent `Scope` filter is applied at the flow level; the flow selects only the keys it needs after loading).
 2. Reads the Emergency Report workbook, worksheet "Emergency Contacts" (configurable via `Agent1SourceWorksheetName`).
 3. Extracts and de-duplicates domain values into an internal/external classification.
 4. Writes `Internal_Domains.txt` and `External_Domains.txt` to their configured SharePoint storage locations.
@@ -72,7 +72,7 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 **Error handling:** On any failure branch (missing worksheet, invalid workbook/extension, write failure), Agent 1 sends an alert e-mail with `Importance = High` (via the central `MailImportanceError` setting) and records the failure in both the Audit Trail and the Agent Status list (`CurrentStatus = Failed`, `StatusSeverity = Critical`).
 
-**Key configuration parameters:** `Agent1TriggerFolder`, `Agent1TriggerFileName`, `Agent1SourceWorksheetName`, `Agent1AlertFolderName`, `ExternalDomainsStorageFolder`, `ExternalDomainsFileName`, `RealDMPIndicatorFolder`/`RealDMPIndicatorFileName` (legacy naming, no longer used for control flow), `WaitSecondsBeforeSentMailSearch`, `WorkflowPathAgent1`.
+**Key configuration parameters:** `Agent1TriggerFolder`, `Agent1TriggerFileName`, `Agent1SourceWorksheetName`, `Agent1AlertFolderName`, `ExternalDomainsStorageFolder`, `ExternalDomainsFileName`, `WaitSecondsBeforeSentMailSearch`, `WorkflowPathAgent1`.
 
 ---
 
@@ -133,7 +133,7 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 **⚠️ Known limitation:** Agent 4's live file-check approach is what previously caused a Power Apps request timeout when it was first used from the app. Because of this, the Power App does **not** currently call Agent 4 directly for its live dashboard data; instead, the Files band, Agent Heartbeat wheel, and KPI values on the Cockpit screen currently use static placeholder/demo values.
 **Planned change (not yet implemented):** Agent 4 should be rebuilt to read the pre-computed `DMP Command Agent Status` list (a fast, simple `Get items` query) instead of performing live file checks, removing the timeout risk while still providing real data to the app.
 
-**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `InternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`.
+**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `InternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`. Also still reads `RealDMPIndicatorFileName`/`RealDMPIndicatorFolder` (legacy Yes.txt-era parameters, deleted from the live configuration list) via a safe `coalesce(...)` fallback to hardcoded defaults (`Yes.txt` / `/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP`) — functionally harmless, but a candidate for cleanup whenever Agent 4 is next rebuilt (see planned change above).
 
 ---
 
@@ -213,12 +213,12 @@ This SharePoint list is the single source of truth for every operational paramet
 | `CurrentValue` | Used only by mode-independent runtime parameters (notably `CurrentOperationMode` itself) |
 | `Description` | Human-readable explanation |
 | `ParameterType` | Text / Email / Path / Number |
-| `Scope` | Which agent(s) the parameter applies to (`Agent1`, `Agent2`, `Agent3`, `Agent4`, `Agent5`, `Agent3_All` [shared], `Global`) |
+| `Scope` | Which agent(s) the parameter applies to: `Agent 01`, `Agent 02`, `Agent 03`, `Agent 04`, `Agent 05` (unified 2-digit, zero-padded, with a space — as of 2026-08-13), `Global` (cross-agent), or `PowerApps` (GUI-only values) |
 | `Value - PROD (NODMP)`, `Value - PROD (DMP)`, `Value - SIMU (NODMP)`, `Value - SIMU (DMP)` | The 4 mode-specific values; agents pick the correct column at runtime based on the current `CurrentOperationMode` |
 
 **Editing rule:** Only the operations team edits this list directly in SharePoint. Do not hardcode values in any flow — if a new parameter is needed, add it here first (with all 4 mode columns populated) before referencing it in a flow.
 
-**Note on `Agent3_All` scope:** This scope value predates the 2026-08-13 agent renumbering and was used for parameters shared across the former Agent 3.01/3.02/3.03 family (now Agents 3/4/5). It has been intentionally left unchanged pending a decision on whether to rename it (e.g. to `Global` or a new shared scope name) — see the open item in §7.
+**Resolved (2026-08-13):** The former shared `Agent3_All` scope value (used by parameters shared across the pre-renumbering Agent 3.01/3.02/3.03 family) has been retired. Agent 3, 4, and 5 now each have their own dedicated `Agent3AlertFolderName` / `Agent4AlertFolderName` / `Agent5AlertFolderName` parameter with its own `Agent 03` / `Agent 04` / `Agent 05` scope — no agent shares an alert folder with another. See §9 for the naming design rule that formalizes this pattern for future agents.
 
 ---
 
@@ -264,9 +264,9 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 | Domain counts look outdated after uploading a new Emergency Report | Agent 1 was not run after the Agent 3 upload | Manually trigger Agent 1 |
 | "Only .xlsx files are allowed" error when using Replace | Wrong file type selected | Re-select a genuine `.xlsx` Emergency Report file |
 | A config value appears to have "no effect" after being changed in SharePoint | `Active` column is not set to `Yes`, or the wrong mode-specific column was edited | Verify `Active = Yes` and that the value was entered in the column matching the *currently active* `CurrentOperationMode` |
-| Agent's WorkflowPath / audit label still shows old naming (e.g. "Agent3_YesFileManagement") after the 2026-08-13 renumbering | The corresponding `WorkflowPathAgentN` row in the live SharePoint configuration list has not yet been updated to match the flow-side rename | Update the SharePoint row (see the precise list of required manual SharePoint changes tracked separately for this migration) |
+| Agent 5's Operating State write silently fails to pick up its own alert/scope config | Live `Scope` value in SharePoint doesn't match the flow's filter exactly (e.g. missing zero-padding or space) | Verify the flow's `$filter` expression matches the exact live `Scope` string (`Agent 05`, not `Agent5` or `agent 05`) |
 
-**Open items pending manual SharePoint updates (as of 2026-08-13 renumbering):** Config `Scope` values (`Agent3_01`→`Agent3` etc. — already reflected on the flow side but not yet in the live list), `AgentKey` values in the Agent Status list, and the `WorkflowPathAgentN` parameter names/values. See the dedicated instructions provided to the operations team for the exact rows and values to change.
+**Resolved (2026-08-13):** All manual SharePoint updates required by the agent renumbering (Scope values, `AgentKey` values, `WorkflowPathAgentN` parameter names/values) have been completed by the operations team, confirmed via a fresh configuration export. The Scope pattern was further unified the same day to `Agent 01`–`Agent 05` (see §4 and §9).
 
 ---
 
@@ -275,3 +275,19 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 | Date | Change |
 |---|---|
 | 2026-08-13 | Initial version. Reflects the 5-agent sequential renumbering, Agent 5 (formerly 3.03) Yes.txt decommissioning, real Operating State toggle wiring, and known Agent 4/Cockpit live-data limitations. |
+| 2026-08-13 | Scope pattern unified to `Agent 01`–`Agent 05` (2-digit, zero-padded, with space) across all agents; retired the shared `Agent3_All` scope in favor of dedicated per-agent `AgentNAlertFolderName` parameters; fixed Agent 5's config filter accordingly; added §9 naming design rule for future agents; cleaned up internal flow action names and the Power App Agent Heartbeat legend to drop the old "Agent 3.01/3.02/3.03" labels; consolidated `Documentation/` by archiving superseded files into `ARCHIVE/`. |
+
+---
+
+## 9. Design Rule: Naming Convention for New Agents
+
+When a new agent (`N`, written 2-digit as `NN`) is introduced, apply these rules consistently:
+
+1. **Agent number:** Sequential integer, no decimal sub-numbering (the old "Agent 3.01" style is retired as of 2026-08-13).
+2. **Display name:** `DMP Agent N (<Purpose>)`.
+3. **`Scope` value** (Configuration list): `Agent NN` — always 2-digit, zero-padded, **with a space** (e.g. `Agent 06`, not `Agent6` or `Agent 6`). Use `Global` for cross-agent shared parameters, `PowerApps` for GUI-only display values.
+4. **`AgentKey`** (Agent Status list): `Agent_NN` (underscore, zero-padded) — deliberately a *different* format from the Scope value, to keep the two lists visually distinct.
+5. **`WorkflowPathAgentN` value** (audit trail `WorkflowPath` column): `AgentNN_<PascalCasePurpose>`, e.g. `Agent06_NewPurpose`.
+6. **Dedicated Alert Folder:** every agent that sends alert/error e-mails gets its own `AgentNAlertFolderName` parameter (Scope = that agent's own `Agent NN` scope), value `Agent NN Alerts`. Never share an alert folder across agents.
+7. **Internal flow action names:** status-board read/write actions use an `_Agent_NN` suffix (e.g. `GET_StatusRow_Agent_06`, `UPDATE_StatusRow_Agent_06`), consistent with the AgentKey format.
+8. All 4 mode-specific value columns must be populated, even if the value is identical across all 4 modes.

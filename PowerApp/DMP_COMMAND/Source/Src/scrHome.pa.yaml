@@ -543,7 +543,7 @@ Screens:
                                                 Height: =18
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent301:
+                                    - conLegendAgent3:
                                         Control: GroupContainer@1.5.0
                                         Variant: AutoLayout
                                         Properties:
@@ -555,7 +555,7 @@ Screens:
                                           LayoutMinHeight: =22
                                           LayoutMaxHeight: =22
                                         Children:
-                                          - dotLegendAgent301:
+                                          - dotLegendAgent3:
                                               Control: GroupContainer@1.5.0
                                               Variant: AutoLayout
                                               Properties:
@@ -566,17 +566,17 @@ Screens:
                                                 RadiusTopRight: =7
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
-                                          - lblLegendAgent301:
+                                          - lblLegendAgent3:
                                               Control: Label@2.5.1
                                               Properties:
-                                                Text: ="Agent 3.01"
+                                                Text: ="Agent 3"
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
                                                 Size: =11
                                                 Height: =18
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent302:
+                                    - conLegendAgent4:
                                         Control: GroupContainer@1.5.0
                                         Variant: AutoLayout
                                         Properties:
@@ -588,7 +588,7 @@ Screens:
                                           LayoutMinHeight: =22
                                           LayoutMaxHeight: =22
                                         Children:
-                                          - dotLegendAgent302:
+                                          - dotLegendAgent4:
                                               Control: GroupContainer@1.5.0
                                               Variant: AutoLayout
                                               Properties:
@@ -599,17 +599,17 @@ Screens:
                                                 RadiusTopRight: =7
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
-                                          - lblLegendAgent302:
+                                          - lblLegendAgent4:
                                               Control: Label@2.5.1
                                               Properties:
-                                                Text: ="Agent 3.02"
+                                                Text: ="Agent 4"
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
                                                 Size: =11
                                                 Height: =18
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                    - conLegendAgent303:
+                                    - conLegendAgent5:
                                         Control: GroupContainer@1.5.0
                                         Variant: AutoLayout
                                         Properties:
@@ -621,7 +621,7 @@ Screens:
                                           LayoutMinHeight: =22
                                           LayoutMaxHeight: =22
                                         Children:
-                                          - dotLegendAgent303:
+                                          - dotLegendAgent5:
                                               Control: GroupContainer@1.5.0
                                               Variant: AutoLayout
                                               Properties:
@@ -632,10 +632,10 @@ Screens:
                                                 RadiusTopRight: =7
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
-                                          - lblLegendAgent303:
+                                          - lblLegendAgent5:
                                               Control: Label@2.5.1
                                               Properties:
-                                                Text: ="Agent 3.03"
+                                                Text: ="Agent 5"
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
                                                 Size: =11

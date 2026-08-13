@@ -657,7 +657,7 @@
                 }
               }
             },
-            "GET_StatusRow_Agent_3.03": {
+            "GET_StatusRow_Agent_05": {
               "runAfter": {
                 "LOOP_AuditEvents": [
                   "Succeeded"
@@ -689,9 +689,9 @@
               },
               "description": "Reads the Agent_05 dashboard status record from DMP Command Agent Status."
             },
-            "UPDATE_StatusRow_Agent_3.03": {
+            "UPDATE_StatusRow_Agent_05": {
               "runAfter": {
-                "GET_StatusRow_Agent_3.03": [
+                "GET_StatusRow_Agent_05": [
                   "Succeeded"
                 ]
               },
@@ -700,21 +700,21 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
-                  "id": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['ID']",
+                  "id": "@first(body('GET_StatusRow_Agent_05')?['value'])?['ID']",
                   "item/Title": "Agent_05",
                   "item/AgentDisplayName": "Operational State Management",
                   "item/CurrentStatus/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Operational',\r\n  'Failed'\r\n)",
                   "item/LastUpdateTimestamp": "@utcNow()",
                   "item/LastRunTimestamp": "@utcNow()",
-                  "item/LastSuccessTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  utcNow(),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastSuccessTimestamp']\r\n)",
+                  "item/LastSuccessTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  utcNow(),\r\n  first(body('GET_StatusRow_Agent_05')?['value'])?['LastSuccessTimestamp']\r\n)",
                   "item/LastRunResult/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Succeeded',\r\n  'Failed'\r\n)",
                   "item/LastRunDurationSec": "@formatNumber(\r\n  div(\r\n    float(\r\n      sub(\r\n        ticks(utcNow()),\r\n        variables('RunStartTicks')\r\n      )\r\n    ),\r\n    10000000\r\n  ),\r\n  '0.00'\r\n)",
-                  "item/LastFailureTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureTimestamp'],\r\n  utcNow()\r\n)",
-                  "item/LastFailureStep": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureStep'],\r\n  'UpdateOperationMode'\r\n)",
-                  "item/LastFailureMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureMessage'],\r\n  concat(\r\n    'Agent 5 did not complete with Succeeded. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)",
-                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningTimestamp']",
-                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningStep']",
-                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningMessage']",
+                  "item/LastFailureTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_05')?['value'])?['LastFailureTimestamp'],\r\n  utcNow()\r\n)",
+                  "item/LastFailureStep": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_05')?['value'])?['LastFailureStep'],\r\n  'UpdateOperationMode'\r\n)",
+                  "item/LastFailureMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_05')?['value'])?['LastFailureMessage'],\r\n  concat(\r\n    'Agent 5 did not complete with Succeeded. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)",
+                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_05')?['value'])?['LastWarningTimestamp']",
+                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_05')?['value'])?['LastWarningStep']",
+                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_05')?['value'])?['LastWarningMessage']",
                   "item/OperationMode/Value": "@variables('OperationMode')",
                   "item/WorkflowPath": "@variables('WorkflowPath')",
                   "item/LastRunId": "@workflow()?['run']?['name']",
