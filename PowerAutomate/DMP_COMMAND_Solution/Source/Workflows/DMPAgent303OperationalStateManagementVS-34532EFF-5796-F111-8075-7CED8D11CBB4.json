@@ -194,7 +194,7 @@
               {
                 "name": "WorkflowPath",
                 "type": "string",
-                "value": "Agent3_OperationalStateManagement"
+                "value": "Agent5_OperationalStateManagement"
               }
             ]
           },
@@ -326,7 +326,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (((Scope eq 'Global') and (Title eq 'CurrentOperationMode' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox')) or (Scope eq 'Agent3_03') or (Scope eq 'Agent3_All'))",
+              "$filter": "Active eq 'Yes' and (((Scope eq 'Global') and (Title eq 'CurrentOperationMode' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox')) or (Scope eq 'Agent5') or (Scope eq 'Agent3_All'))",
               "$orderby": "Title asc",
               "$top": 5000
             },
@@ -415,7 +415,7 @@
           "type": "SetVariable",
           "inputs": {
             "name": "WorkflowPath",
-            "value": "@coalesce(\r\n  outputs('CMP_ConfigObject')?['WorkflowPathAgent303'],\r\n  'Agent3_OperationalStateManagement'\r\n)\r\n"
+            "value": "@coalesce(\r\n  outputs('CMP_ConfigObject')?['WorkflowPathAgent5'],\r\n  'Agent5_OperationalStateManagement'\r\n)\r\n"
           },
           "description": "Sets WorkflowPath from configuration object."
         },
@@ -572,7 +572,7 @@
             ]
           },
           "type": "Scope",
-          "description": "Writes buffered audit events and updates the Agent_03_03 dashboard status record.",
+          "description": "Writes buffered audit events and updates the Agent_05 dashboard status record.",
           "actions": {
             "WRITE_RunSummary_To_AuditTrail": {
               "type": "OpenApiConnection",
@@ -606,7 +606,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Writes the final Agent 3.03 run summary to the central audit trail after the configuration update has completed."
+              "description": "Writes the final Agent 5 run summary to the central audit trail after the configuration update has completed."
             },
             "LOOP_AuditEvents": {
               "foreach": "@variables('AuditEvents')",
@@ -674,7 +674,7 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
-                  "$filter": "AgentKey eq 'Agent_03_03'",
+                  "$filter": "AgentKey eq 'Agent_05'",
                   "$top": 1
                 },
                 "host": {
@@ -687,7 +687,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Reads the Agent_03_03 dashboard status record from DMP Command Agent Status."
+              "description": "Reads the Agent_05 dashboard status record from DMP Command Agent Status."
             },
             "UPDATE_StatusRow_Agent_3.03": {
               "runAfter": {
@@ -701,7 +701,7 @@
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
                   "id": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['ID']",
-                  "item/Title": "Agent_03_03",
+                  "item/Title": "Agent_05",
                   "item/AgentDisplayName": "Operational State Management",
                   "item/CurrentStatus/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Operational',\r\n  'Failed'\r\n)",
                   "item/LastUpdateTimestamp": "@utcNow()",
@@ -711,14 +711,14 @@
                   "item/LastRunDurationSec": "@formatNumber(\r\n  div(\r\n    float(\r\n      sub(\r\n        ticks(utcNow()),\r\n        variables('RunStartTicks')\r\n      )\r\n    ),\r\n    10000000\r\n  ),\r\n  '0.00'\r\n)",
                   "item/LastFailureTimestamp": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureTimestamp'],\r\n  utcNow()\r\n)",
                   "item/LastFailureStep": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureStep'],\r\n  'UpdateOperationMode'\r\n)",
-                  "item/LastFailureMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureMessage'],\r\n  concat(\r\n    'Agent 3.03 did not complete with Succeeded. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)",
+                  "item/LastFailureMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastFailureMessage'],\r\n  concat(\r\n    'Agent 5 did not complete with Succeeded. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)",
                   "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningTimestamp']",
                   "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningStep']",
                   "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.03')?['value'])?['LastWarningMessage']",
                   "item/OperationMode/Value": "@variables('OperationMode')",
                   "item/WorkflowPath": "@variables('WorkflowPath')",
                   "item/LastRunId": "@workflow()?['run']?['name']",
-                  "item/LastStatusUpdateSource": "Agent_03_03",
+                  "item/LastStatusUpdateSource": "Agent_05",
                   "item/StatusSeverity/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Information',\r\n  'Critical'\r\n)",
                   "item/LastHeartbeatTimestamp": "@utcNow()",
                   "item/StatusMessage": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  concat(\r\n    'Operating State updated successfully. NewOperationMode=',\r\n    variables('RequestedAction')\r\n  ),\r\n  concat(\r\n    'Operating State update failed or ended without confirmed success. AuditOutcome=',\r\n    variables('AuditOutcome'),\r\n    ' | RequestedAction=',\r\n    variables('RequestedAction')\r\n  )\r\n)"
@@ -733,7 +733,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Updates the Agent_03_03 dashboard status record with the current run outcome."
+              "description": "Updates the Agent_05 dashboard status record with the current run outcome."
             }
           }
         },
@@ -773,11 +773,11 @@
               {
                 "name": "StatusAgentKey",
                 "type": "string",
-                "value": "Agent_03_03"
+                "value": "Agent_05"
               }
             ]
           },
-          "description": "Stores the unique dashboard identifier of Agent 3.03.\n"
+          "description": "Stores the unique dashboard identifier of Agent 5.\n"
         }
       }
     },

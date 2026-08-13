@@ -27,16 +27,16 @@ Screens:
                 Variant: AutoLayout
                 Properties:
                   Fill: =If(varDarkMode,RGBA(20,17,38,1),RGBA(255,255,255,1))
-                  Width: =220
-                  LayoutMinWidth: =220
-                  LayoutMaxWidth: =220
+                  Width: =252
+                  LayoutMinWidth: =252
+                  LayoutMaxWidth: =252
                   FillPortions: =0
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutAlignItems: =LayoutAlignItems.Stretch
-                  LayoutGap: =4
+                  LayoutGap: =6
                   PaddingTop: =20
-                  PaddingLeft: =14
-                  PaddingRight: =14
+                  PaddingLeft: =16
+                  PaddingRight: =16
                   PaddingBottom: =20
                 Children:
                   - imgSidebarLogo:
@@ -46,6 +46,15 @@ Screens:
                         ImagePosition: =ImagePosition.Fit
                         Height: =128
                         Width: =190
+                        BorderStyle: =BorderStyle.None
+                        BorderColor: =RGBA(0,0,0,0)
+                  - lblSidebarSpacer:
+                      Control: Label@2.5.1
+                      Properties:
+                        Text: =""
+                        Height: =20
+                        LayoutMinHeight: =20
+                        LayoutMaxHeight: =20
                         BorderStyle: =BorderStyle.None
                         BorderColor: =RGBA(0,0,0,0)
                   - btnNavCockpit:
@@ -242,7 +251,7 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutGap: =14
+                              LayoutGap: =2
                             Children:
                               - conKpiCritical:
                                   Control: GroupContainer@1.5.0
@@ -351,7 +360,9 @@ Screens:
                                     Size: =14
                                     Align: =Align.Center
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Height: =44
+                                    Height: =26
+                                    LayoutMinHeight: =26
+                                    LayoutMaxHeight: =26
                                     Width: =74
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
@@ -363,6 +374,7 @@ Screens:
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutGap: =4
                                   Children:
                                     - lblThemeToggleCaption:
                                         Control: Label@2.5.1
@@ -373,7 +385,9 @@ Screens:
                                           Size: =9
                                           Align: =Align.Center
                                           Height: =14
-                                          Width: =80
+                                          LayoutMinHeight: =14
+                                          LayoutMaxHeight: =14
+                                          Width: =90
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
                                     - tglTheme:
@@ -381,7 +395,11 @@ Screens:
                                         Properties:
                                           Default: =false
                                           Height: =24
-                                          Width: =54
+                                          LayoutMinHeight: =24
+                                          LayoutMaxHeight: =24
+                                          Width: =110
+                                          LabelPaddingLeft: =0
+                                          LabelPaddingRight: =0
                                           TrueFill: =RGBA(0,206,125,1)
                                           FalseFill: =RGBA(80,78,100,1)
                                           TrueText: ="Light"
@@ -397,9 +415,9 @@ Screens:
                       Properties:
                         Fill: =RGBA(0,0,0,0)
                         FillPortions: =0
-                        Height: =340
-                        LayoutMinHeight: =340
-                        LayoutMaxHeight: =340
+                        Height: =360
+                        LayoutMinHeight: =360
+                        LayoutMaxHeight: =360
                         LayoutDirection: =LayoutDirection.Horizontal
                         LayoutAlignItems: =LayoutAlignItems.Start
                         LayoutGap: =16
@@ -412,9 +430,9 @@ Screens:
                               BorderColor: =RGBA(0,206,125,0.55)
                               BorderThickness: =1
                               FillPortions: =1
-                              Height: =340
-                              LayoutMinHeight: =340
-                              LayoutMaxHeight: =340
+                              Height: =360
+                              LayoutMinHeight: =360
+                              LayoutMaxHeight: =360
                               LayoutDirection: =LayoutDirection.Vertical
                               LayoutAlignItems: =LayoutAlignItems.Center
                               RadiusTopLeft: =18
@@ -456,74 +474,174 @@ Screens:
                                     Fill: =RGBA(0,0,0,0)
                                     LayoutDirection: =LayoutDirection.Horizontal
                                     LayoutAlignItems: =LayoutAlignItems.Center
-                                    LayoutGap: =4
+                                    LayoutGap: =14
                                     LayoutWrap: =true
                                   Children:
-                                    - btnLegendAgent1:
-                                        Control: Classic/Button@2.2.0
+                                    - conLegendAgent1:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
                                         Properties:
-                                          Text: ="● Agent 1"
-                                          Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                          PressedFill: =RGBA(255,255,255,0.1)
-                                          Font: =Font.'Segoe UI'
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutGap: =6
                                           Height: =22
-                                          OnSelect: =Notify("Navigate to Agent 1 detail", NotificationType.Information)
-                                    - btnLegendAgent2:
-                                        Control: Classic/Button@2.2.0
+                                          LayoutMinHeight: =22
+                                          LayoutMaxHeight: =22
+                                        Children:
+                                          - dotLegendAgent1:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =RGBA(0,206,125,1)
+                                                Width: =14
+                                                Height: =14
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                          - lblLegendAgent1:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Text: ="Agent 1"
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                Font: =Font.'Segoe UI'
+                                                Size: =11
+                                                Height: =18
+                                                BorderStyle: =BorderStyle.None
+                                                BorderColor: =RGBA(0,0,0,0)
+                                    - conLegendAgent2:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
                                         Properties:
-                                          Text: ="● Agent 2"
-                                          Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                          PressedFill: =RGBA(255,255,255,0.1)
-                                          Font: =Font.'Segoe UI'
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutGap: =6
                                           Height: =22
-                                          OnSelect: =Notify("Navigate to Agent 2 detail", NotificationType.Information)
-                                    - btnLegendAgent301:
-                                        Control: Classic/Button@2.2.0
+                                          LayoutMinHeight: =22
+                                          LayoutMaxHeight: =22
+                                        Children:
+                                          - dotLegendAgent2:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =RGBA(0,206,125,1)
+                                                Width: =14
+                                                Height: =14
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                          - lblLegendAgent2:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Text: ="Agent 2"
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                Font: =Font.'Segoe UI'
+                                                Size: =11
+                                                Height: =18
+                                                BorderStyle: =BorderStyle.None
+                                                BorderColor: =RGBA(0,0,0,0)
+                                    - conLegendAgent301:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
                                         Properties:
-                                          Text: ="● Agent 3.01"
-                                          Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                          PressedFill: =RGBA(255,255,255,0.1)
-                                          Font: =Font.'Segoe UI'
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutGap: =6
                                           Height: =22
-                                          OnSelect: =Notify("Navigate to Agent 3.01 detail", NotificationType.Information)
-                                    - btnLegendAgent302:
-                                        Control: Classic/Button@2.2.0
+                                          LayoutMinHeight: =22
+                                          LayoutMaxHeight: =22
+                                        Children:
+                                          - dotLegendAgent301:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =RGBA(0,206,125,1)
+                                                Width: =14
+                                                Height: =14
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                          - lblLegendAgent301:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Text: ="Agent 3.01"
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                Font: =Font.'Segoe UI'
+                                                Size: =11
+                                                Height: =18
+                                                BorderStyle: =BorderStyle.None
+                                                BorderColor: =RGBA(0,0,0,0)
+                                    - conLegendAgent302:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
                                         Properties:
-                                          Text: ="● Agent 3.02"
-                                          Color: =RGBA(255,159,10,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                          PressedFill: =RGBA(255,255,255,0.1)
-                                          Font: =Font.'Segoe UI'
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutGap: =6
                                           Height: =22
-                                          OnSelect: =Notify("Navigate to Agent 3.02 detail", NotificationType.Information)
-                                    - btnLegendAgent303:
-                                        Control: Classic/Button@2.2.0
+                                          LayoutMinHeight: =22
+                                          LayoutMaxHeight: =22
+                                        Children:
+                                          - dotLegendAgent302:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =RGBA(255,159,10,1)
+                                                Width: =14
+                                                Height: =14
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                          - lblLegendAgent302:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Text: ="Agent 3.02"
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                Font: =Font.'Segoe UI'
+                                                Size: =11
+                                                Height: =18
+                                                BorderStyle: =BorderStyle.None
+                                                BorderColor: =RGBA(0,0,0,0)
+                                    - conLegendAgent303:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: AutoLayout
                                         Properties:
-                                          Text: ="● Agent 3.03"
-                                          Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                          PressedFill: =RGBA(255,255,255,0.1)
-                                          Font: =Font.'Segoe UI'
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
+                                          LayoutDirection: =LayoutDirection.Horizontal
+                                          LayoutAlignItems: =LayoutAlignItems.Center
+                                          LayoutGap: =6
                                           Height: =22
-                                          OnSelect: =Notify("Navigate to Agent 3.03 detail", NotificationType.Information)
+                                          LayoutMinHeight: =22
+                                          LayoutMaxHeight: =22
+                                        Children:
+                                          - dotLegendAgent303:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =RGBA(0,206,125,1)
+                                                Width: =14
+                                                Height: =14
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                          - lblLegendAgent303:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                Text: ="Agent 3.03"
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                Font: =Font.'Segoe UI'
+                                                Size: =11
+                                                Height: =18
+                                                BorderStyle: =BorderStyle.None
+                                                BorderColor: =RGBA(0,0,0,0)
                         - conMiddleColumn:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -582,8 +700,9 @@ Screens:
                                               Control: Label@2.5.1
                                               Properties:
                                                 Text: ="Mode"
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
                                                 Size: =12
                                                 FillPortions: =1
                                                 Height: =20
@@ -616,8 +735,9 @@ Screens:
                                               Control: Label@2.5.1
                                               Properties:
                                                 Text: ="Last Changed"
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
                                                 Size: =12
                                                 FillPortions: =1
                                                 Height: =20
@@ -644,16 +764,17 @@ Screens:
                                           LayoutMaxHeight: =30
                                           LayoutDirection: =LayoutDirection.Horizontal
                                           LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =14
+                                          LayoutGap: =6
                                         Children:
                                           - lblOperationalStateLabel:
                                               Control: Label@2.5.1
                                               Properties:
                                                 Text: ="Operational Mode"
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
                                                 Size: =12
-                                                FillPortions: =1
+                                                Width: =120
                                                 Height: =28
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
@@ -661,8 +782,10 @@ Screens:
                                               Control: Classic/Toggle@2.1.0
                                               Properties:
                                                 Default: =true
-                                                Width: =76
+                                                Width: =130
                                                 Height: =26
+                                                LabelPaddingLeft: =0
+                                                LabelPaddingRight: =0
                                                 TrueFill: =RGBA(255,159,10,1)
                                                 FalseFill: =RGBA(0,206,125,1)
                                                 TrueText: ="DMP"
@@ -672,8 +795,32 @@ Screens:
                                                 FontWeight: =FontWeight.Semibold
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                                OnCheck: =Notify("Switch to DMP mode - requires confirmation (next build step)", NotificationType.Warning)
-                                                OnUncheck: =Notify("Switch to Normal mode - requires confirmation (next build step)", NotificationType.Information)
+                                                OnCheck: |-
+                                                  =Set(
+                                                      varOpModeResult,
+                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                          User().Email,
+                                                          If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
+                                                      )
+                                                  );
+                                                  If(
+                                                      Coalesce(varOpModeResult.success, false),
+                                                      Notify("Operating State switched to DMP mode.", NotificationType.Success),
+                                                      Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  )
+                                                OnUncheck: |-
+                                                  =Set(
+                                                      varOpModeResult,
+                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                          User().Email,
+                                                          If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
+                                                      )
+                                                  );
+                                                  If(
+                                                      Coalesce(varOpModeResult.success, false),
+                                                      Notify("Operating State switched to Normal mode.", NotificationType.Success),
+                                                      Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  )
                                     - conRowApplicationMode:
                                         Control: GroupContainer@1.5.0
                                         Variant: AutoLayout
@@ -684,16 +831,17 @@ Screens:
                                           LayoutMaxHeight: =30
                                           LayoutDirection: =LayoutDirection.Horizontal
                                           LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =14
+                                          LayoutGap: =6
                                         Children:
                                           - lblApplicationModeLabel:
                                               Control: Label@2.5.1
                                               Properties:
                                                 Text: ="Environment"
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
                                                 Size: =12
-                                                FillPortions: =1
+                                                Width: =120
                                                 Height: =28
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
@@ -701,8 +849,10 @@ Screens:
                                               Control: Classic/Toggle@2.1.0
                                               Properties:
                                                 Default: =false
-                                                Width: =76
+                                                Width: =130
                                                 Height: =26
+                                                LabelPaddingLeft: =0
+                                                LabelPaddingRight: =0
                                                 TrueFill: =RGBA(196,43,28,1)
                                                 FalseFill: =RGBA(60,125,190,1)
                                                 TrueText: ="PROD"
@@ -712,8 +862,32 @@ Screens:
                                                 FontWeight: =FontWeight.Semibold
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
-                                                OnCheck: =Notify("Switch to PROD environment - requires confirmation (next build step)", NotificationType.Warning)
-                                                OnUncheck: =Notify("Switch to SIMU environment", NotificationType.Information)
+                                                OnCheck: |-
+                                                  =Set(
+                                                      varOpModeResult,
+                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                          User().Email,
+                                                          If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
+                                                      )
+                                                  );
+                                                  If(
+                                                      Coalesce(varOpModeResult.success, false),
+                                                      Notify("Environment switched to PROD.", NotificationType.Success),
+                                                      Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  )
+                                                OnUncheck: |-
+                                                  =Set(
+                                                      varOpModeResult,
+                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                          User().Email,
+                                                          If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
+                                                      )
+                                                  );
+                                                  If(
+                                                      Coalesce(varOpModeResult.success, false),
+                                                      Notify("Environment switched to SIMU.", NotificationType.Success),
+                                                      Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  )
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
@@ -721,9 +895,9 @@ Screens:
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     BorderColor: =RGBA(0,206,125,0.55)
                                     BorderThickness: =1
-                                    Height: =142
-                                    LayoutMinHeight: =142
-                                    LayoutMaxHeight: =142
+                                    Height: =162
+                                    LayoutMinHeight: =162
+                                    LayoutMaxHeight: =162
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
                                     RadiusTopLeft: =18
@@ -752,9 +926,9 @@ Screens:
                                         Variant: AutoLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
-                                          Height: =34
-                                          LayoutMinHeight: =34
-                                          LayoutMaxHeight: =34
+                                          Height: =44
+                                          LayoutMinHeight: =44
+                                          LayoutMaxHeight: =44
                                           LayoutDirection: =LayoutDirection.Horizontal
                                           LayoutAlignItems: =LayoutAlignItems.Center
                                           LayoutGap: =8
@@ -810,7 +984,7 @@ Screens:
                                               Properties:
                                                 Text: =""
                                                 Height: =28
-                                                Width: =70
+                                                Width: =90
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
                                           - lblInternalDomainsCount:
@@ -830,9 +1004,9 @@ Screens:
                                         Variant: AutoLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
-                                          Height: =34
-                                          LayoutMinHeight: =34
-                                          LayoutMaxHeight: =34
+                                          Height: =44
+                                          LayoutMinHeight: =44
+                                          LayoutMaxHeight: =44
                                           LayoutDirection: =LayoutDirection.Horizontal
                                           LayoutAlignItems: =LayoutAlignItems.Center
                                           LayoutGap: =8
@@ -883,68 +1057,95 @@ Screens:
                                                 RadiusBottomLeft: =8
                                                 RadiusBottomRight: =8
                                                 OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt?csf=1&web=1&e=0RnJFW")
-                                          - attExternalDomainsReplace:
-                                              Control: Attachments@2.3.0
+                                          - conReplaceStack:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
                                               Properties:
-                                                Width: =70
-                                                Height: =28
-                                                AddAttachmentText: ="Replace"
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =RGBA(255,255,255,1)
-                                                Fill: =RGBA(60,125,190,1)
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Semibold
-                                                HoverFill: =RGBA(50,105,165,1)
-                                                HoverColor: =RGBA(255,255,255,1)
-                                                ItemColor: =RGBA(255,255,255,0.01)
-                                                ItemFill: =RGBA(255,255,255,0.01)
-                                                ItemHoverColor: =RGBA(255,255,255,0.01)
-                                                ItemHoverFill: =RGBA(255,255,255,0.01)
-                                                MaxAttachments: =1
-                                                MaxAttachmentsText: =""
-                                                NoAttachmentsColor: =RGBA(255,255,255,0.01)
-                                                NoAttachmentsText: =""
-                                                PressedColor: =RGBA(255,255,255,1)
-                                                PressedFill: =RGBA(50,105,165,1)
-                                                Tooltip: ="Upload a new Emergency Report - triggers Agent 1 to regenerate External Domains"
-                                                OnAddFile: |-
-                                                  =If(
-                                                      IsEmpty(attExternalDomainsReplace.Attachments),
-                                                      false,
-                                                      If(
-                                                          !EndsWith(
-                                                              Lower(First(attExternalDomainsReplace.Attachments).Name),
-                                                              ".xlsx"
-                                                          ),
-                                                          Notify("Only .xlsx files are allowed.", NotificationType.Error);
-                                                          Reset(attExternalDomainsReplace),
-                                                          Notify("Emergency Report submitted for processing. Agent 1 will regenerate External Domains.", NotificationType.Information);
-                                                          IfError(
-                                                              Set(
-                                                                  varEmergencyReportUploadResult,
-                                                                  'DMPAgent3(EmergencyReportManagement)'.Run(
-                                                                      User().Email,
-                                                                      {
-                                                                          file: {
-                                                                              name: First(attExternalDomainsReplace.Attachments).Name,
-                                                                              contentBytes: First(attExternalDomainsReplace.Attachments).Value
-                                                                          }
-                                                                      }
-                                                                  )
-                                                              ),
-                                                              Set(
-                                                                  varEmergencyReportUploadResult,
-                                                                  {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
-                                                              )
-                                                          );
-                                                          If(
-                                                              Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
-                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
-                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
-                                                          );
-                                                          Reset(attExternalDomainsReplace)
-                                                      )
-                                                  )
+                                                Fill: =RGBA(0,0,0,0)
+                                                Width: =90
+                                                Height: =40
+                                              Children:
+                                                - lblReplaceFake:
+                                                    Control: Label@2.5.1
+                                                    Properties:
+                                                      X: =0
+                                                      Y: =0
+                                                      Width: =90
+                                                      Height: =40
+                                                      Text: ="Replace"
+                                                      Color: =RGBA(255,255,255,1)
+                                                      Fill: =RGBA(60,125,190,1)
+                                                      Font: =Font.'Segoe UI'
+                                                      FontWeight: =FontWeight.Semibold
+                                                      Size: =12
+                                                      Align: =Align.Center
+                                                      VerticalAlign: =VerticalAlign.Middle
+                                                      BorderStyle: =BorderStyle.None
+                                                      BorderColor: =RGBA(0,0,0,0)
+                                                - attExternalDomainsReplace:
+                                                    Control: Attachments@2.3.0
+                                                    Properties:
+                                                      X: =0
+                                                      Y: =0
+                                                      Width: =90
+                                                      Height: =40
+                                                      AddAttachmentText: =""
+                                                      BorderStyle: =BorderStyle.None
+                                                      BorderColor: =RGBA(0,0,0,0)
+                                                      Color: =RGBA(255,255,255,0.01)
+                                                      Fill: =RGBA(255,255,255,0.01)
+                                                      Font: =Font.'Segoe UI'
+                                                      HoverFill: =RGBA(255,255,255,0.01)
+                                                      HoverColor: =RGBA(255,255,255,0.01)
+                                                      ItemColor: =RGBA(255,255,255,0.01)
+                                                      ItemFill: =RGBA(255,255,255,0.01)
+                                                      ItemHoverColor: =RGBA(255,255,255,0.01)
+                                                      ItemHoverFill: =RGBA(255,255,255,0.01)
+                                                      MaxAttachments: =1
+                                                      MaxAttachmentsText: =""
+                                                      NoAttachmentsColor: =RGBA(255,255,255,0.01)
+                                                      NoAttachmentsText: =""
+                                                      PressedColor: =RGBA(255,255,255,0.01)
+                                                      PressedFill: =RGBA(255,255,255,0.01)
+                                                      Tooltip: ="Upload a new Emergency Report - triggers Agent 1 to regenerate External Domains"
+                                                      OnAddFile: |-
+                                                        =If(
+                                                            IsEmpty(attExternalDomainsReplace.Attachments),
+                                                            false,
+                                                            If(
+                                                                !EndsWith(
+                                                                    Lower(First(attExternalDomainsReplace.Attachments).Name),
+                                                                    ".xlsx"
+                                                                ),
+                                                                Notify("Only .xlsx files are allowed.", NotificationType.Error);
+                                                                Reset(attExternalDomainsReplace),
+                                                                Notify("Emergency Report submitted for processing. Agent 1 will regenerate External Domains.", NotificationType.Information);
+                                                                IfError(
+                                                                    Set(
+                                                                        varEmergencyReportUploadResult,
+                                                                        'DMPAgent3(EmergencyReportManagement)'.Run(
+                                                                            User().Email,
+                                                                            {
+                                                                                file: {
+                                                                                    name: First(attExternalDomainsReplace.Attachments).Name,
+                                                                                    contentBytes: First(attExternalDomainsReplace.Attachments).Value
+                                                                                }
+                                                                            }
+                                                                        )
+                                                                    ),
+                                                                    Set(
+                                                                        varEmergencyReportUploadResult,
+                                                                        {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
+                                                                    )
+                                                                );
+                                                                If(
+                                                                    Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
+                                                                    Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
+                                                                    Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
+                                                                );
+                                                                Reset(attExternalDomainsReplace)
+                                                            )
+                                                        )
                                           - lblExternalDomainsCount:
                                               Control: Label@2.5.1
                                               Properties:
@@ -965,9 +1166,9 @@ Screens:
                               BorderColor: =RGBA(0,206,125,0.55)
                               BorderThickness: =1
                               FillPortions: =1
-                              Height: =340
-                              LayoutMinHeight: =340
-                              LayoutMaxHeight: =340
+                              Height: =360
+                              LayoutMinHeight: =360
+                              LayoutMaxHeight: =360
                               LayoutDirection: =LayoutDirection.Vertical
                               LayoutAlignItems: =LayoutAlignItems.Center
                               RadiusTopLeft: =18
@@ -1099,7 +1300,7 @@ Screens:
                         RadiusBottomRight: =12
                         PaddingTop: =2
                         PaddingBottom: =2
-                        PaddingLeft: =14
+                        PaddingLeft: =60
                         PaddingRight: =14
                         LayoutGap: =12
                       Children:
@@ -1112,7 +1313,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Size: =13
                               Height: =16
-                              Width: =40
+                              Width: =56
                               BorderStyle: =BorderStyle.None
                               BorderColor: =RGBA(0,0,0,0)
                         - lblDotEmergencyReport:

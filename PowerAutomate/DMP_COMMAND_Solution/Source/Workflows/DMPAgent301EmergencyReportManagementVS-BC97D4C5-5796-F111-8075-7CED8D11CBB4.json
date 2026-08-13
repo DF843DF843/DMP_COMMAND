@@ -446,7 +446,7 @@
                                     "name": "AuditEvents",
                                     "value": {
                                       "TimestampUtc": "@{utcNow()}",
-                                      "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                                      "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
                                       "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' FileStored')}",
                                       "StepStatus": "Succeeded",
                                       "User": "@{variables('InitiatedBy')}",
@@ -572,7 +572,7 @@
                                         "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
                                         "item/TimestampUtc": "@utcNow()",
                                         "item/RunId": "@workflow()?['run']?['name']",
-                                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                                         "item/StepName": "EMREPORT-VALIDATE-MISSING-WORKSHEET",
                                         "item/StepStatus": "Failed",
                                         "item/KeyOutput": "Source=@{variables('SourceFileName')} | User=@{variables('InitiatedBy')} | Error=MISSING_WORKSHEET | Worksheet=",
@@ -866,7 +866,7 @@
                                     "dateTimeFormat": "ISO 8601",
                                     "item/TimestampUtc": "@utcNow()",
                                     "item/RunId": "@workflow()?['run']?['name']",
-                                    "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                                    "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                                     "item/StepName": "EMREPORT-VALIDATE-INVALID-WORKBOOK",
                                     "item/StepStatus": "Failed",
                                     "item/KeyOutput": "Source=@{variables('SourceFileName')} | User=@{variables('InitiatedBy')} | Error=INVALID_WORKBOOK | WorkFile=@{variables('WorkFileName')}",
@@ -1119,7 +1119,7 @@
                               "dateTimeFormat": "ISO 8601",
                               "item/TimestampUtc": "@item()?['TimestampUtc']",
                               "item/RunId": "@workflow()?['run']?['name']",
-                              "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                              "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                               "item/StepName": "@item()?['StepName']",
                               "item/StepStatus": "@item()?['StepStatus']",
                               "item/KeyOutput": "@concat( 'Source=', outputs('CMP_SourceFileName'), ' | Target=', trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName'])) )",
@@ -1241,7 +1241,7 @@
                               "type": "Raw"
                             }
                           },
-                          "description": "Recycles the current Agent 3.01 work file via SharePoint REST."
+                          "description": "Recycles the current Agent 3 work file via SharePoint REST."
                         },
                         "INC_StepCounter_(CleanupRecycled)": {
                           "runAfter": {
@@ -1290,7 +1290,7 @@
                             "name": "AuditEvents",
                             "value": {
                               "TimestampUtc": "@{utcNow()}",
-                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
                               "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' WorkFileCleanupStillLocked')}",
                               "StepStatus": "Warning",
                               "User": "@{variables('InitiatedBy')}",
@@ -1315,7 +1315,7 @@
                             "name": "AuditEvents",
                             "value": {
                               "TimestampUtc": "@{utcNow()}",
-                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
                               "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' WorkFileRecycledAfterLock')}",
                               "StepStatus": "Warning",
                               "User": "@{variables('InitiatedBy')}",
@@ -1349,7 +1349,7 @@
                     ]
                   },
                   "type": "Scope",
-                  "description": "Handles cleanup of the current Agent 3.01 work file only."
+                  "description": "Handles cleanup of the current Agent 3 work file only."
                 }
               },
               "runAfter": {
@@ -1432,7 +1432,7 @@
                         "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
                         "item/TimestampUtc": "@utcNow()",
                         "item/RunId": "@workflow()?['run']?['name']",
-                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                        "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                         "item/StepName": "EMREPORT-VALIDATE-INVALID-EXTENSION",
                         "item/StepStatus": "Failed",
                         "item/KeyOutput": "Source=@{variables('SourceFileName')} | Error=Invalid file type | Allowed=.xlsx",
@@ -2058,11 +2058,11 @@
               {
                 "name": "StatusAgentKey",
                 "type": "string",
-                "value": "Agent_03_01"
+                "value": "Agent_03"
               }
             ]
           },
-          "description": "Stores the unique dashboard identifier of Agent 3.01."
+          "description": "Stores the unique dashboard identifier of Agent 3."
         },
         "SCOPE_StatusRow_Update": {
           "actions": {
@@ -2072,7 +2072,7 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
-                  "$filter": "AgentKey eq 'Agent_03_01'",
+                  "$filter": "AgentKey eq 'Agent_03'",
                   "$top": 1
                 },
                 "host": {
@@ -2085,7 +2085,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Reads the Agent_03_01 dashboard status row."
+              "description": "Reads the Agent_03 dashboard status row."
             },
             "GET_StatusRow_EmergencyReport": {
               "runAfter": {
@@ -2133,12 +2133,12 @@
                   "item/LastRunResult/Value": "Succeeded",
                   "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
                   "item/OperationMode/Value": "@first(body('GET_StatusRow_Agent_3.01')?['value'])?['OperationMode']",
-                  "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
-                  "item/AgentKey": "Agent_03_01",
+                  "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
+                  "item/AgentKey": "Agent_03",
                   "item/EmergencyReportPresent/Value": "@if(\r\n  equals(variables('AppResponseStatus'),'SUCCESS'),\r\n  'Yes',\r\n  'No'\r\n)",
                   "item/WorkbookValidationPassed/Value": "@if(\r\n  variables('WorkbookValidationPassed'),\r\n  'Yes',\r\n  'No'\r\n)",
                   "item/LastRunId": "@workflow()?['run']?['name']",
-                  "item/LastStatusUpdateSource": "Agent_03_01",
+                  "item/LastStatusUpdateSource": "Agent_03",
                   "item/StatusSeverity/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Information',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Critical'\r\n )\r\n)",
                   "item/LastHeartbeatTimestamp": "@utcNow()",
                   "item/StatusMessage": "@concat(\r\n 'Emergency Report processing completed. Status=',\r\n variables('AppResponseStatus'),\r\n ' | Code=',\r\n variables('AppResponseCode'),\r\n ' | Message=',\r\n variables('AppResponseMessage')\r\n)\r\n"
@@ -2153,7 +2153,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Stores the operational dashboard status of Agent 3.01."
+              "description": "Stores the operational dashboard status of Agent 3."
             },
             "For_each": {
               "foreach": "@outputs('GET_StatusRow_EmergencyReport')?['body/value']",
@@ -2172,12 +2172,12 @@
                       "item/LastSuccessTimestamp": "@utcNow()",
                       "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
                       "item/OperationMode/Value": "@variables('OperationMode')",
-                      "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))",
+                      "item/WorkflowPath": "@trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))",
                       "item/AgentKey": "EmergencyReport",
                       "item/EmergencyReportPresent/Value": "@if(\r\n  equals(variables('AppResponseStatus'),'SUCCESS'),\r\n  'Yes',\r\n  'No'\r\n)",
                       "item/WorkbookValidationPassed/Value": "@if(\r\n  variables('WorkbookValidationPassed'),\r\n  'Yes',\r\n  'No'\r\n)",
                       "item/LastRunId": "@workflow()?['run']?['name']",
-                      "item/LastStatusUpdateSource": "Agent_03_01",
+                      "item/LastStatusUpdateSource": "Agent_03",
                       "item/StatusSeverity/Value": "@if(\r\n equals(variables('AppResponseStatus'),'SUCCESS'),\r\n 'Information',\r\n if(\r\n  equals(variables('AppResponseStatus'),'WARNING'),\r\n  'Warning',\r\n  'Critical'\r\n )\r\n)",
                       "item/LastHeartbeatTimestamp": "@utcNow()",
                       "item/StatusMessage": "@if(\n equals(variables('AppResponseStatus'),'SUCCESS'),\n concat(\n  'Emergency Report is available. TargetFile=',\n  trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))\n ),\n concat(\n  'Emergency Report upload failed. Code=',\n  variables('AppResponseCode')\n )\n)"
@@ -2212,7 +2212,7 @@
             ]
           },
           "type": "Scope",
-          "description": "Updates DMP COMMAND dashboard status rows for Agent 3.01 and Emergency Report infrastructure."
+          "description": "Updates DMP COMMAND dashboard status rows for Agent 3 and Emergency Report infrastructure."
         },
         "GET_DMP_Command_Configuration": {
           "runAfter": {
@@ -2327,7 +2327,7 @@
                 "name": "AuditEvents",
                 "value": {
                   "TimestampUtc": "@{utcNow()}",
-                  "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent301']))}",
+                  "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
                   "StepName": "@{concat('EMREPORT-', formatNumber(variables('StepCounter'), '000'), ' Failed')}",
                   "StepStatus": "Failed",
                   "User": "@{variables('InitiatedBy')}",
@@ -2424,7 +2424,7 @@
           },
           "type": "Compose",
           "inputs": "@json(outputs('CMP_ConfigJsonText'))",
-          "description": "Converts the generated configuration JSON text into the central Agent 3.01 configuration object used throughout this flow."
+          "description": "Converts the generated configuration JSON text into the central Agent 3 configuration object used throughout this flow."
         }
       }
     },

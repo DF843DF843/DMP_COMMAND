@@ -2313,7 +2313,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'RealDMPIndicatorFileName' or Title eq 'RealDMPIndicatorFolder' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent302' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
+              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'RealDMPIndicatorFileName' or Title eq 'RealDMPIndicatorFolder' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -2325,7 +2325,7 @@
               "type": "Raw"
             }
           },
-          "description": "Loads active Agent 3.02 status configuration items."
+          "description": "Loads active Agent 4 status configuration items."
         },
         "FILTER_Config_CurrentOperationMode": {
           "runAfter": {
@@ -3095,11 +3095,11 @@
               {
                 "name": "StatusAgentKey",
                 "type": "string",
-                "value": "Agent_03_02"
+                "value": "Agent_04"
               }
             ]
           },
-          "description": "Stores the unique dashboard identifier of Agent 3.02."
+          "description": "Stores the unique dashboard identifier of Agent 4."
         },
         "SCOPE_StatusRow_Update": {
           "actions": {
@@ -3112,7 +3112,7 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "@variables('StatusListName')",
-                  "$filter": "AgentKey eq 'Agent_03_02'",
+                  "$filter": "AgentKey eq 'Agent_04'",
                   "$top": 1
                 },
                 "host": {
@@ -3125,7 +3125,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Reads the Agent_03_02 dashboard status row.\n"
+              "description": "Reads the Agent_04 dashboard status row.\n"
             },
             "UPDATE_StatusRow_Agent_3.02": {
               "runAfter": {
@@ -3156,11 +3156,11 @@
                   "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningStep']",
                   "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_3.02')?['value'])?['LastWarningMessage']",
                   "item/OperationMode/Value": "@variables('OperationMode')",
-                  "item/WorkflowPath": "@coalesce(\r\n  variables('ConfigObject')?['WorkflowPathAgent302'],\r\n  'Agent3_StatusCheck'\r\n)",
-                  "item/AgentKey": "Agent_03_02",
+                  "item/WorkflowPath": "@coalesce(\r\n  variables('ConfigObject')?['WorkflowPathAgent4'],\r\n  'Agent3_StatusCheck'\r\n)",
+                  "item/AgentKey": "Agent_04",
                   "item/CurrentIndicatorMode": "@if(\r\n  equals(variables('IsRealDMP'), true),\r\n  'Present',\r\n  'Absent'\r\n)",
                   "item/LastRunId": "@workflow()?['run']?['name']",
-                  "item/LastStatusUpdateSource": "Agent_03_02",
+                  "item/LastStatusUpdateSource": "Agent_04",
                   "item/StatusSeverity/Value": "Information",
                   "item/LastHeartbeatTimestamp": "@utcNow()",
                   "item/StatusMessage": "@concat(\r\n  'Status check completed. AuditTrailExists=',\r\n  string(variables('AuditTrailExists')),\r\n  ' | CounterExists=',\r\n  string(variables('CounterExists')),\r\n  ' | EmergencyReportExists=',\r\n  string(variables('EmergencyReportExists')),\r\n  ' | InternalDomainsExists=',\r\n  string(variables('InternalDomainsExists')),\r\n  ' | ExternalDomainsExists=',\r\n  string(variables('ExternalDomainsExists')),\r\n  ' | IsRealDMP=',\r\n  string(variables('IsRealDMP'))\r\n)"
@@ -3175,7 +3175,7 @@
                   "type": "Raw"
                 }
               },
-              "description": "Updates the operational dashboard status for Agent 3.02 after completing the current infrastructure status check."
+              "description": "Updates the operational dashboard status for Agent 4 after completing the current infrastructure status check."
             }
           },
           "runAfter": {
@@ -3220,7 +3220,7 @@
             "operationMetadataId": "d3a63719-19f6-47c1-a5da-8d4a4a5450a9"
           },
           "type": "Scope",
-          "description": "Updates DMP COMMAND dashboard status rows for Agent 3.02 and related infrastructure components."
+          "description": "Updates DMP COMMAND dashboard status rows for Agent 4 and related infrastructure components."
         },
         "VAR_RunStartTicks": {
           "runAfter": {},

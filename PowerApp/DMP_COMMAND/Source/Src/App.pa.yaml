@@ -45,6 +45,7 @@ App:
       Set(varAuditLastModified,"");
 
       Set(varEmergencyReportUploadResult,Blank());
+      Set(varOpModeResult,Blank());
       Set(varDarkMode,true)
     StartScreen: =scrHome
     Theme: =PowerAppsTheme

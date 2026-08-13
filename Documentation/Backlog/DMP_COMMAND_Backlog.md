@@ -1,12 +1,43 @@
 # DMP COMMAND – Projektweites Backlog für größere, zurückgestellte Optimierungen
 
-**Geltungsbereich:** Dieses Backlog gilt für das gesamte DMP COMMAND System — alle Agenten (Agent 1, Agent 2, Agent 3.01, Agent 3.02, Agent 3.03), die Power App (DMP COMMAND), sowie alle verwendeten Konfigurations- und Statuslisten/-dokumente (`DMP Command Configuration`, `DMP Command Agent Status`, u. a.).
+**Geltungsbereich:** Dieses Backlog gilt für das gesamte DMP COMMAND System — alle Agenten (Agent 1, Agent 2, Agent 3, Agent 4, Agent 5 — durchnummeriert am 2026-08-13, vormals Agent 3.01/3.02/3.03), die Power App (DMP COMMAND), sowie alle verwendeten Konfigurations- und Statuslisten/-dokumente (`DMP Command Configuration`, `DMP Command Agent Status`, u. a.).
 
 **Pflege-Regel (in KI-Arbeitsregeln verankert am 2026-08-06):**
 Dieses Dokument wird regelmäßig aktualisiert, sobald bei der Arbeit an irgendeiner Komponente des Systems ein Finding entsteht, das bewusst auf später verschoben wird. Es ist NICHT auf einen einzelnen Agenten beschränkt.
 
 **Wichtiger Arbeitshinweis (gilt für jeden Punkt):**
 Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Datei(en) neu einlesen und gegen die hier beschriebenen Fundstellen prüfen (Feldnamen/Ausdrücke können sich durch zwischenzeitliche manuelle Änderungen verschoben haben). Keine neuen Config-Felder oder Variablen ohne Rücksprache mit dem Nutzer einführen.
+
+---
+
+# ✅ Agenten-Umnummerierung abgeschlossen (2026-08-13): Agent 3.01/3.02/3.03 → Agent 3/4/5
+
+**Entscheidung des Nutzers (2026-08-13):** Durchgängige sequenzielle Nummerierung aller 5 Agenten statt der bisherigen Dezimalschreibweise, um unnötige Komplexität zu vermeiden. Zuordnung: Agent 1 bleibt 1, Agent 2 bleibt 2, **Agent 3.01 → Agent 3** (Emergency Report Management), **Agent 3.02 → Agent 4** (Status Check), **Agent 3.03 → Agent 5** (Operational State Management). Interne Schlüssel 2-stellig: `Agent_01`.."Agent_05" (AgentKey), Scope-Werte ohne Padding: `Agent1`.."Agent5" (passend zum bestehenden Muster von Agent1/Agent2).
+
+## Durchgeführt (dateibasiert, via Power-Automate-Solution `DMP_COMMAND_Solution`)
+- Flow-Anzeigenamen umbenannt (`.json.data.xml` Name/LocalizedName): "DMP Agent 3 (Emergency Report Management)", "DMP Agent 4 (Status Check)", "DMP Agent 5 (Operational State Management)".
+- Interne Referenzen in allen 3 betroffenen Flow-JSONs umgestellt: `StatusAgentKey`-Werte (`Agent_03_01`→`Agent_03`, `Agent_03_02`→`Agent_04`, `Agent_03_03`→`Agent_05`), `WorkflowPathAgentNNN`-Konfigurationsschlüssel-Referenzen (`WorkflowPathAgent301`→`WorkflowPathAgent3`, `...302`→`...4`, `...303`→`...5`), Beschreibungstexte ("Agent 3.01"→"Agent 3" usw.), Scope-Filter in Agent 5 (`Scope eq 'Agent3_03'`→`Scope eq 'Agent5'`).
+- Gepackt und erfolgreich importiert.
+- Cross-Referenz-Check: Agent 1/2 referenzieren keine der umbenannten Agenten – keine weiteren Anpassungen dort nötig. Agent 3/4 nutzen Title-basierte statt Scope-basierte Config-Filter – dort keine Scope-Anpassung nötig.
+
+## ⚠️ Noch OFFEN – manuell in SharePoint nachzuziehen (konnte nicht automatisiert werden, kein Live-Zugriff)
+Folgende Änderungen an den **live** SharePoint-Listen wurden bewusst NICHT automatisch vorgenommen (kein direkter Schreibzugriff verfügbar) und müssen vom Nutzer nachgezogen werden:
+
+**In `DMP Command Configuration`:**
+1. Zeile `WorkflowPathAgent301` → `ParameterName` umbenennen zu `WorkflowPathAgent3`, `Scope` von `Agent3_01` zu `Agent3`.
+2. Zeile `WorkflowPathAgent302` → `ParameterName` zu `WorkflowPathAgent4`, `Scope` von `Agent3_02` zu `Agent4`.
+3. Zeile `WorkflowPathAgent303` → `ParameterName` zu `WorkflowPathAgent5`, `Scope` von `Agent3_03` zu `Agent5`, `CurrentValue`/alle 4 Modus-Spalten von `Agent3_YesFileManagement`/`Agent3_OperationalStateManagement` zu `Agent5_OperationalStateManagement`.
+4. Alle übrigen Zeilen mit `Scope = Agent3_01` → `Agent3`; `Scope = Agent3_02` → `Agent4`; `Scope = Agent3_03` → `Agent5` (Zeilen vorher in der Liste filtern/identifizieren).
+5. **Offene Design-Frage:** Zeile `Agent3AlertFolderName` nutzt `Scope = Agent3_All` (geteilt zwischen den ehemaligen 3.01/3.02/3.03-Unteragenten). Da diese jetzt vollständig unabhängige Agenten 3/4/5 sind, ergibt "Agent3_All" konzeptionell keinen Sinn mehr – **bewusst unverändert gelassen**, da Agent 3 und Agent 4 ohnehin titelbasiert filtern (nicht scope-basiert) und Agent 5 den Wert `Agent3_All` weiterhin explizit in seinem Filter erwartet (unverändert gelassen). Empfehlung: Bei nächster Gelegenheit gemeinsam entscheiden, ob umbenannt (z. B. zu `Global` oder `SharedAgent345`) oder bewusst so belassen.
+
+**In `DMP Command Agent Status`:**
+6. Zeile mit `AgentKey = Agent_03_01` → `Agent_03`, `AgentDisplayName` zu "Emergency Report Management".
+7. Zeile mit `AgentKey = Agent_03_02` → `Agent_04`, `AgentDisplayName` zu "Status Check".
+8. Zeile mit `AgentKey = Agent_03_03` → `Agent_05`, `AgentDisplayName` bereits "Operational State Management" (unverändert).
+
+**Grund für die Verzögerung:** Direkter Browser-Zugriff auf SharePoint erforderte eine interaktive Anmeldung (SSO/MFA), die aus Sicherheitsgründen nicht durch die KI selbst durchgeführt werden darf.
+
+
 
 ---
 
