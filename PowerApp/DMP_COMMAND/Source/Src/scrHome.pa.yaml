@@ -600,6 +600,7 @@ Screens:
                                               Control: Classic/Toggle@2.1.0
                                               Properties:
                                                 Default: =true
+                                                Value: =varOperationalModeIsDMP
                                                 Width: =130
                                                 Height: =26
                                                 LabelPaddingLeft: =0
@@ -614,31 +615,50 @@ Screens:
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 OnCheck: |-
-                                                  =Set(
+                                                  =Set(varLedOperationalState, "Yellow");
+                                                  Set(
                                                       varOpModeResult,
                                                       'DMPAgent3(YESFileManagement)'.Run(
                                                           User().Email,
-                                                          If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
+                                                          If(varEnvironmentIsPROD, "PROD_DMP", "SIMU_DMP")
                                                       )
                                                   );
                                                   If(
                                                       Coalesce(varOpModeResult.success, false),
+                                                      Set(varOperationalModeIsDMP, true);
+                                                      Set(varLedOperationalState, "Green");
                                                       Notify("Operating State switched to DMP mode.", NotificationType.Success),
+                                                      Set(varLedOperationalState, "Red");
                                                       Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                   )
                                                 OnUncheck: |-
-                                                  =Set(
+                                                  =Set(varLedOperationalState, "Yellow");
+                                                  Set(
                                                       varOpModeResult,
                                                       'DMPAgent3(YESFileManagement)'.Run(
                                                           User().Email,
-                                                          If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
+                                                          If(varEnvironmentIsPROD, "PROD_NODMP", "SIMU_NODMP")
                                                       )
                                                   );
                                                   If(
                                                       Coalesce(varOpModeResult.success, false),
+                                                      Set(varOperationalModeIsDMP, false);
+                                                      Set(varLedOperationalState, "Green");
                                                       Notify("Operating State switched to Normal mode.", NotificationType.Success),
+                                                      Set(varLedOperationalState, "Red");
                                                       Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                   )
+                                          - dotLedOperationalState:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =Switch(varLedOperationalState, "Yellow", RGBA(255,159,10,1), "Red", RGBA(255,69,58,1), RGBA(0,206,125,1))
+                                                Width: =12
+                                                Height: =12
+                                                RadiusTopLeft: =6
+                                                RadiusTopRight: =6
+                                                RadiusBottomLeft: =6
+                                                RadiusBottomRight: =6
                                     - conRowApplicationMode:
                                         Control: GroupContainer@1.5.0
                                         Variant: AutoLayout
@@ -667,6 +687,7 @@ Screens:
                                               Control: Classic/Toggle@2.1.0
                                               Properties:
                                                 Default: =false
+                                                Value: =varEnvironmentIsPROD
                                                 Width: =130
                                                 Height: =26
                                                 LabelPaddingLeft: =0
@@ -681,31 +702,50 @@ Screens:
                                                 BorderStyle: =BorderStyle.None
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 OnCheck: |-
-                                                  =Set(
+                                                  =Set(varLedApplicationMode, "Yellow");
+                                                  Set(
                                                       varOpModeResult,
                                                       'DMPAgent3(YESFileManagement)'.Run(
                                                           User().Email,
-                                                          If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
+                                                          If(varOperationalModeIsDMP, "PROD_DMP", "PROD_NODMP")
                                                       )
                                                   );
                                                   If(
                                                       Coalesce(varOpModeResult.success, false),
+                                                      Set(varEnvironmentIsPROD, true);
+                                                      Set(varLedApplicationMode, "Green");
                                                       Notify("Environment switched to PROD.", NotificationType.Success),
+                                                      Set(varLedApplicationMode, "Red");
                                                       Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                   )
                                                 OnUncheck: |-
-                                                  =Set(
+                                                  =Set(varLedApplicationMode, "Yellow");
+                                                  Set(
                                                       varOpModeResult,
                                                       'DMPAgent3(YESFileManagement)'.Run(
                                                           User().Email,
-                                                          If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
+                                                          If(varOperationalModeIsDMP, "SIMU_DMP", "SIMU_NODMP")
                                                       )
                                                   );
                                                   If(
                                                       Coalesce(varOpModeResult.success, false),
+                                                      Set(varEnvironmentIsPROD, false);
+                                                      Set(varLedApplicationMode, "Green");
                                                       Notify("Environment switched to SIMU.", NotificationType.Success),
+                                                      Set(varLedApplicationMode, "Red");
                                                       Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                   )
+                                          - dotLedApplicationMode:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: AutoLayout
+                                              Properties:
+                                                Fill: =Switch(varLedApplicationMode, "Yellow", RGBA(255,159,10,1), "Red", RGBA(255,69,58,1), RGBA(0,206,125,1))
+                                                Width: =12
+                                                Height: =12
+                                                RadiusTopLeft: =6
+                                                RadiusTopRight: =6
+                                                RadiusBottomLeft: =6
+                                                RadiusBottomRight: =6
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout

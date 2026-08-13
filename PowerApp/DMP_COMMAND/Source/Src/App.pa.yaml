@@ -17,6 +17,11 @@ App:
       Set(varSuppressToggleEvents,false);
       Set(varStartDMPStatusRefresh,false);
 
+      Set(varOperationalModeIsDMP,true);
+      Set(varEnvironmentIsPROD,false);
+      Set(varLedOperationalState,"Green");
+      Set(varLedApplicationMode,"Green");
+
       Set(varEmergencyReportExists,false);
       Set(varEmergencyReportLastModified,"");
 
@@ -73,6 +78,8 @@ App:
           Value = true
         )
       );
-      Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount/5)*100,0))
+      Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount/5)*100,0));
+      Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_DMP"), "_DMP"));
+      Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_DMP"), "PROD"))
     StartScreen: =scrHome
     Theme: =PowerAppsTheme
