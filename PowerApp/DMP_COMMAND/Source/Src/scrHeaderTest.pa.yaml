@@ -48,7 +48,7 @@ Screens:
           Properties:
             X: =20
             Y: =64
-            Width: =1083
+            Width: =1098
             Height: =100
             Fill: =RGBA(32,23,81,1)
             RadiusTopLeft: =18
@@ -198,12 +198,14 @@ Screens:
                   Size: =13
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
+                  PaddingLeft: =1
+                  PaddingRight: =1
                   BorderStyle: =BorderStyle.None
                   BorderColor: =RGBA(0,0,0,0)
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =976
+                  X: =991
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +222,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =935
+                  X: =950
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +237,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1027
+                  X: =1042
                   Y: =43
                   Width: =55
                   Height: =14
