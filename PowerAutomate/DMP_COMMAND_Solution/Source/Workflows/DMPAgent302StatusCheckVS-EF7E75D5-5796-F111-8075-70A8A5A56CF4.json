@@ -18,6 +18,15 @@
         "api": {
           "name": "shared_excelonlinebusiness"
         }
+      },
+      "shared_office365": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedoffice365_63b83"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
       }
     },
     "definition": {

@@ -415,7 +415,7 @@ Screens:
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
                       Properties:
-                        Text: =If(IsBlank(varStatusCallError), "", "DEBUG - Agent 4 call error: " & varStatusCallError)
+                        Text: =If(IsBlank(varStatusCallError), "", "DEBUG - Agent 4 call error - " & varStatusCallError)
                         Visible: =!IsBlank(varStatusCallError)
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(196,43,28,1)
