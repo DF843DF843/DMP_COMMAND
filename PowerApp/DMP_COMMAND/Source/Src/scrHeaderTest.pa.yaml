@@ -432,7 +432,7 @@ Screens:
             Y: =374
             Width: =1300
             Height: =260
-            Text: =If(IsBlank(varStatusResult), "varStatusResult is Blank() - the Agent 4 call itself returned nothing", IfError(JSON(varStatusResult, JSONFormat.IndentFour), "JSON() failed: " & FirstError.Message))
+            Text: =If(IsBlank(varStatusResult), "varStatusResult is Blank() - the Agent 4 call itself returned nothing", IfError(JSON(varStatusResult, JSONFormat.IndentFour), "JSON() failed - " & FirstError.Message))
             Color: =RGBA(20,20,24,1)
             Fill: =RGBA(255,255,255,1)
             BorderStyle: =BorderStyle.Solid
