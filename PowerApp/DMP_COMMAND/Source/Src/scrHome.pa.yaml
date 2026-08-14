@@ -209,8 +209,8 @@ Screens:
                         RadiusBottomRight: =18
                         PaddingTop: =18
                         PaddingBottom: =18
-                        PaddingLeft: =24
-                        PaddingRight: =24
+                        PaddingLeft: =16
+                        PaddingRight: =16
                       Children:
                         - conHeaderTitle:
                             Control: GroupContainer@1.5.0
@@ -274,7 +274,7 @@ Screens:
                                     - lblKpiCriticalValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: =Text(varAuditFailedCount)
+                                          Text: =Text(Coalesce(varAuditFailedCount,0))
                                           Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -310,7 +310,7 @@ Screens:
                                     - lblKpiWarningsValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: =Text(varAuditWarningCount)
+                                          Text: =Text(Coalesce(varAuditWarningCount,0))
                                           Color: =RGBA(255,159,10,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -346,7 +346,7 @@ Screens:
                                     - lblKpiAgentsValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: =varAgentsHealthyCount & "/5"
+                                          Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
                                           Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -371,7 +371,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.10"
+                                    Text: ="v1.1.11"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
@@ -418,7 +418,7 @@ Screens:
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
                       Properties:
-                        Text: =If(!IsBlank(varStatusCallError), "DEBUG - Agent 4 call error - " & varStatusCallError, "DEBUG - Failed=" & varAuditFailedCount & " | Warning=" & varAuditWarningCount & " | RunSummary=" & varAuditRunSummaryCount & " | HealthyAgents=" & varAgentsHealthyCount & " | AuditTrailExists=" & varAuditTrailExists)
+                        Text: =If(!IsBlank(varStatusCallError), "DEBUG - Agent 4 call error - " & varStatusCallError, "DEBUG - Failed=" & varAuditFailedCount & " | Warning=" & varAuditWarningCount & " | RunSummary=" & varAuditRunSummaryCount & " | HealthyAgents=" & varAgentsHealthyCount & " | HealthPct=" & varSystemHealthPercent & " | AuditTrailExists=" & varAuditTrailExists)
                         Visible: =true
                         Color: =RGBA(255,255,255,1)
                         Fill: =If(!IsBlank(varStatusCallError), RGBA(196,43,28,1), RGBA(0,90,160,1))
