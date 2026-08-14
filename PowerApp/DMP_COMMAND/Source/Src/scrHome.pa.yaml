@@ -371,7 +371,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.9"
+                                    Text: ="v1.1.10"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
@@ -418,10 +418,10 @@ Screens:
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
                       Properties:
-                        Text: =If(IsBlank(varStatusCallError), "", "DEBUG - Agent 4 call error - " & varStatusCallError)
-                        Visible: =!IsBlank(varStatusCallError)
+                        Text: =If(!IsBlank(varStatusCallError), "DEBUG - Agent 4 call error - " & varStatusCallError, "DEBUG - Failed=" & varAuditFailedCount & " | Warning=" & varAuditWarningCount & " | RunSummary=" & varAuditRunSummaryCount & " | HealthyAgents=" & varAgentsHealthyCount & " | AuditTrailExists=" & varAuditTrailExists)
+                        Visible: =true
                         Color: =RGBA(255,255,255,1)
-                        Fill: =RGBA(196,43,28,1)
+                        Fill: =If(!IsBlank(varStatusCallError), RGBA(196,43,28,1), RGBA(0,90,160,1))
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Bold
                         Size: =11
