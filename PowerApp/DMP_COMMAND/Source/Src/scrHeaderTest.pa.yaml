@@ -95,9 +95,9 @@ Screens:
                 Properties:
                   X: =590
                   Y: =30
-                  Width: =150
+                  Width: =90
                   Height: =26
-                  Text: ="000.000.000"
+                  Text: ="000"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -111,7 +111,7 @@ Screens:
                 Properties:
                   X: =590
                   Y: =56
-                  Width: =150
+                  Width: =90
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
@@ -124,11 +124,11 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =755
+                  X: =690
                   Y: =30
-                  Width: =150
+                  Width: =90
                   Height: =26
-                  Text: ="000.000.000"
+                  Text: ="000"
                   Color: =RGBA(255,159,10,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -140,9 +140,9 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =755
+                  X: =690
                   Y: =56
-                  Width: =150
+                  Width: =90
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
@@ -155,11 +155,11 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =920
+                  X: =790
                   Y: =30
-                  Width: =170
+                  Width: =130
                   Height: =26
-                  Text: ="000.000.000/5"
+                  Text: ="88/888"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -171,9 +171,9 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =920
+                  X: =790
                   Y: =56
-                  Width: =170
+                  Width: =130
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
@@ -186,11 +186,11 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1105
+                  X: =930
                   Y: =28
-                  Width: =80
+                  Width: =200
                   Height: =44
-                  Text: ="v-Test-A"
+                  Text: ="v000.000.000"
                   Color: =RGBA(255,255,255,1)
                   Fill: =RGBA(0,206,125,0.28)
                   Font: =Font.'Segoe UI'
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1240
+                  X: =1185
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +220,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1195
+                  X: =1140
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +235,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1295
+                  X: =1240
                   Y: =43
                   Width: =55
                   Height: =14
@@ -244,21 +244,6 @@ Screens:
                   Font: =Font.'Segoe UI'
                   Size: =9
                   Align: =Align.Left
-                  VerticalAlign: =VerticalAlign.Middle
-                  BorderStyle: =BorderStyle.None
-                  BorderColor: =RGBA(0,0,0,0)
-            - lblDarkModeDebugA:
-                Control: Label@2.5.1
-                Properties:
-                  X: =1195
-                  Y: =74
-                  Width: =155
-                  Height: =16
-                  Text: ="varDarkModeTestA=" & varDarkModeTestA
-                  Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
-                  Size: =8
-                  Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
                   BorderStyle: =BorderStyle.None
                   BorderColor: =RGBA(0,0,0,0)
