@@ -48,7 +48,7 @@ Screens:
           Properties:
             X: =20
             Y: =64
-            Width: =1210
+            Width: =1180
             Height: =100
             Fill: =RGBA(32,23,81,1)
             RadiusTopLeft: =18
@@ -157,9 +157,9 @@ Screens:
                 Properties:
                   X: =765
                   Y: =30
-                  Width: =130
+                  Width: =100
                   Height: =26
-                  Text: ="88/888"
+                  Text: ="99/99"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -173,7 +173,7 @@ Screens:
                 Properties:
                   X: =765
                   Y: =56
-                  Width: =130
+                  Width: =100
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
@@ -186,7 +186,7 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =905
+                  X: =875
                   Y: =28
                   Width: =130
                   Height: =44
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1090
+                  X: =1060
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +220,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1045
+                  X: =1015
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +235,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1145
+                  X: =1115
                   Y: =43
                   Width: =55
                   Height: =14
