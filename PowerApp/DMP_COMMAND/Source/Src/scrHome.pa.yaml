@@ -265,7 +265,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
-                                    Width: =64
+                                    Width: =56
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -301,7 +301,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
-                                    Width: =78
+                                    Width: =70
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -337,7 +337,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
-                                    Width: =100
+                                    Width: =88
                                     Height: =44
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
@@ -371,7 +371,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.11"
+                                    Text: ="v1.1.12"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
@@ -382,7 +382,7 @@ Screens:
                                     Height: =44
                                     LayoutMinHeight: =44
                                     LayoutMaxHeight: =44
-                                    Width: =74
+                                    Width: =64
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
                               - conThemeToggle:
