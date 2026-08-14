@@ -48,7 +48,7 @@ Screens:
           Properties:
             X: =20
             Y: =64
-            Width: =1155
+            Width: =1215
             Height: =100
             Fill: =RGBA(32,23,81,1)
             RadiusTopLeft: =18
@@ -61,7 +61,7 @@ Screens:
                 Properties:
                   X: =20
                   Y: =18
-                  Width: =440
+                  Width: =500
                   Height: =26
                   Text: ="DMP COMMAND"
                   Color: =RGBA(255,255,255,1)
@@ -78,7 +78,7 @@ Screens:
                 Properties:
                   X: =20
                   Y: =48
-                  Width: =440
+                  Width: =500
                   Height: =20
                   Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                   Color: =RGBA(215,210,235,1)
@@ -93,7 +93,7 @@ Screens:
             - lblCriticalValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =480
+                  X: =540
                   Y: =30
                   Width: =90
                   Height: =26
@@ -109,7 +109,7 @@ Screens:
             - lblCriticalLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =480
+                  X: =540
                   Y: =56
                   Width: =90
                   Height: =14
@@ -124,7 +124,7 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =585
+                  X: =645
                   Y: =30
                   Width: =90
                   Height: =26
@@ -140,7 +140,7 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =585
+                  X: =645
                   Y: =56
                   Width: =90
                   Height: =14
@@ -155,7 +155,7 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =690
+                  X: =750
                   Y: =30
                   Width: =130
                   Height: =26
@@ -171,7 +171,7 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =690
+                  X: =750
                   Y: =56
                   Width: =130
                   Height: =14
@@ -186,7 +186,7 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =835
+                  X: =895
                   Y: =28
                   Width: =130
                   Height: =44
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1025
+                  X: =1085
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +220,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =980
+                  X: =1040
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +235,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1080
+                  X: =1140
                   Y: =43
                   Width: =55
                   Height: =14
