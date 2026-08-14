@@ -1186,7 +1186,7 @@
                           "type": "SetVariable",
                           "inputs": {
                             "name": "NewStepsCount",
-                            "value": "@int(coalesce(body('GET_AgentSummaryRow_ForStep')?[concat(item()?['StepStatus'],'StepsCount')],0)) + 1"
+                            "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForStep')?[concat(item()?['StepStatus'],'StepsCount')],0)), 1)"
                           },
                           "description": "Computes the incremented Steps counter value for this event's StepStatus."
                         },
@@ -1269,7 +1269,7 @@
                       "type": "SetVariable",
                       "inputs": {
                         "name": "NewRunsCount",
-                        "value": "@int(coalesce(body('GET_AgentSummaryRow_ForRun')?[concat(variables('AuditOutcome'),'RunsCount')],0)) + 1"
+                        "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForRun')?[concat(variables('AuditOutcome'),'RunsCount')],0)), 1)"
                       },
                       "description": "Computes the incremented Runs counter value based on this run's final AuditOutcome."
                     },
