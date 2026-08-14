@@ -10,6 +10,32 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
+# 🔴 KRITISCH / WIEDERKEHREND: Power-Automate-Connector-Referenzen brechen nach jedem `pac`-Import (2026-08-14)
+
+**Symptom:** Nach `pac solution import` bzw. `pac canvas pack` + Import zeigt das Power-Apps-Studio-Datenpanel bei den 3 Agent-3/4/5-Verbindungen wieder die ALTEN, veralteten internen Namen
+(`DMPAgent3(EmergencyReportManagement)`, `DMPAgent3(YESFileManagement)`, `DMPAgent3(StatusCheck)`) statt der vom Nutzer manuell korrigierten aktuellen Namen
+(`DMPAgent3.01(EmergencyReportManagement)=>VS`, `DMPAgent3.03(OperationalStateManagement)=>VS`, `DMPAgent4(StatusCheck)=>VS`). Die Power-Fx-Formeln in der App (z. B. `'DMPAgent3(EmergencyReportManagement)'.Run(...)`), die auf den jeweils AKTUELLEN internen Namen verweisen müssen, brechen dadurch STILL (kein Fehler, kein "Submitted for processing", leerer Flow-Run-Verlauf) – der Nutzer merkt es nur daran, dass gar nichts passiert.
+
+**Root Cause (Vermutung, nicht 100% verifiziert):** Die interne Verbindungs-Bindungsmetadaten (`DataSources.json` im `.msapp`-Paket) scheinen Teil des lokal gepackten Standes zu sein (aus `C:\PowerAppWork\DMP_COMMAND\Source`), der noch die ALTEN Bindungen enthält (aus einem früheren `pac canvas download`, lange vor der Agenten-Umnummerierung 2026-08-13). Manuelles Entfernen+Neuhinzufügen der Verbindung in Studio ändert die Bindung nur in der LIVE-App (im Dataverse), nicht im lokalen `pa.yaml`-Source. Beim nächsten `pac canvas pack` + Import wird der lokale (alte) Stand wieder über die Live-App gelegt, wodurch der Nutzer die manuelle Korrektur JEDES MAL wiederholen muss.
+
+**Workaround (aktuell praktiziert, funktioniert aber ist umständlich):**
+1. Nutzer korrigiert die Verbindungen in Power Apps Studio manuell (Datenquelle entfernen, neu hinzufügen, exakten neuen internen Namen per Autovervollständigung ablesen).
+2. KI aktualisiert alle betroffenen Power-Fx-Formeln in den `.pa.yaml`-Dateien auf den neuen exakten Namen (mit `.`/`(`/`)`/`=`/`>` in einfachen Anführungszeichen).
+3. Nach dem NÄCHSTEN Import muss Schritt 1+2 vermutlich wieder durchgeführt werden.
+
+**Betroffene Referenzen (Stand 2026-08-14), falls das Problem wieder auftritt:**
+- `App.pa.yaml` (`OnStart`): `'DMPAgent4(StatusCheck)=>VS'.Run()` (Zeile ~58)
+- `scrHome.pa.yaml`: `'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(...)` – 4 Stellen (Operating-State-Toggle OnCheck/OnUncheck, Environment-Toggle OnCheck/OnUncheck)
+- `scrHome.pa.yaml`: `'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(...)` – 1 Stelle (Emergency-Report-Replace-Attachment `OnAddFile`)
+- **Diagnose-Tipp:** Wenn ein Button/eine Aktion in der App "nichts tut" (kein Fehler, keine Notify-Meldung, leerer Flow-Run-Verlauf), zuerst hier nachsehen, BEVOR man einen Trigger-/Berechtigungsfehler vermutet (der zeigt sich anders: sichtbare Fehlermeldung `WorkflowTriggerIsNotEnabled`).
+
+**Noch offen / für die dauerhafte Lösung (nicht umgesetzt, da riskant ohne mehr Zeit/Tests):**
+- Idee A: `C:\PowerAppWork\DMP_COMMAND\Source` (lokaler pac-Arbeitsordner) einmal per `pac canvas download` NEU vom aktuellen Live-Stand ziehen (NACHDEM der Nutzer die Verbindungen zuletzt manuell korrigiert und gespeichert hat), damit der lokale Source-Stand die aktuellen Bindungen übernimmt. **ACHTUNG:** In dieser Session gab es bereits einen Beinahe-Vorfall, bei dem `pac canvas download --name "DMP COMMAND"` eine KOMPLETT ANDERE, alte App heruntergeladen hat (siehe Abschnitt weiter unten/Session-Memory) – vor jedem erneuten Download IMMER zuerst die App-Identität mit dem Nutzer bestätigen und nach dem Download sofort per grep auf bekannte aktuelle Marker prüfen (z. B. `dotLedOperationalState`, `conKpiCritical`), BEVOR irgendetwas committet wird.
+- Idee B: Direktes Bearbeiten von `DMP_COMMAND.msapr` → `msapp/References/DataSources.json`, um die Bindungen dauerhaft zu korrigieren (riskant, gleiche Fehlerklasse wie oben).
+- Idee C: Mit dem Nutzer klären, ob es einen Weg gibt, Verbindungsreferenzen über die Dataverse-Solution (statt über das Canvas-App-Paket) zu verwalten, damit sie nicht bei jedem Canvas-Pack zurückgesetzt werden.
+
+---
+
 # ✅ Agenten-Umnummerierung abgeschlossen (2026-08-13): Agent 3.01/3.02/3.03 → Agent 3/4/5
 
 **Entscheidung des Nutzers (2026-08-13):** Durchgängige sequenzielle Nummerierung aller 5 Agenten statt der bisherigen Dezimalschreibweise, um unnötige Komplexität zu vermeiden. Zuordnung: Agent 1 bleibt 1, Agent 2 bleibt 2, **Agent 3.01 → Agent 3** (Emergency Report Management), **Agent 3.02 → Agent 4** (Status Check), **Agent 3.03 → Agent 5** (Operational State Management). Interne Schlüssel 2-stellig: `Agent_01`.."Agent_05" (AgentKey). Scope-Werte initial ohne Padding (`Agent1`.."Agent5"), am selben Tag noch auf das finale, einheitliche Muster `Agent 01`.."Agent 05" umgestellt (mit Leerzeichen, Zero-Padding) – siehe Abschnitt „Scope-Muster-Vereinheitlichung" unten.
@@ -139,6 +165,78 @@ vor-aggregierten Tabelle lesen statt die komplette Audit-Trail-Datei zu durchsuc
 - Noch zu klären mit Nutzer: Genaue Tabellenstruktur (Spalten je Agent × StepStatus?), wer/was schreibt die
   Inkremente (jeder Agent selbst am Ende seines Laufs, oder ein zentraler Schritt?), wie wird das mit dem
   geplanten Reset-Feature (Punkt 2 oben) und der Archivierung konsistent gehalten.
+
+### Umsetzungsstand (2026-08-14, Stand bei Urlaubsantritt des Nutzers – WICHTIG für Fortsetzung!)
+- ✅ **Tabelle angelegt:** Neuer Tab **"Agent Audit Summary"** in `AuditTrail.xlsx` (NICHT in Counter.xlsx,
+  da Counter.xlsx zeitweise als OneDrive-Cloud-Platzhalter nicht lesbar war). Tabelle `AgentAuditSummary`,
+  9 Spalten: `AgentKey | SucceededRunsCount | FailedRunsCount | WarningRunsCount | StartedRunsCount |
+  SucceededStepsCount | FailedStepsCount | WarningStepsCount | StartedStepsCount`. 5 Zeilen: `Agent 01`..`Agent 05`,
+  initial alle Zähler auf 0.
+- ✅ **Agent 3 schreibt bereits:** In `SCOPE_AuditTrail_Write` → `LOOP_AuditEvents` wird nach jedem `WRITE_AuditEvent`
+  zusätzlich das passende `<StepStatus>StepsCount` erhöht (Spaltenname dynamisch aus `item()?['StepStatus']`
+  zusammengesetzt). Nach der Schleife (einmal pro Lauf) wird das passende `<AuditOutcome>RunsCount` erhöht
+  (Spaltenname dynamisch aus der finalen Variable `AuditOutcome` zusammengesetzt, mögliche Werte lt. Flow-Doku:
+  `Started`/`Succeeded`/`Warning`/`Failed`). Muster: `GetItem` (Zeile per `AgentKey`, hier `"Agent 03"`) →
+  `SetVariable` (neuer Wert = `add(int(coalesce(alterWert,0)),1)` – **WICHTIG: `add()`-Funktion verwenden, kein
+  rohes `+`, siehe Fallstrick unten**) → `PatchItem` (schreibt nur die eine dynamische Spalte zurück).
+  Getestet und erfolgreich (Nutzer bestätigte: "Der Lauf war erfolgreich: Die Audit-Datei erfolgreich aktualisiert").
+- ❌ **NOCH NICHT gemacht – Agent 1, Agent 2, Agent 5:** Dieselbe Steps-/Runs-Zähler-Logik wie bei Agent 3 muss noch
+  in die anderen 3 schreibenden Flows eingebaut werden (Agent 1: 2 Schreibstellen, Agent 2: 2 Schreibstellen,
+  Agent 5: 2 Schreibstellen – jeweils `AddRowV2`-Aktionen in einer `Foreach`-Schleife über eine Event-Buffer-Array-
+  Variable, exakt gleiches Muster wie bei Agent 3 – als Vorlage den fertigen Agent-3-Umbau 1:1 kopieren und
+  Agent-Key/Variablennamen anpassen).
+- ❌ **NOCH NICHT gemacht – Agent 4 braucht ebenfalls einen Audit-Eintrag pro Durchlauf (Nutzer-Korrektur
+  2026-08-14):** Agent 4 (StatusCheck) schreibt aktuell GAR KEINE Audit-Events (0 `AddRowV2`-Aktionen), da er nur
+  liest und keine granularen Datei-Schritte hat wie Agent 1/2/3/5. Trotzdem soll JEDER Agent-4-Durchlauf
+  mindestens einen **Runs**-Zähler-Eintrag bekommen (kein Steps-Zähler nötig, da es keine einzelnen Steps gibt) –
+  Zeile `Agent 04` in `Agent Audit Summary`, `*RunsCount` erhöhen, vermutlich immer `SucceededRunsCount`
+  (außer der Flow selbst schlägt fehl, dann `FailedRunsCount`). Dafür müsste Agent 4 zunächst ein eigenes
+  `AuditOutcome`-Äquivalent bekommen (existiert dort noch nicht, da bisher nie benötigt) plus eine einmalige
+  `GetItem`→`SetVariable`(`add()`!)→`PatchItem`-Sequenz nach `RESPOND_Status` (oder z. B. in einer Scope mit
+  Error-Handling, falls der Flow fehlschlagen kann).
+- ❌ **NOCH NICHT gemacht – Agent 4 liest die neue Tabelle noch nicht:** Agent 4s `AuditWarningCount`/
+  `AuditFailedCount`/`AuditRunSummaryCount` sind weiterhin fest auf 0 initialisiert und werden nie aus
+  `Agent Audit Summary` ausgelesen. Geplanter Ansatz (noch nicht umgesetzt): 5× `GetItem` (eine pro Agent-Zeile,
+  `idColumn=AgentKey`, `id="Agent 01"`..`"Agent 05"`), dann `AuditFailedCount` = Summe aller 5
+  `FailedStepsCount`-Werte, `AuditWarningCount` = Summe aller 5 `WarningStepsCount`-Werte (diese beiden Felder
+  sollen die STEPS-Zähler summieren, nicht die Runs-Zähler – das entspricht den vom Nutzer bestätigten
+  Vergleichswerten aus der manuellen Excel-Prüfung: Failed=24, Warning=12). `AuditRunSummaryCount` = Summe aller
+  Runs-Zähler-Spalten über alle 5 Zeilen (Gesamtzahl aller Ausführungen system-weit).
+- **Reihenfolge-Empfehlung für die Fortsetzung:** Erst Agent 1/2/5 mit der Schreib-Logik ausstatten (Kopie von
+  Agent 3), DANN Agent 4 mit der Lese-Logik – sonst zeigt Agent 4 nur Teilzahlen (nur von Agent 3).
+
+### 🎯 Wichtiger Fallstrick, der beim Bau von Agent 3 auftrat (gilt auch für Agent 1/2/5!)
+1. **Power Automate WDL erlaubt keinen rohen `+`-Operator** in Ausdrücken (`@int(x) + 1` schlägt beim Aktivieren
+   fehl: "the value '+' ... cannot be converted to number"). Immer `add(x, 1)` verwenden.
+2. **Neue Variablen MÜSSEN explizit per `InitializeVariable` deklariert werden**, bevor sie in einer
+   `SetVariable`-Aktion verwendet werden dürfen (Fehler sonst: "'X' must be initialized before it can be used").
+   Für Agent 3 wurden `VAR_NewStepsCount`/`VAR_NewRunsCount` (beide `integer`, Default 0) direkt nach
+   `VAR_AuditEvents` ergänzt (laufen parallel, nicht Teil der strikten Sequenzkette, aber garantiert vor der
+   späteren Verwendung abgeschlossen).
+
+## 4) Hell/Dunkel-Umschalter (`tglTheme` in `scrHome`) flackert nach Betätigung
+Nutzer bestätigt (2026-08-14, Live-Test in `scrHome`, NICHT im isolierten Testscreen): Nach Klick auf den
+Dark/Light-Toggle im Header fängt er an zu flackern/hin- und herzuspringen.
+
+**Root Cause (bereits einmal in `scrHeaderTest` gefunden und dort erfolgreich behoben, aber die dortige Lösung
+wurde in `scrHome` NUR TEILWEISE übernommen):** `Default` des Toggles ist an eine Variable gebunden
+(`varDarkModeHeaderSnapshot`, einmalig per `Screen.OnVisible` aus `varDarkMode` kopiert), während `OnCheck`/
+`OnUncheck` die LIVE-Variable `varDarkMode` beschreiben (nicht dieselbe wie `Default` liest – das war absichtlich
+so gebaut, um die Rückkopplungsschleife zu vermeiden). Trotzdem flackert es in `scrHome` weiterhin – vermutlich
+reicht der einmalige Snapshot-Ansatz hier NICHT aus (evtl. wird `Screen.OnVisible` in dieser App/diesem
+Kontext anders/mehrfach ausgelöst als angenommen, oder ein anderer Mechanismus überschreibt `varDarkModeHeaderSnapshot`
+erneut).
+**Bereits verifizierte, 100% zuverlässige Lösung (in `scrHeaderTest`, Variante A, seit v-Test-A stabil ohne
+Flackern):** `Default` NICHT an irgendeine Variable binden, sondern auf einen **festen Literal-Wert** setzen
+(z. B. `Default: =false`), und ausschließlich über eine EIGENE, vom Toggle entkoppelte Variable den optischen
+Zustand woanders in der App abbilden, falls nötig. Da der initiale Zustand beim ersten Laden dadurch nicht mehr
+"das echte aktuelle `varDarkMode`" wiederspiegelt, ist das ein bewusster Kompromiss (Zuverlässigkeit vor
+perfekter Initialzustands-Genauigkeit) – falls das für `scrHome` nicht akzeptabel ist, mit Nutzer klären, ob
+der Kompromiss (Toggle startet immer auf "Dark", stellt sich aber beim ersten Klick sofort richtig ein) so
+in Ordnung ist.
+**Empfohlene nächste Aktion:** In `scrHome.pa.yaml`, `tglTheme`-Control, `Default: =varDarkModeHeaderSnapshot`
+ersetzen durch `Default: =false` (oder den zuletzt bekannten Zustand als reinen Literalwert beim Pack einsetzen,
+NICHT als Formel) – exakt das Muster aus `scrHeaderTest` Variante A übernehmen.
 
 ---
 
