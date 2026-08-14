@@ -73,6 +73,9 @@ App:
       Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
       Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
       Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+      Set(varAuditRunSummaryCount, Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount));
+      Set(varAuditWarningCount, Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount));
+      Set(varAuditFailedCount, Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount));
       Set(varAgentsHealthyCount,
         CountIf(
           [varEmergencyReportExists, varInternalDomainsExists, varExternalDomainsExists, varCounterExists, varAuditTrailExists],

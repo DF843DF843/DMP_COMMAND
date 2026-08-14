@@ -274,7 +274,7 @@ Screens:
                                     - lblKpiCriticalValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="0"
+                                          Text: =Text(varAuditFailedCount)
                                           Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -310,7 +310,7 @@ Screens:
                                     - lblKpiWarningsValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="1"
+                                          Text: =Text(varAuditWarningCount)
                                           Color: =RGBA(255,159,10,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -346,7 +346,7 @@ Screens:
                                     - lblKpiAgentsValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="5/5"
+                                          Text: =varAgentsHealthyCount & "/5"
                                           Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
@@ -371,7 +371,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.8"
+                                    Text: ="v1.1.9"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
@@ -396,20 +396,6 @@ Screens:
                                     LayoutAlignItems: =LayoutAlignItems.Center
                                     LayoutGap: =4
                                   Children:
-                                    - lblThemeToggleCaption:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          Text: =If(varDarkMode,"DARK MODE","LIGHT MODE")
-                                          Color: =RGBA(200,195,225,1)
-                                          Font: =Font.'Segoe UI'
-                                          Size: =9
-                                          Align: =Align.Center
-                                          Height: =14
-                                          LayoutMinHeight: =14
-                                          LayoutMaxHeight: =14
-                                          Width: =90
-                                          BorderStyle: =BorderStyle.None
-                                          BorderColor: =RGBA(0,0,0,0)
                                     - tglTheme:
                                         Control: Classic/Toggle@2.1.0
                                         Properties:
