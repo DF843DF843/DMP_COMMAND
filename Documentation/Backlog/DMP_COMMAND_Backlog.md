@@ -86,6 +86,27 @@ Nicht nur beim ersten Mal – jeder Import deaktiviert den/die betroffenen Flow(
 
 ---
 
+# ✅ Alert-Mail-Feature für Agent 4 und Agent 5 gebaut (2026-08-14)
+
+**Auslöser:** Nutzerentscheidung (bestätigt): Agent 4 und Agent 5 sollen bei Fehlern das gleiche Alert-Mail-dann-Verschieben-Muster erhalten wie Agent 1/2/3 (Mail an `AlertEmailRecipient`, danach die gesendete Mail in den jeweiligen `Agent4AlertFolderName`/`Agent5AlertFolderName`-Ordner verschieben).
+
+## Agent 5 (Operational State Management)
+- Neue Variablen `AlertTargetFolderId`, `AlertMailSubject`, `AlertMessageId`.
+- Neuer Scope `E-Mail_Folder_creation` (nach `CMP_ConfigObject`): legt/liest den `Agent5AlertFolderName`-Unterordner im Postfach an, ermittelt `AlertTargetFolderId` – 1:1 Muster von Agent 3 übernommen.
+- Bei Fehlschlag von `UPDATE_ConfigRow_CurrentOperationMode` (`SET_AuditOutcome_Failed`): neue Kette `SET_AlertMailSubject_(ConfigUpdateFailed)` → `MAIL_Alert_(ConfigUpdateFailed)` → `Delay` → `Get_Sent_Email_By_Subject` → `SET_AlertMessageId` → `Move_Email_(ConfigUpdateFailed)`, läuft parallel zu `SCOPE_AuditTrail_Write` (blockiert `RESPOND_Result` nicht). Audit-Failure-Event ergänzt um `TargetFolderName`.
+- Gepackt, importiert, erfolgreich.
+
+## Agent 4 (Status Check)
+- Gleiche neue Variablen + `SET_AlertEmailRecipient_From_Config` + `E-Mail_Folder_creation`-Scope (mit `Agent4AlertFolderName`), `$filter` um `AlertEmailRecipient`/`SharedDMPMailbox`/`ProcessedMailsRootFolderName`/`MailImportanceError`/`WaitSecondsBeforeSentMailSearch`/`Agent4AlertFolderName` erweitert.
+- **Besonderheit:** Agent 4 hatte (anders als Agent 5) noch KEINE Mail-Infrastruktur und keinen `InitiatedBy`-Trigger-Input. Als Fehlerfall wurde bewusst **nur der Config-Ladefehler** (`GET_DMP_Command_Configuration` Failed/TimedOut) gewählt – nicht "Datei fehlt" (das ist normaler, erwarteter Status, kein Flow-Fehler). Da in diesem Fall `CMP_ConfigObject` selbst nicht verfügbar ist, nutzt dieser spezielle Zweig (`...(ConfigLoadFailed)`-Aktionen) bewusst **hartcodierte Fallback-Werte** (Mailbox `default@eurex.com`, Ordnername `Agent 04 Alerts`, Importance `High`, Wartezeit `10s`) statt Config-Werten – einzige Möglichkeit, da die Config ja gerade nicht geladen werden konnte.
+- Gepackt, importiert, erfolgreich.
+
+## Bewusst nicht behandelt / offen
+- Weitere mögliche Fehlerzustände in Agent 4 (z. B. einzelne fehlgeschlagene Datei-Metadaten-Abrufe) lösen aktuell KEINE Alert-Mail aus – nur der komplette Config-Ladefehler. Falls granularere Alarmierung gewünscht ist, mit Nutzer abstimmen.
+- Reihenfolge-Risiko (wie bereits bei Agent 3 akzeptiert): `E-Mail_Folder_creation` läuft parallel zur Hauptkette, es gibt keine explizite Abhängigkeit, dass der Ordner sicher fertig angelegt ist, bevor `Move_Email` läuft – identisches, bereits akzeptiertes Muster wie im produktiven Agent 3.
+
+---
+
 # Grundsätzliche Architektur-Entscheidung: Operativer Zustand über 2 unabhängige Schalter (neu ab 2026-08-11, oberste Priorität, gilt für Power App + ALLE Agenten)
 
 **Entscheidung des Nutzers:** Im DMP-COMMAND-Frontend (Power App) sollen künftig **2 unabhängige Schalter** den operativen Zustand des Gesamtsystems bestimmen:

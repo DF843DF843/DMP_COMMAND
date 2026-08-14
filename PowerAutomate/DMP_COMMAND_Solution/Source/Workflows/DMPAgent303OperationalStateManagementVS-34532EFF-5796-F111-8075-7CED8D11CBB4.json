@@ -263,6 +263,57 @@
           },
           "description": "Notification recipient.\n"
         },
+        "VAR_AlertTargetFolderId": {
+          "runAfter": {
+            "VAR_AlertEmailRecipient": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertTargetFolderId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the Outlook folder id of the Agent 5 alert evidence folder. Used for moving alert mails."
+        },
+        "VAR_AlertMailSubject": {
+          "runAfter": {
+            "VAR_AlertTargetFolderId": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMailSubject",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the subject of the alert mail so it can be reused for the Sent Items lookup and move operation."
+        },
+        "VAR_AlertMessageId": {
+          "runAfter": {
+            "VAR_AlertMailSubject": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMessageId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the message id of the sent alert mail so it can be moved to the Agent 5 Alerts folder."
+        },
         "RESPOND_Result": {
           "runAfter": {
             "SCOPE_AuditTrail_Write": [
@@ -406,6 +457,137 @@
           "inputs": "@json(outputs('CMP_ConfigJsonText'))",
           "description": "Converts the generated configuration JSON text into the central configuration object for this run."
         },
+        "E-Mail_Folder_creation": {
+          "actions": {
+            "Get_DMP_Mailbox_Parent_Folder_ID": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders?$filter=displayName eq ''', trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName'])), '''')",
+                  "Method": "GET",
+                  "CustomHeader1": "ConsistencyLevel: eventual",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the processed-mails root folder so that the Agent 5 alerts subfolder can later be created and addressed."
+            },
+            "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the processed-mails root folder in the shared mailbox if it does not yet exist."
+            },
+            "Create_Mailbox_Subfolder_\"Agent_5_Alerts\"": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Parent_Folder_ID": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'], '/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the dedicated Agent 5 Alerts mailbox subfolder below the processed-mails root folder if it does not yet exist."
+            },
+            "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_5_Alerts\"": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"Agent_5_Alerts\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName'])),\n  ''''\n)",
+                  "Method": "GET",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 3,
+                  "interval": "PT5S"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the Agent 5 Alerts mailbox subfolder so that sent internal Agent 5 alert mails can later be moved there."
+            },
+            "SET_AlertTargetFolderId": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_5_Alerts\"": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AlertTargetFolderId",
+                "value": "@body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_5_Alerts\"')?['value']?[0]?['id']"
+              },
+              "description": "Stores the mailbox folder ID of the Agent 5 Alerts folder for moving sent alert mails."
+            }
+          },
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Ensures the Agent 5 Alerts mailbox evidence folder exists and resolves its folder id."
+        },
         "SET_WorkflowPath_From_Config": {
           "runAfter": {
             "CMP_ConfigObject": [
@@ -531,7 +713,7 @@
               "Recipient": "DMP COMMAND GUI",
               "SubjectOut": "",
               "TargetMessageId": "",
-              "TargetFolderName": "",
+              "TargetFolderName": "@{trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName']))}",
               "TargetFolderId": "",
               "MatchedDomain": "",
               "Decision": "operation_mode_update_failed",
@@ -555,6 +737,134 @@
             "value": "Failed"
           },
           "description": "Marks the run outcome as failed when the configuration update did not succeed."
+        },
+        "SET_AlertMailSubject_(ConfigUpdateFailed)": {
+          "runAfter": {
+            "SET_AuditOutcome_Failed": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertMailSubject",
+            "value": "[Agent 5][FAILED] Operational State Update - Config Write Failed"
+          },
+          "description": "Builds the subject of the config-update-failed alert mail so it can later be reused for the Sent Items lookup and move operation."
+        },
+        "MAIL_Alert_(ConfigUpdateFailed)": {
+          "runAfter": {
+            "SET_AlertMailSubject_(ConfigUpdateFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+              "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+              "emailMessage/Subject": "@variables('AlertMailSubject')",
+              "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 5 - Operating State update failed.</strong></b></p><p class=\"editor-paragraph\"><br>The requested operational mode change could not be written to the central configuration.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Requested Mode:</strong></b> @{variables('RequestedAction')}<br><b><strong class=\"editor-text-bold\">Initiated By:</strong></b> @{variables('InitiatedBy')}<br><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><br>Please check the Audit Trail and SharePoint list permissions.</p>",
+              "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "SharedMailboxSendEmailV2"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Sends an alert mail when the Operating State update fails to write to the central configuration."
+        },
+        "Delay_Before_Get_Sent_Email_(ConfigUpdateFailed)": {
+          "runAfter": {
+            "MAIL_Alert_(ConfigUpdateFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Wait",
+          "inputs": {
+            "interval": {
+              "count": "@int(trim(string(outputs('CMP_ConfigObject')?['WaitSecondsBeforeSentMailSearch'])))",
+              "unit": "Second"
+            }
+          },
+          "description": "Waits before searching Sent Items so that the alert mail can be indexed and found reliably."
+        },
+        "Get_Sent_Email_By_Subject_(ConfigUpdateFailed)": {
+          "runAfter": {
+            "Delay_Before_Get_Sent_Email_(ConfigUpdateFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/sentitems/messages?$filter=', encodeUriComponent(concat('contains(subject,''', replace(variables('AlertMailSubject'), '''', ''''''), ''')')), '&$top=1')",
+              "Method": "GET"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "HttpRequest"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Searches Sent Items for the Agent 5 config-update-failed alert mail using the exact subject stored in AlertMailSubject."
+        },
+        "SET_AlertMessageId__(ConfigUpdateFailed)": {
+          "runAfter": {
+            "Get_Sent_Email_By_Subject_(ConfigUpdateFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertMessageId",
+            "value": "@body('Get_Sent_Email_By_Subject_(ConfigUpdateFailed)')?['value']?[0]?['id']"
+          }
+        },
+        "Move_Email_(ConfigUpdateFailed)": {
+          "runAfter": {
+            "SET_AlertMessageId__(ConfigUpdateFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/messages/', variables('AlertMessageId'), '/move')",
+              "Method": "POST",
+              "CustomHeader1": "Content-Type: application/json",
+              "Body": "{\n  \"destinationId\": \"@{variables('AlertTargetFolderId')}\"\n}",
+              "ContentType": "application/json"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "HttpRequest"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Moves the Agent 5 alert mail from Sent Items to the Agent 5 Alerts folder."
         },
         "SCOPE_AuditTrail_Write": {
           "runAfter": {

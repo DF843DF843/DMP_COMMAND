@@ -71,6 +71,75 @@
           },
           "description": "Stores checked DMP mode."
         },
+        "VAR_AlertEmailRecipient": {
+          "runAfter": {
+            "VAR_IsRealDMP": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertEmailRecipient",
+                "type": "string",
+                "value": "DMP_Communication_Agent_Team@deutsche-boerse.com"
+              }
+            ]
+          },
+          "description": "Notification recipient."
+        },
+        "VAR_AlertTargetFolderId": {
+          "runAfter": {
+            "VAR_AlertEmailRecipient": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertTargetFolderId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the Outlook folder id of the Agent 4 alert evidence folder. Used for moving alert mails."
+        },
+        "VAR_AlertMailSubject": {
+          "runAfter": {
+            "VAR_AlertTargetFolderId": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMailSubject",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the subject of the alert mail so it can be reused for the Sent Items lookup and move operation."
+        },
+        "VAR_AlertMessageId": {
+          "runAfter": {
+            "VAR_AlertMailSubject": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AlertMessageId",
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Stores the message id of the sent alert mail so it can be moved to the Agent 4 Alerts folder."
+        },
         "RESPOND_Status": {
           "runAfter": {
             "SCOPE_StatusRow_Update": [
@@ -2271,7 +2340,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled')"
+              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox' or Title eq 'ProcessedMailsRootFolderName' or Title eq 'MailImportanceError' or Title eq 'WaitSecondsBeforeSentMailSearch' or Title eq 'Agent4AlertFolderName')"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -2284,6 +2353,164 @@
             }
           },
           "description": "Loads active Agent 4 status configuration items."
+        },
+        "SET_AlertMailSubject_(ConfigLoadFailed)": {
+          "runAfter": {
+            "GET_DMP_Command_Configuration": [
+              "Failed",
+              "TimedOut"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertMailSubject",
+            "value": "[Agent 4][FAILED] Status Check - Configuration Load Failed"
+          },
+          "description": "Builds the subject of the config-load-failed alert mail so it can later be reused for the Sent Items lookup and move operation. Uses hardcoded fallback values throughout this branch since the central configuration itself could not be loaded."
+        },
+        "MAIL_Alert_(ConfigLoadFailed)": {
+          "runAfter": {
+            "SET_AlertMailSubject_(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "emailMessage/MailboxAddress": "default@eurex.com",
+              "emailMessage/To": "@variables('AlertEmailRecipient')",
+              "emailMessage/Subject": "@variables('AlertMailSubject')",
+              "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 4 - Status Check failed.</strong></b></p><p class=\"editor-paragraph\"><br>The central DMP COMMAND configuration list could not be loaded, so no status data could be checked or returned.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><br>Please check SharePoint list availability and permissions.</p>",
+              "emailMessage/Importance": "High"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "SharedMailboxSendEmailV2"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Sends an alert mail when the central configuration fails to load, using hardcoded fallback values since CMP_ConfigObject is not available in this branch."
+        },
+        "Delay_Before_Get_Sent_Email_(ConfigLoadFailed)": {
+          "runAfter": {
+            "MAIL_Alert_(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "Wait",
+          "inputs": {
+            "interval": {
+              "count": 10,
+              "unit": "Second"
+            }
+          },
+          "description": "Waits before searching Sent Items so that the alert mail can be indexed and found reliably."
+        },
+        "Get_Sent_Email_By_Subject_(ConfigLoadFailed)": {
+          "runAfter": {
+            "Delay_Before_Get_Sent_Email_(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Uri": "@concat('v1.0/users/default@eurex.com/mailFolders/sentitems/messages?$filter=', encodeUriComponent(concat('contains(subject,''', replace(variables('AlertMailSubject'), '''', ''''''), ''')')), '&$top=1')",
+              "Method": "GET"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "HttpRequest"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Searches Sent Items for the Agent 4 config-load-failed alert mail using the exact subject stored in AlertMailSubject."
+        },
+        "SET_AlertMessageId__(ConfigLoadFailed)": {
+          "runAfter": {
+            "Get_Sent_Email_By_Subject_(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertMessageId",
+            "value": "@body('Get_Sent_Email_By_Subject_(ConfigLoadFailed)')?['value']?[0]?['id']"
+          }
+        },
+        "Get_Alert_Folder_ID_(ConfigLoadFailed)": {
+          "runAfter": {
+            "SET_AlertMessageId__(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Uri": "v1.0/users/default@eurex.com/mailFolders?$filter=displayName eq 'Agent 04 Alerts'",
+              "Method": "GET"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "HttpRequest"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Resolves the Agent 4 Alerts mailbox folder ID directly by display name (config not available in this branch, so the folder must already exist from a prior successful run)."
+        },
+        "Move_Email_(ConfigLoadFailed)": {
+          "runAfter": {
+            "Get_Alert_Folder_ID_(ConfigLoadFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "Uri": "@concat('v1.0/users/default@eurex.com/messages/', variables('AlertMessageId'), '/move')",
+              "Method": "POST",
+              "CustomHeader1": "Content-Type: application/json",
+              "Body": "{\n  \"destinationId\": \"@{body('Get_Alert_Folder_ID_(ConfigLoadFailed)')?['value']?[0]?['id']}\"\n}",
+              "ContentType": "application/json"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "HttpRequest"
+            },
+            "retryPolicy": {
+              "type": "fixed",
+              "count": 3,
+              "interval": "PT5S"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Moves the Agent 4 alert mail from Sent Items to the Agent 4 Alerts folder."
         },
         "FILTER_Config_CurrentOperationMode": {
           "runAfter": {
@@ -2355,6 +2582,150 @@
           },
           "description": "Stores resolved status configuration values, built via Select+Join instead of a per-row loop."
         },
+        "SET_AlertEmailRecipient_From_Config": {
+          "runAfter": {
+            "VAR_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertEmailRecipient",
+            "value": "@coalesce(variables('ConfigObject')?['AlertEmailRecipient'], 'DMP_Communication_Agent_Team@deutsche-boerse.com')"
+          },
+          "description": "Sets AlertEmailRecipient from configuration object."
+        },
+        "E-Mail_Folder_creation": {
+          "actions": {
+            "Get_DMP_Mailbox_Parent_Folder_ID": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders?$filter=displayName eq ''', trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName'])), '''')",
+                  "Method": "GET",
+                  "CustomHeader1": "ConsistencyLevel: eventual",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the processed-mails root folder so that the Agent 4 alerts subfolder can later be created and addressed."
+            },
+            "Create_Mailbox_Subfolder_\"PA_Processed_Mails\"": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the processed-mails root folder in the shared mailbox if it does not yet exist."
+            },
+            "Create_Mailbox_Subfolder_\"Agent_4_Alerts\"": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Parent_Folder_ID": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'], '/childFolders')",
+                  "Method": "POST",
+                  "CustomHeader1": "Content-Type: application/json",
+                  "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['Agent4AlertFolderName']))}\"\n}",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Creates the dedicated Agent 4 Alerts mailbox subfolder below the processed-mails root folder if it does not yet exist."
+            },
+            "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"": {
+              "runAfter": {
+                "Create_Mailbox_Subfolder_\"Agent_4_Alerts\"": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent4AlertFolderName'])),\n  ''''\n)",
+                  "Method": "GET",
+                  "ContentType": "application/json"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "HttpRequest"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 3,
+                  "interval": "PT5S"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Resolves the mailbox folder ID of the Agent 4 Alerts mailbox subfolder so that sent internal Agent 4 alert mails can later be moved there."
+            },
+            "SET_AlertTargetFolderId": {
+              "runAfter": {
+                "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AlertTargetFolderId",
+                "value": "@body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"')?['value']?[0]?['id']"
+              },
+              "description": "Stores the mailbox folder ID of the Agent 4 Alerts folder for moving sent alert mails."
+            }
+          },
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Ensures the Agent 4 Alerts mailbox evidence folder exists and resolves its folder id."
+        },
         "SET_EmergencyReportFolder_From_Config": {
           "runAfter": {
             "SET_EmergencyReportFileName_From_Config": [
@@ -2372,7 +2743,7 @@
         },
         "SET_EmergencyReportFileName_From_Config": {
           "runAfter": {
-            "VAR_ConfigObject": [
+            "SET_AlertEmailRecipient_From_Config": [
               "Succeeded"
             ]
           },
