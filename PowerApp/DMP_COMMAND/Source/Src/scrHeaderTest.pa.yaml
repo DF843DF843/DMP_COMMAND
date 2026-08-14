@@ -48,7 +48,7 @@ Screens:
           Properties:
             X: =20
             Y: =64
-            Width: =1300
+            Width: =1450
             Height: =100
             Fill: =RGBA(32,23,81,1)
             RadiusTopLeft: =18
@@ -93,11 +93,11 @@ Screens:
             - lblCriticalValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =740
+                  X: =590
                   Y: =30
-                  Width: =64
+                  Width: =150
                   Height: =26
-                  Text: =Text(Coalesce(varAuditFailedCount,0))
+                  Text: ="000.000.000"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -109,9 +109,9 @@ Screens:
             - lblCriticalLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =740
+                  X: =590
                   Y: =56
-                  Width: =64
+                  Width: =150
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
@@ -124,12 +124,12 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =820
+                  X: =755
                   Y: =30
-                  Width: =70
+                  Width: =150
                   Height: =26
-                  Text: =Text(Coalesce(varAuditWarningCount,0))
-                  Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
+                  Text: ="000.000.000"
+                  Color: =RGBA(255,159,10,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
                   Size: =22
@@ -140,9 +140,9 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =820
+                  X: =755
                   Y: =56
-                  Width: =70
+                  Width: =150
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
@@ -155,11 +155,11 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =910
+                  X: =920
                   Y: =30
-                  Width: =90
+                  Width: =170
                   Height: =26
-                  Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
+                  Text: ="000.000.000/5"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
@@ -171,9 +171,9 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =910
+                  X: =920
                   Y: =56
-                  Width: =90
+                  Width: =170
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
@@ -186,7 +186,7 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1030
+                  X: =1105
                   Y: =28
                   Width: =80
                   Height: =44
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1165
+                  X: =1240
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +220,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1120
+                  X: =1195
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +235,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1220
+                  X: =1295
                   Y: =43
                   Width: =55
                   Height: =14
@@ -250,7 +250,7 @@ Screens:
             - lblDarkModeDebugA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1120
+                  X: =1195
                   Y: =74
                   Width: =155
                   Height: =16
