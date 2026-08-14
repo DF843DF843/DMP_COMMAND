@@ -229,7 +229,7 @@ Screens:
                                     Size: =19
                                     Align: =Align.Center
                                     Height: =28
-                                    Width: =600
+                                    Width: =420
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
                               - lblAppSubtitle:
@@ -241,7 +241,7 @@ Screens:
                                     Size: =10.5
                                     Align: =Align.Center
                                     Height: =18
-                                    Width: =600
+                                    Width: =420
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
                         - conHeaderKpis:
@@ -251,7 +251,7 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutGap: =18
+                              LayoutGap: =8
                             Children:
                               - conKpiCritical:
                                   Control: GroupContainer@1.5.0
