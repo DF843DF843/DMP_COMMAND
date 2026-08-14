@@ -10,7 +10,6 @@ Screens:
   scrHeaderTest:
     Properties:
       Fill: =RGBA(243,243,243,1)
-      OnVisible: =Set(varDarkModeSnapshotTest, varDarkMode)
     Children:
       - lblLabTitle:
           Control: Label@2.5.1
@@ -61,9 +60,9 @@ Screens:
                 Control: Label@2.5.1
                 Properties:
                   X: =20
-                  Y: =14
-                  Width: =520
-                  Height: =28
+                  Y: =18
+                  Width: =600
+                  Height: =26
                   Text: ="DMP COMMAND"
                   Color: =RGBA(255,255,255,1)
                   Font: =Font.'Segoe UI'
@@ -78,8 +77,8 @@ Screens:
                 Control: Label@2.5.1
                 Properties:
                   X: =20
-                  Y: =46
-                  Width: =520
+                  Y: =48
+                  Width: =600
                   Height: =20
                   Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                   Color: =RGBA(215,210,235,1)
@@ -94,10 +93,10 @@ Screens:
             - lblCriticalValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =640
-                  Y: =18
-                  Width: =70
-                  Height: =28
+                  X: =740
+                  Y: =30
+                  Width: =64
+                  Height: =26
                   Text: =Text(Coalesce(varAuditFailedCount,0))
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
@@ -110,9 +109,9 @@ Screens:
             - lblCriticalLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =640
-                  Y: =50
-                  Width: =70
+                  X: =740
+                  Y: =56
+                  Width: =64
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
@@ -125,10 +124,10 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =730
-                  Y: =18
-                  Width: =90
-                  Height: =28
+                  X: =820
+                  Y: =30
+                  Width: =70
+                  Height: =26
                   Text: =Text(Coalesce(varAuditWarningCount,0))
                   Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
                   Font: =Font.'Segoe UI'
@@ -141,9 +140,9 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =730
-                  Y: =50
-                  Width: =90
+                  X: =820
+                  Y: =56
+                  Width: =70
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
@@ -156,10 +155,10 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =850
-                  Y: =18
-                  Width: =110
-                  Height: =28
+                  X: =910
+                  Y: =30
+                  Width: =90
+                  Height: =26
                   Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
@@ -172,9 +171,9 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =850
-                  Y: =50
-                  Width: =110
+                  X: =910
+                  Y: =56
+                  Width: =90
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
@@ -187,9 +186,9 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =980
+                  X: =1030
                   Y: =28
-                  Width: =90
+                  Width: =80
                   Height: =44
                   Text: ="v-Test-A"
                   Color: =RGBA(255,255,255,1)
@@ -204,11 +203,11 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1120
-                  Y: =34
+                  X: =1165
+                  Y: =38
                   Width: =50
                   Height: =24
-                  Default: =varDarkModeSnapshotTest
+                  Default: =false
                   TrueFill: =RGBA(0,206,125,1)
                   FalseFill: =RGBA(80,78,100,1)
                   TrueText: =""
@@ -216,13 +215,13 @@ Screens:
                   Color: =RGBA(255,255,255,1)
                   BorderStyle: =BorderStyle.None
                   BorderColor: =RGBA(0,0,0,0)
-                  OnCheck: =Set(varDarkMode,false)
-                  OnUncheck: =Set(varDarkMode,true)
+                  OnCheck: =Set(varDarkModeTestA,false)
+                  OnUncheck: =Set(varDarkModeTestA,true)
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1075
-                  Y: =38
+                  X: =1120
+                  Y: =43
                   Width: =40
                   Height: =14
                   Text: ="DARK"
@@ -236,9 +235,9 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1175
-                  Y: =38
-                  Width: =40
+                  X: =1220
+                  Y: =43
+                  Width: =55
                   Height: =14
                   Text: ="LIGHT"
                   Color: =RGBA(200,195,225,1)
@@ -251,11 +250,11 @@ Screens:
             - lblDarkModeDebugA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1075
-                  Y: =60
-                  Width: =140
+                  X: =1120
+                  Y: =74
+                  Width: =155
                   Height: =16
-                  Text: ="varDarkMode=" & varDarkMode
+                  Text: ="varDarkModeTestA=" & varDarkModeTestA
                   Color: =RGBA(200,195,225,1)
                   Font: =Font.'Segoe UI'
                   Size: =8
