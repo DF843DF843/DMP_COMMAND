@@ -217,7 +217,7 @@ Screens:
                             Variant: AutoLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
-                              Width: =480
+                              FillPortions: =1
                               LayoutDirection: =LayoutDirection.Vertical
                               LayoutAlignItems: =LayoutAlignItems.Center
                             Children:
@@ -232,7 +232,7 @@ Screens:
                                     Align: =Align.Center
                                     VerticalAlign: =VerticalAlign.Middle
                                     Height: =28
-                                    Width: =480
+                                    Width: =Parent.Width
                                     Wrap: =false
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
@@ -247,7 +247,7 @@ Screens:
                                     Align: =Align.Center
                                     VerticalAlign: =VerticalAlign.Middle
                                     Height: =18
-                                    Width: =480
+                                    Width: =Parent.Width
                                     Wrap: =false
                                     BorderStyle: =BorderStyle.None
                                     BorderColor: =RGBA(0,0,0,0)
@@ -258,129 +258,120 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutGap: =20
+                              LayoutGap: =6
                             Children:
-                              - conKpiCluster:
+                              - conKpiCritical:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
                                   Properties:
                                     Fill: =RGBA(0,0,0,0)
-                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    Width: =64
+                                    Height: =44
+                                    LayoutDirection: =LayoutDirection.Vertical
                                     LayoutAlignItems: =LayoutAlignItems.Center
-                                    LayoutGap: =2
+                                    LayoutGap: =0
                                   Children:
-                                    - conKpiCritical:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                    - lblKpiCriticalValue:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Width: =64
-                                          Height: =44
-                                          LayoutDirection: =LayoutDirection.Vertical
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =0
-                                        Children:
-                                          - lblKpiCriticalValue:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="0"
-                                                Color: =RGBA(0,206,125,1)
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Size: =24
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =28
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                          - lblKpiCriticalLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="CRITICAL"
-                                                Color: =RGBA(200,195,225,1)
-                                                Font: =Font.'Segoe UI'
-                                                Size: =9
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =14
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conKpiWarnings:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          Text: ="0"
+                                          Color: =RGBA(0,206,125,1)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Size: =24
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =28
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
+                                    - lblKpiCriticalLabel:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Width: =78
-                                          Height: =44
-                                          LayoutDirection: =LayoutDirection.Vertical
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =0
-                                        Children:
-                                          - lblKpiWarningsValue:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="1"
-                                                Color: =RGBA(255,159,10,1)
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Size: =24
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =28
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                          - lblKpiWarningsLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="WARNINGS"
-                                                Color: =RGBA(200,195,225,1)
-                                                Font: =Font.'Segoe UI'
-                                                Size: =9
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =14
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                    - conKpiAgentsActive:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          Text: ="CRITICAL"
+                                          Color: =RGBA(200,195,225,1)
+                                          Font: =Font.'Segoe UI'
+                                          Size: =9
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =14
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
+                              - conKpiWarnings:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Fill: =RGBA(0,0,0,0)
+                                    Width: =78
+                                    Height: =44
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutGap: =0
+                                  Children:
+                                    - lblKpiWarningsValue:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Width: =100
-                                          Height: =44
-                                          LayoutDirection: =LayoutDirection.Vertical
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutGap: =0
-                                        Children:
-                                          - lblKpiAgentsValue:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="5/5"
-                                                Color: =RGBA(0,206,125,1)
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Size: =24
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =28
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
-                                          - lblKpiAgentsLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Text: ="AGENTS ACTIVE"
-                                                Color: =RGBA(200,195,225,1)
-                                                Font: =Font.'Segoe UI'
-                                                Size: =9
-                                                Align: =Align.Center
-                                                VerticalAlign: =VerticalAlign.Middle
-                                                Height: =14
-                                                BorderStyle: =BorderStyle.None
-                                                BorderColor: =RGBA(0,0,0,0)
+                                          Text: ="1"
+                                          Color: =RGBA(255,159,10,1)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Size: =24
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =28
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
+                                    - lblKpiWarningsLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Text: ="WARNINGS"
+                                          Color: =RGBA(200,195,225,1)
+                                          Font: =Font.'Segoe UI'
+                                          Size: =9
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =14
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
+                              - conKpiAgentsActive:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Fill: =RGBA(0,0,0,0)
+                                    Width: =100
+                                    Height: =44
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutAlignItems: =LayoutAlignItems.Center
+                                    LayoutGap: =0
+                                  Children:
+                                    - lblKpiAgentsValue:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Text: ="5/5"
+                                          Color: =RGBA(0,206,125,1)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Size: =24
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =28
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
+                                    - lblKpiAgentsLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Text: ="AGENTS ACTIVE"
+                                          Color: =RGBA(200,195,225,1)
+                                          Font: =Font.'Segoe UI'
+                                          Size: =9
+                                          Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
+                                          Height: =14
+                                          BorderStyle: =BorderStyle.None
+                                          BorderColor: =RGBA(0,0,0,0)
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.7"
+                                    Text: ="v1.1.8"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
