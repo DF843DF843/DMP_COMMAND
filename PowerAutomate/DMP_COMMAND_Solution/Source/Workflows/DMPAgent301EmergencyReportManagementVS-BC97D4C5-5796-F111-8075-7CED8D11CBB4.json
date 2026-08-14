@@ -123,6 +123,48 @@
           },
           "description": "Stores structured audit events before writing them to AuditTrail.xlsx.\n\nContains:\n\n- TimestampUtc\n- WorkflowPath\n- StepName\n- StepStatus\n- User\n- SourceFileName\n- TargetFileName\n- TargetFolder\n- DurationSec\n- Decision\n\nWritten to AuditTrail.xlsx at the end"
         },
+        "VAR_NewStepsCount": {
+          "runAfter": {
+            "VAR_AuditEvents": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1b2c3d4-1111-4a1a-9a1a-000000000007"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewStepsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Holds the incremented Steps counter value while writing it to Agent Audit Summary."
+        },
+        "VAR_NewRunsCount": {
+          "runAfter": {
+            "VAR_AuditEvents": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a1b2c3d4-1111-4a1a-9a1a-000000000008"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewRunsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Holds the incremented Runs counter value while writing it to Agent Audit Summary."
+        },
         "VAR_StepCounter": {
           "runAfter": {
             "VAR_AuditEvents": [
