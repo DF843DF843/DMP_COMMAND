@@ -48,7 +48,7 @@ Screens:
           Properties:
             X: =20
             Y: =64
-            Width: =1180
+            Width: =1165
             Height: =100
             Fill: =RGBA(32,23,81,1)
             RadiusTopLeft: =18
@@ -93,7 +93,7 @@ Screens:
             - lblCriticalValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =575
+                  X: =573
                   Y: =30
                   Width: =90
                   Height: =26
@@ -109,7 +109,7 @@ Screens:
             - lblCriticalLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =575
+                  X: =573
                   Y: =56
                   Width: =90
                   Height: =14
@@ -124,7 +124,7 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =670
+                  X: =666
                   Y: =30
                   Width: =90
                   Height: =26
@@ -140,7 +140,7 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =670
+                  X: =666
                   Y: =56
                   Width: =90
                   Height: =14
@@ -155,7 +155,7 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =765
+                  X: =759
                   Y: =30
                   Width: =100
                   Height: =26
@@ -171,7 +171,7 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =765
+                  X: =759
                   Y: =56
                   Width: =100
                   Height: =14
@@ -186,7 +186,7 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =875
+                  X: =865
                   Y: =28
                   Width: =130
                   Height: =44
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1060
+                  X: =1046
                   Y: =38
                   Width: =50
                   Height: =24
@@ -220,7 +220,7 @@ Screens:
             - lblToggleLeftTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1015
+                  X: =1001
                   Y: =43
                   Width: =40
                   Height: =14
@@ -235,7 +235,7 @@ Screens:
             - lblToggleRightTextA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1115
+                  X: =1101
                   Y: =43
                   Width: =55
                   Height: =14
