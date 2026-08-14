@@ -107,6 +107,41 @@ Nicht nur beim ersten Mal – jeder Import deaktiviert den/die betroffenen Flow(
 
 ---
 
+# 🆕 Neue Backlog-Punkte (2026-08-14): Bestätigung von Warnings/Alerts + kontrollierter Audit-Trail-Reset
+
+**Kontext:** Entstanden während der Arbeit am Power-App-Header/Cockpit (Anzeige von Critical/Warnings/Agents Active), noch nicht umgesetzt.
+
+## 1) Anwender-Bestätigung für neue Warnings/Alerts (Quittierungs-Mechanismus)
+Wenn Warnings oder Alerts auftauchen, muss der Anwender die Möglichkeit haben, diese zu bestätigen/quittieren.
+- **Einfacher erster Schritt:** Eine Warn-LED reicht zunächst aus. Tritt ein neuer Fehler auf, leuchtet die LED auf. Der Anwender bestätigt (quittiert) die LED – die angezeigte Anzahl bleibt danach konstant (keine erneute Alarmierung für bereits quittierte Fehler).
+- Tritt danach ein NEUER Fehler auf, ändert sich sowohl die angezeigte Anzahl als auch die LED wird erneut aktiv ("rot").
+- Noch zu klären mit Nutzer: Wie wird "neu" vs. "bereits quittiert" technisch unterschieden (z. B. Zeitstempel der letzten Quittierung vs. `TimestampUtc` der Audit-Trail-Zeilen)? Wo wird der Quittierungsstatus persistiert (SharePoint-Liste/Config)?
+
+## 2) Kontrollierter globaler Reset der Counter / des Audit Trail
+Es muss eine Möglichkeit geben, die Counter bzw. den Audit Trail global zurückzusetzen (zu leeren).
+- **Nur im 4-Augen-Prinzip:** Reset erfordert eine zweite Bestätigung (2. Person oder 2. expliziter Bestätigungsschritt) – kein versehentlicher Ein-Klick-Reset.
+- **Archivierung vor Reset zwingend:** Vor jedem Reset müssen die bestehenden Dateien/Daten archiviert werden (z. B. Kopie der Audit-Trail-Datei mit Zeitstempel ablegen), bevor der Live-Stand geleert wird.
+- Noch zu klären mit Nutzer: Wer darf den Reset auslösen/bestätigen (Rollen/Berechtigungen), wohin wird archiviert (welcher SharePoint-Ordner/welche Namenskonvention)?
+
+## 3) Finding: Agent 4 liefert Critical/Warnings-Zahlen immer als 0 (echter Datenfehler, kein Anzeigefehler)
+Bei der Header-Arbeit aufgefallen: Agent 4s Flow (`DMPAgent302StatusCheckVS`) legt die Variablen `AuditWarningCount`,
+`AuditFailedCount` und `AuditRunSummaryCount` an und gibt sie im Response-Schema zurück, **befüllt sie aber
+nirgendwo im Flow** – sie bleiben dauerhaft bei ihrem Initialwert 0. Agent 4 prüft aktuell nur, ob `AuditTrail.xlsx`
+existiert (Get file metadata), liest die Zeilen aber nie ein. Manuelle Prüfung von `AuditTrail.xlsx` (Sheet
+"Detailed Action Log", Spalte `StepStatus`) ergab die tatsächlichen Werte: Failed=24, Started=1, Succeeded=501,
+Warning=12, (blank)=29 – das sind die Zahlen, die die App eigentlich anzeigen sollte.
+
+**Nutzerentscheidung zum Lösungsansatz (2026-08-14):** Nicht live in Agent 4 aus `AuditTrail.xlsx` zählen/filtern,
+sondern die bestehende "Counter"-Excel-Datei um eine **neue Tabelle** erweitern, die die Ergebnisse von
+AuditSummary/StepStatus **pro Agent** hochzählt (vermutlich inkrementell von den einzelnen Agenten-Flows
+gepflegt, analog zum bestehenden Counter-Mechanismus für andere Zähler). Agent 4 würde dann aus dieser
+vor-aggregierten Tabelle lesen statt die komplette Audit-Trail-Datei zu durchsuchen.
+- Noch zu klären mit Nutzer: Genaue Tabellenstruktur (Spalten je Agent × StepStatus?), wer/was schreibt die
+  Inkremente (jeder Agent selbst am Ende seines Laufs, oder ein zentraler Schritt?), wie wird das mit dem
+  geplanten Reset-Feature (Punkt 2 oben) und der Archivierung konsistent gehalten.
+
+---
+
 # Grundsätzliche Architektur-Entscheidung: Operativer Zustand über 2 unabhängige Schalter (neu ab 2026-08-11, oberste Priorität, gilt für Power App + ALLE Agenten)
 
 **Entscheidung des Nutzers:** Im DMP-COMMAND-Frontend (Power App) sollen künftig **2 unabhängige Schalter** den operativen Zustand des Gesamtsystems bestimmen:
