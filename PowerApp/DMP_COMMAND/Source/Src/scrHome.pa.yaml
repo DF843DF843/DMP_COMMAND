@@ -355,7 +355,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.2"
+                                    Text: ="v1.1.3"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Fill: =RGBA(0,206,125,0.18)
                                     Font: =Font.'Segoe UI'
@@ -412,6 +412,23 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           OnCheck: =Set(varDarkMode,false)
                                           OnUncheck: =Set(varDarkMode,true)
+                  - lblDebugStatusCallError:
+                      Control: Label@2.5.1
+                      Properties:
+                        Text: =If(IsBlank(varStatusCallError), "", "DEBUG - Agent 4 call error: " & varStatusCallError)
+                        Visible: =!IsBlank(varStatusCallError)
+                        Color: =RGBA(255,255,255,1)
+                        Fill: =RGBA(196,43,28,1)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Size: =11
+                        Align: =Align.Center
+                        VerticalAlign: =VerticalAlign.Middle
+                        Height: =28
+                        LayoutMinHeight: =28
+                        LayoutMaxHeight: =28
+                        BorderStyle: =BorderStyle.None
+                        BorderColor: =RGBA(0,0,0,0)
                   - conRow1:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
