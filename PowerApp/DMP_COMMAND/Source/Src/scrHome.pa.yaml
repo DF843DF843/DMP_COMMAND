@@ -198,15 +198,17 @@ Screens:
                       Variant: AutoLayout
                       Properties:
                         Fill: =RGBA(32,23,81,1)
-                        Height: =88
-                        LayoutMinHeight: =88
-                        LayoutMaxHeight: =88
+                        Height: =96
+                        LayoutMinHeight: =96
+                        LayoutMaxHeight: =96
                         LayoutDirection: =LayoutDirection.Horizontal
                         LayoutAlignItems: =LayoutAlignItems.Center
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
                         RadiusBottomLeft: =18
                         RadiusBottomRight: =18
+                        PaddingTop: =18
+                        PaddingBottom: =18
                         PaddingLeft: =24
                         PaddingRight: =24
                       Children:
@@ -369,7 +371,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.5"
+                                    Text: ="v1.1.6"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
