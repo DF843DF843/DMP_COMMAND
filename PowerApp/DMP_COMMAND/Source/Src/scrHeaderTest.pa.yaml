@@ -10,6 +10,7 @@ Screens:
   scrHeaderTest:
     Properties:
       Fill: =RGBA(243,243,243,1)
+      OnVisible: =Set(varDarkModeSnapshotTest, varDarkMode)
     Children:
       - lblLabTitle:
           Control: Label@2.5.1
@@ -203,26 +204,56 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1090
-                  Y: =28
-                  Width: =130
-                  Height: =44
-                  Default: =varDarkMode
+                  X: =1120
+                  Y: =34
+                  Width: =50
+                  Height: =24
+                  Default: =varDarkModeSnapshotTest
                   TrueFill: =RGBA(0,206,125,1)
                   FalseFill: =RGBA(80,78,100,1)
-                  TrueText: ="Light"
-                  FalseText: ="Dark"
+                  TrueText: =""
+                  FalseText: =""
                   Color: =RGBA(255,255,255,1)
                   BorderStyle: =BorderStyle.None
                   BorderColor: =RGBA(0,0,0,0)
                   OnCheck: =Set(varDarkMode,false)
                   OnUncheck: =Set(varDarkMode,true)
+            - lblToggleLeftTextA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =1075
+                  Y: =38
+                  Width: =40
+                  Height: =14
+                  Text: ="DARK"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Right
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblToggleRightTextA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =1175
+                  Y: =38
+                  Width: =40
+                  Height: =14
+                  Text: ="LIGHT"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Left
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
             - lblDarkModeDebugA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =1090
-                  Y: =74
-                  Width: =160
+                  X: =1075
+                  Y: =60
+                  Width: =140
                   Height: =16
                   Text: ="varDarkMode=" & varDarkMode
                   Color: =RGBA(200,195,225,1)
