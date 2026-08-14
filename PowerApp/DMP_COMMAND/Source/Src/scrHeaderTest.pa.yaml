@@ -93,7 +93,7 @@ Screens:
             - lblCriticalValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =560
+                  X: =640
                   Y: =18
                   Width: =70
                   Height: =28
@@ -109,7 +109,7 @@ Screens:
             - lblCriticalLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =560
+                  X: =640
                   Y: =50
                   Width: =70
                   Height: =14
@@ -124,12 +124,12 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =650
+                  X: =730
                   Y: =18
                   Width: =90
                   Height: =28
                   Text: =Text(Coalesce(varAuditWarningCount,0))
-                  Color: =RGBA(255,159,10,1)
+                  Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
                   Size: =22
@@ -140,7 +140,7 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =650
+                  X: =730
                   Y: =50
                   Width: =90
                   Height: =14
@@ -155,7 +155,7 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =770
+                  X: =850
                   Y: =18
                   Width: =110
                   Height: =28
@@ -171,7 +171,7 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =770
+                  X: =850
                   Y: =50
                   Width: =110
                   Height: =14
@@ -186,7 +186,7 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =900
+                  X: =980
                   Y: =28
                   Width: =90
                   Height: =44
@@ -203,7 +203,7 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =1010
+                  X: =1090
                   Y: =28
                   Width: =130
                   Height: =44
@@ -217,6 +217,21 @@ Screens:
                   BorderColor: =RGBA(0,0,0,0)
                   OnCheck: =Set(varDarkMode,false)
                   OnUncheck: =Set(varDarkMode,true)
+            - lblDarkModeDebugA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =1090
+                  Y: =74
+                  Width: =160
+                  Height: =16
+                  Text: ="varDarkMode=" & varDarkMode
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =8
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
 
       - lblVariantBLabel:
           Control: Label@2.5.1
