@@ -355,7 +355,7 @@ Screens:
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.1"
+                                    Text: ="v1.1.2"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Fill: =RGBA(0,206,125,0.18)
                                     Font: =Font.'Segoe UI'
