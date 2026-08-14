@@ -1,0 +1,444 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrHeaderTest:
+    Properties:
+      Fill: =RGBA(243,243,243,1)
+    Children:
+      - lblLabTitle:
+          Control: Label@2.5.1
+          Properties:
+            X: =20
+            Y: =10
+            Width: =900
+            Height: =24
+            Text: ="HEADER TEST LAB - not linked to navigation, open via the Screens list in Studio"
+            Color: =RGBA(90,88,110,1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =11
+            Align: =Align.Left
+            BorderStyle: =BorderStyle.None
+            BorderColor: =RGBA(0,0,0,0)
+
+      - lblVariantALabel:
+          Control: Label@2.5.1
+          Properties:
+            X: =20
+            Y: =40
+            Width: =400
+            Height: =20
+            Text: ="Variant A - same design as scrHome, ManualLayout (fixed X/Y instead of AutoLayout)"
+            Color: =RGBA(60,60,70,1)
+            Font: =Font.'Segoe UI'
+            Size: =10
+            Align: =Align.Left
+            BorderStyle: =BorderStyle.None
+            BorderColor: =RGBA(0,0,0,0)
+
+      - conHeaderVariantA:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =20
+            Y: =64
+            Width: =1300
+            Height: =100
+            Fill: =RGBA(32,23,81,1)
+            RadiusTopLeft: =18
+            RadiusTopRight: =18
+            RadiusBottomLeft: =18
+            RadiusBottomRight: =18
+          Children:
+            - lblTitleA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =20
+                  Y: =14
+                  Width: =460
+                  Height: =28
+                  Text: ="DMP COMMAND"
+                  Color: =RGBA(255,255,255,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =20
+                  Align: =Align.Left
+                  VerticalAlign: =VerticalAlign.Middle
+                  Wrap: =false
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblSubtitleA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =20
+                  Y: =46
+                  Width: =460
+                  Height: =20
+                  Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
+                  Color: =RGBA(215,210,235,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =10.5
+                  Align: =Align.Left
+                  VerticalAlign: =VerticalAlign.Middle
+                  Wrap: =false
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblCriticalValueA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =560
+                  Y: =18
+                  Width: =60
+                  Height: =28
+                  Text: =Text(Coalesce(varAuditFailedCount,0))
+                  Color: =RGBA(0,206,125,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =22
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblCriticalLabelA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =560
+                  Y: =50
+                  Width: =60
+                  Height: =14
+                  Text: ="CRITICAL"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblWarningsValueA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =630
+                  Y: =18
+                  Width: =70
+                  Height: =28
+                  Text: =Text(Coalesce(varAuditWarningCount,0))
+                  Color: =RGBA(255,159,10,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =22
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblWarningsLabelA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =630
+                  Y: =50
+                  Width: =70
+                  Height: =14
+                  Text: ="WARNINGS"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblAgentsValueA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =710
+                  Y: =18
+                  Width: =90
+                  Height: =28
+                  Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
+                  Color: =RGBA(0,206,125,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =22
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblAgentsLabelA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =710
+                  Y: =50
+                  Width: =90
+                  Height: =14
+                  Text: ="AGENTS ACTIVE"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblVersionTagA:
+                Control: Label@2.5.1
+                Properties:
+                  X: =810
+                  Y: =28
+                  Width: =64
+                  Height: =44
+                  Text: ="v-Test-A"
+                  Color: =RGBA(255,255,255,1)
+                  Fill: =RGBA(0,206,125,0.28)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =13
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - tglThemeA:
+                Control: Classic/Toggle@2.1.0
+                Properties:
+                  X: =884
+                  Y: =28
+                  Width: =110
+                  Height: =44
+                  Default: =varDarkMode
+                  TrueFill: =RGBA(0,206,125,1)
+                  FalseFill: =RGBA(80,78,100,1)
+                  TrueText: ="Light"
+                  FalseText: ="Dark"
+                  Color: =RGBA(255,255,255,1)
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+                  OnCheck: =Set(varDarkMode,false)
+                  OnUncheck: =Set(varDarkMode,true)
+
+      - lblVariantBLabel:
+          Control: Label@2.5.1
+          Properties:
+            X: =20
+            Y: =180
+            Width: =500
+            Height: =20
+            Text: ="Variant B - two-row layout (title on its own row, stats/version/toggle on row below) - more breathing room"
+            Color: =RGBA(60,60,70,1)
+            Font: =Font.'Segoe UI'
+            Size: =10
+            Align: =Align.Left
+            BorderStyle: =BorderStyle.None
+            BorderColor: =RGBA(0,0,0,0)
+
+      - conHeaderVariantB:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            X: =20
+            Y: =204
+            Width: =1300
+            Height: =130
+            Fill: =RGBA(32,23,81,1)
+            RadiusTopLeft: =18
+            RadiusTopRight: =18
+            RadiusBottomLeft: =18
+            RadiusBottomRight: =18
+          Children:
+            - lblTitleB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =0
+                  Y: =8
+                  Width: =1300
+                  Height: =26
+                  Text: ="DMP COMMAND"
+                  Color: =RGBA(255,255,255,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =19
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  Wrap: =false
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblSubtitleB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =0
+                  Y: =34
+                  Width: =1300
+                  Height: =18
+                  Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
+                  Color: =RGBA(215,210,235,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =10.5
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  Wrap: =false
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblCriticalValueB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =400
+                  Y: =68
+                  Width: =70
+                  Height: =26
+                  Text: =Text(Coalesce(varAuditFailedCount,0))
+                  Color: =RGBA(0,206,125,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =20
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblCriticalLabelB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =400
+                  Y: =96
+                  Width: =70
+                  Height: =14
+                  Text: ="CRITICAL"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblWarningsValueB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =490
+                  Y: =68
+                  Width: =80
+                  Height: =26
+                  Text: =Text(Coalesce(varAuditWarningCount,0))
+                  Color: =RGBA(255,159,10,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =20
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblWarningsLabelB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =490
+                  Y: =96
+                  Width: =80
+                  Height: =14
+                  Text: ="WARNINGS"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblAgentsValueB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =590
+                  Y: =68
+                  Width: =100
+                  Height: =26
+                  Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
+                  Color: =RGBA(0,206,125,1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =20
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblAgentsLabelB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =590
+                  Y: =96
+                  Width: =100
+                  Height: =14
+                  Text: ="AGENTS ACTIVE"
+                  Color: =RGBA(200,195,225,1)
+                  Font: =Font.'Segoe UI'
+                  Size: =9
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - lblVersionTagB:
+                Control: Label@2.5.1
+                Properties:
+                  X: =720
+                  Y: =76
+                  Width: =64
+                  Height: =44
+                  Text: ="v-Test-B"
+                  Color: =RGBA(255,255,255,1)
+                  Fill: =RGBA(0,206,125,0.28)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Size: =13
+                  Align: =Align.Center
+                  VerticalAlign: =VerticalAlign.Middle
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+            - tglThemeB:
+                Control: Classic/Toggle@2.1.0
+                Properties:
+                  X: =800
+                  Y: =76
+                  Width: =110
+                  Height: =44
+                  Default: =varDarkMode
+                  TrueFill: =RGBA(0,206,125,1)
+                  FalseFill: =RGBA(80,78,100,1)
+                  TrueText: ="Light"
+                  FalseText: ="Dark"
+                  Color: =RGBA(255,255,255,1)
+                  BorderStyle: =BorderStyle.None
+                  BorderColor: =RGBA(0,0,0,0)
+                  OnCheck: =Set(varDarkMode,false)
+                  OnUncheck: =Set(varDarkMode,true)
+
+      - lblRawDataLabel:
+          Control: Label@2.5.1
+          Properties:
+            X: =20
+            Y: =350
+            Width: =900
+            Height: =20
+            Text: ="Raw Agent 4 response (varStatusResult) as JSON - for diagnosing the blank Critical/Warnings/HealthyAgents values:"
+            Color: =RGBA(60,60,70,1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Size: =10
+            Align: =Align.Left
+            BorderStyle: =BorderStyle.None
+            BorderColor: =RGBA(0,0,0,0)
+
+      - lblRawJsonDump:
+          Control: Label@2.5.1
+          Properties:
+            X: =20
+            Y: =374
+            Width: =1300
+            Height: =260
+            Text: =If(IsBlank(varStatusResult), "varStatusResult is Blank() - the Agent 4 call itself returned nothing", IfError(JSON(varStatusResult, JSONFormat.IndentFour), "JSON() failed: " & FirstError.Message))
+            Color: =RGBA(20,20,24,1)
+            Fill: =RGBA(255,255,255,1)
+            BorderStyle: =BorderStyle.Solid
+            BorderColor: =RGBA(200,200,205,1)
+            Font: =Font.'Courier New'
+            Size: =10
+            Align: =Align.Left
+            VerticalAlign: =VerticalAlign.Top
+            Wrap: =true
