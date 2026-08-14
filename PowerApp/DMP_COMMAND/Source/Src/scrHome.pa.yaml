@@ -228,6 +228,7 @@ Screens:
                                     FontWeight: =FontWeight.Bold
                                     Size: =20
                                     Align: =Align.Center
+                                    VerticalAlign: =VerticalAlign.Middle
                                     Height: =28
                                     Width: =Parent.Width
                                     Wrap: =false
@@ -242,6 +243,7 @@ Screens:
                                     FontWeight: =FontWeight.Bold
                                     Size: =10.5
                                     Align: =Align.Center
+                                    VerticalAlign: =VerticalAlign.Middle
                                     Height: =18
                                     Width: =Parent.Width
                                     Wrap: =false
@@ -276,6 +278,7 @@ Screens:
                                           FontWeight: =FontWeight.Bold
                                           Size: =24
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =28
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
@@ -287,6 +290,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Size: =9
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =14
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
@@ -310,6 +314,7 @@ Screens:
                                           FontWeight: =FontWeight.Bold
                                           Size: =24
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =28
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
@@ -321,6 +326,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Size: =9
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =14
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
@@ -344,6 +350,7 @@ Screens:
                                           FontWeight: =FontWeight.Bold
                                           Size: =24
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =28
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
@@ -355,13 +362,14 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Size: =9
                                           Align: =Align.Center
+                                          VerticalAlign: =VerticalAlign.Middle
                                           Height: =14
                                           BorderStyle: =BorderStyle.None
                                           BorderColor: =RGBA(0,0,0,0)
                               - lblVersionTag:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="v1.1.4"
+                                    Text: ="v1.1.5"
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(0,206,125,0.28)
                                     Font: =Font.'Segoe UI'
