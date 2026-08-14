@@ -126,7 +126,7 @@ Screens:
                 Properties:
                   X: =637
                   Y: =30
-                  Width: =65
+                  Width: =78
                   Height: =26
                   Text: ="000"
                   Color: =RGBA(255,159,10,1)
@@ -142,7 +142,7 @@ Screens:
                 Properties:
                   X: =637
                   Y: =56
-                  Width: =65
+                  Width: =78
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
@@ -155,7 +155,7 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =703
+                  X: =716
                   Y: =30
                   Width: =100
                   Height: =26
@@ -171,7 +171,7 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =703
+                  X: =716
                   Y: =56
                   Width: =100
                   Height: =14
@@ -186,9 +186,9 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =804
+                  X: =817
                   Y: =28
-                  Width: =130
+                  Width: =117
                   Height: =44
                   Text: ="v000.000.000"
                   Color: =RGBA(255,255,255,1)
