@@ -569,7 +569,7 @@ Screens:
                                           - lblLastChangedValue:
                                               Control: Label@2.5.1
                                               Properties:
-                                                Text: ="14:37 · U. Lehmann"
+                                                Text: ="14:37 Â· U. Lehmann"
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Font: =Font.'Segoe UI'
                                                 Size: =12
@@ -622,7 +622,7 @@ Screens:
                                                   =Set(varLedOperationalState, "Yellow");
                                                   Set(
                                                       varOpModeResult,
-                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                           User().Email,
                                                           If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
                                                       )
@@ -640,7 +640,7 @@ Screens:
                                                   =Set(varLedOperationalState, "Yellow");
                                                   Set(
                                                       varOpModeResult,
-                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                           User().Email,
                                                           If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
                                                       )
@@ -710,7 +710,7 @@ Screens:
                                                   =Set(varLedApplicationMode, "Yellow");
                                                   Set(
                                                       varOpModeResult,
-                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                           User().Email,
                                                           If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
                                                       )
@@ -728,7 +728,7 @@ Screens:
                                                   =Set(varLedApplicationMode, "Yellow");
                                                   Set(
                                                       varOpModeResult,
-                                                      'DMPAgent3(YESFileManagement)'.Run(
+                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                           User().Email,
                                                           If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
                                                       )
@@ -988,7 +988,7 @@ Screens:
                                                                 IfError(
                                                                     Set(
                                                                         varEmergencyReportUploadResult,
-                                                                        'DMPAgent3(EmergencyReportManagement)'.Run(
+                                                                        'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(
                                                                             User().Email,
                                                                             {
                                                                                 file: {
@@ -1109,7 +1109,7 @@ Screens:
                                     - lblLegendNoDmp:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="● No DMP"
+                                          Text: ="â— No DMP"
                                           Color: =RGBA(60,125,190,1)
                                           Font: =Font.'Segoe UI'
                                           Size: =10
@@ -1119,7 +1119,7 @@ Screens:
                                     - lblLegendDee:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="● DEE"
+                                          Text: ="â— DEE"
                                           Color: =RGBA(102,52,142,1)
                                           Font: =Font.'Segoe UI'
                                           Size: =10
@@ -1129,7 +1129,7 @@ Screens:
                                     - lblLegendDis:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="● DIS"
+                                          Text: ="â— DIS"
                                           Color: =RGBA(102,52,142,1)
                                           Font: =Font.'Segoe UI'
                                           Size: =10
@@ -1139,7 +1139,7 @@ Screens:
                                     - lblLegendDnes:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Text: ="● DNES"
+                                          Text: ="â— DNES"
                                           Color: =RGBA(255,159,10,1)
                                           Font: =Font.'Segoe UI'
                                           Size: =10
@@ -1184,7 +1184,7 @@ Screens:
                         - lblDotEmergencyReport:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="●"
+                              Text: ="â—"
                               Color: =If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
@@ -1195,7 +1195,7 @@ Screens:
                         - lblInfoEmergencyReport:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Emergency Report  ·  " & If(varEmergencyReportExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "-", Text(varEmergencyReportLastModified, "hh:mm:ss"))
+                              Text: ="Emergency Report  Â·  " & If(varEmergencyReportExists, "Operational", "Missing") & "  Â·  " & If(IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "-", Text(varEmergencyReportLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1217,7 +1217,7 @@ Screens:
                         - lblDotInternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="●"
+                              Text: ="â—"
                               Color: =If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
@@ -1228,7 +1228,7 @@ Screens:
                         - lblInfoInternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Internal Domains  ·  " & If(varInternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "-", Text(varInternalDomainsLastModified, "hh:mm:ss"))
+                              Text: ="Internal Domains  Â·  " & If(varInternalDomainsExists, "Operational", "Missing") & "  Â·  " & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "-", Text(varInternalDomainsLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1250,7 +1250,7 @@ Screens:
                         - lblDotExternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="●"
+                              Text: ="â—"
                               Color: =If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
@@ -1261,7 +1261,7 @@ Screens:
                         - lblInfoExternalDomains:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="External Domains  ·  " & If(varExternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "-", Text(varExternalDomainsLastModified, "hh:mm:ss"))
+                              Text: ="External Domains  Â·  " & If(varExternalDomainsExists, "Operational", "Missing") & "  Â·  " & If(IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "-", Text(varExternalDomainsLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1283,7 +1283,7 @@ Screens:
                         - lblDotCounter:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="●"
+                              Text: ="â—"
                               Color: =If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
@@ -1294,7 +1294,7 @@ Screens:
                         - lblInfoCounter:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Counter File  ·  " & If(varCounterExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varCounterLastModified) Or varCounterLastModified="", "-", Text(varCounterLastModified, "hh:mm:ss"))
+                              Text: ="Counter File  Â·  " & If(varCounterExists, "Operational", "Missing") & "  Â·  " & If(IsBlank(varCounterLastModified) Or varCounterLastModified="", "-", Text(varCounterLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1316,7 +1316,7 @@ Screens:
                         - lblDotAuditTrail:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="●"
+                              Text: ="â—"
                               Color: =If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
                               Font: =Font.'Segoe UI'
                               Size: =13
@@ -1327,7 +1327,7 @@ Screens:
                         - lblInfoAuditTrail:
                             Control: Label@2.5.1
                             Properties:
-                              Text: ="Audit Trail File  ·  " & If(varAuditTrailExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varAuditLastModified) Or varAuditLastModified="", "-", Text(varAuditLastModified, "hh:mm:ss"))
+                              Text: ="Audit Trail File  Â·  " & If(varAuditTrailExists, "Operational", "Missing") & "  Â·  " & If(IsBlank(varAuditLastModified) Or varAuditLastModified="", "-", Text(varAuditLastModified, "hh:mm:ss"))
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
                               Size: =10.5
@@ -1382,7 +1382,7 @@ Screens:
                               - lblNextStep1Done:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="✓ Configuration loaded"
+                                    Text: ="âœ“ Configuration loaded"
                                     Color: =RGBA(0,206,125,1)
                                     Font: =Font.'Segoe UI'
                                     FontWeight: =FontWeight.Semibold
@@ -1423,7 +1423,7 @@ Screens:
                               - lblNextStep2Done:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="✓ Agent 1 domain extraction"
+                                    Text: ="âœ“ Agent 1 domain extraction"
                                     Color: =RGBA(0,206,125,1)
                                     Font: =Font.'Segoe UI'
                                     FontWeight: =FontWeight.Semibold
@@ -1464,7 +1464,7 @@ Screens:
                               - lblNextStep3:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="→ Check Agent 2 inbox"
+                                    Text: ="â†’ Check Agent 2 inbox"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Font: =Font.'Segoe UI'
                                     Size: =12
@@ -1504,7 +1504,7 @@ Screens:
                               - lblNextStep4:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="→ Validate Emergency Report"
+                                    Text: ="â†’ Validate Emergency Report"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Font: =Font.'Segoe UI'
                                     Size: =12
@@ -1544,7 +1544,7 @@ Screens:
                               - lblNextStep5:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="→ Audit Trail review"
+                                    Text: ="â†’ Audit Trail review"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Font: =Font.'Segoe UI'
                                     Size: =12
@@ -1584,7 +1584,7 @@ Screens:
                               - lblNextStep6:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="→ End Fire Drill"
+                                    Text: ="â†’ End Fire Drill"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Font: =Font.'Segoe UI'
                                     Size: =12
@@ -1624,7 +1624,7 @@ Screens:
                               - lblNextStep7:
                                   Control: Label@2.5.1
                                   Properties:
-                                    Text: ="→ Export weekly report"
+                                    Text: ="â†’ Export weekly report"
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     Font: =Font.'Segoe UI'
                                     Size: =12

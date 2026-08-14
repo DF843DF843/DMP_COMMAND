@@ -55,7 +55,7 @@ App:
 
       //Live status refresh from Agent 4 (Status Check) - falls back to the defaults above on error
       Set(varStatusCallError,"");
-      Set(varStatusResult, IfError('DMPAgent3(StatusCheck)'.Run(), Set(varStatusCallError, FirstError.Message); Blank()));
+      Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), Set(varStatusCallError, FirstError.Message); Blank()));
       Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
       Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
       Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
