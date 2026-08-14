@@ -61,7 +61,7 @@ Screens:
                 Properties:
                   X: =20
                   Y: =14
-                  Width: =460
+                  Width: =520
                   Height: =28
                   Text: ="DMP COMMAND"
                   Color: =RGBA(255,255,255,1)
@@ -78,7 +78,7 @@ Screens:
                 Properties:
                   X: =20
                   Y: =46
-                  Width: =460
+                  Width: =520
                   Height: =20
                   Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                   Color: =RGBA(215,210,235,1)
@@ -95,7 +95,7 @@ Screens:
                 Properties:
                   X: =560
                   Y: =18
-                  Width: =60
+                  Width: =70
                   Height: =28
                   Text: =Text(Coalesce(varAuditFailedCount,0))
                   Color: =RGBA(0,206,125,1)
@@ -111,7 +111,7 @@ Screens:
                 Properties:
                   X: =560
                   Y: =50
-                  Width: =60
+                  Width: =70
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
@@ -124,9 +124,9 @@ Screens:
             - lblWarningsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =630
+                  X: =650
                   Y: =18
-                  Width: =70
+                  Width: =90
                   Height: =28
                   Text: =Text(Coalesce(varAuditWarningCount,0))
                   Color: =RGBA(255,159,10,1)
@@ -140,9 +140,9 @@ Screens:
             - lblWarningsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =630
+                  X: =650
                   Y: =50
-                  Width: =70
+                  Width: =90
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
@@ -155,9 +155,9 @@ Screens:
             - lblAgentsValueA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =710
+                  X: =770
                   Y: =18
-                  Width: =90
+                  Width: =110
                   Height: =28
                   Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
                   Color: =RGBA(0,206,125,1)
@@ -171,9 +171,9 @@ Screens:
             - lblAgentsLabelA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =710
+                  X: =770
                   Y: =50
-                  Width: =90
+                  Width: =110
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
@@ -186,9 +186,9 @@ Screens:
             - lblVersionTagA:
                 Control: Label@2.5.1
                 Properties:
-                  X: =810
+                  X: =900
                   Y: =28
-                  Width: =64
+                  Width: =90
                   Height: =44
                   Text: ="v-Test-A"
                   Color: =RGBA(255,255,255,1)
@@ -203,9 +203,9 @@ Screens:
             - tglThemeA:
                 Control: Classic/Toggle@2.1.0
                 Properties:
-                  X: =884
+                  X: =1010
                   Y: =28
-                  Width: =110
+                  Width: =130
                   Height: =44
                   Default: =varDarkMode
                   TrueFill: =RGBA(0,206,125,1)
