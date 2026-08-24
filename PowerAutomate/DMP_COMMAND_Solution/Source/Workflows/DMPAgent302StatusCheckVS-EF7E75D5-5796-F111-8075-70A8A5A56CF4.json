@@ -80,6 +80,60 @@
           },
           "description": "Stores checked DMP mode."
         },
+        "VAR_PowerAppVersionText": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PowerAppVersionText",
+                "type": "string",
+                "value": "v1.2.0"
+              }
+            ]
+          },
+          "description": "Stores the Power App version text; overwritten from the version file in SCOPE_PowerAppVersion_Read, keeps this fallback default if that read fails."
+        },
+        "VAR_AuditOutcome": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditOutcome",
+                "type": "string",
+                "value": "Started"
+              }
+            ]
+          },
+          "description": "Stores the overall outcome of the current run (Succeeded/Failed), used to increment the correct Agent Audit Summary Runs counter."
+        },
+        "VAR_NewRunsCount": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewRunsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Holds the incremented Runs counter value while writing it to Agent Audit Summary."
+        },
         "VAR_AlertEmailRecipient": {
           "runAfter": {
             "VAR_IsRealDMP": [
@@ -153,6 +207,18 @@
           "runAfter": {
             "SCOPE_StatusRow_Update": [
               "Succeeded"
+            ],
+            "SCOPE_AuditSummary_Read": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SCOPE_PowerAppVersion_Read": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
             ]
           },
           "metadata": {
@@ -328,6 +394,12 @@
                   "type": "string",
                   "x-ms-content-hint": "TEXT",
                   "x-ms-dynamically-added": true
+                },
+                "appversion": {
+                  "title": "AppVersion",
+                  "type": "string",
+                  "x-ms-content-hint": "TEXT",
+                  "x-ms-dynamically-added": true
                 }
               },
               "additionalProperties": {}
@@ -363,10 +435,104 @@
               "auditlastwarningtimestamp": "@{variables('AuditLastWarningTimestamp')}",
               "auditlastfailuretimestamp": "@{variables('AuditLastFailureTimestamp')}",
               "auditlastauditeventtimestamp": "@{variables('AuditLastAuditEventTimestamp')}",
-              "currentoperationmode": "@{variables('OperationMode')}"
+              "currentoperationmode": "@{variables('OperationMode')}",
+              "appversion": "@{variables('PowerAppVersionText')}"
             }
           },
           "description": "Returns Control Board status."
+        },
+        "SCOPE_AuditSummary_Write": {
+          "runAfter": {
+            "RESPOND_Status": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Scope",
+          "description": "Increments Agent 4's own Runs counter in Agent Audit Summary after the status response has been sent to the Power App.",
+          "actions": {
+            "SET_AuditOutcome": {
+              "runAfter": {},
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditOutcome",
+                "value": "@if(equals(actions('RESPOND_Status')['status'], 'Succeeded'), 'Succeeded', 'Failed')"
+              },
+              "description": "Determines the final AuditOutcome from the RESPOND_Status action's own execution status, since Agent 4 has no granular error branching."
+            },
+            "GET_AgentSummaryRow_ForRun": {
+              "runAfter": {
+                "SET_AuditOutcome": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 04"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 4's current Runs counters from Agent Audit Summary."
+            },
+            "SET_NewRunsCount": {
+              "runAfter": {
+                "GET_AgentSummaryRow_ForRun": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "NewRunsCount",
+                "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForRun')?[concat(variables('AuditOutcome'),'RunsCount')],0)), 1)"
+              },
+              "description": "Computes the incremented Runs counter value based on this run's final AuditOutcome."
+            },
+            "PATCH_AgentSummaryRow_ForRun": {
+              "runAfter": {
+                "SET_NewRunsCount": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 04",
+                  "item": "@json(concat('{\"', variables('AuditOutcome'), 'RunsCount\": ', string(variables('NewRunsCount')), ', \"', variables('AuditOutcome'), 'RunsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Persists the incremented Runs counter and its last-update timestamp for this run's final AuditOutcome back to Agent Audit Summary."
+            }
+          }
         },
         "VAR_InternalDomainsExists": {
           "runAfter": {
@@ -2349,7 +2515,7 @@
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
               "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
-              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox' or Title eq 'ProcessedMailsRootFolderName' or Title eq 'MailImportanceError' or Title eq 'WaitSecondsBeforeSentMailSearch' or Title eq 'Agent4AlertFolderName')"
+              "$filter": "Active eq 'Yes' and (Title eq 'CurrentOperationMode' or Title eq 'EmergencyReportFileName' or Title eq 'EmergencyReportTargetFolder' or Title eq 'InternalDomainsFileName' or Title eq 'InternalDomainsStorageFolder' or Title eq 'ExternalDomainsFileName' or Title eq 'ExternalDomainsStorageFolder' or Title eq 'CounterFileName' or Title eq 'CounterFolder' or Title eq 'CounterTableName' or Title eq 'CounterTableColumnNamePath' or Title eq 'CounterTableColumnNameCounter' or Title eq 'CounterPathNoDMP' or Title eq 'CounterPathInternalSender' or Title eq 'CounterPathNotEffected' or Title eq 'CounterPathEffectedMember' or Title eq 'AuditFileName' or Title eq 'AuditTableName' or Title eq 'DMPSharePointRootFolder' or Title eq 'AuditColumnStepName' or Title eq 'AuditColumnStepStatus' or Title eq 'AuditColumnTimestampUtc' or Title eq 'AuditOutcomeSucceeded' or Title eq 'AuditOutcomeWarning' or Title eq 'AuditOutcomeFailed' or Title eq 'AuditStepNameRunSummary' or Title eq 'WorkflowPathAgent4' or Title eq 'StatusCheckAuditCardEnabled' or Title eq 'StatusCheckCounterCardEnabled' or Title eq 'StatusCheckDomainsCardEnabled' or Title eq 'StatusCheckEmergencyReportCardEnabled' or Title eq 'AlertEmailRecipient' or Title eq 'SharedDMPMailbox' or Title eq 'ProcessedMailsRootFolderName' or Title eq 'MailImportanceError' or Title eq 'WaitSecondsBeforeSentMailSearch' or Title eq 'Agent4AlertFolderName' or Title eq 'PowerAppVersionFolderName' or Title eq 'PowerAppVersionFileName')"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -2590,6 +2756,243 @@
             ]
           },
           "description": "Stores resolved status configuration values, built via Select+Join instead of a per-row loop."
+        },
+        "SCOPE_PowerAppVersion_Read": {
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Reads the Power App version text file so the Cockpit header can display the current version without requiring a Power-Fx/Studio edit for every version bump.",
+          "actions": {
+            "GET_PowerAppVersion_Content": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "path": "@concat(\r\n  coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFolderName'], '/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage'),\r\n  '/',\r\n  coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFileName'], 'PowerApp_Version.txt')\r\n)",
+                  "inferContentType": true
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetFileContentByPath"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Power App version text file maintained outside of Power Apps Studio."
+            },
+            "SET_PowerAppVersionText": {
+              "runAfter": {
+                "GET_PowerAppVersion_Content": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "PowerAppVersionText",
+                "value": "@trim(string(body('GET_PowerAppVersion_Content')))"
+              },
+              "description": "Stores the trimmed Power App version text for inclusion in the status response. Keeps the initialized fallback default if the file read failed."
+            }
+          }
+        },
+        "SCOPE_AuditSummary_Read": {
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Reads the Agent Audit Summary table for all 5 agents and aggregates Failed/Warning step counts and total run counts for the Control Board.",
+          "actions": {
+            "GET_AuditSummary_Agent01": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 01"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 1's row from Agent Audit Summary for aggregation."
+            },
+            "GET_AuditSummary_Agent02": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 02"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 2's row from Agent Audit Summary for aggregation."
+            },
+            "GET_AuditSummary_Agent03": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 03"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 3's row from Agent Audit Summary for aggregation."
+            },
+            "GET_AuditSummary_Agent04": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 04"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 4's own row from Agent Audit Summary for aggregation."
+            },
+            "GET_AuditSummary_Agent05": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 05"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 5's row from Agent Audit Summary for aggregation."
+            },
+            "SET_AggregatedFailedStepsCount": {
+              "runAfter": {
+                "GET_AuditSummary_Agent01": [
+                  "Succeeded"
+                ],
+                "GET_AuditSummary_Agent02": [
+                  "Succeeded"
+                ],
+                "GET_AuditSummary_Agent03": [
+                  "Succeeded"
+                ],
+                "GET_AuditSummary_Agent04": [
+                  "Succeeded"
+                ],
+                "GET_AuditSummary_Agent05": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditFailedCount",
+                "value": "@add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedStepsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedStepsCount'],0)))), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedStepsCount'],0)))"
+              },
+              "description": "Sums the FailedStepsCount column across all 5 agent rows in Agent Audit Summary."
+            },
+            "SET_AggregatedWarningStepsCount": {
+              "runAfter": {
+                "SET_AggregatedFailedStepsCount": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditWarningCount",
+                "value": "@add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['WarningStepsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['WarningStepsCount'],0)))), int(coalesce(body('GET_AuditSummary_Agent05')?['WarningStepsCount'],0)))"
+              },
+              "description": "Sums the WarningStepsCount column across all 5 agent rows in Agent Audit Summary."
+            },
+            "CMP_TotalRunsPerAgent": {
+              "runAfter": {
+                "SET_AggregatedWarningStepsCount": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": "@createArray(\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent02')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent02')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent03')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent04')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent04')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent05')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent05')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['StartedRunsCount'],0))))\r\n)",
+              "description": "Computes each agent's total run count (Succeeded+Failed+Warning+Started) as an array, one element per agent."
+            },
+            "SET_AggregatedRunSummaryCount": {
+              "runAfter": {
+                "CMP_TotalRunsPerAgent": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditRunSummaryCount",
+                "value": "@add(add(int(outputs('CMP_TotalRunsPerAgent')?[0]), int(outputs('CMP_TotalRunsPerAgent')?[1])), add(add(int(outputs('CMP_TotalRunsPerAgent')?[2]), int(outputs('CMP_TotalRunsPerAgent')?[3])), int(outputs('CMP_TotalRunsPerAgent')?[4])))"
+              },
+              "description": "Sums the per-agent total run counts into the system-wide AuditRunSummaryCount shown on the Control Board."
+            }
+          }
         },
         "SET_AlertEmailRecipient_From_Config": {
           "runAfter": {

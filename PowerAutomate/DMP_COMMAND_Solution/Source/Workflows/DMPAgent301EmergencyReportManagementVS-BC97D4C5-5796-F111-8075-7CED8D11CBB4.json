@@ -1250,7 +1250,7 @@
                               "table": "AgentAuditSummary",
                               "idColumn": "AgentKey",
                               "id": "Agent 03",
-                              "item": "@json(concat('{\"', item()?['StepStatus'], 'StepsCount\": ', string(variables('NewStepsCount')), '}'))"
+                              "item": "@json(concat('{\"', item()?['StepStatus'], 'StepsCount\": ', string(variables('NewStepsCount')), ', \"', item()?['StepStatus'], 'StepsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
                             },
                             "host": {
                               "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
@@ -1333,7 +1333,7 @@
                           "table": "AgentAuditSummary",
                           "idColumn": "AgentKey",
                           "id": "Agent 03",
-                          "item": "@json(concat('{\"', variables('AuditOutcome'), 'RunsCount\": ', string(variables('NewRunsCount')), '}'))"
+                          "item": "@json(concat('{\"', variables('AuditOutcome'), 'RunsCount\": ', string(variables('NewRunsCount')), ', \"', variables('AuditOutcome'), 'RunsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
                         },
                         "host": {
                           "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",

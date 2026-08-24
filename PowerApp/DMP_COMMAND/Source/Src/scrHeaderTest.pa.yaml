@@ -430,7 +430,7 @@ Screens:
                   Y: =76
                   Width: =110
                   Height: =44
-                  Default: =varDarkMode
+                  Default: =false
                   TrueFill: =RGBA(0,206,125,1)
                   FalseFill: =RGBA(80,78,100,1)
                   TrueText: ="Light"
