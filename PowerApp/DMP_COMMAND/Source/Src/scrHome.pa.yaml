@@ -346,8 +346,8 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =40
                               Size: =11
-                              Text: =Coalesce(varAdminActionResult.message,"")
-                              Visible: =!IsBlank(varAdminActionResult)
+                              Text: =varAdminActionResult.message
+                              Visible: =Len(varAdminActionResult.message)>0
                   - conTopHeader:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout

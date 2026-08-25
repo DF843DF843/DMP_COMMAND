@@ -22,6 +22,10 @@ App:
       Set(varLedApplicationMode,"Green");
       Set(varLastChangedText,Blank());
 
+      Set(varShowAdminPanel,false);
+      Set(varConfirmDeleteMailboxFolders,false);
+      Set(varAdminActionResult,{success:false,message:"",requestedaction:"",deletedcount:0});
+
       Set(varEmergencyReportExists,false);
       Set(varEmergencyReportLastModified,Blank());
 
