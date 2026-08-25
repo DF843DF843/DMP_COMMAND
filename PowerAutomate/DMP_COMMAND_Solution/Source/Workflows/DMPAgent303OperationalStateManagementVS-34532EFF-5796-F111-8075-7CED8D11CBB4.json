@@ -74,11 +74,6 @@
               ]
             }
           },
-          "runtimeConfiguration": {
-            "concurrency": {
-              "runs": 1
-            }
-          },
           "description": "Creates or deletes the Real DMP indicator file Yes.txt."
         }
       },
