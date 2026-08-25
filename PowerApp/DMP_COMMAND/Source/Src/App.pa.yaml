@@ -52,7 +52,7 @@ App:
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
       Set(varDarkMode,true);
-      Set(varAppVersion,"v1.2.0");
+      Set(varAppVersion,"v1.3.0");
 
       // Live status refresh from Agent 4 (Status Check)
       Set(varAppStartTimestamp, Now());
