@@ -6,7 +6,7 @@
       <LocalizedName description="DMP_COMMAND_Solution" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0</Version>
+    <Version>7.4.6</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>DMPCommand</UniqueName>
@@ -85,6 +85,7 @@
       <RootComponent type="29" id="{d06a8fb8-5796-f111-8075-7ced8d106436}" behavior="0" />
       <RootComponent type="29" id="{e42c92b2-5796-f111-8075-7ced8d106436}" behavior="0" />
       <RootComponent type="29" id="{ef7e75d5-5796-f111-8075-70a8a5a56cf4}" behavior="0" />
+      <RootComponent type="29" id="{b849d817-8aa0-f111-b8db-000d3a25aef5}" behavior="0" />
     </RootComponents>
     <MissingDependencies />
   </SolutionManifest>

@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{34532eff-5796-f111-8075-7ced8d11cbb4}" Name="DMP Agent 5 (Operational State Management) [1.1.3]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <JsonFileName>/Workflows/DMPAgent303OperationalStateManagementVS-34532EFF-5796-F111-8075-7CED8D11CBB4.json</JsonFileName>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Workflow WorkflowId="{b849d817-8aa0-f111-b8db-000d3a25aef5}" Name="DMP Agent 6 (Admin Functions) [1.0.0]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <JsonFileName>/Workflows/DMPAgent6AdminFunctions-B849D817-8AA0-F111-B8DB-000D3A25AEF5.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
   <Category>5</Category>
@@ -11,8 +11,8 @@
   <TriggerOnDelete>0</TriggerOnDelete>
   <AsyncAutodelete>0</AsyncAutodelete>
   <SyncWorkflowLogOnFailure>0</SyncWorkflowLogOnFailure>
-  <StateCode>0</StateCode>
-  <StatusCode>1</StatusCode>
+  <StateCode>1</StateCode>
+  <StatusCode>2</StatusCode>
   <RunAs>1</RunAs>
   <IsTransacted>1</IsTransacted>
   <IntroducedVersion>1.0</IntroducedVersion>
@@ -22,6 +22,6 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 5 (Operational State Management) [1.1.3]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 6 (Admin Functions) [1.0.0]" />
   </LocalizedNames>
 </Workflow>

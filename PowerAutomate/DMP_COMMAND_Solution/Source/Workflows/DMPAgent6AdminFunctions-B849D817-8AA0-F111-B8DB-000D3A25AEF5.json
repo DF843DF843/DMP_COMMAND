@@ -1,0 +1,500 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedsharepointonline_626f1"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedoffice365_63b83"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "4e1402cd-72d7-4939-be53-29bc1c481432"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "InitiatedBy",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Eingabe eingeben",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "RequestedAction",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Eingabe eingeben",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1"
+              ]
+            }
+          },
+          "description": "Starts an Agent 6 admin/test-only maintenance action requested from the Cockpit's Admin Functions panel. Never called by the 5 production agents."
+        }
+      },
+      "actions": {
+        "VAR_RunStartTicks": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RunStartTicks",
+                "type": "integer",
+                "value": "@ticks(utcNow())"
+              }
+            ]
+          },
+          "description": "Stores run start time."
+        },
+        "VAR_InitiatedBy": {
+          "runAfter": {
+            "VAR_RunStartTicks": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "InitiatedBy",
+                "type": "string",
+                "value": "@triggerBody()?['text']"
+              }
+            ]
+          },
+          "description": "User who started the admin action."
+        },
+        "VAR_RequestedAction": {
+          "runAfter": {
+            "VAR_InitiatedBy": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RequestedAction",
+                "type": "string",
+                "value": "@triggerBody()?['text_1']"
+              }
+            ]
+          },
+          "description": "Identifies which admin/test-only action to run (e.g. DeleteProcessedMailsFolderTree). Extensible for future admin actions such as archive-folder renaming."
+        },
+        "VAR_ResultSuccess": {
+          "runAfter": {
+            "VAR_RequestedAction": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ResultSuccess",
+                "type": "boolean",
+                "value": false
+              }
+            ]
+          },
+          "description": "Tracks whether the requested admin action completed successfully."
+        },
+        "VAR_ResultMessage": {
+          "runAfter": {
+            "VAR_ResultSuccess": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ResultMessage",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "description": "Human-readable result text returned to the Cockpit."
+        },
+        "VAR_DeletedFolderNames": {
+          "runAfter": {
+            "VAR_ResultMessage": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "DeletedFolderNames",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "description": "Buffers the display names of folders actually deleted, for the result message."
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_DeletedFolderNames": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+              "table": "c3e96ba6-1c07-4f39-9b4d-0d0a92db6d6a",
+              "$filter": "Active eq 'Yes'",
+              "$orderby": "Title asc",
+              "$top": 5000
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Loads the active DMP COMMAND configuration items needed to resolve the correct mailbox and folder name for the current operating mode."
+        },
+        "FILTER_Config_CurrentOperationMode": {
+          "runAfter": {
+            "GET_DMP_Command_Configuration": [
+              "Succeeded"
+            ]
+          },
+          "type": "Query",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "where": "@equals(item()?['Title'],'CurrentOperationMode')"
+          },
+          "description": "Finds the current DMP COMMAND operation mode."
+        },
+        "VAR_OperationMode": {
+          "runAfter": {
+            "FILTER_Config_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OperationMode",
+                "type": "string",
+                "value": "@coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], 'PROD_NODMP')"
+              }
+            ]
+          },
+          "description": "Stores the current DMP COMMAND operation mode, so the correct (PROD vs SIMU) mailbox is targeted rather than accidentally deleting folders in the wrong mailbox."
+        },
+        "Select_ConfigEntries": {
+          "runAfter": {
+            "VAR_OperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "Select",
+          "inputs": {
+            "from": "@body('GET_DMP_Command_Configuration')?['value']",
+            "select": "@concat(\n  ',',\n  '\"',\n  replace(coalesce(item()?['Title'], ''), '\"', concat(decodeUriComponent('%5C'), '\"')),\n  '\":\"',\n  replace(\n    replace(\n      replace(\n        replace(\n          coalesce(\n            if(\n              equals(variables('OperationMode'), 'PROD_NODMP'),\n              item()?['Value_PROD_NODMP'],\n              if(\n                equals(variables('OperationMode'), 'PROD_DMP'),\n                item()?['Value_x002d_PROD_x0028_DMP_x0029'],\n                if(\n                  equals(variables('OperationMode'), 'SIMU_NODMP'),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_NODMP_x0029'], item()?['Value_x002d_SIMU_x0028_NODMP_x00']),\n                  item()?['Value_x002d_SIMU_x0028_DMP_x0029']\n                )\n              )\n            ),\n            ''\n          ),\n          decodeUriComponent('%5C'),\n          concat(decodeUriComponent('%5C'), decodeUriComponent('%5C'))\n        ),\n        '\"',\n        concat(decodeUriComponent('%5C'), '\"')\n      ),\n      decodeUriComponent('%0D'),\n      ''\n    ),\n    decodeUriComponent('%0A'),\n    concat(decodeUriComponent('%5C'), 'n')\n  ),\n  '\"'\n)"
+          },
+          "description": "Maps each configuration row to a mode-resolved JSON key-value fragment, matching the same resolution logic used by the production agents."
+        },
+        "CMP_ConfigJsonText": {
+          "runAfter": {
+            "Select_ConfigEntries": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@concat('{\"dummy\":\"\"', join(body('Select_ConfigEntries'), ''), '}')",
+          "description": "Completes the configuration JSON text by wrapping all resolved property fragments in braces."
+        },
+        "CMP_ConfigObject": {
+          "runAfter": {
+            "CMP_ConfigJsonText": [
+              "Succeeded"
+            ]
+          },
+          "type": "Compose",
+          "inputs": "@json(outputs('CMP_ConfigJsonText'))",
+          "description": "Converts the generated configuration JSON text into the central configuration object for this run."
+        },
+        "SWITCH_RequestedAction": {
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ]
+          },
+          "type": "Switch",
+          "expression": "@variables('RequestedAction')",
+          "default": {
+            "actions": {
+              "SET_ResultMessage_UnknownAction": {
+                "runAfter": {},
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ResultMessage",
+                  "value": "@concat('Unknown or unsupported admin action requested: ''', variables('RequestedAction'), '''.')"
+                },
+                "description": "Reports an unrecognized admin action back to the Cockpit instead of silently doing nothing."
+              }
+            }
+          },
+          "cases": {
+            "Case_DeleteProcessedMailsFolderTree": {
+              "case": "DeleteProcessedMailsFolderTree",
+              "actions": {
+                "GET_Matching_ProcessedMails_Folders": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/inbox/childFolders?$filter=startswith(displayName,''', trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName'])), ''')')",
+                      "Method": "GET",
+                      "CustomHeader1": "ConsistencyLevel: eventual",
+                      "ContentType": "application/json"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                      "connectionName": "shared_office365",
+                      "operationId": "HttpRequest"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Finds the 'PA Processed Mails' root folder and any stray duplicates (e.g. 'PA Processed Mails2') by matching on a name prefix, so the whole tree can be reset for testing."
+                },
+                "IF_NoMatchingFoldersFound": {
+                  "runAfter": {
+                    "GET_Matching_ProcessedMails_Folders": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "If",
+                  "expression": {
+                    "equals": [
+                      "@length(body('GET_Matching_ProcessedMails_Folders')?['value'])",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "SET_ResultMessage_NothingToDelete": {
+                      "runAfter": {},
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ResultMessage",
+                        "value": "@concat('No folder(s) matching ''', trim(string(outputs('CMP_ConfigObject')?['ProcessedMailsRootFolderName'])), '*'' found under Inbox - nothing to delete.')"
+                      },
+                      "description": "Reports that there was nothing to delete, which counts as a successful outcome."
+                    },
+                    "SET_ResultSuccess_NothingToDelete": {
+                      "runAfter": {
+                        "SET_ResultMessage_NothingToDelete": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "ResultSuccess",
+                        "value": true
+                      },
+                      "description": "Marks the run as successful since there was no folder to clean up."
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "APPLY_Delete_Matching_Folders": {
+                        "runAfter": {},
+                        "type": "Foreach",
+                        "foreach": "@body('GET_Matching_ProcessedMails_Folders')?['value']",
+                        "actions": {
+                          "DELETE_Folder": {
+                            "runAfter": {},
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', items('APPLY_Delete_Matching_Folders')?['id'])",
+                                "Method": "DELETE",
+                                "ContentType": "application/json"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                "connectionName": "shared_office365",
+                                "operationId": "HttpRequest"
+                              },
+                              "authentication": {
+                                "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                "type": "Raw"
+                              }
+                            },
+                            "description": "Deletes (moves to Deleted Items, recoverable) the matched folder together with all its subfolders and content."
+                          },
+                          "APPEND_DeletedFolderNames": {
+                            "runAfter": {
+                              "DELETE_Folder": [
+                                "Succeeded"
+                              ]
+                            },
+                            "type": "AppendToArrayVariable",
+                            "inputs": {
+                              "name": "DeletedFolderNames",
+                              "value": "@items('APPLY_Delete_Matching_Folders')?['displayName']"
+                            },
+                            "description": "Records the display name of each folder that was actually deleted."
+                          }
+                        }
+                      },
+                      "SET_ResultMessage_Deleted": {
+                        "runAfter": {
+                          "APPLY_Delete_Matching_Folders": [
+                            "Succeeded"
+                          ]
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultMessage",
+                          "value": "@concat('Deleted ', string(length(variables('DeletedFolderNames'))), ' folder(s): ', join(variables('DeletedFolderNames'), ', '), '.')"
+                        },
+                        "description": "Reports the full list of deleted folders back to the Cockpit."
+                      },
+                      "SET_ResultSuccess_Deleted": {
+                        "runAfter": {
+                          "SET_ResultMessage_Deleted": [
+                            "Succeeded"
+                          ]
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultSuccess",
+                          "value": true
+                        },
+                        "description": "Marks the run as successful after all matched folders were deleted."
+                      },
+                      "SET_ResultMessage_PartialFailure": {
+                        "runAfter": {
+                          "APPLY_Delete_Matching_Folders": [
+                            "Failed",
+                            "TimedOut"
+                          ]
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultMessage",
+                          "value": "@concat('Deletion stopped after an error. Successfully removed ', string(length(variables('DeletedFolderNames'))), ' folder(s) so far: ', join(variables('DeletedFolderNames'), ', '), '. Check the Power Automate run history for details.')"
+                        },
+                        "description": "Reports a partial failure so the Cockpit does not falsely claim full success."
+                      },
+                      "SET_ResultSuccess_PartialFailure": {
+                        "runAfter": {
+                          "SET_ResultMessage_PartialFailure": [
+                            "Succeeded"
+                          ]
+                        },
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ResultSuccess",
+                          "value": false
+                        },
+                        "description": "Marks the run as failed when not all matched folders could be deleted."
+                      }
+                    }
+                  },
+                  "description": "Skips the delete loop entirely (and reports success) when no 'PA Processed Mails' folder currently exists, instead of treating an already-clean mailbox as an error."
+                }
+              }
+            }
+          },
+          "description": "Dispatches to the requested admin/test-only action. Extensible: future admin actions (e.g. renaming a folder for archiving) can be added as additional cases without touching the delete logic."
+        },
+        "RESPOND_Result": {
+          "runAfter": {
+            "SWITCH_RequestedAction": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "success": "@variables('ResultSuccess')",
+              "message": "@variables('ResultMessage')",
+              "requestedaction": "@variables('RequestedAction')",
+              "deletedcount": "@length(variables('DeletedFolderNames'))"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "requestedaction": {
+                  "type": "string"
+                },
+                "deletedcount": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "description": "Returns the admin action's result to the Cockpit's Admin Functions panel."
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
