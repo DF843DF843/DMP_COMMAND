@@ -634,7 +634,7 @@
                 "name": "AlertTargetFolderId",
                 "value": "@coalesce(body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_5_Alerts\"')?['value']?[0]?['id'], '')"
               },
-              "description": "Stores the mailbox folder ID of the Agent 5 Alerts folder for moving sent alert mails. Always runs so this scope's own status stays Succeeded even when folders already existed and Create/Get steps were tolerated as Failed; a real resolution failure is detected downstream from an empty value, not from this scope's status."
+              "description": "Stores the Agent 5 Alerts folder ID for moving sent alert mails. Always runs (even if Create/Get above were tolerated as Failed) so this scope stays Succeeded; a real resolution failure is detected downstream from an empty value."
             }
           },
           "runAfter": {
@@ -932,7 +932,7 @@
             ]
           },
           "type": "If",
-          "description": "Only marks the run as Failed and sends the critical alert mail when the Agent 5 Alerts mailbox folder id could genuinely not be resolved - not merely because 'PA Processed Mails' or 'Agent 5 Alerts' already existed and their Create steps therefore returned an expected/tolerated failure."
+          "description": "Only marks the run Failed and sends the alert mail when the Agent 5 Alerts folder id could not genuinely be resolved - not merely because folders already existed and Create steps were tolerated as Failed."
         },
         "SET_AlertMailSubject_(ConfigUpdateFailed)": {
           "runAfter": {
