@@ -9,14 +9,13 @@
 App:
   Properties:
     OnStart: |-
-      =//Variables Declaration
+      =// Variables Declaration
       Set(varConfirmVisible,false);
       Set(varPendingAction,"");
       Set(varIsRealDMP,false);
       Set(varRequestedMode,false);
       Set(varSuppressToggleEvents,false);
       Set(varStartDMPStatusRefresh,false);
-
       Set(varOperationalModeIsDMP,true);
       Set(varEnvironmentIsPROD,false);
       Set(varLedOperationalState,"Green");
@@ -24,22 +23,22 @@ App:
       Set(varLastChangedText,Blank());
 
       Set(varEmergencyReportExists,false);
-      Set(varEmergencyReportLastModified,"");
+      Set(varEmergencyReportLastModified,Blank());
 
       Set(varInternalDomainsExists,false);
       Set(varInternalDomainsCount,0);
-      Set(varInternalDomainsLastModified,"");
+      Set(varInternalDomainsLastModified,Blank());
 
       Set(varExternalDomainsExists,false);
       Set(varExternalDomainsCount,0);
-      Set(varExternalDomainsLastModified,"");
+      Set(varExternalDomainsLastModified,Blank());
 
       Set(varCounterExists,false);
       Set(varCounterNoDMP,0);
       Set(varCounterInternalSender,0);
       Set(varCounterNotEffected,0);
       Set(varCounterEffected,0);
-      Set(varCounterLastModified,"");
+      Set(varCounterLastModified,Blank());
 
       Set(varAuditTrailExists,false);
       Set(varAuditRunSummaryCount,0);
@@ -48,46 +47,105 @@ App:
       Set(varAuditLastRunTimestamp,"");
       Set(varAuditLastSuccessTimestamp,"");
       Set(varAuditLastFailedTimestamp,"");
-      Set(varAuditLastModified,"");
+      Set(varAuditLastModified,Blank());
 
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
       Set(varDarkMode,true);
       Set(varAppVersion,"v1.2.0");
 
-      //Live status refresh from Agent 4 (Status Check) - falls back to the defaults above on error
+      // Live status refresh from Agent 4 (Status Check)
       Set(varAppStartTimestamp, Now());
-      Set(varStatusCallError,"");
-      Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), Set(varStatusCallError, FirstError.Message); Blank()));
+      Set(varStatusCallError, "");
+
+      Set(
+          varStatusResult,
+          IfError(
+              'DMPAgent4(StatusCheck)=>VS'.Run(),
+              Set(varStatusCallError, FirstError.Message);
+              Blank()
+          )
+      );
+
       Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+
       Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
       Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+
       Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
       Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
       Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+
       Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
       Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
       Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+
       Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
       Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
       Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
       Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
       Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
       Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+
       Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
       Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
-      Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
-      Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
-      Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
-      Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
-      Set(varAgentsHealthyCount,
-        CountIf(
-          [varEmergencyReportExists, varInternalDomainsExists, varExternalDomainsExists, varCounterExists, varAuditTrailExists],
-          Value = true
-        )
+
+      Set(
+          varAuditRunSummaryCount,
+          IfError(
+              Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount),
+              varAuditRunSummaryCount
+          )
       );
-      Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount/5)*100,0));
-      Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
-      Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"))
+
+      Set(
+          varAuditWarningCount,
+          IfError(
+              Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount),
+              varAuditWarningCount
+          )
+      );
+
+      Set(
+          varAuditFailedCount,
+          IfError(
+              Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount),
+              varAuditFailedCount
+          )
+      );
+
+      Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
+
+      // Health Calculation
+      Set(
+          varAgentsHealthyCount,
+          If(varEmergencyReportExists, 1, 0) +
+          If(varInternalDomainsExists, 1, 0) +
+          If(varExternalDomainsExists, 1, 0) +
+          If(varCounterExists, 1, 0) +
+          If(varAuditTrailExists, 1, 0)
+      );
+
+      Set(
+          varSystemHealthPercent,
+          RoundUp((varAgentsHealthyCount / 5) * 100, 0)
+      );
+
+      // Current Mode
+      Set(
+          varOperationalModeIsDMP,
+          EndsWith(
+              Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"),
+              "_DMP"
+          )
+      );
+
+      Set(
+          varEnvironmentIsPROD,
+          StartsWith(
+              Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"),
+              "PROD"
+          )
+      )
     StartScreen: =scrHome
     Theme: =PowerAppsTheme
