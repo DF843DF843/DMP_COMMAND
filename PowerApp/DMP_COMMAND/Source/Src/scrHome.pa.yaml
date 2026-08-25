@@ -567,42 +567,54 @@ Screens:
                                                 LabelPaddingLeft: =0
                                                 LabelPaddingRight: =0
                                                 OnCheck: |-
-                                                  =Set(varLedOperationalState, "Yellow");
-                                                  Set(
-                                                      varOpModeResult,
-                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                          User().Email,
-                                                          If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
-                                                      )
-                                                  );
-                                                  If(
-                                                      Coalesce(varOpModeResult.success, false),
-                                                      Set(varOperationalModeIsDMP, true);
-                                                      Set(varLedOperationalState, "Green");
-                                                      Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                      Notify("Operating State switched to DMP mode.", NotificationType.Success),
-                                                      Set(varLedOperationalState, "Red");
-                                                      Reset(tglOperationalState);
-                                                      Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  =If(
+                                                      varSuppressToggleEvents,
+                                                      Set(varSuppressToggleEvents, false),
+                                                      Set(varSuppressToggleEvents, true);
+                                                      Set(varLedOperationalState, "Yellow");
+                                                      Set(
+                                                          varOpModeResult,
+                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                              User().Email,
+                                                              If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
+                                                          )
+                                                      );
+                                                      If(
+                                                          Coalesce(varOpModeResult.success, false),
+                                                          Set(varOperationalModeIsDMP, true);
+                                                          Set(varLedOperationalState, "Green");
+                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                          Notify("Operating State switched to DMP mode.", NotificationType.Success),
+                                                          Set(varLedOperationalState, "Red");
+                                                          Reset(tglOperationalState);
+                                                          Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                      );
+                                                      Set(varSuppressToggleEvents, false)
                                                   )
                                                 OnUncheck: |-
-                                                  =Set(varLedOperationalState, "Yellow");
-                                                  Set(
-                                                      varOpModeResult,
-                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                          User().Email,
-                                                          If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
-                                                      )
-                                                  );
-                                                  If(
-                                                      Coalesce(varOpModeResult.success, false),
-                                                      Set(varOperationalModeIsDMP, false);
-                                                      Set(varLedOperationalState, "Green");
-                                                      Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                      Notify("Operating State switched to Normal mode.", NotificationType.Success),
-                                                      Set(varLedOperationalState, "Red");
-                                                      Reset(tglOperationalState);
-                                                      Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  =If(
+                                                      varSuppressToggleEvents,
+                                                      Set(varSuppressToggleEvents, false),
+                                                      Set(varSuppressToggleEvents, true);
+                                                      Set(varLedOperationalState, "Yellow");
+                                                      Set(
+                                                          varOpModeResult,
+                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                              User().Email,
+                                                              If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
+                                                          )
+                                                      );
+                                                      If(
+                                                          Coalesce(varOpModeResult.success, false),
+                                                          Set(varOperationalModeIsDMP, false);
+                                                          Set(varLedOperationalState, "Green");
+                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                          Notify("Operating State switched to Normal mode.", NotificationType.Success),
+                                                          Set(varLedOperationalState, "Red");
+                                                          Reset(tglOperationalState);
+                                                          Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                      );
+                                                      Set(varSuppressToggleEvents, false)
                                                   )
                                                 TrueFill: =RGBA(255,159,10,1)
                                                 TrueText: ="DMP"
@@ -658,42 +670,54 @@ Screens:
                                                 LabelPaddingLeft: =0
                                                 LabelPaddingRight: =0
                                                 OnCheck: |-
-                                                  =Set(varLedApplicationMode, "Yellow");
-                                                  Set(
-                                                      varOpModeResult,
-                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                          User().Email,
-                                                          If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
-                                                      )
-                                                  );
-                                                  If(
-                                                      Coalesce(varOpModeResult.success, false),
-                                                      Set(varEnvironmentIsPROD, true);
-                                                      Set(varLedApplicationMode, "Green");
-                                                      Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                      Notify("Environment switched to PROD.", NotificationType.Success),
-                                                      Set(varLedApplicationMode, "Red");
-                                                      Reset(tglApplicationMode);
-                                                      Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  =If(
+                                                      varSuppressToggleEvents,
+                                                      Set(varSuppressToggleEvents, false),
+                                                      Set(varSuppressToggleEvents, true);
+                                                      Set(varLedApplicationMode, "Yellow");
+                                                      Set(
+                                                          varOpModeResult,
+                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                              User().Email,
+                                                              If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
+                                                          )
+                                                      );
+                                                      If(
+                                                          Coalesce(varOpModeResult.success, false),
+                                                          Set(varEnvironmentIsPROD, true);
+                                                          Set(varLedApplicationMode, "Green");
+                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                          Notify("Environment switched to PROD.", NotificationType.Success),
+                                                          Set(varLedApplicationMode, "Red");
+                                                          Reset(tglApplicationMode);
+                                                          Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                      );
+                                                      Set(varSuppressToggleEvents, false)
                                                   )
                                                 OnUncheck: |-
-                                                  =Set(varLedApplicationMode, "Yellow");
-                                                  Set(
-                                                      varOpModeResult,
-                                                      'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                          User().Email,
-                                                          If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
-                                                      )
-                                                  );
-                                                  If(
-                                                      Coalesce(varOpModeResult.success, false),
-                                                      Set(varEnvironmentIsPROD, false);
-                                                      Set(varLedApplicationMode, "Green");
-                                                      Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                      Notify("Environment switched to SIMU.", NotificationType.Success),
-                                                      Set(varLedApplicationMode, "Red");
-                                                      Reset(tglApplicationMode);
-                                                      Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                  =If(
+                                                      varSuppressToggleEvents,
+                                                      Set(varSuppressToggleEvents, false),
+                                                      Set(varSuppressToggleEvents, true);
+                                                      Set(varLedApplicationMode, "Yellow");
+                                                      Set(
+                                                          varOpModeResult,
+                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                              User().Email,
+                                                              If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
+                                                          )
+                                                      );
+                                                      If(
+                                                          Coalesce(varOpModeResult.success, false),
+                                                          Set(varEnvironmentIsPROD, false);
+                                                          Set(varLedApplicationMode, "Green");
+                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                          Notify("Environment switched to SIMU.", NotificationType.Success),
+                                                          Set(varLedApplicationMode, "Red");
+                                                          Reset(tglApplicationMode);
+                                                          Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                      );
+                                                      Set(varSuppressToggleEvents, false)
                                                   )
                                                 TrueFill: =RGBA(196,43,28,1)
                                                 TrueText: ="PROD"

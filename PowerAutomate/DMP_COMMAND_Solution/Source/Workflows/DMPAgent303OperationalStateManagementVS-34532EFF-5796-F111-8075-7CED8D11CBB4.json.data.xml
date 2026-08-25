@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{34532eff-5796-f111-8075-7ced8d11cbb4}" Name="DMP Agent 5 (Operational State Management) [1.1.0]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow WorkflowId="{34532eff-5796-f111-8075-7ced8d11cbb4}" Name="DMP Agent 5 (Operational State Management) [1.1.1]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <JsonFileName>/Workflows/DMPAgent303OperationalStateManagementVS-34532EFF-5796-F111-8075-7CED8D11CBB4.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
@@ -22,6 +22,6 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 5 (Operational State Management) [1.1.0]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 5 (Operational State Management) [1.1.1]" />
   </LocalizedNames>
 </Workflow>

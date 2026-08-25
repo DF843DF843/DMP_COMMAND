@@ -74,6 +74,11 @@
               ]
             }
           },
+          "runtimeConfiguration": {
+            "concurrency": {
+              "runs": 1
+            }
+          },
           "description": "Creates or deletes the Real DMP indicator file Yes.txt."
         }
       },
@@ -116,9 +121,27 @@
           },
           "description": "Stores run outcome."
         },
-        "VAR_AuditEvents": {
+        "VAR_CoreActionOutcome": {
           "runAfter": {
             "VAR_AuditOutcome": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CoreActionOutcome",
+                "type": "string",
+                "value": "Started"
+              }
+            ]
+          },
+          "description": "Tracks the outcome of the actual Operating State/Environment switch itself, independent of AuditOutcome, so the Power App response reflects the core action's real result even if unrelated housekeeping (mailbox folder setup) fails afterwards."
+        },
+        "VAR_AuditEvents": {
+          "runAfter": {
+            "VAR_CoreActionOutcome": [
               "Succeeded"
             ]
           },
@@ -394,7 +417,7 @@
             },
             "statusCode": 200,
             "body": {
-              "success": "@equals(variables('AuditOutcome'),'Succeeded')",
+              "success": "@or(equals(variables('AuditOutcome'),'Succeeded'),equals(variables('CoreActionOutcome'),'Succeeded'))",
               "auditoutcome": "@{variables('AuditOutcome')}",
               "requestedaction": "@{variables('RequestedAction')}",
               "newoperationmode": "@{variables('RequestedAction')}"
@@ -689,6 +712,19 @@
           },
           "description": "Marks the run outcome as successful after the configuration update."
         },
+        "SET_CoreActionOutcome_Succeeded": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CoreActionOutcome",
+            "value": "Succeeded"
+          },
+          "description": "Marks the core Operating State/Environment switch as successful, independent of any later housekeeping (mailbox folder) outcome."
+        },
         "AUDIT_ConfigUpdate_Success": {
           "runAfter": {
             "UPDATE_ConfigRow_CurrentOperationMode": [
@@ -773,6 +809,21 @@
             "value": "Failed"
           },
           "description": "Marks the run outcome as failed when the configuration update did not succeed."
+        },
+        "SET_CoreActionOutcome_Failed": {
+          "runAfter": {
+            "UPDATE_ConfigRow_CurrentOperationMode": [
+              "Failed",
+              "TimedOut",
+              "Skipped"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "CoreActionOutcome",
+            "value": "Failed"
+          },
+          "description": "Marks the core Operating State/Environment switch as failed so the Power App correctly reports failure only when the actual switch itself did not succeed."
         },
         "SET_AuditOutcome_EmailFolderFailed": {
           "runAfter": {
@@ -1025,6 +1076,18 @@
               "TimedOut"
             ],
             "MAIL_Alert_(EmailFolderCreationFailed)": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SET_CoreActionOutcome_Succeeded": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SET_CoreActionOutcome_Failed": [
               "Succeeded",
               "Failed",
               "Skipped",
