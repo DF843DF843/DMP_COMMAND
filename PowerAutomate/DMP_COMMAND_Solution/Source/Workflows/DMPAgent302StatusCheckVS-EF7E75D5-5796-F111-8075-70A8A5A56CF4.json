@@ -1310,7 +1310,8 @@
                   "inputs": {
                     "name": "CounterNoDMP",
                     "value": "@int(float(coalesce(body('GET_Counter_NoDMP')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
-                  }
+                  },
+                  "description": "Stores the No DMP workflow counter value read from Counter.xlsx for the Cockpit Counter card."
                 },
                 "GET_Counter_InternalSender": {
                   "runAfter": {
@@ -1469,7 +1470,8 @@
                   "inputs": {
                     "name": "CounterLastModified",
                     "value": "@outputs('GET_Counter_Metadata')?['body/LastModified']"
-                  }
+                  },
+                  "description": "Stores the last-modified timestamp of the Counter file for the Cockpit Counter card."
                 },
                 "SET_Counter_File_True": {
                   "metadata": {
@@ -1519,7 +1521,8 @@
               "metadata": {
                 "operationMetadataId": "68eac766-bdaf-4e88-8c73-2e1264f48ddd"
               },
-              "type": "If"
+              "type": "If",
+              "description": "Routes processing depending on whether the Counter file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
             }
           },
           "runAfter": {
@@ -1626,7 +1629,8 @@
               "metadata": {
                 "operationMetadataId": "2613b6e9-889e-4b8a-9f2a-40c243e45dcb"
               },
-              "type": "If"
+              "type": "If",
+              "description": "Routes processing depending on whether the Audit Trail file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
             }
           },
           "runAfter": {
@@ -1682,7 +1686,8 @@
                   "inputs": {
                     "name": "EmergencyReportLastModified",
                     "value": "@outputs('GET_EmergencyReport_Metadata')?['body/LastModified']"
-                  }
+                  },
+                  "description": "Stores the last-modified timestamp of the Emergency Report file for the Cockpit Emergency Report card."
                 },
                 "SET_Emergency_Report_True": {
                   "metadata": {
@@ -1732,7 +1737,8 @@
               "metadata": {
                 "operationMetadataId": "7ddf3aad-b697-48ab-a813-f9cfaa54bbb6"
               },
-              "type": "If"
+              "type": "If",
+              "description": "Routes processing depending on whether the Emergency Report file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
             }
           },
           "runAfter": {
@@ -1927,7 +1933,7 @@
               }
             ]
           },
-          "description": "Stores the Excel table key column used to identify workflow counter rows.\n\nAligned with Agent 2.\n\nDefault = Workflow\n\nUsed for:\n- Reading the No DMP counter row\n- Reading the DMP internal Sender counter row\n- Reading the DMP not effected Sender counter row"
+          "description": "Stores the Excel table key column used to identify workflow counter rows.\n\nAligned with Agent 2.\n\nDefault = Workflow\n\nUsed for reading the No DMP, DMP internal Sender, and DMP not effected Sender counter rows."
         },
         "VAR_CounterTableColumnCounter": {
           "runAfter": {
@@ -2231,7 +2237,7 @@
               }
             ]
           },
-          "description": "Stores the Excel table name used for the central audit trail.\n\nAligned with Agent 1 and Agent 2.\n\nUsed for:\n- Reading audit trail rows\n- Counting run summary entries\n- Counting warning and failed audit entries\n- Returning audit health data to DMP COMMAND"
+          "description": "Stores the Excel table name used for the central audit trail.\n\nAligned with Agent 1 and Agent 2.\n\nUsed for reading audit trail rows, counting run summary/warning/failed entries, and returning audit health data to DMP COMMAND."
         },
         "VAR_AuditColumnStepName": {
           "runAfter": {
@@ -2499,7 +2505,8 @@
                 "type": "string"
               }
             ]
-          }
+          },
+          "description": "Reserves the string variable used to hold the last-modified timestamp of the real-DMP indicator source."
         },
         "GET_DMP_Command_Configuration": {
           "runAfter": {
@@ -2624,7 +2631,8 @@
           "inputs": {
             "name": "AlertMessageId",
             "value": "@body('Get_Sent_Email_By_Subject_(ConfigLoadFailed)')?['value']?[0]?['id']"
-          }
+          },
+          "description": "Stores the message id of the sent config-load-failed alert mail so it can be moved to the Agent 4 Alerts folder."
         },
         "Get_Alert_Folder_ID_(ConfigLoadFailed)": {
           "runAfter": {
@@ -3067,7 +3075,7 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
-                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'], '/childFolders')",
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value']?[0]?['id'], '/childFolders')",
                   "Method": "POST",
                   "CustomHeader1": "Content-Type: application/json",
                   "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['Agent4AlertFolderName']))}\"\n}",
@@ -3095,7 +3103,7 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
-                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent4AlertFolderName'])),\n  ''''\n)",
+                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value']?[0]?['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent4AlertFolderName'])),\n  ''''\n)",
                   "Method": "GET",
                   "ContentType": "application/json"
                 },
@@ -3151,7 +3159,8 @@
           "inputs": {
             "name": "EmergencyReportFolder",
             "value": "@coalesce(variables('ConfigObject')?['EmergencyReportTargetFolder'], '/Shared Documents/Email Hotline/AI_Agent/Emergency_Report_Storage')"
-          }
+          },
+          "description": "Sets EmergencyReportFolder from configuration object."
         },
         "SET_EmergencyReportFileName_From_Config": {
           "runAfter": {
@@ -3166,7 +3175,8 @@
           "inputs": {
             "name": "EmergencyReportFileName",
             "value": "@coalesce(variables('ConfigObject')?['EmergencyReportFileName'], 'Emergency Report.xlsx')"
-          }
+          },
+          "description": "Sets EmergencyReportFileName from configuration object."
         },
         "SET_InternalDomainsFolder_From_Config": {
           "runAfter": {
@@ -3181,7 +3191,8 @@
           "inputs": {
             "name": "InternalDomainsFolder",
             "value": "@coalesce(variables('ConfigObject')?['InternalDomainsStorageFolder'], '/Shared Documents/Email Hotline/AI_Agent/Internal_Domains_Storage')"
-          }
+          },
+          "description": "Sets InternalDomainsFolder from configuration object."
         },
         "SET_InternalDomainsFileName_From_Config": {
           "runAfter": {
@@ -3196,7 +3207,8 @@
           "inputs": {
             "name": "InternalDomainsFileName",
             "value": "@coalesce(variables('ConfigObject')?['InternalDomainsFileName'], 'Internal_Domains.txt')"
-          }
+          },
+          "description": "Sets InternalDomainsFileName from configuration object."
         },
         "SET_ExternalDomainsFolder_From_Config": {
           "runAfter": {
@@ -3211,7 +3223,8 @@
           "inputs": {
             "name": "ExternalDomainsFolder",
             "value": "@coalesce(variables('ConfigObject')?['ExternalDomainsStorageFolder'], '/Shared Documents/Email Hotline/AI_Agent/External_Domains_Storage')"
-          }
+          },
+          "description": "Sets ExternalDomainsFolder from configuration object."
         },
         "SET_ExternalDomainsFileName_From_Config": {
           "runAfter": {
@@ -3226,7 +3239,8 @@
           "inputs": {
             "name": "ExternalDomainsFileName",
             "value": "@coalesce(variables('ConfigObject')?['ExternalDomainsFileName'], 'External_Domains.txt')"
-          }
+          },
+          "description": "Sets ExternalDomainsFileName from configuration object."
         },
         "SET_CounterFolder_From_Config": {
           "runAfter": {
@@ -3241,7 +3255,8 @@
           "inputs": {
             "name": "CounterFolder",
             "value": "@coalesce(variables('ConfigObject')?['CounterFolder'], '/Shared Documents/Email Hotline/AI_Agent')"
-          }
+          },
+          "description": "Sets CounterFolder from configuration object."
         },
         "SET_CounterFileName_From_Config": {
           "runAfter": {
@@ -3256,7 +3271,8 @@
           "inputs": {
             "name": "CounterFileName",
             "value": "@coalesce(variables('ConfigObject')?['CounterFileName'], 'Counter.xlsx')"
-          }
+          },
+          "description": "Sets CounterFileName from configuration object."
         },
         "SET_CounterTableName_From_Config": {
           "runAfter": {
@@ -3271,7 +3287,8 @@
           "inputs": {
             "name": "DMP E-Mail Counter Table Name",
             "value": "@coalesce(\r\n    variables('ConfigObject')?['CounterTableName'],\r\n    'DMP_Email_Counter'\r\n)"
-          }
+          },
+          "description": "Sets the Counter table name from configuration object."
         },
         "SET_CounterTableColumnPath_From_Config": {
           "runAfter": {
@@ -3286,7 +3303,8 @@
           "inputs": {
             "name": "DMP E-Mail Counter Table Column Name Path",
             "value": "@coalesce(variables('ConfigObject')?['CounterTableColumnNamePath'], 'Workflow')"
-          }
+          },
+          "description": "Sets the Counter table's path column name from configuration object."
         },
         "SET_CounterTableColumnCounter_From_Config": {
           "runAfter": {
@@ -3301,7 +3319,8 @@
           "inputs": {
             "name": "DMP E-Mail Counter Table Column Name Counter",
             "value": "@coalesce(variables('ConfigObject')?['CounterTableColumnNameCounter'], 'Number_Processed_Emails')"
-          }
+          },
+          "description": "Sets the Counter table's counter column name from configuration object."
         },
         "SET_CounterPathNoDMP_From_Config": {
           "runAfter": {
@@ -3316,7 +3335,8 @@
           "inputs": {
             "name": "CounterPathNoDMP",
             "value": "@coalesce(variables('ConfigObject')?['CounterPathNoDMP'], 'No DMP')"
-          }
+          },
+          "description": "Sets CounterPathNoDMP from configuration object."
         },
         "SET_CounterPathInternalSender_From_Config": {
           "runAfter": {
@@ -3331,7 +3351,8 @@
           "inputs": {
             "name": "CounterPathInternalSender",
             "value": "@coalesce(variables('ConfigObject')?['CounterPathInternalSender'], 'DMP internal Sender')"
-          }
+          },
+          "description": "Sets CounterPathInternalSender from configuration object."
         },
         "SET_CounterPathNotEffected_From_Config": {
           "runAfter": {
@@ -3346,7 +3367,8 @@
           "inputs": {
             "name": "CounterPathNotEffected",
             "value": "@coalesce(variables('ConfigObject')?['CounterPathNotEffected'], 'DMP not effected Sender')"
-          }
+          },
+          "description": "Sets CounterPathNotEffected from configuration object."
         },
         "SET_CounterPathEffectedMember_From_Config": {
           "runAfter": {
@@ -3361,7 +3383,8 @@
           "inputs": {
             "name": "CounterPathEffectedMember",
             "value": "@coalesce(variables('ConfigObject')?['CounterPathEffectedMember'], 'DMP effected Member')"
-          }
+          },
+          "description": "Sets CounterPathEffectedMember from configuration object."
         },
         "SET_AuditTrailFolder_From_Config": {
           "runAfter": {
@@ -3376,7 +3399,8 @@
           "inputs": {
             "name": "AuditTrailFolder",
             "value": "@coalesce(variables('ConfigObject')?['DMPSharePointRootFolder'], '/Shared Documents/Email Hotline/AI_Agent')"
-          }
+          },
+          "description": "Sets AuditTrailFolder from configuration object."
         },
         "SET_AuditTrailFileName_From_Config": {
           "runAfter": {
@@ -3391,7 +3415,8 @@
           "inputs": {
             "name": "AuditTrailFileName",
             "value": "@coalesce(variables('ConfigObject')?['AuditFileName'], 'AuditTrail.xlsx')"
-          }
+          },
+          "description": "Sets AuditTrailFileName from configuration object."
         },
         "SET_AuditTableName_From_Config": {
           "runAfter": {
@@ -3406,7 +3431,8 @@
           "inputs": {
             "name": "AuditTableName",
             "value": "@coalesce(variables('ConfigObject')?['AuditTableName'], 'AuditTrail')"
-          }
+          },
+          "description": "Sets AuditTableName from configuration object."
         },
         "SET_AuditColumnStepName_From_Config": {
           "runAfter": {
@@ -3421,7 +3447,8 @@
           "inputs": {
             "name": "AuditColumnStepName",
             "value": "@coalesce(variables('ConfigObject')?['AuditColumnStepName'], 'StepName')"
-          }
+          },
+          "description": "Sets AuditColumnStepName from configuration object."
         },
         "SET_AuditColumnStepStatus_From_Config": {
           "runAfter": {
@@ -3436,7 +3463,8 @@
           "inputs": {
             "name": "AuditColumnStepStatus",
             "value": "@coalesce(variables('ConfigObject')?['AuditColumnStepStatus'], 'StepStatus')"
-          }
+          },
+          "description": "Sets AuditColumnStepStatus from configuration object."
         },
         "SET_AuditColumnTimestampUtc_From_Config": {
           "runAfter": {
@@ -3451,7 +3479,8 @@
           "inputs": {
             "name": "AuditColumnTimestampUtc",
             "value": "@coalesce(variables('ConfigObject')?['AuditColumnTimestampUtc'], 'TimestampUtc')"
-          }
+          },
+          "description": "Sets AuditColumnTimestampUtc from configuration object."
         },
         "SET_AuditStepNameRunSummary_From_Config": {
           "runAfter": {
@@ -3466,7 +3495,8 @@
           "inputs": {
             "name": "AuditStepNameRunSummary",
             "value": "@coalesce(variables('ConfigObject')?['AuditStepNameRunSummary'], 'RunSummary')"
-          }
+          },
+          "description": "Sets AuditStepNameRunSummary from configuration object."
         },
         "SET_OperationMode": {
           "runAfter": {
@@ -3481,7 +3511,8 @@
           "inputs": {
             "name": "OperationMode",
             "value": "@coalesce(first(body('FILTER_Config_CurrentOperationMode'))?['CurrentValue'], 'PROD_NODMP')"
-          }
+          },
+          "description": "Sets the current operation mode (e.g. PROD_NODMP) from the filtered configuration table row."
         },
         "SET_AuditStatusSucceeded_From_Config": {
           "runAfter": {
@@ -3496,7 +3527,8 @@
           "inputs": {
             "name": "AuditStatusSucceeded",
             "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeSucceeded'], 'Succeeded')"
-          }
+          },
+          "description": "Sets AuditStatusSucceeded from configuration object."
         },
         "SET_AuditStatusWarning_From_Config": {
           "runAfter": {
@@ -3511,7 +3543,8 @@
           "inputs": {
             "name": "AuditStatusWarning",
             "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeWarning'], 'Warning')"
-          }
+          },
+          "description": "Sets AuditStatusWarning from configuration object."
         },
         "SET_AuditStatusFailed_From_Config": {
           "runAfter": {
@@ -3526,7 +3559,8 @@
           "inputs": {
             "name": "AuditStatusFailed",
             "value": "@coalesce(variables('ConfigObject')?['AuditOutcomeFailed'], 'Failed')"
-          }
+          },
+          "description": "Sets AuditStatusFailed from configuration object."
         },
         "VAR_StatusCheckAuditCardEnabled": {
           "runAfter": {
@@ -3546,7 +3580,8 @@
                 "value": true
               }
             ]
-          }
+          },
+          "description": "Reserves the flag that controls whether the Audit Trail card is shown on the Cockpit Status Check dashboard."
         },
         "VAR_StatusCheckCounterCardEnabled": {
           "runAfter": {
@@ -3566,7 +3601,8 @@
                 "value": true
               }
             ]
-          }
+          },
+          "description": "Reserves the flag that controls whether the Counter card is shown on the Cockpit Status Check dashboard."
         },
         "VAR_StatusCheckDomainsCardEnabled": {
           "runAfter": {
@@ -3586,7 +3622,8 @@
                 "value": true
               }
             ]
-          }
+          },
+          "description": "Reserves the flag that controls whether the Domains card is shown on the Cockpit Status Check dashboard."
         },
         "VAR_StatusCheckEmergencyReportCardEnabled": {
           "runAfter": {
@@ -3606,7 +3643,8 @@
                 "value": true
               }
             ]
-          }
+          },
+          "description": "Reserves the flag that controls whether the Emergency Report card is shown on the Cockpit Status Check dashboard."
         },
         "VAR_OperationMode": {
           "runAfter": {

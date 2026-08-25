@@ -657,7 +657,8 @@
                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                             }
-                          }
+                          },
+                          "description": "Buffers the audit event confirming that the sent No-DMP mailbox-folder warning mail was successfully moved from Sent Items to the Agent 2 Alerts mailbox folder."
                         },
                         "Buffer_Audit_Event_(Move_Mailbox_Folder_Error_ND_Email_Failed)": {
                           "runAfter": {
@@ -694,7 +695,8 @@
                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                             }
-                          }
+                          },
+                          "description": "Buffers the audit event recording that moving the sent No-DMP mailbox-folder warning mail from Sent Items to the Agent 2 Alerts mailbox folder failed."
                         }
                       },
                       "runAfter": {
@@ -733,7 +735,8 @@
                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                               }
-                            }
+                            },
+                            "description": "Buffers the audit event recording that the sent No-DMP mailbox-folder warning mail could not be found in Sent Items by subject, so no move to the Agent 2 Alerts mailbox folder was attempted."
                           }
                         }
                       },
@@ -765,7 +768,8 @@
                           "operationMetadataId": "fe261daa-3e7b-4048-a353-1b1f73e5dd43"
                         },
                         "type": "Compose",
-                        "inputs": "@ticks(utcNow())"
+                        "inputs": "@ticks(utcNow())",
+                        "description": "Stores the timestamp used to calculate the duration of sending the No DMP auto-reply."
                       },
                       "Reply_to_email_-_No_DMP": {
                         "runAfter": {
@@ -845,7 +849,8 @@
                             "Sender": "@{outputs('SenderAddress')}",
                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                           }
-                        }
+                        },
+                        "description": "Buffers the audit event confirming that the No DMP auto-reply was sent to the sender, including the business reference and duration."
                       },
                       "Rename_incoming_Mail_-__No_DMP": {
                         "runAfter": {
@@ -964,7 +969,8 @@
                             "Sender": "@{outputs('SenderAddress')}",
                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                           }
-                        }
+                        },
+                        "description": "Buffers the audit event confirming that the inbound No DMP e-mail was moved to the No DMP workflow folder."
                       },
                       "Delay_(Wait_for_responded_ND_E-Mail)": {
                         "runAfter": {
@@ -1073,7 +1079,8 @@
                             "Sender": "@{outputs('SenderAddress')}",
                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                           }
-                        }
+                        },
+                        "description": "Buffers the audit event recording the result of the Sent Items search for the No DMP response e-mail."
                       },
                       "Increase_Stepcounter_(No_DMP)_3": {
                         "runAfter": {
@@ -1135,7 +1142,8 @@
                                 "Sender": "@{outputs('SenderAddress')}",
                                 "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                               }
-                            }
+                            },
+                            "description": "Buffers the audit event confirming that the sent No DMP response e-mail was moved to the No DMP workflow folder."
                           },
                           "Move_respons_E-Mail_to_Subfolder_\"No_DMP\"": {
                             "runAfter": {
@@ -1205,7 +1213,8 @@
                                   "Sender": "@{outputs('SenderAddress')}",
                                   "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                 }
-                              }
+                              },
+                              "description": "Buffers the audit event recording that no sent No DMP response e-mail was found in Sent Items, so the move to the No DMP workflow folder was skipped."
                             },
                             "TICKS_NoMoveSent_ND": {
                               "metadata": {
@@ -1225,7 +1234,8 @@
                               "inputs": {
                                 "name": "AuditOutcome",
                                 "value": "Warning"
-                              }
+                              },
+                              "description": "Sets the overall run outcome to Warning because the sent No DMP response e-mail could not be found in Sent Items."
                             },
                             "Info_to_Hotline_team_about_sent_mail_not_found_(ND)": {
                               "runAfter": {
@@ -1251,7 +1261,8 @@
                                   "operationId": "SendEmailV2"
                                 },
                                 "authentication": "@parameters('$authentication')"
-                              }
+                              },
+                              "description": "Sends the No DMP sent-mail-not-found warning to the configured operational alert recipient."
                             },
                             "Compose_Subject_(Sent_Mail_Not_Found_ND)": {
                               "runAfter": {
@@ -1391,7 +1402,8 @@
                                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the audit event confirming that the sent No-DMP sent-mail-not-found warning mail was successfully moved from Sent Items to the Agent 2 Alerts mailbox folder."
                                 },
                                 "Buffer_Audit_Event_(Move_Sent_Mail_Not_Found_ND_Email_Failed)": {
                                   "runAfter": {
@@ -1428,7 +1440,8 @@
                                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the audit event recording that moving the sent No-DMP sent-mail-not-found warning mail from Sent Items to the Agent 2 Alerts mailbox folder failed."
                                 }
                               },
                               "runAfter": {
@@ -1467,7 +1480,8 @@
                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the audit event recording that the sent No-DMP sent-mail-not-found warning mail could not be found in Sent Items by subject, so no move to the Agent 2 Alerts mailbox folder was attempted."
                                   }
                                 }
                               },
@@ -1511,7 +1525,8 @@
                         "metadata": {
                           "operationMetadataId": "e91c5896-4be2-40a0-96bf-58d5414ceaae"
                         },
-                        "type": "If"
+                        "type": "If",
+                        "description": "Checks whether the Sent Items search found at least one matching No DMP response e-mail. If found, moves the sent reply to the No DMP workflow folder; otherwise records that no sent mail was found and raises a warning."
                       }
                     }
                   },
@@ -1525,9 +1540,11 @@
                       }
                     ]
                   },
-                  "type": "If"
+                  "type": "If",
+                  "description": "Checks whether resolving the No DMP mailbox subfolder returned no folder ID. If empty, raises the mailbox-folder-error alert; otherwise proceeds with the standard auto-reply, inbound-mail move, sent-reply move, and counter handling."
                 },
                 "Handle_Counter_file_update_error_(ND)": {
+                  "description": "Handles a failed counter-file update for the No DMP workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
                   "actions": {
                     "Buffer_Audit_Event_Alert_(Counter_File_Update_Failed)_(ND)": {
                       "runAfter": {
@@ -1563,7 +1580,8 @@
                           "Sender": "@{outputs('SenderAddress')}",
                           "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                         }
-                      }
+                      },
+                      "description": "Buffers the structured alert audit event that documents the failed counter-file update for the No DMP workflow path."
                     },
                     "Workflow_Status_-_Failed_(Counter_file_update_error_(ND))": {
                       "runAfter": {
@@ -1575,7 +1593,8 @@
                       "inputs": {
                         "name": "AuditOutcome",
                         "value": "Failed"
-                      }
+                      },
+                      "description": "Sets the overall AuditOutcome to Failed because the counter file could not be updated for the No DMP workflow path."
                     },
                     "Info_to_Hotline_team_about_counter_file_update_error_(ND)": {
                       "runAfter": {
@@ -1601,7 +1620,8 @@
                           "operationId": "SendEmailV2"
                         },
                         "authentication": "@parameters('$authentication')"
-                      }
+                      },
+                      "description": "Sends an alert e-mail to the Hotline team informing them that the workflow counter file could not be updated for the No DMP workflow path."
                     },
                     "Compose_Subject_(Counter_Update_Failed_ND)": {
                       "type": "Compose",
@@ -1736,7 +1756,8 @@
                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                             }
-                          }
+                          },
+                          "description": "Buffers the audit event confirming that the No DMP counter-update-failed alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                         },
                         "Buffer_Audit_Event_(Move_Counter_Update_Failed_ND_Email_Failed)": {
                           "runAfter": {
@@ -1773,7 +1794,8 @@
                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                             }
-                          }
+                          },
+                          "description": "Buffers the audit event recording that moving the No DMP counter-update-failed alert mail to the Agent 2 Alerts mailbox folder failed."
                         }
                       },
                       "runAfter": {
@@ -1812,7 +1834,8 @@
                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                               }
-                            }
+                            },
+                            "description": "Buffers the audit event recording that the sent No DMP counter-update-failed alert mail could not be found in Sent Items for moving."
                           }
                         }
                       },
@@ -1861,7 +1884,8 @@
                       "inputs": {
                         "name": "AuditOutcome",
                         "value": "Succeeded"
-                      }
+                      },
+                      "description": "Sets the overall AuditOutcome to Succeeded once the No DMP workflow path has completed without unresolved errors."
                     }
                   },
                   "runAfter": {
@@ -2341,7 +2365,8 @@
                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the audit event confirming that the DIS mailbox-folder-error alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                   },
                                   "Buffer_Audit_Event_(Move_Mailbox_Folder_Error_DIS_Email_Failed)": {
                                     "runAfter": {
@@ -2378,7 +2403,8 @@
                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the audit event recording that moving the DIS mailbox-folder-error alert mail to the Agent 2 Alerts mailbox folder failed."
                                   }
                                 },
                                 "runAfter": {
@@ -2417,7 +2443,8 @@
                                           "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                           "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                         }
-                                      }
+                                      },
+                                      "description": "Buffers the audit event recording that the sent DIS mailbox-folder-error alert mail could not be found in Sent Items for moving."
                                     }
                                   }
                                 },
@@ -2475,7 +2502,8 @@
                                     "operationMetadataId": "f8a9738c-1777-457f-be16-2da2a3fcfcba"
                                   },
                                   "type": "Compose",
-                                  "inputs": "@ticks(utcNow())"
+                                  "inputs": "@ticks(utcNow())",
+                                  "description": "Stores the timestamp used to calculate the duration of sending the DIS acknowledgement reply."
                                 },
                                 "Reply_to_email_-_DMP_internal_Sender": {
                                   "runAfter": {
@@ -2554,7 +2582,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event confirming that the DIS acknowledgement reply was sent to the sender."
                                 },
                                 "TICKS_InfoMail_DIS": {
                                   "runAfter": {
@@ -2646,7 +2675,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event confirming that the internal hotline information mail was sent for the DIS path."
                                 },
                                 "Delay_(Wait_for_responded_DIS_E-Mail)_": {
                                   "runAfter": {
@@ -2755,7 +2785,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording the result of searching Sent Items for DIS-related sent e-mails."
                                 },
                                 "Move_all_Mails_(DIS)": {
                                   "foreach": "@coalesce(body('Search_sent_mails_(DIS)_')?['value'], createArray())",
@@ -2857,7 +2888,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event summarizing the move of all DIS-related sent e-mails to the DIS workflow folder."
                                 },
                                 "TICKS_Rename_Inbound_(DIS)": {
                                   "runAfter": {
@@ -2949,7 +2981,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event confirming that the original inbound DIS e-mail subject was renamed with the business reference."
                                 },
                                 "TICKS_Move_Inbound_(DIS)": {
                                   "runAfter": {
@@ -3040,7 +3073,8 @@
                                       "Sender": "@{outputs('SenderAddress')}",
                                       "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event confirming that the inbound DIS e-mail was moved to the DIS workflow folder."
                                 }
                               }
                             },
@@ -3054,7 +3088,8 @@
                                 }
                               ]
                             },
-                            "type": "If"
+                            "type": "If",
+                            "description": "Routes processing depending on whether the DMP Internal Sender mailbox subfolder was resolved. If empty, raises a mailbox-folder warning; otherwise sends the reply, forwards to Hotline, and moves the e-mails."
                           },
                           "Update_Last_DMP_Internal_Sender_ID": {
                             "runAfter": {
@@ -3087,6 +3122,7 @@
                             "description": "Persists the updated DIS workflow counter to the configured Agent 2 counter file."
                           },
                           "Handle_Counter_file_update_error_(DIS)": {
+                            "description": "Handles a failed counter-file update for the DMP Internal Sender workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
                             "actions": {
                               "Buffer_Audit_Event_Alert_(Counter_File_Update_Failed)_(DIS)": {
                                 "runAfter": {
@@ -3122,7 +3158,8 @@
                                     "Sender": "@{outputs('SenderAddress')}",
                                     "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                   }
-                                }
+                                },
+                                "description": "Buffers the structured alert audit event that documents the failed counter-file update for the DMP Internal Sender workflow path."
                               },
                               "Workflow_Status_-_Failed_(Counter_file_update_error_(DIS))": {
                                 "runAfter": {
@@ -3134,7 +3171,8 @@
                                 "inputs": {
                                   "name": "AuditOutcome",
                                   "value": "Failed"
-                                }
+                                },
+                                "description": "Sets the overall AuditOutcome to Failed because the counter file could not be updated for the DMP Internal Sender workflow path."
                               },
                               "Info_to_Hotline_team_about_counter_file_update_error_(DIS)": {
                                 "runAfter": {
@@ -3160,7 +3198,8 @@
                                     "operationId": "SendEmailV2"
                                   },
                                   "authentication": "@parameters('$authentication')"
-                                }
+                                },
+                                "description": "Sends an alert e-mail to the Hotline team informing them that the workflow counter file could not be updated for the DMP Internal Sender workflow path."
                               },
                               "Compose_Subject_(Counter_Update_Failed_DIS)": {
                                 "type": "Compose",
@@ -3305,7 +3344,8 @@
                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the audit event confirming that the DIS counter-update-failed alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                   },
                                   "Buffer_Audit_Event_(Move_Counter_Update_Failed_DIS_Email_Failed)": {
                                     "runAfter": {
@@ -3342,7 +3382,8 @@
                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the audit event recording that moving the DIS counter-update-failed alert mail to the Agent 2 Alerts mailbox folder failed."
                                   }
                                 },
                                 "runAfter": {
@@ -3381,7 +3422,8 @@
                                           "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                           "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                         }
-                                      }
+                                      },
+                                      "description": "Buffers the audit event recording that the sent DIS counter-update-failed alert mail could not be found in Sent Items for moving."
                                     }
                                   }
                                 },
@@ -3424,7 +3466,8 @@
                             "inputs": {
                               "name": "AuditBuffer",
                               "value": "@concat('[', utcNow(), '] Completed', '\\n')"
-                            }
+                            },
+                            "description": "Appends a completion marker to the run's audit trail buffer for the DMP Internal Sender workflow path."
                           },
                           "AuditOutcome_is_still_Started_(DIS)": {
                             "actions": {
@@ -3436,7 +3479,8 @@
                                 "inputs": {
                                   "name": "AuditOutcome",
                                   "value": "Succeeded"
-                                }
+                                },
+                                "description": "Sets the overall AuditOutcome to Succeeded once the DMP Internal Sender workflow path has completed without unresolved errors."
                               }
                             },
                             "runAfter": {
@@ -3524,7 +3568,7 @@
                                     "name": "Current Workflow Counter",
                                     "value": "@add(int(float(coalesce(body('Get_Last_DMP_effected_Member_ID')?['Number_Processed_Emails'],'0'))),1)"
                                   },
-                                  "description": ""
+                                  "description": "Increments the DEE workflow counter read from the counter file to compute the next sequential business reference number."
                                 },
                                 "Create_DMP_Mailbox_Subfolder_\"DMP_effected_Member\"": {
                                   "runAfter": {
@@ -3884,7 +3928,8 @@
                                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the audit event confirming that the DEE mailbox-folder-error alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                         },
                                         "Buffer_Audit_Event_(Move_Mailbox_Folder_Error_DEE_Email_Failed)": {
                                           "runAfter": {
@@ -3921,7 +3966,8 @@
                                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the audit event recording that moving the DEE mailbox-folder-error alert mail to the Agent 2 Alerts mailbox folder failed."
                                         }
                                       },
                                       "runAfter": {
@@ -3960,7 +4006,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event recording that the sent DEE mailbox-folder-error alert mail could not be found in Sent Items for moving."
                                           }
                                         }
                                       },
@@ -3992,7 +4039,8 @@
                                           "operationMetadataId": "2ee1a00d-969d-418a-8b92-c20390ed3b86"
                                         },
                                         "type": "Compose",
-                                        "inputs": "@ticks(utcNow())"
+                                        "inputs": "@ticks(utcNow())",
+                                        "description": "Stores the timestamp used to calculate the duration of sending the DEE acknowledgement reply."
                                       },
                                       "Reply_to_email_-_DMP_External_effected": {
                                         "runAfter": {
@@ -4070,7 +4118,8 @@
                                             "Sender": "@{outputs('SenderAddress')}",
                                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                           }
-                                        }
+                                        },
+                                        "description": "Buffers the structured audit event confirming that the DEE acknowledgement reply was sent to the sender."
                                       },
                                       "Rename_Incoming_Mail_(DEE)": {
                                         "runAfter": {
@@ -4189,7 +4238,8 @@
                                             "Sender": "@{outputs('SenderAddress')}",
                                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                           }
-                                        }
+                                        },
+                                        "description": "Buffers the structured audit event confirming that the inbound DEE e-mail was moved to the DEE workflow folder."
                                       },
                                       "Delay_(Wait_for_responded_DEE_E-Mail)_": {
                                         "runAfter": {
@@ -4298,7 +4348,8 @@
                                             "Sender": "@{outputs('SenderAddress')}",
                                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                           }
-                                        }
+                                        },
+                                        "description": "Buffers the structured audit event recording the result of searching Sent Items for the DEE reply mail."
                                       },
                                       "A_least_one_sent_mail_found_(DEE)": {
                                         "actions": {
@@ -4344,7 +4395,8 @@
                                                 "Sender": "@{outputs('SenderAddress')}",
                                                 "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the structured audit event summarizing the move of the DEE-related sent reply mail to the DEE workflow folder."
                                           },
                                           "Move_all_Mails_(DEE)": {
                                             "foreach": "@coalesce(body('Identify_sent_reply_(DMP_effected_Member)')?['value'], createArray())",
@@ -4439,17 +4491,19 @@
                                                   "operationId": "SendEmailV2"
                                                 },
                                                 "authentication": "@parameters('$authentication')"
-                                              }
+                                              },
+                                              "description": "Sends an alert e-mail to the Hotline team informing them that the DEE reply mail could not be found in Sent Items."
                                             },
                                             "AuditOutcome_is_still_Started_(DEE_SentMailWarning)": {
                                               "actions": {
-                                                "Workflow_Status_-_Warning_(Sent_Mail_not_found_(DEE))": {
-                                                  "type": "SetVariable",
-                                                  "inputs": {
-                                                    "name": "AuditOutcome",
-                                                    "value": "Warning"
-                                                  }
-                                                }
+                                                 "Workflow_Status_-_Warning_(Sent_Mail_not_found_(DEE))": {
+                                                   "type": "SetVariable",
+                                                   "inputs": {
+                                                     "name": "AuditOutcome",
+                                                     "value": "Warning"
+                                                   },
+                                                   "description": "Sets the overall run outcome to Warning because the sent DEE reply mail could not be found and confirmed."
+                                                 }
                                               },
                                               "runAfter": {
                                                 "Buffer_Audit_Event_-_no_sent_email_found_to_move_(DEE)": [
@@ -4607,7 +4661,8 @@
                                                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                     }
-                                                  }
+                                                  },
+                                                  "description": "Buffers the audit event confirming that the DEE sent-mail-not-found alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                                 },
                                                 "Buffer_Audit_Event_(Move_Sent_Mail_Not_Found_DEE_Email_Failed)": {
                                                   "runAfter": {
@@ -4644,7 +4699,8 @@
                                                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                     }
-                                                  }
+                                                  },
+                                                  "description": "Buffers the audit event recording that moving the DEE sent-mail-not-found alert mail to the Agent 2 Alerts mailbox folder failed."
                                                 }
                                               },
                                               "runAfter": {
@@ -4683,7 +4739,8 @@
                                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                       }
-                                                    }
+                                                    },
+                                                    "description": "Buffers the audit event recording that the sent DEE sent-mail-not-found alert mail could not be found in Sent Items for moving."
                                                   }
                                                 }
                                               },
@@ -4736,7 +4793,8 @@
                                                   "Sender": "@{outputs('SenderAddress')}",
                                                   "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                                 }
-                                              }
+                                              },
+                                              "description": "Buffers the audit event recording that no DEE sent reply mail was found, so the move-to-workflow-folder step was skipped."
                                             },
                                             "TICKS_Move_Alert_Email_(Sent_Mail_Not_Found_DEE)": {
                                               "runAfter": {
@@ -4766,7 +4824,8 @@
                                         "metadata": {
                                           "operationMetadataId": "ce92948c-d571-49c7-b210-d8daceea8b4c"
                                         },
-                                        "type": "If"
+                                        "type": "If",
+                                        "description": "Routes processing depending on whether at least one sent DEE reply mail was found. If found, it is moved to the DEE workflow folder; otherwise a sent-mail-not-found warning is raised."
                                       },
                                       "Mail_Forward_Process_(DEE)": {
                                         "actions": {
@@ -4928,7 +4987,8 @@
                                             "Succeeded"
                                           ]
                                         },
-                                        "type": "Scope"
+                                        "type": "Scope",
+                                        "description": "Forwards the DEE e-mail internally to the CAMS and Porting teams and buffers the corresponding audit event."
                                       },
                                       "Handle_E-Mail_Forward_error_(DEE)": {
                                         "actions": {
@@ -4966,7 +5026,8 @@
                                                 "Sender": "@{outputs('SenderAddress')}",
                                                 "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the structured alert audit event that documents the failed DEE forward to the CAMS and Porting teams."
                                           },
                                           "Workflow_Status_-_Failed_(E-Mail_Forward_error_(DEE))": {
                                             "runAfter": {
@@ -4978,7 +5039,8 @@
                                             "inputs": {
                                               "name": "AuditOutcome",
                                               "value": "Failed"
-                                            }
+                                            },
+                                            "description": "Sets the overall AuditOutcome to Failed because the DEE e-mail forward to CAMS and Porting failed."
                                           },
                                           "Info_to_Hotline_team_about_E-Mail_forward_fail_(DEE)": {
                                             "runAfter": {
@@ -5150,7 +5212,8 @@
                                                     "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                     "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                   }
-                                                }
+                                                },
+                                                "description": "Buffers the audit event confirming that the DEE forward-failed alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                               },
                                               "Buffer_Audit_Event_(Move_Forward_Failed_DEE_Email_Failed)": {
                                                 "runAfter": {
@@ -5187,7 +5250,8 @@
                                                     "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                     "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                   }
-                                                }
+                                                },
+                                                "description": "Buffers the audit event recording that moving the DEE forward-failed alert mail to the Agent 2 Alerts mailbox folder failed."
                                               }
                                             },
                                             "runAfter": {
@@ -5226,7 +5290,8 @@
                                                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                     }
-                                                  }
+                                                  },
+                                                  "description": "Buffers the audit event recording that the sent DEE forward-failed alert mail could not be found in Sent Items for moving."
                                                 }
                                               }
                                             },
@@ -5268,7 +5333,8 @@
                                       }
                                     ]
                                   },
-                                  "type": "If"
+                                  "type": "If",
+                                  "description": "Routes processing depending on whether the DMP effected Member mailbox subfolder was resolved. If empty, raises a mailbox-folder warning; otherwise sends the reply, forwards to CAMS/Porting, and moves the e-mails."
                                 },
                                 "Update_Last_DMP_effected_Member_ID": {
                                   "runAfter": {
@@ -5301,6 +5367,7 @@
                                   "description": "Persists the updated DEE workflow counter to the configured Agent 2 counter file."
                                 },
                                 "Handle_Counter_file_update_error_(DEE)": {
+                                  "description": "Handles a failed counter-file update for the DMP effected Member workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
                                   "actions": {
                                     "Buffer_Audit_Event_Alert_(Counter_File_Update_Failed)_(DEE)": {
                                       "runAfter": {
@@ -5336,7 +5403,8 @@
                                           "Sender": "@{outputs('SenderAddress')}",
                                           "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                         }
-                                      }
+                                      },
+                                      "description": "Buffers the structured alert audit event that documents the failed counter-file update for the DMP effected Member workflow path."
                                     },
                                     "Workflow_Status_-_Failed_(Counter_file_update_error_(DEE))": {
                                       "runAfter": {
@@ -5348,7 +5416,8 @@
                                       "inputs": {
                                         "name": "AuditOutcome",
                                         "value": "Failed"
-                                      }
+                                      },
+                                      "description": "Sets the overall AuditOutcome to Failed because the counter file could not be updated for the DMP effected Member workflow path."
                                     },
                                     "Info_to_Hotline_team_about_counter_file_update_error_(DEE)": {
                                       "runAfter": {
@@ -5374,7 +5443,8 @@
                                           "operationId": "SendEmailV2"
                                         },
                                         "authentication": "@parameters('$authentication')"
-                                      }
+                                      },
+                                      "description": "Sends an alert e-mail to the Hotline team informing them that the workflow counter file could not be updated for the DMP effected Member workflow path."
                                     },
                                     "Compose_Subject_(Counter_Update_Failed_DEE)": {
                                       "type": "Compose",
@@ -5519,7 +5589,8 @@
                                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the audit event confirming that the DEE counter-update-failed alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                         },
                                         "Buffer_Audit_Event_(Move_Counter_Update_Failed_DEE_Email_Failed)": {
                                           "runAfter": {
@@ -5556,7 +5627,8 @@
                                               "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                               "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the audit event recording that moving the DEE counter-update-failed alert mail to the Agent 2 Alerts mailbox folder failed."
                                         }
                                       },
                                       "runAfter": {
@@ -5595,7 +5667,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event recording that the sent DEE counter-update-failed alert mail could not be found in Sent Items for moving."
                                           }
                                         }
                                       },
@@ -5638,7 +5711,8 @@
                                   "inputs": {
                                     "name": "AuditBuffer",
                                     "value": "@concat('[', utcNow(), '] Completed', '\\n')"
-                                  }
+                                  },
+                                  "description": "Appends a completion marker to the run's audit trail buffer for the DMP effected Member workflow path."
                                 },
                                 "AuditOutcome_is_still_Started_(DEE)": {
                                   "actions": {
@@ -5650,7 +5724,8 @@
                                       "inputs": {
                                         "name": "AuditOutcome",
                                         "value": "Succeeded"
-                                      }
+                                      },
+                                      "description": "Sets the overall AuditOutcome to Succeeded once the DMP effected Member workflow path has completed without unresolved errors."
                                     }
                                   },
                                   "runAfter": {
@@ -5775,7 +5850,8 @@
                                       "operationMetadataId": "c8a6d0d8-3b5f-4af8-a0a3-a09c7ab6aad9"
                                     },
                                     "type": "Compose",
-                                    "inputs": "@formatNumber(variables('Current Workflow Counter'),'0000')"
+                                    "inputs": "@formatNumber(variables('Current Workflow Counter'),'0000')",
+                                    "description": "Formats the DNES workflow counter as a zero-padded 4-digit number for use in the business reference."
                                   },
                                   "Get_DMP_Mailbox_Subfolder_ID_for_\"DMP_not_effected_Sender\"": {
                                     "runAfter": {
@@ -6095,7 +6171,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event confirming that the DNES mailbox-folder-error alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                           },
                                           "Buffer_Audit_Event_(Move_Mailbox_Folder_Error_DNES_Email_Failed)": {
                                             "runAfter": {
@@ -6132,7 +6209,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event recording that moving the DNES mailbox-folder-error alert mail to the Agent 2 Alerts mailbox folder failed."
                                           }
                                         },
                                         "runAfter": {
@@ -6171,7 +6249,8 @@
                                                   "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                   "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                 }
-                                              }
+                                              },
+                                              "description": "Buffers the audit event recording that the sent DNES mailbox-folder-error alert mail could not be found in Sent Items for moving."
                                             }
                                           }
                                         },
@@ -6203,7 +6282,8 @@
                                             "operationMetadataId": "2ee1a00d-969d-418a-8b92-c20390ed3b86"
                                           },
                                           "type": "Compose",
-                                          "inputs": "@ticks(utcNow())"
+                                          "inputs": "@ticks(utcNow())",
+                                          "description": "Stores the timestamp used to calculate the duration of sending the DNES acknowledgement reply."
                                         },
                                         "Reply_to_email_-_DMP_not_effected_Sender": {
                                           "runAfter": {
@@ -6281,7 +6361,8 @@
                                               "Sender": "@{outputs('SenderAddress')}",
                                               "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the structured audit event confirming that the DNES acknowledgement reply was sent to the sender."
                                         },
                                         "Rename_incoming_Mail_-_DMP_not_effected_Sender": {
                                           "runAfter": {
@@ -6400,7 +6481,8 @@
                                               "Sender": "@{outputs('SenderAddress')}",
                                               "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the structured audit event confirming that the inbound DNES e-mail was moved to the DNES workflow folder."
                                         },
                                         "Delay_(Wait_for_responded_DNES_E-Mail)_": {
                                           "runAfter": {
@@ -6509,7 +6591,8 @@
                                               "Sender": "@{outputs('SenderAddress')}",
                                               "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                             }
-                                          }
+                                          },
+                                          "description": "Buffers the structured audit event recording the result of searching Sent Items for the DNES response mail."
                                         },
                                         "A_least_one_sent_mail_found_(DNES)": {
                                           "actions": {
@@ -6555,7 +6638,8 @@
                                                   "Sender": "@{outputs('SenderAddress')}",
                                                   "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                                 }
-                                              }
+                                              },
+                                              "description": "Buffers the structured audit event confirming that the sent DNES response e-mail was moved to the DNES workflow folder."
                                             },
                                             "Increase_Stepcounter_(DNES)_3": {
                                               "runAfter": {
@@ -6649,7 +6733,8 @@
                                                     "Sender": "@{outputs('SenderAddress')}",
                                                     "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                                   }
-                                                }
+                                                },
+                                                "description": "Buffers the audit event recording that no DNES sent response mail was found, so the move-to-workflow-folder step was skipped."
                                               },
                                               "Workflow_Status_-_Warning_(Sent_Mail_not_found_(DNES))": {
                                                 "runAfter": {
@@ -6661,7 +6746,8 @@
                                                 "inputs": {
                                                   "name": "AuditOutcome",
                                                   "value": "Warning"
-                                                }
+                                                },
+                                                "description": "Sets the overall run outcome to Warning because the sent DNES response mail could not be found and confirmed."
                                               },
                                               "Info_to_Hotline_team_about_sent_mail_not_found_(DNES)": {
                                                 "runAfter": {
@@ -6687,7 +6773,8 @@
                                                     "operationId": "SendEmailV2"
                                                   },
                                                   "authentication": "@parameters('$authentication')"
-                                                }
+                                                },
+                                                "description": "Sends an alert e-mail to the Hotline team informing them that the DNES response mail could not be found in Sent Items."
                                               },
                                               "Compose_Subject_(Sent_Mail_Not_Found_DNES)": {
                                                 "runAfter": {
@@ -6837,7 +6924,8 @@
                                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                       }
-                                                    }
+                                                    },
+                                                    "description": "Buffers the audit event confirming that the DNES sent-mail-not-found alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                                   },
                                                   "Buffer_Audit_Event_(Move_Sent_Mail_Not_Found_DNES_Email_Failed)": {
                                                     "runAfter": {
@@ -6874,7 +6962,8 @@
                                                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                       }
-                                                    }
+                                                    },
+                                                    "description": "Buffers the audit event recording that moving the DNES sent-mail-not-found alert mail to the Agent 2 Alerts mailbox folder failed."
                                                   }
                                                 },
                                                 "runAfter": {
@@ -6913,7 +7002,8 @@
                                                           "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                           "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                         }
-                                                      }
+                                                      },
+                                                      "description": "Buffers the audit event recording that the sent DNES sent-mail-not-found alert mail could not be found in Sent Items for moving."
                                                     }
                                                   }
                                                 },
@@ -6947,7 +7037,8 @@
                                           "metadata": {
                                             "operationMetadataId": "ce92948c-d571-49c7-b210-d8daceea8b4c"
                                           },
-                                          "type": "If"
+                                          "type": "If",
+                                          "description": "Routes processing depending on whether at least one sent DNES response mail was found. If found, it is moved to the DNES workflow folder; otherwise a sent-mail-not-found warning is raised."
                                         }
                                       }
                                     },
@@ -6961,7 +7052,8 @@
                                         }
                                       ]
                                     },
-                                    "type": "If"
+                                    "type": "If",
+                                    "description": "Routes processing depending on whether the DMP not effected Sender mailbox subfolder was resolved. If empty, raises a mailbox-folder warning; otherwise sends the reply and moves the e-mails."
                                   },
                                   "Update_Last_DMP_not_effected_Sender_ID": {
                                     "runAfter": {
@@ -6994,6 +7086,7 @@
                                     "description": "Persists the updated DNES workflow counter to the configured Agent 2 counter file."
                                   },
                                   "Handle_Counter_file_update_error_(DNES)": {
+                                    "description": "Handles a failed counter-file update for the DMP not effected Sender workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
                                     "actions": {
                                       "Buffer_Audit_Event_Alert_(Counter_File_Update_Failed)_(DNES)": {
                                         "runAfter": {
@@ -7029,7 +7122,8 @@
                                             "Sender": "@{outputs('SenderAddress')}",
                                             "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                                           }
-                                        }
+                                        },
+                                        "description": "Buffers the structured alert audit event that documents the failed counter-file update for the DMP not effected Sender workflow path."
                                       },
                                       "Workflow_Status_-_Failed_(Counter_file_update_error_(DNES))": {
                                         "runAfter": {
@@ -7041,7 +7135,8 @@
                                         "inputs": {
                                           "name": "AuditOutcome",
                                           "value": "Failed"
-                                        }
+                                        },
+                                        "description": "Sets the overall AuditOutcome to Failed because the counter file could not be updated for the DMP not effected Sender workflow path."
                                       },
                                       "Info_to_Hotline_team_about_counter_file_update_error_(DNES)": {
                                         "runAfter": {
@@ -7067,7 +7162,8 @@
                                             "operationId": "SendEmailV2"
                                           },
                                           "authentication": "@parameters('$authentication')"
-                                        }
+                                        },
+                                        "description": "Sends an alert e-mail to the Hotline team informing them that the workflow counter file could not be updated for the DMP not effected Sender workflow path."
                                       },
                                       "Compose_Subject_(Counter_Update_Failed_DNES)": {
                                         "type": "Compose",
@@ -7212,7 +7308,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event confirming that the DNES counter-update-failed alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                                           },
                                           "Buffer_Audit_Event_(Move_Counter_Update_Failed_DNES_Email_Failed)": {
                                             "runAfter": {
@@ -7249,7 +7346,8 @@
                                                 "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                 "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                               }
-                                            }
+                                            },
+                                            "description": "Buffers the audit event recording that moving the DNES counter-update-failed alert mail to the Agent 2 Alerts mailbox folder failed."
                                           }
                                         },
                                         "runAfter": {
@@ -7288,7 +7386,8 @@
                                                   "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                                   "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                                 }
-                                              }
+                                              },
+                                              "description": "Buffers the audit event recording that the sent DNES counter-update-failed alert mail could not be found in Sent Items for moving."
                                             }
                                           }
                                         },
@@ -7331,7 +7430,8 @@
                                     "inputs": {
                                       "name": "AuditBuffer",
                                       "value": "@concat('[', utcNow(), '] Completed', '\\n')"
-                                    }
+                                    },
+                                    "description": "Appends a completion marker to the run's audit trail buffer for the DMP not effected Sender workflow path."
                                   },
                                   "AuditOutcome_is_still_Started_(DNES)": {
                                     "actions": {
@@ -7343,7 +7443,8 @@
                                         "inputs": {
                                           "name": "AuditOutcome",
                                           "value": "Succeeded"
-                                        }
+                                        },
+                                        "description": "Sets the overall AuditOutcome to Succeeded once the DMP not effected Sender workflow path has completed without unresolved errors."
                                       }
                                     },
                                     "runAfter": {
@@ -7384,7 +7485,8 @@
                               "metadata": {
                                 "operationMetadataId": "a838112b-eac3-4566-b2d9-9c078a11dfa1"
                               },
-                              "type": "If"
+                              "type": "If",
+                              "description": "Routes processing depending on whether the sender domain matched an external DMP domain: the DMP effected Member path runs if matched, otherwise the sender is classified as DMP not effected Sender."
                             },
                             "Load_External_Domains": {
                               "metadata": {
@@ -7475,7 +7577,8 @@
                         "metadata": {
                           "operationMetadataId": "4619831a-f123-4322-bc2f-e843cce0f3ea"
                         },
-                        "type": "If"
+                        "type": "If",
+                        "description": "Routes processing depending on whether the sender domain matched an internal DMP domain: the DMP Internal Sender path runs if matched, otherwise the DMP effected/not effected Member classification continues."
                       },
                       "Load_Internal_Domains": {
                         "metadata": {
@@ -7609,7 +7712,8 @@
                             "TargetFolderName": "",
                             "TargetFolderId": ""
                           }
-                        }
+                        },
+                        "description": "Buffers the structured audit event that documents the internal-domain sender classification decision and its debug details."
                       }
                     },
                     "runAfter": {
@@ -7680,7 +7784,8 @@
                               "Sender": "@{outputs('SenderAddress')}",
                               "SenderDomain": "@{outputs('SenderDomainNormalized')}"
                             }
-                          }
+                          },
+                          "description": "Buffers the structured alert audit event that documents the missing Internal Domains reference file."
                         },
                         "TICKS_Alert_(Internal_Domains_List_Missing)": {
                           "metadata": {
@@ -7791,7 +7896,8 @@
                             "operationMetadataId": "2ee1a00d-969d-418a-8b92-c20390ed3b86"
                           },
                           "type": "Compose",
-                          "inputs": "@ticks(utcNow())"
+                          "inputs": "@ticks(utcNow())",
+                          "description": "Stores the timestamp used to calculate the duration of the Sent Items lookup and move handling for the internal-domains-missing alert mail."
                         },
                         "IF_Sent_Message_ID_Found_(Internal_Domains_List_Missing)": {
                           "actions": {
@@ -7853,7 +7959,8 @@
                                   "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                   "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                 }
-                              }
+                              },
+                              "description": "Buffers the audit event confirming that the internal-domains-missing alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                             },
                             "Buffer_Audit_Event_(Move_Internal_Domains_List_Missing_Email_Failed)": {
                               "runAfter": {
@@ -7890,7 +7997,8 @@
                                   "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                   "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                 }
-                              }
+                              },
+                              "description": "Buffers the audit event recording that moving the internal-domains-missing alert mail to the Agent 2 Alerts mailbox folder failed."
                             }
                           },
                           "runAfter": {
@@ -7929,7 +8037,8 @@
                                     "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                                     "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                                   }
-                                }
+                                },
+                                "description": "Buffers the audit event recording that the sent internal-domains-missing alert mail could not be found in Sent Items for moving."
                               }
                             }
                           },
@@ -7945,7 +8054,8 @@
                               }
                             ]
                           },
-                          "type": "If"
+                          "type": "If",
+                          "description": "Checks whether the internal-domains-missing alert mail was found in Sent Items before attempting to move it to the Agent 2 Alerts folder."
                         }
                       }
                     },
@@ -7964,7 +8074,8 @@
                     "metadata": {
                       "operationMetadataId": "cb479044-8a4a-4e83-9a1e-f692ac7116da"
                     },
-                    "type": "If"
+                    "type": "If",
+                    "description": "Routes processing depending on whether the internal domains reference file exists. If it exists, the sender is classified as internal or external DMP domain; if missing, an alert is raised and the run is stopped."
                   },
                   "Check_Existence_of_Internal_Domains_File": {
                     "metadata": {
@@ -8003,7 +8114,8 @@
               "metadata": {
                 "operationMetadataId": "ffc8403f-3d1b-4e86-a568-1ec5df1ffee6"
               },
-              "type": "If"
+              "type": "If",
+              "description": "Checks whether the external domains reference file is missing. If missing, the sender cannot be classified and the flow follows the No DMP path; otherwise it classifies the sender against the internal/external domain lists."
             },
             "RunID": {
               "metadata": {
@@ -8074,7 +8186,8 @@
           "metadata": {
             "operationMetadataId": "ee2f494b-c58c-4c2f-a70d-1ef108006b8f"
           },
-          "type": "Scope"
+          "type": "Scope",
+          "description": "Top-level scope that processes every inbound e-mail: classifies the sender into the No DMP, DMP Internal Sender, DMP effected Member, or DMP not effected Sender path and runs the matching reply/forward/counter/audit handling."
         },
         "Error_handling": {
           "actions": {
@@ -8086,7 +8199,8 @@
               "inputs": {
                 "name": "AuditOutcome",
                 "value": "Failed"
-              }
+              },
+              "description": "Sets the overall AuditOutcome to Failed because the main e-mail processing flow terminated unexpectedly (timed out or failed)."
             },
             "Audit_Trail_-_Flow_completion_(Failed)": {
               "runAfter": {
@@ -8101,7 +8215,8 @@
               "inputs": {
                 "name": "AuditBuffer",
                 "value": "@\r\nconcat(\r\n  '[', utcNow(), '] ERROR | ',\r\n  'code=', coalesce(workflow()?['run']?['error']?['code'], 'n/a'),\r\n  ' | message=', coalesce(workflow()?['run']?['error']?['message'], 'n/a'),\r\n  '\\n'\r\n)\r\n"
-              }
+              },
+              "description": "Appends a technical error marker (run error code and message) to the run's audit trail buffer."
             }
           },
           "runAfter": {
@@ -8113,7 +8228,8 @@
           "metadata": {
             "operationMetadataId": "52de46b7-9601-4e1c-ba87-8582863a53de"
           },
-          "type": "Scope"
+          "type": "Scope",
+          "description": "Handles a technical failure or timeout of the main e-mail processing flow: sets the audit outcome to Failed and records the run error details in the audit trail buffer."
         },
         "Audit_Trail_Processing": {
           "actions": {
@@ -8269,7 +8385,8 @@
                   "metadata": {
                     "operationMetadataId": "6bd4ddd3-eebd-4397-9762-d5090c6335ee"
                   },
-                  "type": "Foreach"
+                  "type": "Foreach",
+                  "description": "Iterates over all buffered audit events and writes each one as a row into the central audit table, updating the corresponding Agent Audit Summary step counters."
                 }
               },
               "runAfter": {
@@ -8293,7 +8410,8 @@
               "metadata": {
                 "operationMetadataId": "650d96bb-d565-4e04-80dc-5d3e2a17f50b"
               },
-              "type": "If"
+              "type": "If",
+              "description": "Checks whether any audit events were buffered during this run. If so, writes them all to the central audit table; otherwise skips the write step."
             },
             "GET_AgentSummaryRow_ForRun": {
               "runAfter": {
@@ -8377,7 +8495,8 @@
           "metadata": {
             "operationMetadataId": "eb138b2f-b5ec-4a1d-8dea-42e6984e5ab3"
           },
-          "type": "Scope"
+          "type": "Scope",
+          "description": "Writes the run summary and all buffered step-level audit events to the central audit table, and updates the Agent Audit Summary run/step counters, regardless of whether the main flow succeeded or failed."
         },
         "VAR_RunPrefix": {
           "runAfter": {
@@ -8552,6 +8671,7 @@
           "description": "Default = 0\nStores the current step number within the selected workflow branch for audit trail sequencing."
         },
         "Handle_Counter_File_Error": {
+          "description": "Handles the case where the workflow counter file is missing at flow start: alerts the Hotline team, marks the run as Failed, and terminates the flow to avoid further processing without a working counter.",
           "actions": {
             "Buffer_Audit_Event_Alert(Counter_File_Missing)": {
               "runAfter": {
@@ -8587,7 +8707,8 @@
                   "Sender": "@{toLower(trim(coalesce(triggerOutputs()?['body/from/emailAddress/address'], triggerOutputs()?['body/sender/emailAddress/address'], triggerOutputs()?['body/from'], '')))}",
                   "SenderDomain": "@{toLower(trim(if(contains(coalesce(triggerOutputs()?['body/from/emailAddress/address'], triggerOutputs()?['body/sender/emailAddress/address'], triggerOutputs()?['body/from'], ''), '@'), last(split(coalesce(triggerOutputs()?['body/from/emailAddress/address'], triggerOutputs()?['body/sender/emailAddress/address'], triggerOutputs()?['body/from'], ''), '@')), '')))}"
                 }
-              }
+              },
+              "description": "Buffers the structured alert audit event that documents the missing workflow counter file."
             },
             "Workflow_Status_-_Failed_(Terminate)_": {
               "runAfter": {
@@ -8602,7 +8723,8 @@
               "inputs": {
                 "name": "AuditOutcome",
                 "value": "Failed"
-              }
+              },
+              "description": "Sets the overall AuditOutcome to Failed because the workflow counter file is missing."
             },
             "Terminate_(Counter_File_Missing)": {
               "runAfter": {
@@ -8616,7 +8738,8 @@
                 "runError": {
                   "message": "File: @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} missing!"
                 }
-              }
+              },
+              "description": "Terminates the flow run as Failed because the workflow counter file could not be found, preventing further processing without a working counter."
             },
             "Info_to_Hotline_team_about_missing_counter_file": {
               "runAfter": {
@@ -8725,7 +8848,8 @@
                 "operationMetadataId": "0c9c3f88-b734-4629-b419-7859526301f8"
               },
               "type": "Compose",
-              "inputs": "@ticks(utcNow())"
+              "inputs": "@ticks(utcNow())",
+              "description": "Stores the timestamp used to calculate the duration of the Sent Items lookup and move handling for the missing-counter-file alert mail."
             },
             "IF_Sent_Message_ID_Found_(Missing_Counter_File)": {
               "actions": {
@@ -8787,7 +8911,8 @@
                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                     }
-                  }
+                  },
+                  "description": "Buffers the audit event confirming that the missing-counter-file alert mail was successfully moved to the Agent 2 Alerts mailbox folder."
                 },
                 "Buffer_Audit_Event_(Move_Missing_Counter_File_Email_Failed)": {
                   "runAfter": {
@@ -8824,7 +8949,8 @@
                       "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                       "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                     }
-                  }
+                  },
+                  "description": "Buffers the audit event recording that moving the missing-counter-file alert mail to the Agent 2 Alerts mailbox folder failed."
                 }
               },
               "runAfter": {
@@ -8863,7 +8989,8 @@
                         "Sender": "@{trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))}",
                         "SenderDomain": "@{last(split(trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),'@'))}"
                       }
-                    }
+                    },
+                    "description": "Buffers the audit event recording that the sent missing-counter-file alert mail could not be found in Sent Items for moving."
                   }
                 }
               },
@@ -8879,7 +9006,8 @@
                   }
                 ]
               },
-              "type": "If"
+              "type": "If",
+              "description": "Checks whether the missing-counter-file alert mail was found in Sent Items before attempting to move it to the Agent 2 Alerts folder."
             }
           },
           "runAfter": {
@@ -8892,13 +9020,15 @@
           "type": "Scope"
         },
         "Handle_Audit_Error": {
+          "description": "Handles the case where the central audit trail file cannot be written to: marks the buffer as failed, alerts the Hotline team, and sets the overall outcome to Warning.",
           "actions": {
             "No_access_to_audit_Trail_File": {
               "type": "AppendToStringVariable",
               "inputs": {
                 "name": "AuditBuffer",
                 "value": "AUDIT WRITE FAILED"
-              }
+              },
+              "description": "Marks the run's audit trail buffer as failed because the central audit file could not be accessed for writing."
             },
             "Info_to_Hotline_team_about_missing_audit_trail_file": {
               "runAfter": {
@@ -8971,7 +9101,8 @@
                   "inputs": {
                     "name": "AuditOutcome",
                     "value": "Warning"
-                  }
+                  },
+                  "description": "Sets the overall run outcome to Warning because the central audit trail file could not be written to, unless a more severe outcome was already recorded."
                 }
               },
               "runAfter": {
@@ -9080,7 +9211,8 @@
                 "operationMetadataId": "2ee1a00d-969d-418a-8b92-c20390ed3b86"
               },
               "type": "Compose",
-              "inputs": "@ticks(utcNow())"
+              "inputs": "@ticks(utcNow())",
+              "description": "Stores the timestamp used to calculate the duration of the Sent Items lookup and move handling for the audit-write-failed alert mail."
             },
             "IF_Sent_Message_ID_Found_(Audit_Write_Failed)": {
               "actions": {
@@ -9237,7 +9369,8 @@
                   }
                 ]
               },
-              "type": "If"
+              "type": "If",
+              "description": "Checks whether the audit-write-failed alert mail was found in Sent Items before attempting to move it to the Agent 2 Alerts folder."
             }
           },
           "runAfter": {
@@ -9350,7 +9483,7 @@
               }
             ]
           },
-          "description": ""
+          "description": "Default = <empty>\n\nStores the currently configured DMP operation mode read from the central configuration."
         },
         "VAR_StatusAgentKey": {
           "runAfter": {
@@ -9519,7 +9652,8 @@
           "inputs": {
             "from": "@body('GET_DMP_Command_Configuration')?['value']",
             "where": "@equals(coalesce(item()?['ParameterName'], item()?['Title']),'CurrentOperationMode')"
-          }
+          },
+          "description": "Filters the DMP Command Configuration rows down to the single row that defines the current operation mode parameter."
         },
         "CMP_ConfigObject": {
           "runAfter": {
@@ -9577,7 +9711,8 @@
           "inputs": {
             "from": "@body('GET_DMP_Command_Configuration')?['value']",
             "select": "@concat(\n  ',',\n  '\"',\n  replace(coalesce(item()?['ParameterName'], item()?['Title'], ''), '\"', concat(decodeUriComponent('%5C'), '\"')),\n  '\":\"',\n  replace(\n    replace(\n      replace(\n        replace(\n          coalesce(\n            if(\n              equals(variables('CurrentOperationMode'), 'PROD_NODMP'),\n              coalesce(item()?['Value_x002d_PROD_x0028_NODMP_x0029'], item()?['Value_PROD_NODMP'], ''),\n              if(\n                equals(variables('CurrentOperationMode'), 'PROD_DMP'),\n                coalesce(item()?['Value_x002d_PROD_x0028_DMP_x0029'], ''),\n                if(\n                  equals(variables('CurrentOperationMode'), 'SIMU_NODMP'),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_NODMP_x0029'], item()?['Value_x002d_SIMU_x0028_NODMP_x00'], ''),\n                  coalesce(item()?['Value_x002d_SIMU_x0028_DMP_x0029'], '')\n                )\n              )\n            ),\n            ''\n          ),\n          decodeUriComponent('%5C'),\n          concat(decodeUriComponent('%5C'), decodeUriComponent('%5C'))\n        ),\n        '\"',\n        concat(decodeUriComponent('%5C'), '\"')\n      ),\n      decodeUriComponent('%0D'),\n      ''\n    ),\n    decodeUriComponent('%0A'),\n    concat(decodeUriComponent('%5C'), 'n')\n  ),\n  '\"'\n)"
-          }
+          },
+          "description": "Builds one JSON key/value fragment per active configuration row, selecting the value for the currently active operation mode, to be assembled into the central Agent 2 configuration object."
         }
       },
       "outputs": {}

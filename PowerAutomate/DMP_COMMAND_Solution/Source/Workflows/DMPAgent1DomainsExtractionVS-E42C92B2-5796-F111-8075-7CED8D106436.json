@@ -359,7 +359,8 @@
                       "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                       "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                     }
-                  }
+                  },
+                  "description": "Buffers the structured audit event recording that moving the sent Agent 1 global-failure alert mail to the Agent 1 Alerts folder failed."
                 },
                 "Buffer_Audit_Event_(Move_Global_Fail_Succeeded)": {
                   "runAfter": {
@@ -392,7 +393,8 @@
                       "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                       "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                     }
-                  }
+                  },
+                  "description": "Buffers the structured audit event recording that the sent Agent 1 global-failure alert mail was successfully moved to the Agent 1 Alerts folder."
                 },
                 "Move_Email_(Global_Fail)": {
                   "metadata": {
@@ -455,7 +457,8 @@
                         "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                         "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                       }
-                    }
+                    },
+                    "description": "Buffers the structured audit event recording that the sent Agent 1 global-failure alert mail could not be found in Sent Items by subject, so it could not be moved."
                   }
                 }
               },
@@ -563,7 +566,8 @@
               "TimedOut"
             ]
           },
-          "type": "Scope"
+          "type": "Scope",
+          "description": "Handles an unexpected global failure (e.g. Agent 1 Alerts folder lookup) outside the expected business branches: marks the run Failed, buffers an audit event, sends an alert mail, and moves it to the Agent 1 Alerts folder."
         },
         "Audit_Trail_Processing": {
           "actions": {
@@ -964,7 +968,8 @@
               "Failed"
             ]
           },
-          "type": "Scope"
+          "type": "Scope",
+          "description": "Finalizes the Agent 1 run: writes the run summary and buffered audit events to the audit trail, updates Agent 1's counters in Agent Audit Summary, and refreshes the dashboard status rows. Runs regardless of success or failure."
         },
         "Create_Mailbox_Subfolder_\"Agent_1_Alerts\"": {
           "runAfter": {
@@ -1659,7 +1664,8 @@
                                     "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                     "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                   }
-                                }
+                                },
+                                "description": "Buffers the structured audit event recording that moving the sent Agent 1 write-domains-file-failed alert mail to the Agent 1 Alerts folder failed."
                               },
                               "Buffer_Audit_Event_(Move_Write_Domains_File_Failed_Email_Succeeded)": {
                                 "runAfter": {
@@ -1692,7 +1698,8 @@
                                     "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                     "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                   }
-                                }
+                                },
+                                "description": "Buffers the structured audit event recording that the sent Agent 1 write-domains-file-failed alert mail was successfully moved to the Agent 1 Alerts folder."
                               }
                             },
                             "runAfter": {
@@ -1728,7 +1735,8 @@
                                       "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                       "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording that the sent Agent 1 write-domains-file-failed alert mail could not be found in Sent Items by subject, so it could not be moved."
                                 }
                               }
                             },
@@ -1953,7 +1961,8 @@
                                       "TargetMessageId": "@{outputs('Compose_Sent_Message_ID_(Write_Domains_File_Succeeded)')}",
                                       "Decision": "write_domains_success_mail_moved"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording that the sent Agent 1 domains-file-written information mail was successfully moved to the Agent 1 Alerts folder."
                                 },
                                 "Buffer_Audit_Event_(Move_Write_Domains_File_Succeeded_Email_Failed)": {
                                   "runAfter": {
@@ -1987,7 +1996,8 @@
                                       "TargetMessageId": "@{outputs('Compose_Sent_Message_ID_(Write_Domains_File_Succeeded)')}",
                                       "Decision": "write_domains_success_mail_move_failed"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording that moving the sent Agent 1 domains-file-written information mail to the Agent 1 Alerts folder failed."
                                 }
                               },
                               "runAfter": {
@@ -2023,7 +2033,8 @@
                                         "TargetMessageId": "@{outputs('Compose_Sent_Message_ID_(Write_Domains_File_Succeeded)')}",
                                         "Decision": "write_domains_success_mail_not_found"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the structured audit event recording that the sent Agent 1 domains-file-written information mail could not be found in Sent Items by subject, so it could not be moved."
                                   }
                                 }
                               },
@@ -2168,18 +2179,19 @@
                             }
                           ]
                         },
-                        "type": "If"
-                      }
-                    },
-                    "runAfter": {
-                      "Domains_Extraction": [
-                        "Succeeded"
-                      ]
-                    },
-                    "else": {
-                      "actions": {
-                        "Technical_Error_or_NoData": {
-                          "actions": {
+                                        "type": "If",
+                                        "description": "Checks whether writing the external domains reference file failed. If it failed, sends the write-failed alert mail (this branch); otherwise sends the domains-file-written information mail (else branch)."
+                                      }
+                                    },
+                                    "runAfter": {
+                                      "Domains_Extraction": [
+                                        "Succeeded"
+                                      ]
+                                    },
+                                    "else": {
+                                      "actions": {
+                                        "Technical_Error_or_NoData": {
+                                          "actions": {
                             "Increment_StepCounter_(Failed_Domains_Extraction_-_Technical_Error)_-_Alert": {
                               "type": "IncrementVariable",
                               "inputs": {
@@ -2382,7 +2394,8 @@
                                       "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                       "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording that the sent Agent 1 technical-error alert mail was successfully moved to the Agent 1 Alerts folder."
                                 },
                                 "Buffer_Audit_Event_(Move_Email_(Failed_Domains_Extraction_-_Technical_Error)_F)": {
                                   "runAfter": {
@@ -2416,7 +2429,8 @@
                                       "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                       "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                     }
-                                  }
+                                  },
+                                  "description": "Buffers the structured audit event recording that moving the sent Agent 1 technical-error alert mail to the Agent 1 Alerts folder failed."
                                 }
                               },
                               "runAfter": {
@@ -2452,7 +2466,8 @@
                                         "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                         "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the structured audit event recording that the sent Agent 1 technical-error alert mail could not be found in Sent Items by subject, so it could not be moved."
                                   }
                                 }
                               },
@@ -2831,7 +2846,8 @@
                                         "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                         "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the structured audit event recording that moving the sent Agent 1 no-domains-found alert mail to the Agent 1 Alerts folder failed."
                                   },
                                   "Move_Email_(Failed_Domains_Extraction_-_No_Domains_Found)": {
                                     "metadata": {
@@ -2891,7 +2907,8 @@
                                         "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                         "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                       }
-                                    }
+                                    },
+                                    "description": "Buffers the structured audit event recording that the sent Agent 1 no-domains-found alert mail was successfully moved to the Agent 1 Alerts folder."
                                   }
                                 },
                                 "runAfter": {
@@ -2927,7 +2944,8 @@
                                           "Sender": "@{outputs('CMP_ConfigObject')?['SharedDMPMailbox']}",
                                           "SenderDomain": "@{last(split(outputs('CMP_ConfigObject')?['SharedDMPMailbox'],'@'))}"
                                         }
-                                      }
+                                      },
+                                      "description": "Buffers the structured audit event recording that the sent Agent 1 no-domains-found alert mail could not be found in Sent Items by subject, so it could not be moved."
                                     }
                                   }
                                 },
@@ -3014,7 +3032,8 @@
                               }
                             ]
                           },
-                          "type": "If"
+                          "type": "If",
+                          "description": "Checks whether the Office Script domain extraction result reported a technical error status. If it did, handles the technical-error alert path (this branch); otherwise handles the no-domains-found warning path (else branch)."
                         }
                       }
                     },
@@ -3028,7 +3047,8 @@
                         }
                       ]
                     },
-                    "type": "If"
+                    "type": "If",
+                    "description": "Checks whether the domain extraction found at least one domain. If so, writes the external domains file and sends success/failure alerts (this branch); otherwise routes to technical-error or no-domains-found handling (else)."
                   },
                   "ACT_Domains_Extraction": {
                     "runAfter": {
@@ -3084,7 +3104,8 @@
                     "description": "Extracts the normalized domain array returned by the Office Script result."
                   }
                 },
-                "type": "Scope"
+                "type": "Scope",
+                "description": "Runs the core Agent 1 workflow once the Agent 1 Alerts folder is confirmed: resolves the triggering file, executes the Office Script domain extraction, and branches into success, technical-error, or no-domains-found handling."
               }
             }
           },
@@ -3376,7 +3397,8 @@
           "inputs": {
             "name": "OperationMode",
             "value": "@coalesce( first(body('FILTER_Config_Row_CurrentOperationMode'))?['CurrentValue'], 'PROD_NODMP' )"
-          }
+          },
+          "description": "Applies the resolved CurrentOperationMode configuration value to the OperationMode variable, defaulting to PROD_NODMP when no matching configuration row was found."
         },
         "FILTER_Config_Row_CurrentOperationMode": {
           "runAfter": {

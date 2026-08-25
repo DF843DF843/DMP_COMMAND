@@ -553,7 +553,7 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
-                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'], '/childFolders')",
+                  "Uri": "@concat('v1.0/users/', trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])), '/mailFolders/', body('Get_DMP_Mailbox_Parent_Folder_ID')?['value']?[0]?['id'], '/childFolders')",
                   "Method": "POST",
                   "CustomHeader1": "Content-Type: application/json",
                   "Body": "{\n  \"displayName\": \"@{trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName']))}\"\n}",
@@ -581,7 +581,7 @@
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
-                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value'][0]['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName'])),\n  ''''\n)",
+                  "Uri": "@concat(\n  'v1.0/users/',\n  trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox'])),\n  '/mailFolders/',\n  body('Get_DMP_Mailbox_Parent_Folder_ID')?['value']?[0]?['id'],\n  '/childFolders?$filter=displayName eq ''',\n  trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName'])),\n  ''''\n)",
                   "Method": "GET",
                   "ContentType": "application/json"
                 },
@@ -774,6 +774,107 @@
           },
           "description": "Marks the run outcome as failed when the configuration update did not succeed."
         },
+        "SET_AuditOutcome_EmailFolderFailed": {
+          "runAfter": {
+            "E-Mail_Folder_creation": [
+              "Failed",
+              "TimedOut",
+              "Skipped"
+            ],
+            "SET_AuditOutcome_Succeeded": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SET_AuditOutcome_Failed": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditOutcome",
+            "value": "Failed"
+          },
+          "description": "Marks the run outcome as Failed when the mailbox evidence folder setup did not succeed. Treated as critical because it breaks housekeeping/archiving of processed alert mails, even if the Operating State update itself succeeded."
+        },
+        "AUDIT_EmailFolderCreation_Failed": {
+          "runAfter": {
+            "SET_AuditOutcome_EmailFolderFailed": [
+              "Succeeded"
+            ]
+          },
+          "type": "AppendToArrayVariable",
+          "inputs": {
+            "name": "AuditEvents",
+            "value": {
+              "TimestampUtc": "@{utcNow()}",
+              "RunId": "@{workflow()?['run']?['name']}",
+              "MessageId": "",
+              "WorkflowPath": "@{variables('WorkflowPath')}",
+              "StepName": "EmailFolderCreation",
+              "StepStatus": "Failed",
+              "Flow ID": "",
+              "KeyOutput": "Mailbox evidence folder setup (PA Processed Mails / Agent 5 Alerts) failed - housekeeping/archiving of processed alert mails is affected until this is resolved.",
+              "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')}",
+              "ActionType": "Write",
+              "Direction": "Internal",
+              "Recipient": "DMP COMMAND GUI",
+              "SubjectOut": "",
+              "TargetMessageId": "",
+              "TargetFolderName": "@{trim(string(outputs('CMP_ConfigObject')?['Agent5AlertFolderName']))}",
+              "TargetFolderId": "",
+              "MatchedDomain": "",
+              "Decision": "email_folder_creation_failed",
+              "Sender": "@{variables('InitiatedBy')}",
+              "SenderDomain": ""
+            }
+          },
+          "description": "Buffers a Failed audit event when the mailbox evidence folder setup did not succeed, so the Cockpit surfaces this as Critical even though the Operating State update itself succeeded."
+        },
+        "SET_AlertMailSubject_(EmailFolderCreationFailed)": {
+          "runAfter": {
+            "AUDIT_EmailFolderCreation_Failed": [
+              "Succeeded"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AlertMailSubject",
+            "value": "[Agent 5][FAILED] Mailbox Evidence Folder Setup Failed"
+          },
+          "description": "Builds the subject of the email-folder-creation-failed alert mail."
+        },
+        "MAIL_Alert_(EmailFolderCreationFailed)": {
+          "runAfter": {
+            "SET_AlertMailSubject_(EmailFolderCreationFailed)": [
+              "Succeeded"
+            ]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+              "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+              "emailMessage/Subject": "@variables('AlertMailSubject')",
+              "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 5 - Mailbox evidence folder setup failed.</strong></b></p><p class=\"editor-paragraph\"><br>The shared mailbox subfolders used for evidence/housekeeping (\"PA Processed Mails\" / \"Agent 5 Alerts\") could not be created or resolved. Housekeeping/archiving of processed alert mails will not work correctly until this is resolved.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Initiated By:</strong></b> @{variables('InitiatedBy')}<br><b><strong class=\"editor-text-bold\">Run ID:</strong></b> @{workflow()?['run']?['name']}<br><br>Please check the shared mailbox permissions and folder structure.</p>",
+              "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "connectionName": "shared_office365",
+              "operationId": "SharedMailboxSendEmailV2"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "description": "Sends a critical alert mail when the mailbox evidence folder setup failed, so the operations team is notified without needing to actively monitor the Cockpit."
+        },
         "SET_AlertMailSubject_(ConfigUpdateFailed)": {
           "runAfter": {
             "SET_AuditOutcome_Failed": [
@@ -868,7 +969,8 @@
           "inputs": {
             "name": "AlertMessageId",
             "value": "@body('Get_Sent_Email_By_Subject_(ConfigUpdateFailed)')?['value']?[0]?['id']"
-          }
+          },
+          "description": "Stores the message id of the sent config-update-failed alert mail so it can be moved to the Agent 5 Alerts folder."
         },
         "Move_Email_(ConfigUpdateFailed)": {
           "runAfter": {
@@ -911,6 +1013,18 @@
               "TimedOut"
             ],
             "SET_AuditOutcome_Failed": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "SET_AuditOutcome_EmailFolderFailed": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ],
+            "MAIL_Alert_(EmailFolderCreationFailed)": [
               "Succeeded",
               "Failed",
               "Skipped",
