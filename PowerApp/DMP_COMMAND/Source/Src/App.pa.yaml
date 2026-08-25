@@ -14,7 +14,7 @@ App:
       Set(varPendingAction,"");
       Set(varIsRealDMP,false);
       Set(varRequestedMode,false);
-      Set(varSuppressToggleEvents,false);
+      Set(varSuppressToggleEvents,true);
       Set(varStartDMPStatusRefresh,false);
       Set(varOperationalModeIsDMP,true);
       Set(varEnvironmentIsPROD,false);
@@ -52,7 +52,7 @@ App:
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
       Set(varDarkMode,true);
-      Set(varAppVersion,"v1.3.0");
+      Set(varAppVersion,"");
 
       // Live status refresh from Agent 4 (Status Check)
       Set(varAppStartTimestamp, Now());
@@ -146,6 +146,11 @@ App:
               Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"),
               "PROD"
           )
-      )
+      );
+
+      // Only now (after both toggle-bound Default variables above have their real values)
+      // is it safe to lift the guard - this prevents the Default-driven OnCheck/OnUncheck
+      // that fires while these variables are being set above from calling Agent 5 for real.
+      Set(varSuppressToggleEvents,false)
     StartScreen: =scrHome
     Theme: =PowerAppsTheme

@@ -490,7 +490,7 @@ Screens:
                               Height: =44
                               PaddingLeft: =1
                               PaddingRight: =1
-                              Text: =Coalesce(varAppVersion, "v1.2.0")
+                              Text: =varAppVersion
                               Width: =117
                               X: =Parent.Width - 281
                               Y: =28
@@ -751,7 +751,7 @@ Screens:
                                                 OnCheck: |-
                                                   =If(
                                                       varSuppressToggleEvents,
-                                                      Set(varSuppressToggleEvents, false),
+                                                      false,
                                                       Set(varSuppressToggleEvents, true);
                                                       Set(varLedOperationalState, "Yellow");
                                                       Set(
@@ -776,7 +776,7 @@ Screens:
                                                 OnUncheck: |-
                                                   =If(
                                                       varSuppressToggleEvents,
-                                                      Set(varSuppressToggleEvents, false),
+                                                      false,
                                                       Set(varSuppressToggleEvents, true);
                                                       Set(varLedOperationalState, "Yellow");
                                                       Set(
@@ -854,7 +854,7 @@ Screens:
                                                 OnCheck: |-
                                                   =If(
                                                       varSuppressToggleEvents,
-                                                      Set(varSuppressToggleEvents, false),
+                                                      false,
                                                       Set(varSuppressToggleEvents, true);
                                                       Set(varLedApplicationMode, "Yellow");
                                                       Set(
@@ -879,7 +879,7 @@ Screens:
                                                 OnUncheck: |-
                                                   =If(
                                                       varSuppressToggleEvents,
-                                                      Set(varSuppressToggleEvents, false),
+                                                      false,
                                                       Set(varSuppressToggleEvents, true);
                                                       Set(varLedApplicationMode, "Yellow");
                                                       Set(
