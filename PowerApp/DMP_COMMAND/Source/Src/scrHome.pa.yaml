@@ -404,11 +404,11 @@ Screens:
                               Height: =20
                               Size: =11.5
                               Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
-                              Width: =550
+                              Width: =610
                               Wrap: =false
                               X: =20
                               Y: =40
-                        - lblStatusLastRefreshed:
+                        - lblHeaderStatusLine:
                             Control: Label@2.5.1
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
@@ -417,39 +417,11 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =14
                               Size: =8.5
-                              Text: =If(IsBlank(varStatusLastRefreshed), "Noch nicht aktualisiert", "Zuletzt aktualisiert:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss") & " Uhr")
-                              Width: =230
+                              Text: =If(IsBlank(varStatusLastRefreshed), "Noch nicht aktualisiert", "Aktualisiert:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-Update aus", "Nächstes Update in " & Text(RoundDown(varAutoRefreshSecondsRemaining/60,0),"00") & ":" & Text(Mod(varAutoRefreshSecondsRemaining,60),"00"))
+                              Width: =430
                               Wrap: =false
                               X: =20
-                              Y: =62
-                        - lblAutoRefreshCountdown:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(160,155,190,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =8.5
-                              Text: =If(varAutoRefreshMinutes<=0, "Auto-Update:" & " Aus", "Nächstes Update in " & Text(RoundDown(varAutoRefreshSecondsRemaining/60,0),"00") & ":" & Text(Mod(varAutoRefreshSecondsRemaining,60),"00"))
-                              Width: =170
-                              Wrap: =false
-                              X: =258
-                              Y: =62
-                        - lblAutoRefreshChoiceLabel:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(160,155,190,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =8.5
-                              Text: ="Auto-Update:"
-                              Width: =90
-                              Wrap: =false
-                              X: =436
-                              Y: =62
+                              Y: =64
                         - btnAutoRefreshOff:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -459,17 +431,18 @@ Screens:
                               Color: =If(varAutoRefreshMinutes=0, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
-                              Height: =20
+                              Height: =18
                               HoverFill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 0);
                                 Set(varAutoRefreshSecondsRemaining, 0)
                               PressedFill: =RGBA(0,180,110,1)
-                              Size: =8
+                              Size: =7.5
                               Text: ="Aus"
-                              Width: =36
-                              X: =526
-                              Y: =59
+                              Width: =30
+                              Wrap: =false
+                              X: =460
+                              Y: =62
                         - btnAutoRefresh2:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -479,17 +452,18 @@ Screens:
                               Color: =If(varAutoRefreshMinutes=2, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
-                              Height: =20
+                              Height: =18
                               HoverFill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 2);
                                 Set(varAutoRefreshSecondsRemaining, 2*60)
                               PressedFill: =RGBA(0,180,110,1)
-                              Size: =8
+                              Size: =7.5
                               Text: ="2m"
-                              Width: =36
-                              X: =566
-                              Y: =59
+                              Width: =30
+                              Wrap: =false
+                              X: =494
+                              Y: =62
                         - btnAutoRefresh5:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -499,17 +473,18 @@ Screens:
                               Color: =If(varAutoRefreshMinutes=5, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
-                              Height: =20
+                              Height: =18
                               HoverFill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 5);
                                 Set(varAutoRefreshSecondsRemaining, 5*60)
                               PressedFill: =RGBA(0,180,110,1)
-                              Size: =8
+                              Size: =7.5
                               Text: ="5m"
-                              Width: =36
-                              X: =606
-                              Y: =59
+                              Width: =30
+                              Wrap: =false
+                              X: =528
+                              Y: =62
                         - btnAutoRefresh10:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -519,17 +494,18 @@ Screens:
                               Color: =If(varAutoRefreshMinutes=10, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
-                              Height: =20
+                              Height: =18
                               HoverFill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 10);
                                 Set(varAutoRefreshSecondsRemaining, 10*60)
                               PressedFill: =RGBA(0,180,110,1)
-                              Size: =8
+                              Size: =7.5
                               Text: ="10m"
-                              Width: =40
-                              X: =646
-                              Y: =59
+                              Width: =32
+                              Wrap: =false
+                              X: =562
+                              Y: =62
                         - btnAutoRefresh15:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -539,17 +515,18 @@ Screens:
                               Color: =If(varAutoRefreshMinutes=15, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
-                              Height: =20
+                              Height: =18
                               HoverFill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 15);
                                 Set(varAutoRefreshSecondsRemaining, 15*60)
                               PressedFill: =RGBA(0,180,110,1)
-                              Size: =8
+                              Size: =7.5
                               Text: ="15m"
-                              Width: =40
-                              X: =690
-                              Y: =59
+                              Width: =32
+                              Wrap: =false
+                              X: =598
+                              Y: =62
                         - tmrAutoRefreshTick:
                             Control: Timer@1.1.1
                             Properties:
@@ -627,8 +604,9 @@ Screens:
                               Height: =28
                               Size: =24
                               Text: =Text(Coalesce(varAuditFailedCount,0))
-                              Width: =65
-                              X: =Parent.Width - 527
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 598
                               Y: =18
                         - lblKpiCriticalLabel:
                             Control: Label@2.5.1
@@ -638,11 +616,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =15
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="CRITICAL"
-                              Width: =65
-                              X: =Parent.Width - 527
+                              Width: =80
+                              Wrap: =false
+                              X: =Parent.Width - 598
                               Y: =48
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
@@ -656,8 +635,9 @@ Screens:
                               Height: =28
                               Size: =24
                               Text: =Text(Coalesce(varAuditWarningCount,0))
-                              Width: =78
-                              X: =Parent.Width - 461
+                              Width: =95
+                              Wrap: =false
+                              X: =Parent.Width - 510
                               Y: =18
                         - lblKpiWarningsLabel:
                             Control: Label@2.5.1
@@ -667,11 +647,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =15
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="WARNINGS"
-                              Width: =78
-                              X: =Parent.Width - 461
+                              Width: =95
+                              Wrap: =false
+                              X: =Parent.Width - 510
                               Y: =48
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
@@ -685,8 +666,9 @@ Screens:
                               Height: =28
                               Size: =24
                               Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
-                              Width: =100
-                              X: =Parent.Width - 382
+                              Width: =125
+                              Wrap: =false
+                              X: =Parent.Width - 407
                               Y: =18
                         - lblKpiAgentsLabel:
                             Control: Label@2.5.1
@@ -696,11 +678,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =15
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="AGENTS ACTIVE"
-                              Width: =100
-                              X: =Parent.Width - 382
+                              Width: =125
+                              Wrap: =false
+                              X: =Parent.Width - 407
                               Y: =48
                         - lblVersionTag:
                             Control: Label@2.5.1
@@ -718,6 +701,7 @@ Screens:
                               Size: =12
                               Text: =varAppVersion
                               Width: =117
+                              Wrap: =false
                               X: =Parent.Width - 281
                               Y: =23
                         - lblToggleLeftText:
@@ -728,11 +712,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =15
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="DARK"
-                              Width: =40
-                              X: =Parent.Width - 163
+                              Width: =48
+                              Wrap: =false
+                              X: =Parent.Width - 176
                               Y: =35
                         - tglTheme:
                             Control: Classic/Toggle@2.1.0
@@ -757,10 +742,11 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =15
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="LIGHT"
-                              Width: =55
+                              Width: =58
+                              Wrap: =false
                               X: =Parent.Width - 56
                               Y: =35
                   - lblDebugStatusCallError:
