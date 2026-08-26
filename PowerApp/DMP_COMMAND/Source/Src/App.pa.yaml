@@ -64,121 +64,14 @@ App:
       Set(varStatusLastRefreshed,Blank());
       Set(varAutoRefreshMinutes,0);
       Set(varIsRefreshing,false);
+      Set(varLastAttemptTimestamp,Blank());
+      Set(varInitialRefreshDone,false);
+      Set(varStatusCallError, "")
 
-      // Live status refresh from Agent 4 (Status Check)
-      Set(varAppStartTimestamp, Now());
-      Set(varStatusCallError, "");
-      Set(varIsRefreshing, true);
-
-      Set(
-          varStatusResult,
-          IfError(
-              'DMPAgent4(StatusCheck)=>VS'.Run(),
-              Set(varStatusCallError, FirstError.Message);
-              Blank()
-          )
-      );
-      Set(varIsRefreshing, false);
-
-      // Timestamp only advances on a successful refresh, so the header always shows when the data was genuinely last valid.
-      Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
-
-      Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
-
-      Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
-      Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
-
-      Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
-      Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
-      Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
-
-      Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
-      Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
-      Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
-
-      Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-      Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-      Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-      Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-      Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
-      Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
-
-      Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
-      Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
-
-      Set(
-          varAuditRunSummaryCount,
-          IfError(
-              Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount),
-              varAuditRunSummaryCount
-          )
-      );
-
-      Set(
-          varAuditWarningCount,
-          IfError(
-              Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount),
-              varAuditWarningCount
-          )
-      );
-
-      Set(
-          varAuditFailedCount,
-          IfError(
-              Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount),
-              varAuditFailedCount
-          )
-      );
-
-      Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
-
-      Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
-
-      Set(
-          varNextMilestones,
-          If(
-              IsBlank(varStatusResult.nextmilestones),
-              varNextMilestones,
-              varStatusResult.nextmilestones
-          )
-      );
-
-      // Health Calculation
-      Set(
-          varAgentsHealthyCount,
-          If(varEmergencyReportExists, 1, 0) +
-          If(varInternalDomainsExists, 1, 0) +
-          If(varExternalDomainsExists, 1, 0) +
-          If(varCounterExists, 1, 0) +
-          If(varAuditTrailExists, 1, 0) +
-          If(varAgent6Healthy, 1, 0)
-      );
-
-      Set(
-          varSystemHealthPercent,
-          RoundUp((varAgentsHealthyCount / 6) * 100, 0)
-      );
-
-      // Current Mode
-      Set(
-          varOperationalModeIsDMP,
-          EndsWith(
-              Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"),
-              "_DMP"
-          )
-      );
-
-      Set(
-          varEnvironmentIsPROD,
-          StartsWith(
-              Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"),
-              "PROD"
-          )
-      );
-
-      // Only now (after both toggle-bound Default variables above have their real values)
-      // is it safe to lift the guard - this prevents the Default-driven OnCheck/OnUncheck
-      // that fires while these variables are being set above from calling Agent 5 for real.
-      Set(varSuppressToggleEvents,false)
+      // NOTE: The actual Agent 4 status refresh call is deliberately NOT made here in App.OnStart.
+      // Data source connections are not always fully ready at this very early point in the app lifecycle,
+      // which caused the initial automatic refresh to silently fail while a later manual call worked fine.
+      // See scrHome.OnVisible for the real first refresh call (runs once the screen is actually loaded) -
+      // that is also where varSuppressToggleEvents is finally lifted, once real Agent 4 values are in.
     StartScreen: =scrHome
     Theme: =PowerAppsTheme

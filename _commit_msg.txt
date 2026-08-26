@@ -1,0 +1,11 @@
+Fix "Autoplay doesn't work" for real: moved the initial Agent 4 status refresh call out of App.OnStart into scrHome.OnVisible (guarded by a new varInitialRefreshDone flag so it only runs once per session). Root cause: data source connections are not always fully ready at the very early App.OnStart point in the app lifecycle, so the automatic call silently failed while the identical call in a manually-clicked button worked reliably a moment later - this is a documented Power Apps platform quirk. The toggle-event suppression guard (varSuppressToggleEvents) is now correctly lifted at the end of this OnVisible refresh instead of unconditionally in OnStart, preserving the original safety behavior.
+
+Fix missing/blank timestamp on "Configuration loaded": the AUTOMATION STATUS tile displayed varAppStartTimestamp, which was only ever set once in App.OnStart and never updated by the Now button or the auto-refresh Timer - so after any refresh other than the very first one, the timestamp shown was stale or blank. Replaced with a new varLastAttemptTimestamp that is set at the start of every refresh attempt (initial OnVisible call, manual Now click, and Timer-triggered refresh alike).
+
+Widened and spread out the CRITICAL/WARNINGS/AGENTS ACTIVE KPI boxes per user feedback (text was being truncated with an ellipsis) and shifted the whole cluster further left, away from the version tag/toggle group, for better legibility and breathing room (Critical 80->90px, Warnings 95->110px, Agents Active 125->140px; gaps between columns doubled from 8px to roughly 14-16px).
+
+Clarified for the user: the "flying dots" indicator during a flow call is native Power Apps Player/Studio chrome, not a customizable in-app element - the app's own "Refresh ongoing" label is the intended custom substitute to watch instead.
+
+Bump PowerApp_Version.txt to v1.4.0, Solution -> 7.9.11
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
