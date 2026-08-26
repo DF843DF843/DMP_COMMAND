@@ -371,8 +371,8 @@ Screens:
                       Variant: ManualLayout
                       Properties:
                         Fill: =RGBA(32,23,81,1)
-                        Height: =100
-                        LayoutMaxHeight: =100
+                        Height: =84
+                        LayoutMaxHeight: =84
                         RadiusBottomLeft: =18
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
@@ -386,13 +386,13 @@ Screens:
                               Color: =RGBA(255,255,255,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =26
-                              Size: =20
+                              Height: =28
+                              Size: =22
                               Text: ="DMP COMMAND"
                               Width: =550
                               Wrap: =false
                               X: =20
-                              Y: =18
+                              Y: =10
                         - lblAppSubtitle:
                             Control: Label@2.5.1
                             Properties:
@@ -402,12 +402,215 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =20
-                              Size: =10.5
+                              Size: =11.5
                               Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                               Width: =550
                               Wrap: =false
                               X: =20
-                              Y: =48
+                              Y: =40
+                        - lblStatusLastRefreshed:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(160,155,190,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =14
+                              Size: =8.5
+                              Text: =If(IsBlank(varStatusLastRefreshed), "Noch nicht aktualisiert", "Zuletzt aktualisiert: " & Text(varStatusLastRefreshed, "hh:mm:ss") & " Uhr")
+                              Width: =230
+                              Wrap: =false
+                              X: =20
+                              Y: =62
+                        - lblAutoRefreshCountdown:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(160,155,190,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =14
+                              Size: =8.5
+                              Text: =If(varAutoRefreshMinutes<=0, "Auto-Update: Aus", "Nächstes Update in " & Text(RoundDown(varAutoRefreshSecondsRemaining/60,0),"00") & ":" & Text(Mod(varAutoRefreshSecondsRemaining,60),"00"))
+                              Width: =170
+                              Wrap: =false
+                              X: =258
+                              Y: =62
+                        - lblAutoRefreshChoiceLabel:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(160,155,190,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =14
+                              Size: =8.5
+                              Text: ="Auto-Update:"
+                              Width: =90
+                              Wrap: =false
+                              X: =436
+                              Y: =62
+                        - btnAutoRefreshOff:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varAutoRefreshMinutes=0, RGBA(8,33,15,1), RGBA(200,195,225,1))
+                              Fill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
+                              Font: =Font.'Segoe UI'
+                              Height: =20
+                              HoverFill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
+                              OnSelect: |-
+                                =Set(varAutoRefreshMinutes, 0);
+                                Set(varAutoRefreshSecondsRemaining, 0)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =8
+                              Text: ="Aus"
+                              Width: =36
+                              X: =526
+                              Y: =59
+                        - btnAutoRefresh2:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varAutoRefreshMinutes=2, RGBA(8,33,15,1), RGBA(200,195,225,1))
+                              Fill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
+                              Font: =Font.'Segoe UI'
+                              Height: =20
+                              HoverFill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
+                              OnSelect: |-
+                                =Set(varAutoRefreshMinutes, 2);
+                                Set(varAutoRefreshSecondsRemaining, 2*60)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =8
+                              Text: ="2m"
+                              Width: =36
+                              X: =566
+                              Y: =59
+                        - btnAutoRefresh5:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varAutoRefreshMinutes=5, RGBA(8,33,15,1), RGBA(200,195,225,1))
+                              Fill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
+                              Font: =Font.'Segoe UI'
+                              Height: =20
+                              HoverFill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
+                              OnSelect: |-
+                                =Set(varAutoRefreshMinutes, 5);
+                                Set(varAutoRefreshSecondsRemaining, 5*60)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =8
+                              Text: ="5m"
+                              Width: =36
+                              X: =606
+                              Y: =59
+                        - btnAutoRefresh10:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varAutoRefreshMinutes=10, RGBA(8,33,15,1), RGBA(200,195,225,1))
+                              Fill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
+                              Font: =Font.'Segoe UI'
+                              Height: =20
+                              HoverFill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
+                              OnSelect: |-
+                                =Set(varAutoRefreshMinutes, 10);
+                                Set(varAutoRefreshSecondsRemaining, 10*60)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =8
+                              Text: ="10m"
+                              Width: =40
+                              X: =646
+                              Y: =59
+                        - btnAutoRefresh15:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varAutoRefreshMinutes=15, RGBA(8,33,15,1), RGBA(200,195,225,1))
+                              Fill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
+                              Font: =Font.'Segoe UI'
+                              Height: =20
+                              HoverFill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
+                              OnSelect: |-
+                                =Set(varAutoRefreshMinutes, 15);
+                                Set(varAutoRefreshSecondsRemaining, 15*60)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =8
+                              Text: ="15m"
+                              Width: =40
+                              X: =690
+                              Y: =59
+                        - tmrAutoRefreshTick:
+                            Control: Timer@1.1.1
+                            Properties:
+                              Duration: =1000
+                              OnTimerEnd: |-
+                                =If(
+                                    varAutoRefreshMinutes<=0,
+                                    Set(varAutoRefreshSecondsRemaining, 0),
+                                    If(
+                                        varAutoRefreshSecondsRemaining<=1,
+                                        Set(varStatusCallError, "");
+                                        Set(
+                                            varStatusResult,
+                                            IfError(
+                                                'DMPAgent4(StatusCheck)=>VS'.Run(),
+                                                Set(varStatusCallError, FirstError.Message);
+                                                Blank()
+                                            )
+                                        );
+                                        Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
+                                        Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+                                        Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
+                                        Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+                                        Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
+                                        Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
+                                        Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+                                        Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
+                                        Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
+                                        Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+                                        Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
+                                        Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
+                                        Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
+                                        Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
+                                        Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                        Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+                                        Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+                                        Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+                                        Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
+                                        Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                                        Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                                        Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
+                                        Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                        Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
+                                        Set(
+                                            varAgentsHealthyCount,
+                                            If(varEmergencyReportExists,1,0) +
+                                            If(varInternalDomainsExists,1,0) +
+                                            If(varExternalDomainsExists,1,0) +
+                                            If(varCounterExists,1,0) +
+                                            If(varAuditTrailExists,1,0) +
+                                            If(varAgent6Healthy,1,0)
+                                        );
+                                        Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                        Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
+                                        ,
+                                        Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
+                                    )
+                                )
+                              Repeat: =true
+                              Start: =true
+                              Visible: =false
                         - lblKpiCriticalValue:
                             Control: Label@2.5.1
                             Properties:
@@ -417,12 +620,12 @@ Screens:
                               Color: =If(Coalesce(varAuditFailedCount,0)>0, RGBA(209,52,56,1), RGBA(0,206,125,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =26
-                              Size: =22
+                              Height: =28
+                              Size: =24
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =65
                               X: =Parent.Width - 527
-                              Y: =30
+                              Y: =18
                         - lblKpiCriticalLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -431,12 +634,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =9
+                              Height: =15
+                              Size: =10
                               Text: ="CRITICAL"
                               Width: =65
                               X: =Parent.Width - 527
-                              Y: =56
+                              Y: =48
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -446,12 +649,12 @@ Screens:
                               Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =26
-                              Size: =22
+                              Height: =28
+                              Size: =24
                               Text: =Text(Coalesce(varAuditWarningCount,0))
                               Width: =78
                               X: =Parent.Width - 461
-                              Y: =30
+                              Y: =18
                         - lblKpiWarningsLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -460,12 +663,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =9
+                              Height: =15
+                              Size: =10
                               Text: ="WARNINGS"
                               Width: =78
                               X: =Parent.Width - 461
-                              Y: =56
+                              Y: =48
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -475,12 +678,12 @@ Screens:
                               Color: =If(Coalesce(varAgentsHealthyCount,0)>=6, RGBA(0,206,125,1), RGBA(255,159,10,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =26
-                              Size: =22
+                              Height: =28
+                              Size: =24
                               Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
                               Width: =100
                               X: =Parent.Width - 382
-                              Y: =30
+                              Y: =18
                         - lblKpiAgentsLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -489,12 +692,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =9
+                              Height: =15
+                              Size: =10
                               Text: ="AGENTS ACTIVE"
                               Width: =100
                               X: =Parent.Width - 382
-                              Y: =56
+                              Y: =48
                         - lblVersionTag:
                             Control: Label@2.5.1
                             Properties:
@@ -505,13 +708,14 @@ Screens:
                               Fill: =RGBA(0,206,125,0.28)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =44
+                              Height: =38
                               PaddingLeft: =1
                               PaddingRight: =1
+                              Size: =12
                               Text: =varAppVersion
                               Width: =117
                               X: =Parent.Width - 281
-                              Y: =28
+                              Y: =23
                         - lblToggleLeftText:
                             Control: Label@2.5.1
                             Properties:
@@ -520,12 +724,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =9
+                              Height: =15
+                              Size: =10
                               Text: ="DARK"
                               Width: =40
                               X: =Parent.Width - 163
-                              Y: =43
+                              Y: =35
                         - tglTheme:
                             Control: Classic/Toggle@2.1.0
                             Properties:
@@ -541,7 +745,7 @@ Screens:
                               TrueText: =""
                               Width: =50
                               X: =Parent.Width - 107
-                              Y: =38
+                              Y: =30
                         - lblToggleRightText:
                             Control: Label@2.5.1
                             Properties:
@@ -549,12 +753,12 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =14
-                              Size: =9
+                              Height: =15
+                              Size: =10
                               Text: ="LIGHT"
                               Width: =55
                               X: =Parent.Width - 56
-                              Y: =43
+                              Y: =35
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
                       Properties:

@@ -92,11 +92,11 @@
               {
                 "name": "PowerAppVersionText",
                 "type": "string",
-                "value": "v1.2.0"
+                "value": ""
               }
             ]
           },
-          "description": "Stores the Power App version text; overwritten from the version file in SCOPE_PowerAppVersion_Read, keeps this fallback default if that read fails."
+          "description": "Stores the Power App version text; overwritten from the version file in SCOPE_PowerAppVersion_Read. Empty fallback default (not a hardcoded old version) so a failed/skipped file read shows nothing in the Cockpit rather than a stale version number."
         },
         "VAR_AuditOutcome": {
           "runAfter": {
