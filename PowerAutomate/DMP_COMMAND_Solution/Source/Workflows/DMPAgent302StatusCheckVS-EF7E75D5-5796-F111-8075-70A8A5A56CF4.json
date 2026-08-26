@@ -2964,15 +2964,18 @@
             "SET_PowerAppVersionText": {
               "runAfter": {
                 "GET_PowerAppVersion_Content": [
-                  "Succeeded"
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "PowerAppVersionText",
-                "value": "@trim(string(body('GET_PowerAppVersion_Content')))"
+                "value": "@trim(string(coalesce(actions('GET_PowerAppVersion_Content')?['outputs']?['body'], variables('PowerAppVersionText'))))"
               },
-              "description": "Stores the trimmed Power App version text for inclusion in the status response. Keeps the initialized fallback default if the file read failed."
+              "description": "Stores the trimmed Power App version text. Always runs (even if the file read failed/timed out) so this scope stays Succeeded and does not fail the whole flow run - a failed read keeps the current (empty) fallback instead."
             }
           }
         },
