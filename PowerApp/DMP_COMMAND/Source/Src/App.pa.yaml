@@ -55,6 +55,8 @@ App:
 
       Set(varAgent6Healthy,true);
 
+      Set(varNextMilestones,Filter(Table({phase:"",milestone:"",responsibility:"",status:""}),false));
+
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
       Set(varDarkMode,true);
@@ -123,6 +125,15 @@ App:
       Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
 
       Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+
+      Set(
+          varNextMilestones,
+          If(
+              IsBlank(varStatusResult.nextmilestones),
+              varNextMilestones,
+              varStatusResult.nextmilestones
+          )
+      );
 
       // Health Calculation
       Set(

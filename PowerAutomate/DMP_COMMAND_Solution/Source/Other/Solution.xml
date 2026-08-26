@@ -6,7 +6,7 @@
       <LocalizedName description="DMP_COMMAND_Solution" languagecode="1033" />
     </LocalizedNames>
     <Descriptions />
-    <Version>7.8.7</Version>
+    <Version>7.10.7</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>DMPCommand</UniqueName>

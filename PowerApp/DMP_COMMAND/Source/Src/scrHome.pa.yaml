@@ -1519,6 +1519,253 @@ Screens:
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
                       Children:
+                        - lblRealNextStepsTitle:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =18
+                              Size: =11
+                              Text: ="NEXT STEPS  ·  Default Management Process"
+                        - conNoMilestonesRow:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)=0
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblNoMilestones:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: ="No pending milestones - Default Management Process is currently idle."
+                        - conMilestoneRow1:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)>=1
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =16
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblMilestone1:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},"→ " & m.milestone)
+                                    Width: =240
+                              - lblMilestone1Detail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
+                                    BorderThickness: =1
+                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    PaddingLeft: =10
+                                    PaddingRight: =10
+                                    Size: =11.5
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                        - conMilestoneRow2:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)>=2
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =16
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblMilestone2:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},"→ " & m.milestone)
+                                    Width: =240
+                              - lblMilestone2Detail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
+                                    BorderThickness: =1
+                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    PaddingLeft: =10
+                                    PaddingRight: =10
+                                    Size: =11.5
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                        - conMilestoneRow3:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)>=3
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =16
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblMilestone3:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},"→ " & m.milestone)
+                                    Width: =240
+                              - lblMilestone3Detail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
+                                    BorderThickness: =1
+                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    PaddingLeft: =10
+                                    PaddingRight: =10
+                                    Size: =11.5
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                        - conMilestoneRow4:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)>=4
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =16
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblMilestone4:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},"→ " & m.milestone)
+                                    Width: =240
+                              - lblMilestone4Detail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
+                                    BorderThickness: =1
+                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    PaddingLeft: =10
+                                    PaddingRight: =10
+                                    Size: =11.5
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                        - conMilestoneRow5:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =CountRows(varNextMilestones)>=5
+                              Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
+                              Height: =36
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =16
+                              LayoutMaxHeight: =36
+                              LayoutMinHeight: =36
+                            Children:
+                              - lblMilestone5:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    Size: =12
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},"→ " & m.milestone)
+                                    Width: =240
+                              - lblMilestone5Detail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
+                                    BorderThickness: =1
+                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    PaddingLeft: =10
+                                    PaddingRight: =10
+                                    Size: =11.5
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                  - conAutomationStatus:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =14
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =14
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
                         - lblNextStepsTitle:
                             Control: Label@2.5.1
                             Properties:
@@ -1529,7 +1776,7 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =18
                               Size: =11
-                              Text: ="NEXT STEPS"
+                              Text: ="AUTOMATION STATUS"
                         - conStep1:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
