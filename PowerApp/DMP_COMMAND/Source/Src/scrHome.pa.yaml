@@ -11,6 +11,7 @@ Screens:
     Properties:
       Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
       LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
+      OnVisible: =Reset(tmrAutoRefreshTick)
     Children:
       - ScreenContainer1:
           Control: GroupContainer@1.5.0
@@ -593,13 +594,13 @@ Screens:
                               Color: =If(Coalesce(varAuditFailedCount,0)>0, RGBA(209,52,56,1), RGBA(0,206,125,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =34
-                              Size: =28
+                              Height: =38
+                              Size: =30
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =80
                               Wrap: =false
                               X: =Parent.Width - 598
-                              Y: =16
+                              Y: =13
                         - lblKpiCriticalLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -608,8 +609,8 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =17
-                              Size: =11
+                              Height: =18
+                              Size: =12
                               Text: ="CRITICAL"
                               Width: =80
                               Wrap: =false
