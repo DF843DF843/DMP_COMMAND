@@ -1,9 +1,0 @@
-Rebuilt the auto-refresh timer to be genuinely reliable when switching intervals: replaced the previous approach (Timer.Duration bound to a formula that changed at runtime, combined with Reset()) with a fixed 1-second-tick Timer plus an app-owned countdown variable (varAutoRefreshSecondsRemaining). Duration/Repeat/AutoStart/Start are now all constant literals (never change), eliminating any uncertainty about whether the platform actually re-reads a changed Duration after Reset() - the Off/2m/5m/10m/15m buttons now simply set the countdown variable directly instead of relying on Reset(). This also let us drop the confusing visible green progress line entirely (was reported as rendering too short/inconsistent) - the countdown is communicated purely through the existing "Next update in MM:SS" text.
-
-Changed the "Now" button's styling to stop looking like a second "selected" state next to "Off": it now shows a distinct green highlight only until the very first successful refresh completes (IsBlank(varStatusLastRefreshed)), then settles into the same muted/neutral look as the other inactive duration buttons.
-
-Widened the version tag box back up (70 -> 95px) to comfortably fit longer version strings, and recalculated the whole right-side header cluster (version tag, DARK, toggle, LIGHT) with tighter but still clash-free gaps to keep everything fitting well including a real (if modest) right margin.
-
-Bump PowerApp_Version.txt to v1.4.2, Solution -> 7.9.14
-
-Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
