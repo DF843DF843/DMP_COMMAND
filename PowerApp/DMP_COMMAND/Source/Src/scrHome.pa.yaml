@@ -68,7 +68,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(8,33,15,1)
                         HoverFill: =RGBA(0,206,125,1)
-                        OnSelect: =Notify("Already on Cockpit", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Already on Cockpit", NotificationType.Information)
                         PaddingLeft: =12
                         PressedColor: =RGBA(8,33,15,1)
                         PressedFill: =RGBA(0,180,110,1)
@@ -85,7 +88,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Notify("Agent Monitoring screen - coming next", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Agent Monitoring screen - coming next", NotificationType.Information)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Agent Monitoring"
@@ -101,7 +107,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Notify("Operational Board screen - coming next", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Operational Board screen - coming next", NotificationType.Information)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Operational Board"
@@ -117,7 +126,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Notify("Audit Trail detail screen - coming next", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Audit Trail detail screen - coming next", NotificationType.Information)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Audit Trail (Detail)"
@@ -133,7 +145,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Notify("Configuration (Lists) screen - coming next", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Configuration (Lists) screen - coming next", NotificationType.Information)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Configuration (Lists)"
@@ -149,7 +164,10 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Notify("Maintenance screen - coming next", NotificationType.Information)
+                        OnSelect: |-
+                          =Set(varShowAdminPanel, false);
+                          Set(varConfirmDeleteMailboxFolders, false);
+                          Notify("Maintenance screen - coming next", NotificationType.Information)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Maintenance"
