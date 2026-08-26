@@ -2843,12 +2843,22 @@
               "type": "Foreach",
               "foreach": "@coalesce(body('GET_OverallProcess_Rows')?['value'], createArray())",
               "actions": {
-                "SET_LastSeenPhase_IfPresent": {
+                "CMP_EffectivePhase": {
                   "runAfter": {},
+                  "type": "Compose",
+                  "inputs": "@if(empty(trim(coalesce(item()?['Phase'], ''))), variables('LastSeenPhase'), trim(item()?['Phase']))",
+                  "description": "Computes the effective Phase for this row (carried forward from the last non-blank one) without the SetVariable action referencing its own variable directly."
+                },
+                "SET_LastSeenPhase_IfPresent": {
+                  "runAfter": {
+                    "CMP_EffectivePhase": [
+                      "Succeeded"
+                    ]
+                  },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "LastSeenPhase",
-                    "value": "@if(empty(trim(coalesce(item()?['Phase'], ''))), variables('LastSeenPhase'), trim(item()?['Phase']))"
+                    "value": "@outputs('CMP_EffectivePhase')"
                   },
                   "description": "Carries the last non-blank Phase value forward onto the following rows that belong to the same merged Phase group."
                 },
