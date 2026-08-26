@@ -63,6 +63,7 @@ App:
       Set(varAppVersion,"");
       Set(varStatusLastRefreshed,Blank());
       Set(varAutoRefreshMinutes,0);
+      Set(varAutoRefreshSecondsRemaining,0);
       Set(varIsRefreshing,false);
       Set(varLastAttemptTimestamp,Blank());
       Set(varInitialRefreshDone,false);

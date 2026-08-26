@@ -475,7 +475,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =12
                               Size: =8.5
-                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/60000,0),"00") & ":" & Text(RoundDown(Mod(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/1000,60),0),"00")))
+                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
                               Width: =430
                               Wrap: =false
                               X: =20
@@ -493,7 +493,7 @@ Screens:
                               HoverFill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 0);
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, 0)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="Off"
@@ -506,11 +506,11 @@ Screens:
                               Align: =Align.Center
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Fill: =RGBA(0,206,125,0.12)
+                              Color: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,1), RGBA(200,195,225,1))
+                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,0.25), RGBA(255,255,255,0.06))
                               Font: =Font.'Segoe UI'
                               Height: =13
-                              HoverFill: =RGBA(0,206,125,0.22)
+                              HoverFill: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,0.35), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varStatusCallError, "");
                                 Set(varLastAttemptTimestamp, Now());
@@ -558,7 +558,7 @@ Screens:
                                     If(varAgent6Healthy,1,0)
                                 );
                                 Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="Now"
@@ -578,7 +578,7 @@ Screens:
                               HoverFill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 2);
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, 2*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="2m"
@@ -598,7 +598,7 @@ Screens:
                               HoverFill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 5);
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, 5*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="5m"
@@ -618,7 +618,7 @@ Screens:
                               HoverFill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 10);
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, 10*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="10m"
@@ -638,7 +638,7 @@ Screens:
                               HoverFill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
                                 =Set(varAutoRefreshMinutes, 15);
-                                Reset(tmrAutoRefreshTick)
+                                Set(varAutoRefreshSecondsRemaining, 15*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
                               Text: ="15m"
@@ -719,66 +719,73 @@ Screens:
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Duration: =varAutoRefreshMinutes*60*1000
-                              Fill: =RGBA(0,206,125,0.4)
-                              Height: =3
+                              Duration: =1000
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =1
                               OnTimerEnd: |-
                                 =If(
-                                    varAutoRefreshMinutes>0,
-                                    Set(varStatusCallError, "");
-                                    Set(varLastAttemptTimestamp, Now());
-                                    Set(varIsRefreshing, true);
-                                    Set(
-                                        varStatusResult,
-                                        IfError(
-                                            'DMPAgent4(StatusCheck)=>VS'.Run(),
-                                            Set(varStatusCallError, FirstError.Message);
-                                            Blank()
-                                        )
-                                    );
-                                    Set(varIsRefreshing, false);
-                                    Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
-                                    Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
-                                    Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
-                                    Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
-                                    Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
-                                    Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
-                                    Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
-                                    Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
-                                    Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
-                                    Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
-                                    Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                    Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                    Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                    Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                    Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
-                                    Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
-                                    Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
-                                    Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
-                                    Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
-                                    Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
-                                    Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
-                                    Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
-                                    Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
-                                    Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
-                                    Set(
-                                        varAgentsHealthyCount,
-                                        If(varEmergencyReportExists,1,0) +
-                                        If(varInternalDomainsExists,1,0) +
-                                        If(varExternalDomainsExists,1,0) +
-                                        If(varCounterExists,1,0) +
-                                        If(varAuditTrailExists,1,0) +
-                                        If(varAgent6Healthy,1,0)
-                                    );
-                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0))
+                                    varAutoRefreshMinutes<=0,
+                                    Set(varAutoRefreshSecondsRemaining, 0),
+                                    If(
+                                        varAutoRefreshSecondsRemaining<=1,
+                                        Set(varStatusCallError, "");
+                                        Set(varLastAttemptTimestamp, Now());
+                                        Set(varIsRefreshing, true);
+                                        Set(
+                                            varStatusResult,
+                                            IfError(
+                                                'DMPAgent4(StatusCheck)=>VS'.Run(),
+                                                Set(varStatusCallError, FirstError.Message);
+                                                Blank()
+                                            )
+                                        );
+                                        Set(varIsRefreshing, false);
+                                        Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
+                                        Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+                                        Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
+                                        Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+                                        Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
+                                        Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
+                                        Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+                                        Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
+                                        Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
+                                        Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+                                        Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
+                                        Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
+                                        Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
+                                        Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
+                                        Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                        Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+                                        Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+                                        Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+                                        Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
+                                        Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                                        Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                                        Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
+                                        Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                        Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
+                                        Set(
+                                            varAgentsHealthyCount,
+                                            If(varEmergencyReportExists,1,0) +
+                                            If(varInternalDomainsExists,1,0) +
+                                            If(varExternalDomainsExists,1,0) +
+                                            If(varCounterExists,1,0) +
+                                            If(varAuditTrailExists,1,0) +
+                                            If(varAgent6Healthy,1,0)
+                                        );
+                                        Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                        Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
+                                        ,
+                                        Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
+                                    )
                                 )
                               Repeat: =true
-                              AutoStart: =varAutoRefreshMinutes>0
-                              Start: =varAutoRefreshMinutes>0
+                              AutoStart: =true
+                              Start: =true
                               Visible: =true
-                              Width: =620
-                              X: =20
-                              Y: =81
+                              Width: =1
+                              X: =0
+                              Y: =2
                         - lblKpiCriticalValue:
                             Control: Label@2.5.1
                             Properties:
@@ -887,9 +894,9 @@ Screens:
                               PaddingRight: =1
                               Size: =12
                               Text: =varAppVersion
-                              Width: =70
+                              Width: =95
                               Wrap: =false
-                              X: =Parent.Width - 258
+                              X: =Parent.Width - 273
                               Y: =23
                         - lblToggleLeftText:
                             Control: Label@2.5.1
@@ -904,7 +911,7 @@ Screens:
                               Text: ="DARK"
                               Width: =48
                               Wrap: =false
-                              X: =Parent.Width - 180
+                              X: =Parent.Width - 168
                               Y: =35
                         - tglTheme:
                             Control: Classic/Toggle@2.1.0
@@ -920,7 +927,7 @@ Screens:
                               TrueFill: =RGBA(0,206,125,1)
                               TrueText: =""
                               Width: =50
-                              X: =Parent.Width - 124
+                              X: =Parent.Width - 114
                               Y: =30
                         - lblToggleRightText:
                             Control: Label@2.5.1
@@ -934,7 +941,7 @@ Screens:
                               Text: ="LIGHT"
                               Width: =58
                               Wrap: =false
-                              X: =Parent.Width - 70
+                              X: =Parent.Width - 60
                               Y: =35
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
