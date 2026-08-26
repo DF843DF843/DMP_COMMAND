@@ -63,7 +63,6 @@ App:
       Set(varAppVersion,"");
       Set(varStatusLastRefreshed,Blank());
       Set(varAutoRefreshMinutes,5);
-      Set(varAutoRefreshSecondsRemaining,varAutoRefreshMinutes*60);
 
       // Live status refresh from Agent 4 (Status Check)
       Set(varAppStartTimestamp, Now());
