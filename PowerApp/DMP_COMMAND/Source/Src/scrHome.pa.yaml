@@ -588,10 +588,14 @@ Screens:
                               Repeat: =true
                               Start: =true
                               Visible: =true
+                              Fill: =RGBA(0,0,0,0)
+                              BorderColor: =RGBA(0,0,0,0)
+                              HandOffColor: =RGBA(0,0,0,0)
+                              Color: =RGBA(0,0,0,0)
                               Height: =1
                               Width: =1
-                              X: =-50
-                              Y: =-50
+                              X: =2
+                              Y: =2
                         - lblKpiCriticalValue:
                             Control: Label@2.5.1
                             Properties:
