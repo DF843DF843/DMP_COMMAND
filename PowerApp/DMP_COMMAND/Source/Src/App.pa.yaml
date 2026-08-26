@@ -53,6 +53,8 @@ App:
       Set(varAuditLastFailedTimestamp,"");
       Set(varAuditLastModified,Blank());
 
+      Set(varAgent6Healthy,true);
+
       Set(varEmergencyReportUploadResult,Blank());
       Set(varOpModeResult,Blank());
       Set(varDarkMode,true);
@@ -120,6 +122,8 @@ App:
 
       Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
 
+      Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+
       // Health Calculation
       Set(
           varAgentsHealthyCount,
@@ -127,12 +131,13 @@ App:
           If(varInternalDomainsExists, 1, 0) +
           If(varExternalDomainsExists, 1, 0) +
           If(varCounterExists, 1, 0) +
-          If(varAuditTrailExists, 1, 0)
+          If(varAuditTrailExists, 1, 0) +
+          If(varAgent6Healthy, 1, 0)
       );
 
       Set(
           varSystemHealthPercent,
-          RoundUp((varAgentsHealthyCount / 5) * 100, 0)
+          RoundUp((varAgentsHealthyCount / 6) * 100, 0)
       );
 
       // Current Mode

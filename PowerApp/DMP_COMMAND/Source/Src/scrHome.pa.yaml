@@ -454,12 +454,12 @@ Screens:
                               Align: =Align.Center
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =If(Coalesce(varAgentsHealthyCount,0)>=5, RGBA(0,206,125,1), RGBA(255,159,10,1))
+                              Color: =If(Coalesce(varAgentsHealthyCount,0)>=6, RGBA(0,206,125,1), RGBA(255,159,10,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =22
-                              Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
+                              Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
                               Width: =100
                               X: =Parent.Width - 382
                               Y: =30

@@ -400,6 +400,11 @@
                   "type": "string",
                   "x-ms-content-hint": "TEXT",
                   "x-ms-dynamically-added": true
+                },
+                "agent6healthy": {
+                  "title": "Agent6Healthy",
+                  "x-ms-dynamically-added": true,
+                  "type": "boolean"
                 }
               },
               "additionalProperties": {}
@@ -436,7 +441,8 @@
               "auditlastfailuretimestamp": "@{variables('AuditLastFailureTimestamp')}",
               "auditlastauditeventtimestamp": "@{variables('AuditLastAuditEventTimestamp')}",
               "currentoperationmode": "@{variables('OperationMode')}",
-              "appversion": "@{variables('PowerAppVersionText')}"
+              "appversion": "@{variables('PowerAppVersionText')}",
+              "agent6healthy": "@variables('Agent6Healthy')"
             }
           },
           "description": "Returns Control Board status."
@@ -827,6 +833,24 @@
             ]
           },
           "description": "Number of audit entries of flows with status \"failed\"."
+        },
+        "VAR_Agent6Healthy": {
+          "runAfter": {
+            "VAR_AuditFailedCount": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Agent6Healthy",
+                "type": "boolean",
+                "value": true
+              }
+            ]
+          },
+          "description": "Tracks whether Agent 6 (Admin Functions) is healthy, i.e. has no recorded failed runs in Agent Audit Summary. Defaults to true so a never-yet-run admin tool is not falsely shown as unhealthy."
         },
         "VAR_AuditLastRunTimestamp": {
           "runAfter": {
@@ -2939,6 +2963,30 @@
               },
               "description": "Reads Agent 5's row from Agent Audit Summary for aggregation."
             },
+            "GET_AuditSummary_Agent06": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 06"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 6's row from Agent Audit Summary for aggregation. Tolerated as Failed downstream so a not-yet-seeded row never blocks the whole status check."
+            },
             "SET_AggregatedFailedStepsCount": {
               "runAfter": {
                 "GET_AuditSummary_Agent01": [
@@ -2955,14 +3003,20 @@
                 ],
                 "GET_AuditSummary_Agent05": [
                   "Succeeded"
+                ],
+                "GET_AuditSummary_Agent06": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "AuditFailedCount",
-                "value": "@add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedStepsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedStepsCount'],0)))), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedStepsCount'],0)))"
+                "value": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent03')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent06')?['FailedStepsCount'],0)))"
               },
-              "description": "Sums the FailedStepsCount column across all 5 agent rows in Agent Audit Summary."
+              "description": "Sums the FailedStepsCount column across all 6 agent rows in Agent Audit Summary."
             },
             "SET_AggregatedWarningStepsCount": {
               "runAfter": {
@@ -2973,19 +3027,32 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AuditWarningCount",
-                "value": "@add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['WarningStepsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['WarningStepsCount'],0)))), int(coalesce(body('GET_AuditSummary_Agent05')?['WarningStepsCount'],0)))"
+                "value": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent03')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent04')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent05')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_Agent06')?['WarningStepsCount'],0)))"
               },
-              "description": "Sums the WarningStepsCount column across all 5 agent rows in Agent Audit Summary."
+              "description": "Sums the WarningStepsCount column across all 6 agent rows in Agent Audit Summary."
             },
-            "CMP_TotalRunsPerAgent": {
+            "SET_Agent6Healthy": {
               "runAfter": {
                 "SET_AggregatedWarningStepsCount": [
                   "Succeeded"
                 ]
               },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Agent6Healthy",
+                "value": "@equals(int(coalesce(body('GET_AuditSummary_Agent06')?['FailedRunsCount'],0)), 0)"
+              },
+              "description": "Marks Agent 6 as healthy when it has no recorded failed runs in Agent Audit Summary, consistent with how the other 5 agents' health is derived."
+            },
+            "CMP_TotalRunsPerAgent": {
+              "runAfter": {
+                "SET_Agent6Healthy": [
+                  "Succeeded"
+                ]
+              },
               "type": "Compose",
-              "inputs": "@createArray(\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent02')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent02')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent03')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent04')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent04')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent05')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent05')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['StartedRunsCount'],0))))\r\n)",
-              "description": "Computes each agent's total run count (Succeeded+Failed+Warning+Started) as an array, one element per agent."
+              "inputs": "@createArray(\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent01')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent01')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent01')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent02')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent02')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent02')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent03')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent03')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent03')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent04')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent04')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent04')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent05')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent05')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent05')?['StartedRunsCount'],0)))),\r\n  add(add(int(coalesce(body('GET_AuditSummary_Agent06')?['SucceededRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent06')?['FailedRunsCount'],0))), add(int(coalesce(body('GET_AuditSummary_Agent06')?['WarningRunsCount'],0)), int(coalesce(body('GET_AuditSummary_Agent06')?['StartedRunsCount'],0))))\r\n)",
+              "description": "Computes each agent's total run count (Succeeded+Failed+Warning+Started) as an array, one element per agent, for all 6 agents."
             },
             "SET_AggregatedRunSummaryCount": {
               "runAfter": {
@@ -2996,7 +3063,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AuditRunSummaryCount",
-                "value": "@add(add(int(outputs('CMP_TotalRunsPerAgent')?[0]), int(outputs('CMP_TotalRunsPerAgent')?[1])), add(add(int(outputs('CMP_TotalRunsPerAgent')?[2]), int(outputs('CMP_TotalRunsPerAgent')?[3])), int(outputs('CMP_TotalRunsPerAgent')?[4])))"
+                "value": "@add(add(add(int(outputs('CMP_TotalRunsPerAgent')?[0]), int(outputs('CMP_TotalRunsPerAgent')?[1])), add(add(int(outputs('CMP_TotalRunsPerAgent')?[2]), int(outputs('CMP_TotalRunsPerAgent')?[3])), int(outputs('CMP_TotalRunsPerAgent')?[4]))), int(outputs('CMP_TotalRunsPerAgent')?[5]))"
               },
               "description": "Sums the per-agent total run counts into the system-wide AuditRunSummaryCount shown on the Control Board."
             }

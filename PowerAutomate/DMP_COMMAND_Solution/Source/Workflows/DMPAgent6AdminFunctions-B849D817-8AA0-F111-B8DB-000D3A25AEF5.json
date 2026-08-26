@@ -173,9 +173,45 @@
           },
           "description": "Buffers the display names of folders actually deleted, for the result message."
         },
-        "GET_DMP_Command_Configuration": {
+        "VAR_AuditOutcome": {
           "runAfter": {
             "VAR_DeletedFolderNames": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditOutcome",
+                "type": "string",
+                "value": "Started"
+              }
+            ]
+          },
+          "description": "Stores this run's final outcome (Succeeded/Failed), derived from the requested admin action's own result once it has completed."
+        },
+        "VAR_WorkflowPath": {
+          "runAfter": {
+            "VAR_AuditOutcome": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WorkflowPath",
+                "type": "string",
+                "value": "Agent6_AdminFunctions"
+              }
+            ]
+          },
+          "description": "Identifies this flow's path in the audit trail and dashboard status row."
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_WorkflowPath": [
               "Succeeded"
             ]
           },
@@ -453,9 +489,230 @@
           },
           "description": "Dispatches to the requested admin/test-only action. Extensible: future admin actions (e.g. renaming a folder for archiving) can be added as additional cases without touching the delete logic."
         },
-        "RESPOND_Result": {
+        "SET_AuditOutcome_FromResult": {
           "runAfter": {
             "SWITCH_RequestedAction": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "AuditOutcome",
+            "value": "@if(variables('ResultSuccess'), 'Succeeded', 'Failed')"
+          },
+          "description": "Determines the final AuditOutcome from the admin action's own result, mirroring Agent 4's pattern since Agent 6 has one linear action rather than granular branching."
+        },
+        "SCOPE_AuditTrail_Write": {
+          "runAfter": {
+            "SET_AuditOutcome_FromResult": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Writes a single run-summary row for this admin action to the central audit trail.",
+          "actions": {
+            "WRITE_RunSummary_To_AuditTrail": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                  "dateTimeFormat": "ISO 8601",
+                  "item/TimestampUtc": "@utcNow()",
+                  "item/RunId": "@workflow()?['run']?['name']",
+                  "item/WorkflowPath": "@variables('WorkflowPath')",
+                  "item/StepName": "AdminAction",
+                  "item/StepStatus": "@variables('AuditOutcome')",
+                  "item/KeyOutput": "@concat(variables('RequestedAction'), ': ', variables('ResultMessage'))",
+                  "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000),'0.00')",
+                  "item/ActionType": "AdminAction",
+                  "item/Direction": "Internal",
+                  "item/Recipient": "DMP COMMAND GUI",
+                  "item/Decision": "@if(variables('ResultSuccess'), 'admin_action_completed', 'admin_action_failed')",
+                  "item/Sender": "@variables('InitiatedBy')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "AddRowV2"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Writes the run summary for this admin action to the central audit trail."
+            }
+          }
+        },
+        "SCOPE_AuditSummary_Write": {
+          "runAfter": {
+            "SCOPE_AuditTrail_Write": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Scope",
+          "description": "Increments Agent 6's own Runs counter in Agent Audit Summary after the admin action has completed.",
+          "actions": {
+            "GET_AgentSummaryRow_ForRun": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 06"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads Agent 6's current Runs counters from Agent Audit Summary."
+            },
+            "SET_NewRunsCount": {
+              "runAfter": {
+                "GET_AgentSummaryRow_ForRun": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "NewRunsCount",
+                "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForRun')?[concat(variables('AuditOutcome'),'RunsCount')],0)), 1)"
+              },
+              "description": "Computes the incremented Runs counter value based on this run's final AuditOutcome."
+            },
+            "PATCH_AgentSummaryRow_ForRun": {
+              "runAfter": {
+                "SET_NewRunsCount": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 06",
+                  "item": "@json(concat('{\"', variables('AuditOutcome'), 'RunsCount\": ', string(variables('NewRunsCount')), ', \"', variables('AuditOutcome'), 'RunsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Persists the incremented Runs counter and its last-update timestamp back to Agent Audit Summary."
+            }
+          }
+        },
+        "SCOPE_StatusRow_Update": {
+          "runAfter": {
+            "SCOPE_AuditSummary_Write": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "type": "Scope",
+          "description": "Updates the Agent_06 dashboard status row after the admin action has completed.",
+          "actions": {
+            "GET_StatusRow_Agent_06": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "$filter": "AgentKey eq 'Agent_06'",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads the Agent_06 dashboard status record from DMP Command Agent Status."
+            },
+            "UPDATE_StatusRow_Agent_06": {
+              "runAfter": {
+                "GET_StatusRow_Agent_06": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                  "table": "632dfbf4-69b5-4e8a-924b-e2624a50d5a5",
+                  "id": "@first(body('GET_StatusRow_Agent_06')?['value'])?['ID']",
+                  "item/AgentDisplayName": "Admin Functions",
+                  "item/CurrentStatus/Value": "@if(variables('ResultSuccess'), 'Operational', 'Failed')",
+                  "item/LastUpdateTimestamp": "@utcNow()",
+                  "item/LastRunTimestamp": "@utcNow()",
+                  "item/LastSuccessTimestamp": "@if(variables('ResultSuccess'), utcNow(), first(body('GET_StatusRow_Agent_06')?['value'])?['LastSuccessTimestamp'])",
+                  "item/LastRunResult/Value": "@if(variables('ResultSuccess'), 'Succeeded', 'Failed')",
+                  "item/LastRunDurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000), '0.00')",
+                  "item/LastFailureTimestamp": "@if(variables('ResultSuccess'), first(body('GET_StatusRow_Agent_06')?['value'])?['LastFailureTimestamp'], utcNow())",
+                  "item/LastFailureStep": "@if(variables('ResultSuccess'), first(body('GET_StatusRow_Agent_06')?['value'])?['LastFailureStep'], variables('RequestedAction'))",
+                  "item/LastFailureMessage": "@if(variables('ResultSuccess'), first(body('GET_StatusRow_Agent_06')?['value'])?['LastFailureMessage'], variables('ResultMessage'))",
+                  "item/LastWarningTimestamp": "@first(body('GET_StatusRow_Agent_06')?['value'])?['LastWarningTimestamp']",
+                  "item/LastWarningStep": "@first(body('GET_StatusRow_Agent_06')?['value'])?['LastWarningStep']",
+                  "item/LastWarningMessage": "@first(body('GET_StatusRow_Agent_06')?['value'])?['LastWarningMessage']",
+                  "item/WorkflowPath": "@variables('WorkflowPath')",
+                  "item/AgentKey": "Agent_06",
+                  "item/LastRunId": "@workflow()?['run']?['name']",
+                  "item/LastStatusUpdateSource": "Agent_06",
+                  "item/StatusSeverity/Value": "@if(variables('ResultSuccess'), 'Information', 'Critical')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PatchItem"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Updates the operational dashboard status for Agent 6 after completing the requested admin action."
+            }
+          }
+        },
+        "RESPOND_Result": {
+          "runAfter": {
+            "SCOPE_StatusRow_Update": [
               "Succeeded",
               "Failed",
               "Skipped",

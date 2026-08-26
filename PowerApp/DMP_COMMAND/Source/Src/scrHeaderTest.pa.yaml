@@ -382,7 +382,7 @@ Screens:
                   Y: =68
                   Width: =100
                   Height: =26
-                  Text: =Coalesce(varAgentsHealthyCount,0) & "/5"
+                  Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
                   Color: =RGBA(0,206,125,1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
