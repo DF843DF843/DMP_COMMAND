@@ -2961,7 +2961,7 @@
               },
               "description": "Reads the Power App version text file maintained outside of Power Apps Studio."
             },
-            "SET_PowerAppVersionText": {
+            "CMP_PowerAppVersionResolved": {
               "runAfter": {
                 "GET_PowerAppVersion_Content": [
                   "Succeeded",
@@ -2970,10 +2970,20 @@
                   "TimedOut"
                 ]
               },
+              "type": "Compose",
+              "inputs": "@coalesce(actions('GET_PowerAppVersion_Content')?['outputs']?['body'], variables('PowerAppVersionText'))",
+              "description": "Resolves the file content if the read succeeded, otherwise keeps the current PowerAppVersionText value. Computed here (not directly in SetVariable) because SetVariable cannot reference the variable it sets."
+            },
+            "SET_PowerAppVersionText": {
+              "runAfter": {
+                "CMP_PowerAppVersionResolved": [
+                  "Succeeded"
+                ]
+              },
               "type": "SetVariable",
               "inputs": {
                 "name": "PowerAppVersionText",
-                "value": "@trim(string(coalesce(actions('GET_PowerAppVersion_Content')?['outputs']?['body'], variables('PowerAppVersionText'))))"
+                "value": "@trim(string(outputs('CMP_PowerAppVersionResolved')))"
               },
               "description": "Stores the trimmed Power App version text. Always runs (even if the file read failed/timed out) so this scope stays Succeeded and does not fail the whole flow run - a failed read keeps the current (empty) fallback instead."
             }
