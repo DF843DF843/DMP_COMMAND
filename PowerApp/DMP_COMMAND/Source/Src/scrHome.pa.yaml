@@ -660,13 +660,13 @@ Screens:
                               Color: =If(Coalesce(varAuditFailedCount,0)>0, RGBA(209,52,56,1), RGBA(0,206,125,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =38
-                              Size: =30
+                              Height: =40
+                              Size: =32
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =80
                               Wrap: =false
                               X: =Parent.Width - 598
-                              Y: =13
+                              Y: =21
                         - lblKpiCriticalLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -675,13 +675,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =18
-                              Size: =12
+                              Height: =19
+                              Size: =13
                               Text: ="CRITICAL"
                               Width: =80
                               Wrap: =false
                               X: =Parent.Width - 598
-                              Y: =52
+                              Y: =62
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -691,13 +691,13 @@ Screens:
                               Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =34
-                              Size: =28
+                              Height: =40
+                              Size: =32
                               Text: =Text(Coalesce(varAuditWarningCount,0))
                               Width: =95
                               Wrap: =false
                               X: =Parent.Width - 510
-                              Y: =16
+                              Y: =21
                         - lblKpiWarningsLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -706,13 +706,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =17
-                              Size: =11
+                              Height: =19
+                              Size: =13
                               Text: ="WARNINGS"
                               Width: =95
                               Wrap: =false
                               X: =Parent.Width - 510
-                              Y: =52
+                              Y: =62
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -722,13 +722,13 @@ Screens:
                               Color: =If(Coalesce(varAgentsHealthyCount,0)>=6, RGBA(0,206,125,1), RGBA(255,159,10,1))
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =34
-                              Size: =28
+                              Height: =40
+                              Size: =32
                               Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
                               Width: =125
                               Wrap: =false
                               X: =Parent.Width - 407
-                              Y: =16
+                              Y: =21
                         - lblKpiAgentsLabel:
                             Control: Label@2.5.1
                             Properties:
@@ -737,13 +737,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
-                              Height: =17
-                              Size: =11
+                              Height: =19
+                              Size: =13
                               Text: ="AGENTS ACTIVE"
                               Width: =125
                               Wrap: =false
                               X: =Parent.Width - 407
-                              Y: =52
+                              Y: =62
                         - lblVersionTag:
                             Control: Label@2.5.1
                             Properties:

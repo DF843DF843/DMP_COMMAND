@@ -2971,8 +2971,8 @@
                 ]
               },
               "type": "Compose",
-              "inputs": "@coalesce(actions('GET_PowerAppVersion_Content')?['outputs']?['body'], variables('PowerAppVersionText'))",
-              "description": "Resolves the file content if the read succeeded, otherwise keeps the current PowerAppVersionText value. Computed here (not directly in SetVariable) because SetVariable cannot reference the variable it sets."
+              "inputs": "@if(equals(actions('GET_PowerAppVersion_Content')['status'], 'Succeeded'), coalesce(actions('GET_PowerAppVersion_Content')?['outputs']?['body'], variables('PowerAppVersionText')), variables('PowerAppVersionText'))",
+              "description": "Resolves the file content only if GET actually succeeded (checked via its runtime status), otherwise keeps the current PowerAppVersionText value. A plain coalesce alone was insufficient: a failed GET (e.g. 404) still returns a non-null error body."
             },
             "SET_PowerAppVersionText": {
               "runAfter": {
