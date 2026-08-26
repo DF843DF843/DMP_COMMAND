@@ -610,7 +610,11 @@ Screens:
                                 )
                               Repeat: =true
                               Start: =true
-                              Visible: =false
+                              Visible: =true
+                              Height: =1
+                              Width: =1
+                              X: =-50
+                              Y: =-50
                         - lblKpiCriticalValue:
                             Control: Label@2.5.1
                             Properties:
