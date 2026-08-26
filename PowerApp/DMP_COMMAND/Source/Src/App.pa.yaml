@@ -62,11 +62,13 @@ App:
       Set(varDarkMode,true);
       Set(varAppVersion,"");
       Set(varStatusLastRefreshed,Blank());
-      Set(varAutoRefreshMinutes,5);
+      Set(varAutoRefreshMinutes,0);
+      Set(varIsRefreshing,false);
 
       // Live status refresh from Agent 4 (Status Check)
       Set(varAppStartTimestamp, Now());
       Set(varStatusCallError, "");
+      Set(varIsRefreshing, true);
 
       Set(
           varStatusResult,
@@ -76,6 +78,7 @@ App:
               Blank()
           )
       );
+      Set(varIsRefreshing, false);
 
       // Timestamp only advances on a successful refresh, so the header always shows when the data was genuinely last valid.
       Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));

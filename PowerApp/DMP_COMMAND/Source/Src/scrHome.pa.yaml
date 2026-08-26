@@ -414,11 +414,11 @@ Screens:
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =RGBA(160,155,190,1)
+                              Color: =If(varIsRefreshing, RGBA(0,206,125,1), RGBA(160,155,190,1))
                               Font: =Font.'Segoe UI'
                               Height: =12
                               Size: =8.5
-                              Text: =If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/60000,0),"00") & ":" & Text(RoundDown(Mod(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/1000,60),0),"00"))
+                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/60000,0),"00") & ":" & Text(RoundDown(Mod(Max(tmrAutoRefreshTick.Duration - tmrAutoRefreshTick.Value,0)/1000,60),0),"00")))
                               Width: =430
                               Wrap: =false
                               X: =20
@@ -443,6 +443,70 @@ Screens:
                               Width: =30
                               X: =460
                               Y: =68
+                        - btnRefreshNow:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,206,125,0.12)
+                              Font: =Font.'Segoe UI'
+                              Height: =13
+                              HoverFill: =RGBA(0,206,125,0.22)
+                              OnSelect: |-
+                                =Set(varStatusCallError, "");
+                                Set(varIsRefreshing, true);
+                                Set(
+                                    varStatusResult,
+                                    IfError(
+                                        'DMPAgent4(StatusCheck)=>VS'.Run(),
+                                        Set(varStatusCallError, FirstError.Message);
+                                        Blank()
+                                    )
+                                );
+                                Set(varIsRefreshing, false);
+                                Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
+                                Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+                                Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
+                                Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+                                Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
+                                Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
+                                Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+                                Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
+                                Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
+                                Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+                                Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
+                                Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
+                                Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
+                                Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
+                                Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+                                Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+                                Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+                                Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
+                                Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                                Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                                Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
+                                Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
+                                Set(
+                                    varAgentsHealthyCount,
+                                    If(varEmergencyReportExists,1,0) +
+                                    If(varInternalDomainsExists,1,0) +
+                                    If(varExternalDomainsExists,1,0) +
+                                    If(varCounterExists,1,0) +
+                                    If(varAuditTrailExists,1,0) +
+                                    If(varAgent6Healthy,1,0)
+                                );
+                                Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                Reset(tmrAutoRefreshTick)
+                              PressedFill: =RGBA(0,180,110,1)
+                              Size: =7.5
+                              Text: ="Now"
+                              Width: =36
+                              X: =494
+                              Y: =68
                         - btnAutoRefresh2:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -461,7 +525,7 @@ Screens:
                               Size: =7.5
                               Text: ="2m"
                               Width: =30
-                              X: =494
+                              X: =534
                               Y: =68
                         - btnAutoRefresh5:
                             Control: Classic/Button@2.2.0
@@ -481,7 +545,7 @@ Screens:
                               Size: =7.5
                               Text: ="5m"
                               Width: =30
-                              X: =528
+                              X: =568
                               Y: =68
                         - btnAutoRefresh10:
                             Control: Classic/Button@2.2.0
@@ -501,7 +565,7 @@ Screens:
                               Size: =7.5
                               Text: ="10m"
                               Width: =32
-                              X: =562
+                              X: =602
                               Y: =68
                         - btnAutoRefresh15:
                             Control: Classic/Button@2.2.0
@@ -521,7 +585,7 @@ Screens:
                               Size: =7.5
                               Text: ="15m"
                               Width: =32
-                              X: =598
+                              X: =638
                               Y: =68
                         - tmrAutoRefreshTick:
                             Control: Timer@2.1.0
@@ -535,6 +599,7 @@ Screens:
                                 =If(
                                     varAutoRefreshMinutes>0,
                                     Set(varStatusCallError, "");
+                                    Set(varIsRefreshing, true);
                                     Set(
                                         varStatusResult,
                                         IfError(
@@ -543,6 +608,7 @@ Screens:
                                             Blank()
                                         )
                                     );
+                                    Set(varIsRefreshing, false);
                                     Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
                                     Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
                                     Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
