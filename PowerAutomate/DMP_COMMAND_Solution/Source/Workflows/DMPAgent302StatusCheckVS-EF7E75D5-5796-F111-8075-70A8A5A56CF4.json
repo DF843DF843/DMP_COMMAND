@@ -2801,6 +2801,9 @@
           "runAfter": {
             "CMP_ConfigObject": [
               "Succeeded"
+            ],
+            "VAR_NextMilestonesArray": [
+              "Succeeded"
             ]
           },
           "type": "Scope",
@@ -2828,49 +2831,13 @@
               },
               "description": "Lists all rows of the OverallProcess table (Phase, ID, Milestone, Responsibility, Status) from the real-world DMP process tracker."
             },
-            "VAR_LastSeenPhase": {
+            "LOOP_OverallProcessRows": {
               "runAfter": {
                 "GET_OverallProcess_Rows": [
                   "Succeeded",
                   "Failed",
                   "Skipped",
                   "TimedOut"
-                ]
-              },
-              "type": "InitializeVariable",
-              "inputs": {
-                "variables": [
-                  {
-                    "name": "LastSeenPhase",
-                    "type": "string",
-                    "value": ""
-                  }
-                ]
-              },
-              "description": "Tracks the current Phase text, since the Phase column is only filled on the first row of each merged group in the source sheet."
-            },
-            "VAR_NextMilestonesArray": {
-              "runAfter": {
-                "VAR_LastSeenPhase": [
-                  "Succeeded"
-                ]
-              },
-              "type": "InitializeVariable",
-              "inputs": {
-                "variables": [
-                  {
-                    "name": "NextMilestonesArray",
-                    "type": "array",
-                    "value": []
-                  }
-                ]
-              },
-              "description": "Buffers the next not-yet-done milestones (Phase, Milestone, Responsibility, Status) for the Cockpit's Next Steps card."
-            },
-            "LOOP_OverallProcessRows": {
-              "runAfter": {
-                "VAR_NextMilestonesArray": [
-                  "Succeeded"
                 ]
               },
               "type": "Foreach",
@@ -4200,6 +4167,38 @@
             ]
           },
           "description": "Stores run start time for duration calculation."
+        },
+        "VAR_LastSeenPhase": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "LastSeenPhase",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "description": "Tracks the current Phase text, since the Phase column is only filled on the first row of each merged group in the source sheet."
+        },
+        "VAR_NextMilestonesArray": {
+          "runAfter": {
+            "VAR_LastSeenPhase": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NextMilestonesArray",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "description": "Buffers the next not-yet-done milestones (Phase, Milestone, Responsibility, Status) for the Cockpit's Next Steps card."
         }
       }
     },
