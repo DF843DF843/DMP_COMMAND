@@ -1,0 +1,9 @@
+Fix trailing-newline path bug found by user in Power Automate raw run input: GET_PowerAppVersion_Content's computed path ended with a literal "\n" (e.g. ".../PowerApp_Version.txt\n"), causing the file lookup to genuinely fail (file not found) even though the file exists at the expected location. Root cause: the SharePoint config list's PowerAppVersionFolderName/PowerAppVersionFileName values likely contain a trailing newline from how they were entered. Wrapped both coalesce() calls in trim() to strip any leading/trailing whitespace or newlines from the resolved config values before building the path. Agent 4 -> [1.2.5].
+
+Added a second, independent "kickstart" Timer (tmrInitialKickstart, fires once after 800ms, AutoStart/Start both literal true) as a redundant fallback for the initial Agent 4 refresh, since the user confirmed the previous fix (moving the call to scrHome.OnVisible) still did not auto-trigger - OnVisible is documented to be unreliable for a screen's very first appearance in some Canvas Apps versions. Both OnVisible and the new Timer guard their refresh logic with the same varInitialRefreshDone flag, so whichever fires first performs the one-time initial refresh; the other becomes a no-op.
+
+Per user's marked screenshot: shrunk the version tag box back down (117 -> 70px, matches actual short version text) and shifted the whole right-side cluster (version tag, DARK, toggle, LIGHT) further left, creating a clear ~30px gap from the AGENTS ACTIVE column (was crowding/overlapping into it) instead of the previous near-zero gap.
+
+Bump PowerApp_Version.txt to v1.4.1, Solution -> 7.9.13
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

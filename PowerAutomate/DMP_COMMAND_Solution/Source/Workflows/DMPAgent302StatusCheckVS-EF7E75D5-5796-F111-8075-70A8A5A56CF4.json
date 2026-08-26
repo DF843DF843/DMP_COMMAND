@@ -2946,7 +2946,7 @@
               "inputs": {
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                  "path": "@concat(\r\n  coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFolderName'], '/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage'),\r\n  '/',\r\n  coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFileName'], 'PowerApp_Version.txt')\r\n)",
+                  "path": "@concat(\r\n  trim(coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFolderName'], '/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage')),\r\n  '/',\r\n  trim(coalesce(outputs('CMP_ConfigObject')?['PowerAppVersionFileName'], 'PowerApp_Version.txt'))\r\n)",
                   "inferContentType": true
                 },
                 "host": {
