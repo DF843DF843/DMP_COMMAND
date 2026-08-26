@@ -218,9 +218,27 @@
           },
           "description": "Identifies this flow's path in the audit trail and dashboard status row."
         },
-        "GET_DMP_Command_Configuration": {
+        "VAR_NewRunsCount": {
           "runAfter": {
             "VAR_WorkflowPath": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewRunsCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Holds the incremented Runs counter value while writing it to Agent Audit Summary."
+        },
+        "GET_DMP_Command_Configuration": {
+          "runAfter": {
+            "VAR_NewRunsCount": [
               "Succeeded"
             ]
           },
