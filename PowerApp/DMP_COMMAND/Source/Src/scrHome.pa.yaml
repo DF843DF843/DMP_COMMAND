@@ -417,7 +417,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =14
                               Size: =8.5
-                              Text: =If(IsBlank(varStatusLastRefreshed), "Noch nicht aktualisiert", "Zuletzt aktualisiert: " & Text(varStatusLastRefreshed, "hh:mm:ss") & " Uhr")
+                              Text: =If(IsBlank(varStatusLastRefreshed), "Noch nicht aktualisiert", "Zuletzt aktualisiert:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss") & " Uhr")
                               Width: =230
                               Wrap: =false
                               X: =20
@@ -431,7 +431,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =14
                               Size: =8.5
-                              Text: =If(varAutoRefreshMinutes<=0, "Auto-Update: Aus", "Nächstes Update in " & Text(RoundDown(varAutoRefreshSecondsRemaining/60,0),"00") & ":" & Text(Mod(varAutoRefreshSecondsRemaining,60),"00"))
+                              Text: =If(varAutoRefreshMinutes<=0, "Auto-Update:" & " Aus", "Nächstes Update in " & Text(RoundDown(varAutoRefreshSecondsRemaining/60,0),"00") & ":" & Text(Mod(varAutoRefreshSecondsRemaining,60),"00"))
                               Width: =170
                               Wrap: =false
                               X: =258
