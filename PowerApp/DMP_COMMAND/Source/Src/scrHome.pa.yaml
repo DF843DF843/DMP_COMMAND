@@ -63,10 +63,11 @@ Screens:
             Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
             Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
             Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-            // Only now (after both toggle-bound Default variables above have their real values) is it safe to
-            // lift the guard - this prevents the Default-driven OnCheck/OnUncheck that fires while these
-            // variables are being set above from calling Agent 5 for real.
-            Set(varSuppressToggleEvents, false)
+            // The guard is intentionally NOT lifted here: the toggle's Default-driven OnCheck/OnUncheck
+            // reaction to the values just set above can fire a moment later (next render pass), which was
+            // still catching the guard as already-lifted and showing a spurious "switched" notification.
+            // tmrAutoRefreshTick lifts the guard one full second later instead, safely after that.
+            Set(varReadyToLiftToggleGuard, true)
         );
         Reset(tmrAutoRefreshTick)
     Children:
@@ -479,7 +480,7 @@ Screens:
                               Width: =430
                               Wrap: =false
                               X: =20
-                              Y: =69
+                              Y: =73
                         - btnAutoRefreshOff:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -498,8 +499,8 @@ Screens:
                               Size: =7.5
                               Text: ="Off"
                               Width: =30
-                              X: =460
-                              Y: =68
+                              X: =310
+                              Y: =72
                         - btnRefreshNow:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -563,8 +564,8 @@ Screens:
                               Size: =7.5
                               Text: ="Now"
                               Width: =36
-                              X: =494
-                              Y: =68
+                              X: =344
+                              Y: =72
                         - btnAutoRefresh2:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -583,8 +584,8 @@ Screens:
                               Size: =7.5
                               Text: ="2m"
                               Width: =30
-                              X: =534
-                              Y: =68
+                              X: =384
+                              Y: =72
                         - btnAutoRefresh5:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -603,8 +604,8 @@ Screens:
                               Size: =7.5
                               Text: ="5m"
                               Width: =30
-                              X: =568
-                              Y: =68
+                              X: =418
+                              Y: =72
                         - btnAutoRefresh10:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -623,8 +624,8 @@ Screens:
                               Size: =7.5
                               Text: ="10m"
                               Width: =32
-                              X: =602
-                              Y: =68
+                              X: =452
+                              Y: =72
                         - btnAutoRefresh15:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -643,8 +644,8 @@ Screens:
                               Size: =7.5
                               Text: ="15m"
                               Width: =32
-                              X: =638
-                              Y: =68
+                              X: =488
+                              Y: =72
                         - tmrInitialKickstart:
                             Control: Timer@2.1.0
                             Properties:
@@ -705,7 +706,7 @@ Screens:
                                     Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
                                     Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
                                     Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-                                    Set(varSuppressToggleEvents, false)
+                                    Set(varReadyToLiftToggleGuard, true)
                                 )
                               Repeat: =false
                               AutoStart: =true
@@ -724,6 +725,11 @@ Screens:
                               Height: =1
                               OnTimerEnd: |-
                                 =If(
+                                    varReadyToLiftToggleGuard && varSuppressToggleEvents,
+                                    Set(varSuppressToggleEvents, false);
+                                    Set(varReadyToLiftToggleGuard, false)
+                                );
+                                If(
                                     varAutoRefreshMinutes<=0,
                                     Set(varAutoRefreshSecondsRemaining, 0),
                                     If(

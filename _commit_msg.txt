@@ -1,0 +1,7 @@
+Fix spurious "Operating State switched to..." notification appearing without any user action: the toggle's Default-driven OnCheck/OnUncheck reaction to varOperationalModeIsDMP/varEnvironmentIsPROD being set by the automatic refresh was firing a render-pass later than expected, after the guard (varSuppressToggleEvents) had already been lifted in the same formula chain - so the guard-check inside OnCheck/OnUncheck saw it as already open and ran the real Agent 5 call + notification. Fix: the guard is no longer lifted directly in OnVisible/the kickstart timer; instead they set varReadyToLiftToggleGuard, and the regular 1-second tick timer lifts the actual guard one full tick later, safely after any delayed toggle reaction.
+
+Per user feedback: shifted the Off/Now/2m/5m/10m/15m button row left by 150px (closer to the status text, was an oddly large empty gap) and moved the whole status-line/button row down an extra 4px.
+
+Bump PowerApp_Version.txt to v1.4.3, Solution -> 7.9.15
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

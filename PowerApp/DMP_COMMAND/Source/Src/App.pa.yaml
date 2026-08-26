@@ -64,6 +64,7 @@ App:
       Set(varStatusLastRefreshed,Blank());
       Set(varAutoRefreshMinutes,0);
       Set(varAutoRefreshSecondsRemaining,0);
+      Set(varReadyToLiftToggleGuard,false);
       Set(varIsRefreshing,false);
       Set(varLastAttemptTimestamp,Blank());
       Set(varInitialRefreshDone,false);
