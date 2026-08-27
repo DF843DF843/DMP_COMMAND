@@ -767,7 +767,10 @@
                                   "MAIL_Alert_(MissingWorksheet)": {
                                     "runAfter": {
                                       "AUDIT_MissingWorksheet": [
-                                        "Succeeded"
+                                        "Succeeded",
+                                        "Failed",
+                                        "Skipped",
+                                        "TimedOut"
                                       ]
                                     },
                                     "type": "OpenApiConnection",
@@ -1065,7 +1068,10 @@
                               "MAIL_Alert_(InvalidWorkbook)": {
                                 "runAfter": {
                                   "AUDIT_InvalidWorkbook": [
-                                    "Succeeded"
+                                    "Succeeded",
+                                    "Failed",
+                                    "Skipped",
+                                    "TimedOut"
                                   ]
                                 },
                                 "type": "OpenApiConnection",
@@ -1758,7 +1764,10 @@
                   "MAIL_Alert_(InvalidExtension)": {
                     "runAfter": {
                       "AUDIT_InvalidExtension": [
-                        "Succeeded"
+                        "Succeeded",
+                        "Failed",
+                        "Skipped",
+                        "TimedOut"
                       ]
                     },
                     "type": "OpenApiConnection",
@@ -1884,7 +1893,10 @@
         "SET_AlertMailSubject_(EmailFolderCreationFailed)": {
           "runAfter": {
             "AUDIT_EmailFolderCreation_Failed": [
-              "Succeeded"
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
             ]
           },
           "type": "SetVariable",
@@ -1897,7 +1909,10 @@
         "MAIL_Alert_(EmailFolderCreationFailed)": {
           "runAfter": {
             "SET_AlertMailSubject_(EmailFolderCreationFailed)": [
-              "Succeeded"
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
             ]
           },
           "type": "OpenApiConnection",
@@ -2627,7 +2642,10 @@
             "MAIL_Alert_(Audit_Failure)": {
               "runAfter": {
                 "SET_AlertMailSubject_(Audit_Failure)": [
-                  "Succeeded"
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "type": "OpenApiConnection",
@@ -2654,7 +2672,10 @@
             "SET_AlertMailSubject_(Audit_Failure)": {
               "runAfter": {
                 "AUDIT_Failure": [
-                  "Succeeded"
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "metadata": {
