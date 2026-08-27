@@ -1037,7 +1037,7 @@ Screens:
                               LayoutAlignItems: =LayoutAlignItems.Stretch
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutGap: =16
-                              Width: =896
+                              Width: =1056
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
@@ -1052,18 +1052,18 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =440
+                                    Width: =520
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                          Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
-                                          FontWeight: =FontWeight.Semibold
+                                          FontWeight: =FontWeight.Bold
                                           Height: =18
-                                          Size: =11
+                                          Size: =12
                                           Text: ="OPERATING STATE"
                                           Width: =300
                                           Wrap: =false
@@ -1080,7 +1080,7 @@ Screens:
                                           Height: =22
                                           Size: =12
                                           Text: ="Mode"
-                                          Width: =50
+                                          Width: =70
                                           Wrap: =false
                                           X: =16
                                           Y: =34
@@ -1094,12 +1094,12 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =22
-                                          Size: =12.5
+                                          Size: =10.5
                                           Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
-                                          Width: =354
+                                          Width: =414
                                           Wrap: =false
-                                          X: =70
-                                          Y: =34
+                                          X: =90
+                                          Y: =35
                                     - lblLastChangedLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1111,7 +1111,7 @@ Screens:
                                           Height: =22
                                           Size: =13
                                           Text: ="Last Changed"
-                                          Width: =120
+                                          Width: =190
                                           Wrap: =false
                                           X: =16
                                           Y: =60
@@ -1126,9 +1126,9 @@ Screens:
                                           Height: =22
                                           Size: =13
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
-                                          Width: =288
+                                          Width: =284
                                           Wrap: =false
-                                          X: =136
+                                          X: =220
                                           Y: =60
                                     - lblOperationalStateLabel:
                                         Control: Label@2.5.1
@@ -1141,7 +1141,7 @@ Screens:
                                           Height: =26
                                           Size: =13
                                           Text: ="Operational Mode"
-                                          Width: =150
+                                          Width: =190
                                           Wrap: =false
                                           X: =16
                                           Y: =90
@@ -1213,7 +1213,7 @@ Screens:
                                           TrueFill: =RGBA(255,159,10,1)
                                           TrueText: ="DMP"
                                           Width: =110
-                                          X: =172
+                                          X: =220
                                           Y: =88
                                     - dotLedOperationalState:
                                         Control: GroupContainer@1.5.0
@@ -1228,7 +1228,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =300
+                                          X: =344
                                           Y: =89
                                     - lblApplicationModeLabel:
                                         Control: Label@2.5.1
@@ -1241,7 +1241,7 @@ Screens:
                                           Height: =26
                                           Size: =13
                                           Text: ="Environment"
-                                          Width: =150
+                                          Width: =190
                                           Wrap: =false
                                           X: =16
                                           Y: =122
@@ -1316,7 +1316,7 @@ Screens:
                                           TrueFill: =RGBA(196,43,28,1)
                                           TrueText: ="PROD"
                                           Width: =110
-                                          X: =172
+                                          X: =220
                                           Y: =120
                                     - dotLedApplicationMode:
                                         Control: GroupContainer@1.5.0
@@ -1331,7 +1331,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =300
+                                          X: =344
                                           Y: =121
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
@@ -1355,18 +1355,18 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =440
+                                    Width: =520
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                          Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
-                                          FontWeight: =FontWeight.Semibold
+                                          FontWeight: =FontWeight.Bold
                                           Height: =18
-                                          Size: =11
+                                          Size: =12
                                           Text: ="MAINTENANCE - DOMAINS"
                                     - conRowInternalDomains:
                                         Control: GroupContainer@1.5.0
