@@ -1030,14 +1030,14 @@ Screens:
                                     Width: =328
                         - conMiddleColumn:
                             Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
+                            Variant: ManualLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
                               FillPortions: =0
-                              LayoutAlignItems: =LayoutAlignItems.Stretch
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              Width: =1316
+                              Height: =360
+                              LayoutMaxHeight: =360
+                              LayoutMinHeight: =360
+                              Width: =1186
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
@@ -1054,7 +1054,9 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =600
+                                    Width: =550
+                                    X: =0
+                                    Y: =0
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
@@ -1098,7 +1100,7 @@ Screens:
                                           Height: =22
                                           Size: =11.5
                                           Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
-                                          Width: =364
+                                          Width: =314
                                           Wrap: =false
                                           X: =220
                                           Y: =35
@@ -1348,7 +1350,9 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =700
+                                    Width: =620
+                                    X: =566
+                                    Y: =0
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
@@ -1435,7 +1439,7 @@ Screens:
                                           Height: =32
                                           Size: =11
                                           Text: =Coalesce(varInternalDomainsCount,0) & " (SharePoint)"
-                                          Width: =224
+                                          Width: =144
                                           Wrap: =false
                                           X: =460
                                           Y: =46
@@ -1601,52 +1605,198 @@ Screens:
                                           Height: =32
                                           Size: =11
                                           Text: =Coalesce(varExternalDomainsCount,0) & " (File)"
-                                          Width: =224
+                                          Width: =144
                                           Wrap: =false
                                           X: =460
                                           Y: =98
+                              - conFilesRow:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    BorderColor: =RGBA(0,206,125,0.7)
+                                    BorderThickness: =3
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                                    FillPortions: =0
+                                    Height: =184
+                                    RadiusBottomLeft: =18
+                                    RadiusBottomRight: =18
+                                    RadiusTopLeft: =18
+                                    RadiusTopRight: =18
+                                    Width: =1186
+                                    X: =0
+                                    Y: =176
+                                  Children:
+                                    - lblFilesRowTitle:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(0,206,125,1)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =18
+                                          Size: =12
+                                          Text: ="FILES"
+                                          Width: =120
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =10
+                                    - lblDotEmergencyReport:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Text: ="●"
+                                          Width: =16
+                                          X: =16
+                                          Y: =42
+                                    - lblInfoEmergencyReport:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Emergency Report  ·  " & If(varEmergencyReportExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "-", Text(varEmergencyReportLastModified, "hh:mm:ss"))
+                                          Width: =1130
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =42
+                                    - lblDotInternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Text: ="●"
+                                          Width: =16
+                                          X: =16
+                                          Y: =68
+                                    - lblInfoInternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Internal Domains  ·  " & If(varInternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "-", Text(varInternalDomainsLastModified, "hh:mm:ss"))
+                                          Width: =1130
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =68
+                                    - lblDotExternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Text: ="●"
+                                          Width: =16
+                                          X: =16
+                                          Y: =94
+                                    - lblInfoExternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="External Domains  ·  " & If(varExternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "-", Text(varExternalDomainsLastModified, "hh:mm:ss"))
+                                          Width: =1130
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =94
+                                    - lblDotCounter:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Text: ="●"
+                                          Width: =16
+                                          X: =16
+                                          Y: =120
+                                    - lblInfoCounter:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Counter File  ·  " & If(varCounterExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varCounterLastModified) Or varCounterLastModified="", "-", Text(varCounterLastModified, "hh:mm:ss"))
+                                          Width: =1130
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =120
+                                    - lblDotAuditTrail:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Center
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Text: ="●"
+                                          Width: =16
+                                          X: =16
+                                          Y: =146
+                                    - lblInfoAuditTrail:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Audit Trail File  ·  " & If(varAuditTrailExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varAuditLastModified) Or varAuditLastModified="", "-", Text(varAuditLastModified, "hh:mm:ss"))
+                                          Width: =1130
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =146
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
+                              BorderColor: =RGBA(0,206,125,0.7)
                               BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                               FillPortions: =0
                               Height: =360
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Vertical
-                              LayoutGap: =10
-                              LayoutMaxHeight: =360
-                              LayoutMinHeight: =360
-                              PaddingBottom: =16
-                              PaddingLeft: =24
-                              PaddingRight: =24
-                              PaddingTop: =16
                               RadiusBottomLeft: =18
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
-                              Width: =400
+                              Width: =620
                             Children:
-                              - lblEmailsTitle:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                                    Font: =Font.'Segoe UI'
-                                    FontWeight: =FontWeight.Semibold
-                                    Height: =18
-                                    Size: =11
-                                    Text: ="AGENT 2 - EMAILS PROCESSED"
-                                    Width: =Parent.Width
                               - imgEmailsWheel:
                                   Control: Image@2.2.3
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Height: =180
+                                    Height: =328
                                     Image: |-
                                       =With(
                                           {
@@ -1667,7 +1817,7 @@ Screens:
                                                       vOff3: -(((vNoDMP+vDEE)/vTotal)*408.407),
                                                       vOff4: -(((vNoDMP+vDEE+vDIS)/vTotal)*408.407)
                                                   },
-                                                  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'>" &
+                                                  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'>" &
                                                   "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                   "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                   "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(153,102,178)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
@@ -1677,240 +1827,69 @@ Screens:
                                               )
                                           )
                                       )
-                                    Width: =180
-                              - conEmailsLegend:
-                                  Control: GroupContainer@1.5.0
-                                  Variant: AutoLayout
+                                    Width: =328
+                                    X: =24
+                                    Y: =16
+                              - lblLegendNoDmp:
+                                  Control: Label@2.5.1
                                   Properties:
-                                    Fill: =RGBA(0,0,0,0)
-                                    LayoutAlignItems: =LayoutAlignItems.Center
-                                    LayoutDirection: =LayoutDirection.Horizontal
-                                    LayoutGap: =4
-                                    LayoutWrap: =true
-                                  Children:
-                                    - lblLegendNoDmp:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(60,125,190,1)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="- No DMP"
-                                    - lblLegendDee:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(102,52,142,1)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="- DEE"
-                                    - lblLegendDis:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(153,102,178,1)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="- DIS"
-                                    - lblLegendDnes:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(255,159,10,1)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="- DNES"
-                  - conFilesRow:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
-                        BorderThickness: =3
-                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        FillPortions: =0
-                        Height: =30
-                        LayoutAlignItems: =LayoutAlignItems.Center
-                        LayoutDirection: =LayoutDirection.Horizontal
-                        LayoutGap: =12
-                        LayoutMaxHeight: =30
-                        LayoutMinHeight: =30
-                        PaddingBottom: =2
-                        PaddingLeft: =20
-                        PaddingRight: =14
-                        PaddingTop: =2
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
-                      Children:
-                        - lblFilesRowTitle:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
-                              FontWeight: =FontWeight.Bold
-                              Height: =16
-                              Text: ="FILES"
-                              Width: =56
-                        - lblDotEmergencyReport:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Text: ="●"
-                              Width: =16
-                        - lblInfoEmergencyReport:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =10.5
-                              Text: ="Emergency Report  ·  " & If(varEmergencyReportExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "-", Text(varEmergencyReportLastModified, "hh:mm:ss"))
-                              Width: =310
-                        - lblSep1:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(90,88,100,1),RGBA(180,178,190,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =12
-                              Text: ="|"
-                              Width: =8
-                        - lblDotInternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Text: ="●"
-                              Width: =16
-                        - lblInfoInternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =10.5
-                              Text: ="Internal Domains  ·  " & If(varInternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "-", Text(varInternalDomainsLastModified, "hh:mm:ss"))
-                              Width: =310
-                        - lblSep2:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(90,88,100,1),RGBA(180,178,190,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =12
-                              Text: ="|"
-                              Width: =8
-                        - lblDotExternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Text: ="●"
-                              Width: =16
-                        - lblInfoExternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =10.5
-                              Text: ="External Domains  ·  " & If(varExternalDomainsExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "-", Text(varExternalDomainsLastModified, "hh:mm:ss"))
-                              Width: =310
-                        - lblSep3:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(90,88,100,1),RGBA(180,178,190,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =12
-                              Text: ="|"
-                              Width: =8
-                        - lblDotCounter:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Text: ="●"
-                              Width: =16
-                        - lblInfoCounter:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =10.5
-                              Text: ="Counter File  ·  " & If(varCounterExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varCounterLastModified) Or varCounterLastModified="", "-", Text(varCounterLastModified, "hh:mm:ss"))
-                              Width: =310
-                        - lblSep4:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(90,88,100,1),RGBA(180,178,190,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =12
-                              Text: ="|"
-                              Width: =8
-                        - lblDotAuditTrail:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Text: ="●"
-                              Width: =16
-                        - lblInfoAuditTrail:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =16
-                              Size: =10.5
-                              Text: ="Audit Trail File  ·  " & If(varAuditTrailExists, "Operational", "Missing") & "  ·  " & If(IsBlank(varAuditLastModified) Or varAuditLastModified="", "-", Text(varAuditLastModified, "hh:mm:ss"))
-                              Width: =310
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(60,125,190,1),RGBA(30,80,140,1))
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    Size: =12
+                                    Text: ="No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                    Width: =224
+                                    Wrap: =false
+                                    X: =372
+                                    Y: =50
+                              - lblLegendDee:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(102,52,142,1),RGBA(80,35,115,1))
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    Size: =12
+                                    Text: ="External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                    Width: =224
+                                    Wrap: =false
+                                    X: =372
+                                    Y: =124
+                              - lblLegendDis:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(153,102,178,1),RGBA(110,60,140,1))
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    Size: =12
+                                    Text: ="Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                    Width: =224
+                                    Wrap: =false
+                                    X: =372
+                                    Y: =198
+                              - lblLegendDnes:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(255,159,10,1),RGBA(180,100,0,1))
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    Size: =12
+                                    Text: ="Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                    Width: =224
+                                    Wrap: =false
+                                    X: =372
+                                    Y: =272
                   - conNextSteps:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
