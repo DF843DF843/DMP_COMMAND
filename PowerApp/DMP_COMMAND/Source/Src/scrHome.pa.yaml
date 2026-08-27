@@ -1337,22 +1337,13 @@ Screens:
                                           Y: =124
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
-                                  Variant: AutoLayout
+                                  Variant: ManualLayout
                                   Properties:
                                     BorderColor: =RGBA(0,206,125,0.7)
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
                                     Height: =160
-                                    LayoutAlignItems: =LayoutAlignItems.Stretch
-                                    LayoutDirection: =LayoutDirection.Vertical
-                                    LayoutGap: =8
-                                    LayoutMaxHeight: =160
-                                    LayoutMinHeight: =160
-                                    PaddingBottom: =14
-                                    PaddingLeft: =16
-                                    PaddingRight: =16
-                                    PaddingTop: =14
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
@@ -1370,235 +1361,250 @@ Screens:
                                           Height: =18
                                           Size: =12
                                           Text: ="MAINTENANCE - DOMAINS"
-                                    - conRowInternalDomains:
+                                          Width: =300
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =10
+                                    - lblInternalDomainsLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="Internal"
+                                          Width: =140
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =46
+                                    - btnInternalDomainsRead:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(varDarkMode,RGBA(255,255,255,0.4),RGBA(20,20,24,0.4))
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =2
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt")
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =12
+                                          Text: ="View"
+                                          Width: =70
+                                          X: =170
+                                          Y: =44
+                                    - btnInternalDomainsMaintain:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,206,125,0.8)
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =2
+                                          Color: =RGBA(0,206,125,1)
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          HoverFill: =RGBA(0,206,125,0.12)
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt?csf=1&web=1&e=0RnJFW")
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =12
+                                          Text: ="Edit"
+                                          Width: =80
+                                          X: =256
+                                          Y: =44
+                                    - lblInternalDomainsCount:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Right
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =11
+                                          Text: =Coalesce(varInternalDomainsCount,0) & " (SharePoint)"
+                                          Width: =224
+                                          Wrap: =false
+                                          X: =460
+                                          Y: =46
+                                    - lblExternalDomainsLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="External"
+                                          Width: =140
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =98
+                                    - btnExternalDomainsRead:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(varDarkMode,RGBA(255,255,255,0.4),RGBA(20,20,24,0.4))
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =2
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt")
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =12
+                                          Text: ="View"
+                                          Width: =70
+                                          X: =170
+                                          Y: =96
+                                    - btnExternalDomainsMaintain:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,206,125,0.8)
+                                          BorderStyle: =BorderStyle.Solid
+                                          BorderThickness: =2
+                                          Color: =RGBA(0,206,125,1)
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =32
+                                          HoverFill: =RGBA(0,206,125,0.12)
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt?csf=1&web=1&e=0RnJFW")
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Size: =12
+                                          Text: ="Edit"
+                                          Width: =80
+                                          X: =256
+                                          Y: =96
+                                    - conReplaceStack:
                                         Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                        Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
                                           Height: =44
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutGap: =8
-                                          LayoutMaxHeight: =44
-                                          LayoutMinHeight: =44
+                                          Width: =90
+                                          X: =352
+                                          Y: =92
                                         Children:
-                                          - lblInternalDomainsLabel:
+                                          - lblReplaceFake:
                                               Control: Label@2.5.1
                                               Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =1
+                                                Align: =Align.Center
+                                                BorderColor: =RGBA(60,125,190,0.8)
+                                                BorderStyle: =BorderStyle.Solid
+                                                BorderThickness: =2
+                                                Color: =RGBA(60,125,190,1)
+                                                Fill: =RGBA(0,0,0,0)
                                                 Font: =Font.'Segoe UI'
-                                                Height: =28
+                                                FontWeight: =FontWeight.Semibold
+                                                Height: =32
+                                                RadiusBottomLeft: =8
+                                                RadiusBottomRight: =8
+                                                RadiusTopLeft: =8
+                                                RadiusTopRight: =8
                                                 Size: =12
-                                                Text: ="Internal"
-                                          - btnInternalDomainsRead:
-                                              Control: Classic/Button@2.2.0
-                                              Properties:
-                                                BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                                BorderThickness: =3
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Fill: =RGBA(0,0,0,0)
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                HoverFill: =RGBA(255,255,255,0.08)
-                                                OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt")
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Text: ="View"
-                                                Width: =60
-                                          - btnInternalDomainsMaintain:
-                                              Control: Classic/Button@2.2.0
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =RGBA(8,33,15,1)
-                                                Fill: =RGBA(0,206,125,1)
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                HoverFill: =RGBA(0,180,110,1)
-                                                OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt?csf=1&web=1&e=0RnJFW")
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Text: ="Edit"
-                                                Width: =74
-                                          - lblInternalDomainsSpacer:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Height: =28
-                                                Text: =""
-                                                Width: =40
-                                          - lblInternalDomainsCount:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Align: =Align.Right
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                Size: =11
-                                                Text: =Coalesce(varInternalDomainsCount,0) & " (SharePoint)"
-                                                Width: =110
-                                    - conRowExternalDomains:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
-                                        Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Height: =44
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutGap: =8
-                                          LayoutMaxHeight: =44
-                                          LayoutMinHeight: =44
-                                        Children:
-                                          - lblExternalDomainsLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =1
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                Size: =12
-                                                Text: ="External"
-                                          - btnExternalDomainsRead:
-                                              Control: Classic/Button@2.2.0
-                                              Properties:
-                                                BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                                BorderThickness: =3
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Fill: =RGBA(0,0,0,0)
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                HoverFill: =RGBA(255,255,255,0.08)
-                                                OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt")
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Text: ="View"
-                                                Width: =60
-                                          - btnExternalDomainsMaintain:
-                                              Control: Classic/Button@2.2.0
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =RGBA(8,33,15,1)
-                                                Fill: =RGBA(0,206,125,1)
-                                                Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                HoverFill: =RGBA(0,180,110,1)
-                                                OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt?csf=1&web=1&e=0RnJFW")
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Text: ="Edit"
-                                                Width: =74
-                                          - conReplaceStack:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: ManualLayout
-                                              Properties:
-                                                Fill: =RGBA(0,0,0,0)
-                                                Height: =40
+                                                Text: ="Replace"
                                                 Width: =90
-                                              Children:
-                                                - lblReplaceFake:
-                                                    Control: Label@2.5.1
-                                                    Properties:
-                                                      Align: =Align.Center
-                                                      BorderColor: =RGBA(0,0,0,0)
-                                                      BorderStyle: =BorderStyle.None
-                                                      Color: =RGBA(255,255,255,1)
-                                                      Fill: =RGBA(60,125,190,1)
-                                                      Font: =Font.'Segoe UI'
-                                                      FontWeight: =FontWeight.Semibold
-                                                      Size: =12
-                                                      Text: ="Replace"
-                                                      Width: =90
-                                                - attExternalDomainsReplace:
-                                                    Control: Attachments@2.3.0
-                                                    Properties:
-                                                      AddAttachmentText: =""
-                                                      BorderColor: =RGBA(0,0,0,0)
-                                                      BorderStyle: =BorderStyle.None
-                                                      Color: =RGBA(255,255,255,0.01)
-                                                      Fill: =RGBA(255,255,255,0.01)
-                                                      Font: =Font.'Segoe UI'
-                                                      Height: =40
-                                                      HoverColor: =RGBA(255,255,255,0.01)
-                                                      HoverFill: =RGBA(255,255,255,0.01)
-                                                      ItemColor: =RGBA(255,255,255,0.01)
-                                                      ItemFill: =RGBA(255,255,255,0.01)
-                                                      ItemHoverColor: =RGBA(255,255,255,0.01)
-                                                      ItemHoverFill: =RGBA(255,255,255,0.01)
-                                                      MaxAttachments: =1
-                                                      MaxAttachmentsText: =""
-                                                      NoAttachmentsColor: =RGBA(255,255,255,0.01)
-                                                      NoAttachmentsText: =""
-                                                      OnAddFile: |-
-                                                        =If(
-                                                            IsEmpty(attExternalDomainsReplace.Attachments),
-                                                            false,
-                                                            If(
-                                                                !EndsWith(
-                                                                    Lower(First(attExternalDomainsReplace.Attachments).Name),
-                                                                    ".xlsx"
-                                                                ),
-                                                                Notify("Only .xlsx files are allowed.", NotificationType.Error);
-                                                                Reset(attExternalDomainsReplace),
-                                                                Notify("Emergency Report submitted for processing. Agent 1 will regenerate External Domains.", NotificationType.Information);
-                                                                IfError(
-                                                                    Set(
-                                                                        varEmergencyReportUploadResult,
-                                                                        'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(
-                                                                            User().Email,
-                                                                            {
-                                                                                file: {
-                                                                                    name: First(attExternalDomainsReplace.Attachments).Name,
-                                                                                    contentBytes: First(attExternalDomainsReplace.Attachments).Value
-                                                                                }
-                                                                            }
-                                                                        )
-                                                                    ),
-                                                                    Set(
-                                                                        varEmergencyReportUploadResult,
-                                                                        {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
-                                                                    )
-                                                                );
-                                                                If(
-                                                                    Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
-                                                                    Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
-                                                                    Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
-                                                                );
-                                                                Reset(attExternalDomainsReplace)
-                                                            )
-                                                        )
-                                                      PressedColor: =RGBA(255,255,255,0.01)
-                                                      PressedFill: =RGBA(255,255,255,0.01)
-                                                      Tooltip: ="Upload a new Emergency Report - triggers Agent 1 to regenerate External Domains"
-                                                      Width: =90
-                                          - lblExternalDomainsCount:
-                                              Control: Label@2.5.1
+                                                Y: =6
+                                          - attExternalDomainsReplace:
+                                              Control: Attachments@2.3.0
                                               Properties:
-                                                Align: =Align.Right
+                                                AddAttachmentText: =""
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                                Color: =RGBA(255,255,255,0.01)
+                                                Fill: =RGBA(255,255,255,0.01)
                                                 Font: =Font.'Segoe UI'
-                                                Height: =28
-                                                Size: =11
-                                                Text: =Coalesce(varExternalDomainsCount,0) & " (File)"
-                                                Width: =70
+                                                Height: =44
+                                                HoverColor: =RGBA(255,255,255,0.01)
+                                                HoverFill: =RGBA(255,255,255,0.01)
+                                                ItemColor: =RGBA(255,255,255,0.01)
+                                                ItemFill: =RGBA(255,255,255,0.01)
+                                                ItemHoverColor: =RGBA(255,255,255,0.01)
+                                                ItemHoverFill: =RGBA(255,255,255,0.01)
+                                                MaxAttachments: =1
+                                                MaxAttachmentsText: =""
+                                                NoAttachmentsColor: =RGBA(255,255,255,0.01)
+                                                NoAttachmentsText: =""
+                                                OnAddFile: |-
+                                                  =If(
+                                                      IsEmpty(attExternalDomainsReplace.Attachments),
+                                                      false,
+                                                      If(
+                                                          !EndsWith(
+                                                              Lower(First(attExternalDomainsReplace.Attachments).Name),
+                                                              ".xlsx"
+                                                          ),
+                                                          Notify("Only .xlsx files are allowed.", NotificationType.Error);
+                                                          Reset(attExternalDomainsReplace),
+                                                          Notify("Emergency Report submitted for processing. Agent 1 will regenerate External Domains.", NotificationType.Information);
+                                                          IfError(
+                                                              Set(
+                                                                  varEmergencyReportUploadResult,
+                                                                  'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(
+                                                                      User().Email,
+                                                                      {
+                                                                          file: {
+                                                                              name: First(attExternalDomainsReplace.Attachments).Name,
+                                                                              contentBytes: First(attExternalDomainsReplace.Attachments).Value
+                                                                          }
+                                                                      }
+                                                                  )
+                                                              ),
+                                                              Set(
+                                                                  varEmergencyReportUploadResult,
+                                                                  {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
+                                                              )
+                                                          );
+                                                          If(
+                                                              Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
+                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
+                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
+                                                          );
+                                                          Reset(attExternalDomainsReplace)
+                                                      )
+                                                  )
+                                                PressedColor: =RGBA(255,255,255,0.01)
+                                                PressedFill: =RGBA(255,255,255,0.01)
+                                                Tooltip: ="Upload a new Emergency Report - triggers Agent 1 to regenerate External Domains"
+                                                Width: =90
+                                    - lblExternalDomainsCount:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Right
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =11
+                                          Text: =Coalesce(varExternalDomainsCount,0) & " (File)"
+                                          Width: =224
+                                          Wrap: =false
+                                          X: =460
+                                          Y: =98
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
