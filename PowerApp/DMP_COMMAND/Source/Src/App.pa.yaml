@@ -20,6 +20,7 @@ App:
       Set(varEnvironmentIsPROD,false);
       Set(varLedOperationalState,"Gray");
       Set(varLedApplicationMode,"Gray");
+      Set(varLedEmergencyReport,"Gray");
       Set(varBlinkPhase,true);
       Set(varLastChangedText,Blank());
 
