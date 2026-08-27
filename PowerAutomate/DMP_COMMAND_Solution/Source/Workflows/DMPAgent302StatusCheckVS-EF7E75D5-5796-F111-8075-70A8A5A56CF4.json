@@ -2842,6 +2842,9 @@
             ],
             "VAR_NextMilestonesArray": [
               "Succeeded"
+            ],
+            "VAR_MilestoneRowIndex": [
+              "Succeeded"
             ]
           },
           "type": "Scope",
@@ -2878,13 +2881,27 @@
                   "TimedOut"
                 ]
               },
-              "type": "Foreach",
-              "foreach": "@coalesce(body('GET_OverallProcess_Rows')?['value'], createArray())",
+              "type": "Until",
+              "expression": "@or(greaterOrEquals(variables('MilestoneRowIndex'), length(coalesce(body('GET_OverallProcess_Rows')?['value'], createArray()))), greaterOrEquals(length(variables('NextMilestonesArray')), 5))",
+              "limit": {
+                "count": 60,
+                "timeout": "PT1H"
+              },
               "actions": {
-                "CMP_EffectivePhase": {
+                "CMP_CurrentRow": {
                   "runAfter": {},
                   "type": "Compose",
-                  "inputs": "@if(empty(trim(coalesce(item()?['Phase'], ''))), variables('LastSeenPhase'), trim(item()?['Phase']))",
+                  "inputs": "@coalesce(body('GET_OverallProcess_Rows')?['value'], createArray())[variables('MilestoneRowIndex')]",
+                  "description": "Reads the current row by index instead of Foreach's item(), so the loop can stop early once enough milestones are found instead of always walking all 44 rows."
+                },
+                "CMP_EffectivePhase": {
+                  "runAfter": {
+                    "CMP_CurrentRow": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@if(empty(trim(coalesce(outputs('CMP_CurrentRow')?['Phase'], ''))), variables('LastSeenPhase'), trim(outputs('CMP_CurrentRow')?['Phase']))",
                   "description": "Computes the effective Phase for this row (carried forward from the last non-blank one) without the SetVariable action referencing its own variable directly."
                 },
                 "SET_LastSeenPhase_IfPresent": {
@@ -2912,7 +2929,7 @@
                       {
                         "not": {
                           "equals": [
-                            "@toLower(trim(coalesce(item()?['Status'], '')))",
+                            "@toLower(trim(coalesce(outputs('CMP_CurrentRow')?['Status'], '')))",
                             "done"
                           ]
                         }
@@ -2933,18 +2950,41 @@
                         "name": "NextMilestonesArray",
                         "value": {
                           "phase": "@variables('LastSeenPhase')",
-                          "milestone": "@trim(coalesce(item()?['Milestone'], ''))",
-                          "responsibility": "@trim(coalesce(item()?['Responsibility'], ''))",
-                          "status": "@trim(coalesce(item()?['Status'], ''))"
+                          "milestone": "@trim(coalesce(outputs('CMP_CurrentRow')?['Milestone'], ''))",
+                          "responsibility": "@trim(coalesce(outputs('CMP_CurrentRow')?['Responsibility'], ''))",
+                          "status": "@trim(coalesce(outputs('CMP_CurrentRow')?['Status'], ''))"
                         }
                       },
                       "description": "Adds this pending milestone to the Next Steps buffer, stopping once 5 have been collected."
                     }
                   },
                   "description": "Collects this row as one of the next pending milestones if its Status is not 'done' and fewer than 5 have been collected so far."
+                },
+                "CMP_NextRowIndex": {
+                  "runAfter": {
+                    "IF_StatusNotDoneAndRoomLeft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@add(variables('MilestoneRowIndex'), 1)",
+                  "description": "Computes the next row index in a separate Compose, since SetVariable cannot reference the variable it sets."
+                },
+                "SET_MilestoneRowIndex": {
+                  "runAfter": {
+                    "CMP_NextRowIndex": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "MilestoneRowIndex",
+                    "value": "@outputs('CMP_NextRowIndex')"
+                  },
+                  "description": "Advances to the next row for the loop's exit condition."
                 }
               },
-              "description": "Walks every Overall Process row in sheet order, forward-filling the Phase and collecting the next pending (not 'done') milestones."
+              "description": "Walks Overall Process rows by index (Until, not Foreach) so it stops as soon as 5 pending milestones are found instead of always processing all 44 rows - a likely contributor to occasional Agent 4 timeouts."
             }
           }
         },
@@ -4260,6 +4300,24 @@
             ]
           },
           "description": "Buffers the next not-yet-done milestones (Phase, Milestone, Responsibility, Status) for the Cockpit's Next Steps card."
+        },
+        "VAR_MilestoneRowIndex": {
+          "runAfter": {
+            "VAR_NextMilestonesArray": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "MilestoneRowIndex",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Tracks the current row index for the Until-based milestone scan, so it can stop early instead of always walking all 44 rows like the previous Foreach did."
         }
       }
     },
