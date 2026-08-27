@@ -486,7 +486,7 @@
             ]
           },
           "type": "Scope",
-          "description": "Increments Agent 4's own Runs counter in Agent Audit Summary after the status response has been sent to the Power App.",
+          "description": "Increments Agent 4's own Runs counter in Agent Audit Summary and writes this run's summary to the central Audit Trail, after the status response has been sent to the Power App.",
           "actions": {
             "SET_AuditOutcome": {
               "runAfter": {},
@@ -496,6 +496,44 @@
                 "value": "@if(equals(actions('RESPOND_Status')['status'], 'Succeeded'), 'Succeeded', 'Failed')"
               },
               "description": "Determines the final AuditOutcome from the RESPOND_Status action's own execution status, since Agent 4 has no granular error branching."
+            },
+            "WRITE_RunSummary_To_AuditTrail": {
+              "runAfter": {
+                "SET_AuditOutcome": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                  "dateTimeFormat": "ISO 8601",
+                  "item/TimestampUtc": "@utcNow()",
+                  "item/RunId": "@workflow()?['run']?['name']",
+                  "item/WorkflowPath": "@coalesce(variables('ConfigObject')?['WorkflowPathAgent4'], 'Agent3_StatusCheck')",
+                  "item/StepName": "RunSummary",
+                  "item/StepStatus": "@variables('AuditOutcome')",
+                  "item/KeyOutput": "@concat('AuditTrailExists=', string(variables('AuditTrailExists')), ' | CounterExists=', string(variables('CounterExists')), ' | EmergencyReportExists=', string(variables('EmergencyReportExists')))",
+                  "item/DurationSec": "@formatNumber(div(float(sub(ticks(utcNow()), variables('RunStartTicks'))), 10000000),'0.00')",
+                  "item/ActionType": "Summary",
+                  "item/Direction": "Internal",
+                  "item/Recipient": "DMP COMMAND GUI",
+                  "item/Decision": "@if(equals(variables('AuditOutcome'), 'Succeeded'), 'run_completed', 'run_failed')"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "AddRowV2"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Writes this run's summary to the central Audit Trail, so Agent 4 status-check runs become visible in Audit Trail (Detail) like all other agents (was previously missing entirely)."
             },
             "GET_AgentSummaryRow_ForRun": {
               "runAfter": {

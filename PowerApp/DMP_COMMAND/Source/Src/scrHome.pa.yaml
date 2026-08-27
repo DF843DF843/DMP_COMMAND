@@ -445,7 +445,7 @@ Screens:
                               Color: =RGBA(255,255,255,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =28
+                              Height: =31
                               Size: =22
                               Text: ="DMP COMMAND"
                               Width: =550
@@ -460,7 +460,7 @@ Screens:
                               Color: =RGBA(215,210,235,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =21
                               Size: =11.5
                               Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                               Width: =610
@@ -500,7 +500,7 @@ Screens:
                               Text: ="Off"
                               Width: =30
                               X: =310
-                              Y: =72
+                              Y: =77
                         - btnRefreshNow:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -565,7 +565,7 @@ Screens:
                               Text: ="Now"
                               Width: =36
                               X: =344
-                              Y: =72
+                              Y: =77
                         - btnAutoRefresh2:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -585,7 +585,7 @@ Screens:
                               Text: ="2m"
                               Width: =30
                               X: =384
-                              Y: =72
+                              Y: =77
                         - btnAutoRefresh5:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -605,7 +605,7 @@ Screens:
                               Text: ="5m"
                               Width: =30
                               X: =418
-                              Y: =72
+                              Y: =77
                         - btnAutoRefresh10:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -625,7 +625,7 @@ Screens:
                               Text: ="10m"
                               Width: =32
                               X: =452
-                              Y: =72
+                              Y: =77
                         - btnAutoRefresh15:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -645,7 +645,7 @@ Screens:
                               Text: ="15m"
                               Width: =32
                               X: =488
-                              Y: =72
+                              Y: =77
                         - tmrInitialKickstart:
                             Control: Timer@2.1.0
                             Properties:
