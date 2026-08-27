@@ -266,7 +266,7 @@ Screens:
                         Visible: =varShowAdminPanel
                         Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
                         BorderColor: =RGBA(220,53,69,1)
-                        BorderThickness: =2
+                        BorderThickness: =3
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =10
@@ -401,7 +401,7 @@ Screens:
                                         Control: Classic/Button@2.2.0
                                         Properties:
                                           BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                          BorderThickness: =2
+                                          BorderThickness: =3
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Fill: =RGBA(0,0,0,0)
                                           Font: =Font.'Segoe UI'
@@ -982,7 +982,7 @@ Screens:
                             Variant: AutoLayout
                             Properties:
                               BorderColor: =RGBA(0,206,125,0.55)
-                              BorderThickness: =2
+                              BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                               FillPortions: =0
                               Height: =360
@@ -1037,7 +1037,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     BorderColor: =RGBA(0,206,125,0.55)
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     Height: =182
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
@@ -1345,7 +1345,7 @@ Screens:
                                   Variant: AutoLayout
                                   Properties:
                                     BorderColor: =RGBA(0,206,125,0.55)
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     Height: =162
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
@@ -1400,7 +1400,7 @@ Screens:
                                               Control: Classic/Button@2.2.0
                                               Properties:
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                                BorderThickness: =2
+                                                BorderThickness: =3
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Fill: =RGBA(0,0,0,0)
                                                 Font: =Font.'Segoe UI'
@@ -1477,7 +1477,7 @@ Screens:
                                               Control: Classic/Button@2.2.0
                                               Properties:
                                                 BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                                BorderThickness: =2
+                                                BorderThickness: =3
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                                 Fill: =RGBA(0,0,0,0)
                                                 Font: =Font.'Segoe UI'
@@ -1607,7 +1607,7 @@ Screens:
                             Variant: AutoLayout
                             Properties:
                               BorderColor: =RGBA(0,206,125,0.55)
-                              BorderThickness: =2
+                              BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                               Height: =360
                               LayoutAlignItems: =LayoutAlignItems.Center
@@ -1728,7 +1728,7 @@ Screens:
                       Variant: AutoLayout
                       Properties:
                         BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
-                        BorderThickness: =2
+                        BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                         FillPortions: =0
                         Height: =30
@@ -1911,7 +1911,7 @@ Screens:
                       Variant: AutoLayout
                       Properties:
                         BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
-                        BorderThickness: =2
+                        BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
@@ -1987,7 +1987,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2026,7 +2026,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2065,7 +2065,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2104,7 +2104,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2143,7 +2143,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2158,7 +2158,7 @@ Screens:
                       Variant: AutoLayout
                       Properties:
                         BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
-                        BorderThickness: =2
+                        BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
@@ -2201,18 +2201,18 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Color: =If(varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1))
+                                    Color: =If(varIsRefreshing, RGBA(160,155,190,1), If(varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                     Font: =Font.'Segoe UI'
                                     FontWeight: =FontWeight.Semibold
                                     Height: =32
                                     Size: =12
-                                    Text: =If(varStatusCallError="", "✓ Configuration loaded", "! Configuration load failed")
+                                    Text: =If(varIsRefreshing, "⟳ Loading configuration…", If(varStatusCallError="", "✓ Configuration loaded", "! Configuration load failed"))
                                     Width: =240
                               - lblNextStep1Detail:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2221,7 +2221,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =If(varStatusCallError="", "Live status successfully retrieved from Agent 4 at " & Text(varLastAttemptTimestamp,"hh:mm:ss"), "Agent 4 status call failed at " & Text(varLastAttemptTimestamp,"hh:mm:ss") & " - showing fallback defaults (" & varStatusCallError & ")")
+                                    Text: =If(varIsRefreshing, "Requesting live status from Agent 4 - please wait…", If(varStatusCallError="", "Live status successfully retrieved from Agent 4 at " & Text(varLastAttemptTimestamp,"hh:mm:ss"), "Agent 4 status call failed at " & Text(varLastAttemptTimestamp,"hh:mm:ss") & " - showing fallback defaults (" & varStatusCallError & ")"))
                                     Wrap: =true
                         - conStep2:
                             Control: GroupContainer@1.5.0
@@ -2252,7 +2252,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2290,7 +2290,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2328,7 +2328,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2366,7 +2366,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2404,7 +2404,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
@@ -2442,7 +2442,7 @@ Screens:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =2
+                                    BorderThickness: =3
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
