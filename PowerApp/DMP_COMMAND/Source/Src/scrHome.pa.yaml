@@ -1034,7 +1034,7 @@ Screens:
                             Properties:
                               Fill: =RGBA(0,0,0,0)
                               LayoutAlignItems: =LayoutAlignItems.Stretch
-                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutDirection: =LayoutDirection.Horizontal
                               LayoutGap: =16
                             Children:
                               - conOperatingState:
@@ -1044,6 +1044,7 @@ Screens:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                                    FillPortions: =0
                                     Height: =150
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
                                     LayoutDirection: =LayoutDirection.Vertical
@@ -1058,6 +1059,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
+                                    Width: =340
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
@@ -1088,12 +1090,13 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                FillPortions: =0
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =22
                                                 Size: =12
                                                 Text: ="Mode"
-                                                Width: =42
+                                                Width: =48
                                                 Wrap: =false
                                           - lblModeValue:
                                               Control: Label@2.5.1
@@ -1126,12 +1129,14 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =1
+                                                FillPortions: =0
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =22
                                                 Size: =13
                                                 Text: ="Last Changed"
+                                                Width: =100
+                                                Wrap: =false
                                           - lblLastChangedValue:
                                               Control: Label@2.5.1
                                               Properties:
@@ -1139,6 +1144,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                FillPortions: =1
                                                 Font: =Font.'Segoe UI'
                                                 Height: =22
                                                 Size: =13
@@ -1162,6 +1168,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                FillPortions: =0
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =26
@@ -1243,6 +1250,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0.3)
                                                 BorderThickness: =1
                                                 Fill: =Switch(varLedOperationalState, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
+                                                FillPortions: =0
                                                 Height: =16
                                                 LayoutDirection: =LayoutDirection.Horizontal
                                                 RadiusBottomLeft: =8
@@ -1268,6 +1276,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                                FillPortions: =0
                                                 Font: =Font.'Segoe UI'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =26
@@ -1295,24 +1304,27 @@ Screens:
                                                       false,
                                                       Set(varSuppressToggleEvents, true);
                                                       Set(varLedApplicationMode, "Yellow");
+                                                      Set(varLedOperationalState, If(tglOperationalState.Value, "Yellow", varLedOperationalState));
                                                       Set(
                                                           varOpModeResult,
                                                           'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                               User().Email,
-                                                              If(tglOperationalState.Value, "PROD_DMP", "PROD_NODMP")
+                                                              "PROD_NODMP"
                                                           )
                                                       );
                                                       If(
                                                           Coalesce(varOpModeResult.success, false),
                                                           Set(varEnvironmentIsPROD, true);
+                                                          Set(varOperationalModeIsDMP, false);
                                                           Set(varLedApplicationMode, "Green");
+                                                          Set(varLedOperationalState, "Green");
                                                           Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                          Notify("Environment switched to PROD.", NotificationType.Success),
+                                                          Notify("Environment switched to PROD" & If(tglOperationalState.Value, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
                                                           Set(varLedApplicationMode, "Red");
                                                           Reset(tglApplicationMode);
                                                           Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                       );
-                                                      Set(varSuppressToggleEvents, false)
+                                                      Set(varReadyToLiftToggleGuard, true)
                                                   )
                                                 OnUncheck: |-
                                                   =If(
@@ -1349,6 +1361,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0.3)
                                                 BorderThickness: =1
                                                 Fill: =Switch(varLedApplicationMode, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
+                                                FillPortions: =0
                                                 Height: =16
                                                 LayoutDirection: =LayoutDirection.Horizontal
                                                 RadiusBottomLeft: =8
@@ -1360,9 +1373,10 @@ Screens:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
                                   Properties:
-                                    BorderColor: =RGBA(0,206,125,0.55)
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                                    FillPortions: =1
                                     Height: =162
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
                                     LayoutDirection: =LayoutDirection.Vertical
@@ -1622,9 +1636,10 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
                             Properties:
-                              BorderColor: =RGBA(0,206,125,0.55)
+                              BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
                               BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              FillPortions: =0
                               Height: =360
                               LayoutAlignItems: =LayoutAlignItems.Center
                               LayoutDirection: =LayoutDirection.Vertical
@@ -1632,13 +1647,14 @@ Screens:
                               LayoutMaxHeight: =360
                               LayoutMinHeight: =360
                               PaddingBottom: =16
-                              PaddingLeft: =12
-                              PaddingRight: =12
+                              PaddingLeft: =24
+                              PaddingRight: =24
                               PaddingTop: =16
                               RadiusBottomLeft: =18
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
+                              Width: =228
                             Children:
                               - lblEmailsTitle:
                                   Control: Label@2.5.1
@@ -2468,3 +2484,39 @@ Screens:
                                     PaddingRight: =10
                                     Size: =11.5
                                     Text: ="Generate and send the weekly summary report"
+      - conFrameTop:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Width: =Parent.Width
+            X: =0
+            Y: =0
+      - conFrameBottom:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Width: =Parent.Width
+            X: =0
+            Y: =Parent.Height - Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+      - conFrameLeft:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Height: =Parent.Height
+            Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            X: =0
+            Y: =0
+      - conFrameRight:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Height: =Parent.Height
+            Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            X: =Parent.Width - Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Y: =0
