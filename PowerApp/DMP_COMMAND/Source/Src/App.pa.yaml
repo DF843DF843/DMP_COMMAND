@@ -18,8 +18,9 @@ App:
       Set(varStartDMPStatusRefresh,false);
       Set(varOperationalModeIsDMP,true);
       Set(varEnvironmentIsPROD,false);
-      Set(varLedOperationalState,"Green");
-      Set(varLedApplicationMode,"Green");
+      Set(varLedOperationalState,"Gray");
+      Set(varLedApplicationMode,"Gray");
+      Set(varBlinkPhase,true);
       Set(varLastChangedText,Blank());
 
       Set(varShowAdminPanel,false);
