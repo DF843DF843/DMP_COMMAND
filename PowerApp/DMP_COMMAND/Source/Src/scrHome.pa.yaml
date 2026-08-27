@@ -1037,22 +1037,24 @@ Screens:
                               LayoutAlignItems: =LayoutAlignItems.Stretch
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutGap: =16
-                              Width: =1056
+                              Width: =1316
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
                                   Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
+                                    BorderColor: =RGBA(0,206,125,0.7)
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
                                     Height: =160
+                                    LayoutMaxHeight: =160
+                                    LayoutMinHeight: =160
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =520
+                                    Width: =650
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
@@ -1098,7 +1100,7 @@ Screens:
                                           Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
                                           Width: =414
                                           Wrap: =false
-                                          X: =90
+                                          X: =220
                                           Y: =35
                                     - lblLastChangedLabel:
                                         Control: Label@2.5.1
@@ -1118,7 +1120,7 @@ Screens:
                                     - lblLastChangedValue:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Align: =Align.Right
+                                          Align: =Align.Left
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
@@ -1126,7 +1128,7 @@ Screens:
                                           Height: =22
                                           Size: =13
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
-                                          Width: =284
+                                          Width: =414
                                           Wrap: =false
                                           X: =220
                                           Y: =60
@@ -1229,7 +1231,7 @@ Screens:
                                           RadiusTopRight: =9
                                           Width: =18
                                           X: =344
-                                          Y: =89
+                                          Y: =92
                                     - lblApplicationModeLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1332,12 +1334,12 @@ Screens:
                                           RadiusTopRight: =9
                                           Width: =18
                                           X: =344
-                                          Y: =121
+                                          Y: =124
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
                                   Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
+                                    BorderColor: =RGBA(0,206,125,0.7)
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
@@ -1355,7 +1357,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =520
+                                    Width: =650
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
