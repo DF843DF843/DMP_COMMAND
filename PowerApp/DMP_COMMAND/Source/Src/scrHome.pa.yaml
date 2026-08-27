@@ -1033,33 +1033,26 @@ Screens:
                             Variant: AutoLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
+                              FillPortions: =0
                               LayoutAlignItems: =LayoutAlignItems.Stretch
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutGap: =16
+                              Width: =896
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
-                                  Variant: AutoLayout
+                                  Variant: ManualLayout
                                   Properties:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
-                                    Height: =150
-                                    LayoutAlignItems: =LayoutAlignItems.Stretch
-                                    LayoutDirection: =LayoutDirection.Vertical
-                                    LayoutGap: =4
-                                    LayoutMaxHeight: =150
-                                    LayoutMinHeight: =150
-                                    PaddingBottom: =6
-                                    PaddingLeft: =16
-                                    PaddingRight: =16
-                                    PaddingTop: =6
+                                    Height: =160
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =340
+                                    Width: =440
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
@@ -1072,303 +1065,274 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="OPERATING STATE"
-                                    - conRowMode:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          Width: =300
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =10
+                                    - lblModeLabel:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Height: =24
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutGap: =8
-                                          LayoutMaxHeight: =24
-                                          LayoutMinHeight: =24
-                                        Children:
-                                          - lblModeLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =0
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Height: =22
-                                                Size: =12
-                                                Text: ="Mode"
-                                                Width: =48
-                                                Wrap: =false
-                                          - lblModeValue:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Align: =Align.Left
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =1
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Semibold
-                                                Height: =22
-                                                Size: =12.5
-                                                Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
-                                                Wrap: =false
-                                    - conRowLastChanged:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =22
+                                          Size: =12
+                                          Text: ="Mode"
+                                          Width: =50
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =34
+                                    - lblModeValue:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Height: =24
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutMaxHeight: =24
-                                          LayoutMinHeight: =24
-                                        Children:
-                                          - lblLastChangedLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =0
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Height: =22
-                                                Size: =13
-                                                Text: ="Last Changed"
-                                                Width: =100
-                                                Wrap: =false
-                                          - lblLastChangedValue:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                Align: =Align.Right
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =1
-                                                Font: =Font.'Segoe UI'
-                                                Height: =22
-                                                Size: =13
-                                                Text: =Coalesce(varLastChangedText, "Not changed this session")
-                                                Wrap: =false
-                                    - conRowOperationalState:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          Align: =Align.Left
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =22
+                                          Size: =12.5
+                                          Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
+                                          Width: =354
+                                          Wrap: =false
+                                          X: =70
+                                          Y: =34
+                                    - lblLastChangedLabel:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Height: =28
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutGap: =6
-                                          LayoutMaxHeight: =28
-                                          LayoutMinHeight: =28
-                                        Children:
-                                          - lblOperationalStateLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =0
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Height: =26
-                                                Size: =13
-                                                Text: ="Operational Mode"
-                                                Width: =130
-                                                Wrap: =false
-                                          - tglOperationalState:
-                                              Control: Classic/Toggle@2.1.0
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Default: =varOperationalModeIsDMP
-                                                FalseFill: =RGBA(0,206,125,1)
-                                                FalseText: ="Normal"
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Semibold
-                                                Height: =26
-                                                LabelPaddingLeft: =0
-                                                LabelPaddingRight: =0
-                                                OnCheck: |-
-                                                  =If(
-                                                      varSuppressToggleEvents,
-                                                      false,
-                                                      Set(varSuppressToggleEvents, true);
-                                                      Set(varLedOperationalState, "Yellow");
-                                                      Set(
-                                                          varOpModeResult,
-                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                              User().Email,
-                                                              If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
-                                                          )
-                                                      );
-                                                      If(
-                                                          Coalesce(varOpModeResult.success, false),
-                                                          Set(varOperationalModeIsDMP, true);
-                                                          Set(varLedOperationalState, "Green");
-                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                          Notify("Operating State switched to DMP mode.", NotificationType.Success),
-                                                          Set(varLedOperationalState, "Red");
-                                                          Reset(tglOperationalState);
-                                                          Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                      );
-                                                      Set(varSuppressToggleEvents, false)
-                                                  )
-                                                OnUncheck: |-
-                                                  =If(
-                                                      varSuppressToggleEvents,
-                                                      false,
-                                                      Set(varSuppressToggleEvents, true);
-                                                      Set(varLedOperationalState, "Yellow");
-                                                      Set(
-                                                          varOpModeResult,
-                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                              User().Email,
-                                                              If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
-                                                          )
-                                                      );
-                                                      If(
-                                                          Coalesce(varOpModeResult.success, false),
-                                                          Set(varOperationalModeIsDMP, false);
-                                                          Set(varLedOperationalState, "Green");
-                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                          Notify("Operating State switched to Normal mode.", NotificationType.Success),
-                                                          Set(varLedOperationalState, "Red");
-                                                          Reset(tglOperationalState);
-                                                          Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                      );
-                                                      Set(varSuppressToggleEvents, false)
-                                                  )
-                                                TrueFill: =RGBA(255,159,10,1)
-                                                TrueText: ="DMP"
-                                                Width: =130
-                                          - dotLedOperationalState:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0.3)
-                                                BorderThickness: =1
-                                                Fill: =Switch(varLedOperationalState, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
-                                                FillPortions: =0
-                                                Height: =16
-                                                LayoutDirection: =LayoutDirection.Horizontal
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Width: =16
-                                    - conRowApplicationMode:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: AutoLayout
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =22
+                                          Size: =13
+                                          Text: ="Last Changed"
+                                          Width: =120
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =60
+                                    - lblLastChangedValue:
+                                        Control: Label@2.5.1
                                         Properties:
-                                          Fill: =RGBA(0,0,0,0)
-                                          Height: =28
-                                          LayoutAlignItems: =LayoutAlignItems.Center
-                                          LayoutDirection: =LayoutDirection.Horizontal
-                                          LayoutGap: =6
-                                          LayoutMaxHeight: =28
-                                          LayoutMinHeight: =28
-                                        Children:
-                                          - lblApplicationModeLabel:
-                                              Control: Label@2.5.1
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                FillPortions: =0
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Bold
-                                                Height: =26
-                                                Size: =13
-                                                Text: ="Environment"
-                                                Width: =130
-                                                Wrap: =false
-                                          - tglApplicationMode:
-                                              Control: Classic/Toggle@2.1.0
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0)
-                                                BorderStyle: =BorderStyle.None
-                                                Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                                Default: =varEnvironmentIsPROD
-                                                FalseFill: =RGBA(60,125,190,1)
-                                                FalseText: ="SIMU"
-                                                Font: =Font.'Segoe UI'
-                                                FontWeight: =FontWeight.Semibold
-                                                Height: =26
-                                                LabelPaddingLeft: =0
-                                                LabelPaddingRight: =0
-                                                OnCheck: |-
-                                                  =If(
-                                                      varSuppressToggleEvents,
-                                                      false,
-                                                      Set(varSuppressToggleEvents, true);
-                                                      Set(varLedApplicationMode, "Yellow");
-                                                      Set(varLedOperationalState, If(tglOperationalState.Value, "Yellow", varLedOperationalState));
-                                                      Set(
-                                                          varOpModeResult,
-                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                              User().Email,
-                                                              "PROD_NODMP"
-                                                          )
-                                                      );
-                                                      If(
-                                                          Coalesce(varOpModeResult.success, false),
-                                                          Set(varEnvironmentIsPROD, true);
-                                                          Set(varOperationalModeIsDMP, false);
-                                                          Set(varLedApplicationMode, "Green");
-                                                          Set(varLedOperationalState, "Green");
-                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                          Notify("Environment switched to PROD" & If(tglOperationalState.Value, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
-                                                          Set(varLedApplicationMode, "Red");
-                                                          Reset(tglApplicationMode);
-                                                          Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                      );
-                                                      Set(varReadyToLiftToggleGuard, true)
-                                                  )
-                                                OnUncheck: |-
-                                                  =If(
-                                                      varSuppressToggleEvents,
-                                                      false,
-                                                      Set(varSuppressToggleEvents, true);
-                                                      Set(varLedApplicationMode, "Yellow");
-                                                      Set(
-                                                          varOpModeResult,
-                                                          'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                              User().Email,
-                                                              If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
-                                                          )
-                                                      );
-                                                      If(
-                                                          Coalesce(varOpModeResult.success, false),
-                                                          Set(varEnvironmentIsPROD, false);
-                                                          Set(varLedApplicationMode, "Green");
-                                                          Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                          Notify("Environment switched to SIMU.", NotificationType.Success),
-                                                          Set(varLedApplicationMode, "Red");
-                                                          Reset(tglApplicationMode);
-                                                          Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                      );
-                                                      Set(varSuppressToggleEvents, false)
-                                                  )
-                                                TrueFill: =RGBA(196,43,28,1)
-                                                TrueText: ="PROD"
-                                                Width: =130
-                                          - dotLedApplicationMode:
-                                              Control: GroupContainer@1.5.0
-                                              Variant: AutoLayout
-                                              Properties:
-                                                BorderColor: =RGBA(0,0,0,0.3)
-                                                BorderThickness: =1
-                                                Fill: =Switch(varLedApplicationMode, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
-                                                FillPortions: =0
-                                                Height: =16
-                                                LayoutDirection: =LayoutDirection.Horizontal
-                                                RadiusBottomLeft: =8
-                                                RadiusBottomRight: =8
-                                                RadiusTopLeft: =8
-                                                RadiusTopRight: =8
-                                                Width: =16
+                                          Align: =Align.Right
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =22
+                                          Size: =13
+                                          Text: =Coalesce(varLastChangedText, "Not changed this session")
+                                          Width: =288
+                                          Wrap: =false
+                                          X: =136
+                                          Y: =60
+                                    - lblOperationalStateLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =26
+                                          Size: =13
+                                          Text: ="Operational Mode"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =90
+                                    - tglOperationalState:
+                                        Control: Classic/Toggle@2.1.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =0
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Default: =varOperationalModeIsDMP
+                                          FalseFill: =RGBA(0,206,125,1)
+                                          FalseText: ="Normal"
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =26
+                                          LabelPaddingLeft: =0
+                                          LabelPaddingRight: =0
+                                          OnCheck: |-
+                                            =If(
+                                                varSuppressToggleEvents,
+                                                false,
+                                                Set(varSuppressToggleEvents, true);
+                                                Set(varLedOperationalState, "Yellow");
+                                                Set(
+                                                    varOpModeResult,
+                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                        User().Email,
+                                                        If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
+                                                    )
+                                                );
+                                                If(
+                                                    Coalesce(varOpModeResult.success, false),
+                                                    Set(varOperationalModeIsDMP, true);
+                                                    Set(varLedOperationalState, "Green");
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                    Notify("Operating State switched to DMP mode.", NotificationType.Success),
+                                                    Set(varLedOperationalState, "Red");
+                                                    Reset(tglOperationalState);
+                                                    Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                );
+                                                Set(varSuppressToggleEvents, false)
+                                            )
+                                          OnUncheck: |-
+                                            =If(
+                                                varSuppressToggleEvents,
+                                                false,
+                                                Set(varSuppressToggleEvents, true);
+                                                Set(varLedOperationalState, "Yellow");
+                                                Set(
+                                                    varOpModeResult,
+                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                        User().Email,
+                                                        If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
+                                                    )
+                                                );
+                                                If(
+                                                    Coalesce(varOpModeResult.success, false),
+                                                    Set(varOperationalModeIsDMP, false);
+                                                    Set(varLedOperationalState, "Green");
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                    Notify("Operating State switched to Normal mode.", NotificationType.Success),
+                                                    Set(varLedOperationalState, "Red");
+                                                    Reset(tglOperationalState);
+                                                    Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                );
+                                                Set(varSuppressToggleEvents, false)
+                                            )
+                                          TrueFill: =RGBA(255,159,10,1)
+                                          TrueText: ="DMP"
+                                          Width: =110
+                                          X: =172
+                                          Y: =88
+                                    - dotLedOperationalState:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0.3)
+                                          BorderThickness: =1
+                                          Fill: =Switch(varLedOperationalState, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
+                                          Height: =18
+                                          RadiusBottomLeft: =9
+                                          RadiusBottomRight: =9
+                                          RadiusTopLeft: =9
+                                          RadiusTopRight: =9
+                                          Width: =18
+                                          X: =300
+                                          Y: =89
+                                    - lblApplicationModeLabel:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =26
+                                          Size: =13
+                                          Text: ="Environment"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =122
+                                    - tglApplicationMode:
+                                        Control: Classic/Toggle@2.1.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =0
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Default: =varEnvironmentIsPROD
+                                          FalseFill: =RGBA(60,125,190,1)
+                                          FalseText: ="SIMU"
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =26
+                                          LabelPaddingLeft: =0
+                                          LabelPaddingRight: =0
+                                          OnCheck: |-
+                                            =If(
+                                                varSuppressToggleEvents,
+                                                false,
+                                                Set(varSuppressToggleEvents, true);
+                                                Set(varLedApplicationMode, "Yellow");
+                                                Set(varLedOperationalState, If(tglOperationalState.Value, "Yellow", varLedOperationalState));
+                                                Set(
+                                                    varOpModeResult,
+                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                        User().Email,
+                                                        "PROD_NODMP"
+                                                    )
+                                                );
+                                                If(
+                                                    Coalesce(varOpModeResult.success, false),
+                                                    Set(varEnvironmentIsPROD, true);
+                                                    Set(varOperationalModeIsDMP, false);
+                                                    Set(varLedApplicationMode, "Green");
+                                                    Set(varLedOperationalState, "Green");
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                    Notify("Environment switched to PROD" & If(tglOperationalState.Value, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
+                                                    Set(varLedApplicationMode, "Red");
+                                                    Reset(tglApplicationMode);
+                                                    Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                );
+                                                Set(varReadyToLiftToggleGuard, true)
+                                            )
+                                          OnUncheck: |-
+                                            =If(
+                                                varSuppressToggleEvents,
+                                                false,
+                                                Set(varSuppressToggleEvents, true);
+                                                Set(varLedApplicationMode, "Yellow");
+                                                Set(
+                                                    varOpModeResult,
+                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                        User().Email,
+                                                        If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
+                                                    )
+                                                );
+                                                If(
+                                                    Coalesce(varOpModeResult.success, false),
+                                                    Set(varEnvironmentIsPROD, false);
+                                                    Set(varLedApplicationMode, "Green");
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                    Notify("Environment switched to SIMU.", NotificationType.Success),
+                                                    Set(varLedApplicationMode, "Red");
+                                                    Reset(tglApplicationMode);
+                                                    Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                );
+                                                Set(varSuppressToggleEvents, false)
+                                            )
+                                          TrueFill: =RGBA(196,43,28,1)
+                                          TrueText: ="PROD"
+                                          Width: =110
+                                          X: =172
+                                          Y: =120
+                                    - dotLedApplicationMode:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0.3)
+                                          BorderThickness: =1
+                                          Fill: =Switch(varLedApplicationMode, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
+                                          Height: =18
+                                          RadiusBottomLeft: =9
+                                          RadiusBottomRight: =9
+                                          RadiusTopLeft: =9
+                                          RadiusTopRight: =9
+                                          Width: =18
+                                          X: =300
+                                          Y: =121
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
                                   Variant: AutoLayout
@@ -1376,13 +1340,13 @@ Screens:
                                     BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                                    FillPortions: =1
-                                    Height: =162
+                                    FillPortions: =0
+                                    Height: =160
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutGap: =8
-                                    LayoutMaxHeight: =162
-                                    LayoutMinHeight: =162
+                                    LayoutMaxHeight: =160
+                                    LayoutMinHeight: =160
                                     PaddingBottom: =14
                                     PaddingLeft: =16
                                     PaddingRight: =16
@@ -1391,6 +1355,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
+                                    Width: =440
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
@@ -1467,7 +1432,7 @@ Screens:
                                                 BorderStyle: =BorderStyle.None
                                                 Height: =28
                                                 Text: =""
-                                                Width: =90
+                                                Width: =40
                                           - lblInternalDomainsCount:
                                               Control: Label@2.5.1
                                               Properties:
@@ -1654,7 +1619,7 @@ Screens:
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
-                              Width: =228
+                              Width: =400
                             Children:
                               - lblEmailsTitle:
                                   Control: Label@2.5.1
