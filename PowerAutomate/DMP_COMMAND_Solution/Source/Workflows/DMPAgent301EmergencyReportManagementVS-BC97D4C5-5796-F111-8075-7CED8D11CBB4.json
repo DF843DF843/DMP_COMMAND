@@ -1840,7 +1840,7 @@
             }
           },
           "runAfter": {
-            "MAIL_Alert_(EmailFolderCreationFailed)": [
+            "IF_EmailFolderResolutionFailed": [
               "Succeeded",
               "Failed",
               "Skipped",
@@ -1853,88 +1853,98 @@
           "type": "Scope",
           "description": "Validates all mandatory inputs received from Power Apps: file object received, user provided, filename available, and supported file extension (.xlsx). Invalid files are rejected before any SharePoint action is executed."
         },
-        "SET_AuditOutcome_EmailFolderFailed": {
+        "IF_EmailFolderResolutionFailed": {
+          "actions": {
+            "SET_AuditOutcome_EmailFolderFailed": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditOutcome",
+                "value": "Failed"
+              },
+              "description": "Marks the run outcome as Failed when the Agent 3 Alerts mailbox folder id could genuinely not be resolved. Treated as critical because it breaks housekeeping/archiving of processed alert mails, even if the Emergency Report upload itself succeeds later."
+            },
+            "AUDIT_EmailFolderCreation_Failed": {
+              "runAfter": {
+                "SET_AuditOutcome_EmailFolderFailed": [
+                  "Succeeded"
+                ]
+              },
+              "type": "AppendToArrayVariable",
+              "inputs": {
+                "name": "AuditEvents",
+                "value": {
+                  "TimestampUtc": "@{utcNow()}",
+                  "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
+                  "StepName": "EmailFolderCreation",
+                  "StepStatus": "Failed",
+                  "User": "@{variables('InitiatedBy')}",
+                  "SourceFileName": "@{triggerBody()?['file']?['name']}",
+                  "TargetFileName": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}",
+                  "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}"
+                }
+              },
+              "description": "Buffers a Failed audit event when the mailbox evidence folder setup did not succeed, so the detailed Audit Trail shows this even if the Emergency Report upload itself is later processed successfully."
+            },
+            "SET_AlertMailSubject_(EmailFolderCreationFailed)": {
+              "runAfter": {
+                "AUDIT_EmailFolderCreation_Failed": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AlertMailSubject",
+                "value": "[Agent 3][FAILED] Mailbox Evidence Folder Setup Failed"
+              },
+              "description": "Builds the subject of the email-folder-creation-failed alert mail."
+            },
+            "MAIL_Alert_(EmailFolderCreationFailed)": {
+              "runAfter": {
+                "SET_AlertMailSubject_(EmailFolderCreationFailed)": [
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                  "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                  "emailMessage/Subject": "@variables('AlertMailSubject')",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Mailbox evidence folder setup failed.</strong></b></p><p class=\"editor-paragraph\"><br>The shared mailbox subfolders used for evidence/housekeeping (\"PA Processed Mails\" / \"Agent 3 Alerts\") could not be created or resolved. Housekeeping/archiving of processed alert mails will not work correctly until this is resolved. The uploaded Emergency Report will still be validated and processed independently of this issue.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">User:</strong></b> @{variables('InitiatedBy')}<br><b><strong class=\"editor-text-bold\">RunId:</strong></b> @{workflow()?['run']?['name']}<br><br>Please check the shared mailbox permissions and folder structure.</p>",
+                  "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "SharedMailboxSendEmailV2"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Sends a critical alert mail when the mailbox evidence folder setup failed, so the operations team is notified without needing to actively monitor the Cockpit."
+            }
+          },
           "runAfter": {
             "E-Mail_Folder_creation": [
-              "Failed",
-              "TimedOut",
-              "Skipped"
-            ]
-          },
-          "type": "SetVariable",
-          "inputs": {
-            "name": "AuditOutcome",
-            "value": "Failed"
-          },
-          "description": "Marks the run outcome as Failed when the mailbox evidence folder setup did not succeed. Treated as critical because it breaks housekeeping/archiving of processed alert mails, even if the Emergency Report upload itself succeeds later."
-        },
-        "AUDIT_EmailFolderCreation_Failed": {
-          "runAfter": {
-            "SET_AuditOutcome_EmailFolderFailed": [
               "Succeeded"
             ]
           },
-          "type": "AppendToArrayVariable",
-          "inputs": {
-            "name": "AuditEvents",
-            "value": {
-              "TimestampUtc": "@{utcNow()}",
-              "WorkflowPath": "@{trim(string(outputs('CMP_ConfigObject')?['WorkflowPathAgent3']))}",
-              "StepName": "EmailFolderCreation",
-              "StepStatus": "Failed",
-              "User": "@{variables('InitiatedBy')}",
-              "SourceFileName": "@{triggerBody()?['file']?['name']}",
-              "TargetFileName": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportFileName']))}",
-              "TargetFolder": "@{trim(string(outputs('CMP_ConfigObject')?['EmergencyReportTargetFolder']))}"
-            }
-          },
-          "description": "Buffers a Failed audit event when the mailbox evidence folder setup did not succeed, so the detailed Audit Trail shows this even if the Emergency Report upload itself is later processed successfully."
-        },
-        "SET_AlertMailSubject_(EmailFolderCreationFailed)": {
-          "runAfter": {
-            "AUDIT_EmailFolderCreation_Failed": [
-              "Succeeded",
-              "Failed",
-              "Skipped",
-              "TimedOut"
+          "expression": {
+            "equals": [
+              "@empty(coalesce(variables('AlertTargetFolderId'), ''))",
+              true
             ]
           },
-          "type": "SetVariable",
-          "inputs": {
-            "name": "AlertMailSubject",
-            "value": "[Agent 3][FAILED] Mailbox Evidence Folder Setup Failed"
-          },
-          "description": "Builds the subject of the email-folder-creation-failed alert mail."
-        },
-        "MAIL_Alert_(EmailFolderCreationFailed)": {
-          "runAfter": {
-            "SET_AlertMailSubject_(EmailFolderCreationFailed)": [
-              "Succeeded",
-              "Failed",
-              "Skipped",
-              "TimedOut"
-            ]
-          },
-          "type": "OpenApiConnection",
-          "inputs": {
-            "parameters": {
-              "emailMessage/MailboxAddress": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
-              "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
-              "emailMessage/Subject": "@variables('AlertMailSubject')",
-              "emailMessage/Body": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 3 - Mailbox evidence folder setup failed.</strong></b></p><p class=\"editor-paragraph\"><br>The shared mailbox subfolders used for evidence/housekeeping (\"PA Processed Mails\" / \"Agent 3 Alerts\") could not be created or resolved. Housekeeping/archiving of processed alert mails will not work correctly until this is resolved. The uploaded Emergency Report will still be validated and processed independently of this issue.<br></p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">User:</strong></b> @{variables('InitiatedBy')}<br><b><strong class=\"editor-text-bold\">RunId:</strong></b> @{workflow()?['run']?['name']}<br><br>Please check the shared mailbox permissions and folder structure.</p>",
-              "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
-            },
-            "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
-              "connectionName": "shared_office365",
-              "operationId": "SharedMailboxSendEmailV2"
-            },
-            "authentication": {
-              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-              "type": "Raw"
-            }
-          },
-          "description": "Sends a critical alert mail when the mailbox evidence folder setup failed, so the operations team is notified without needing to actively monitor the Cockpit."
+          "type": "If",
+          "description": "Only marks the run Failed and sends the alert mail when the Agent 3 Alerts folder id could not genuinely be resolved - not merely because folders already existed and Create steps were tolerated as Failed."
         },
         "VAR_AlertEmailRecipient": {
           "runAfter": {
@@ -2225,7 +2235,10 @@
             "SET_AlertTargetFolderId": {
               "runAfter": {
                 "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"": [
-                  "Succeeded"
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "metadata": {
@@ -2234,9 +2247,9 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AlertTargetFolderId",
-                "value": "@body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"')?['value']?[0]?['id']"
+                "value": "@coalesce(body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"')?['value']?[0]?['id'], '')"
               },
-              "description": "Stores the mailbox folder ID of the Agent 3 Alerts folder.\nUsed for:\n- Moving sent alert mails\n- Audit evidence\n- Operational traceability"
+              "description": "Always runs (even if Create/Get above were tolerated as Failed) so this scope stays Succeeded; a real resolution failure is detected downstream from an empty value.\nStores the mailbox folder ID of the Agent 3 Alerts folder.\nUsed for:\n- Moving sent alert mails\n- Audit evidence\n- Operational traceability"
             }
           },
           "runAfter": {

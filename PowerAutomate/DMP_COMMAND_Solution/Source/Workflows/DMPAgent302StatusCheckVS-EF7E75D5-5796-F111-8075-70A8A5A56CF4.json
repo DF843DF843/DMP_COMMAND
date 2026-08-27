@@ -3427,15 +3427,18 @@
             "SET_AlertTargetFolderId": {
               "runAfter": {
                 "Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"": [
-                  "Succeeded"
+                  "Succeeded",
+                  "Failed",
+                  "Skipped",
+                  "TimedOut"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "AlertTargetFolderId",
-                "value": "@body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"')?['value']?[0]?['id']"
+                "value": "@coalesce(body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_4_Alerts\"')?['value']?[0]?['id'], '')"
               },
-              "description": "Stores the mailbox folder ID of the Agent 4 Alerts folder for moving sent alert mails."
+              "description": "Always runs (even if Create/Get above were tolerated as Failed) so this scope stays Succeeded; a real resolution failure is detected downstream from an empty value.\nStores the mailbox folder ID of the Agent 4 Alerts folder for moving sent alert mails."
             }
           },
           "runAfter": {
