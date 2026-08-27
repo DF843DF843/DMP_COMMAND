@@ -1054,7 +1054,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =650
+                                    Width: =600
                                   Children:
                                     - lblOperatingStateTitle:
                                         Control: Label@2.5.1
@@ -1080,7 +1080,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Bold
                                           Height: =22
-                                          Size: =12
+                                          Size: =13
                                           Text: ="Mode"
                                           Width: =70
                                           Wrap: =false
@@ -1096,9 +1096,9 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =22
-                                          Size: =10.5
+                                          Size: =11.5
                                           Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
-                                          Width: =414
+                                          Width: =364
                                           Wrap: =false
                                           X: =220
                                           Y: =35
@@ -1126,9 +1126,9 @@ Screens:
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Segoe UI'
                                           Height: =22
-                                          Size: =13
+                                          Size: =11.5
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
-                                          Width: =414
+                                          Width: =364
                                           Wrap: =false
                                           X: =220
                                           Y: =60
@@ -1357,7 +1357,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =650
+                                    Width: =700
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
