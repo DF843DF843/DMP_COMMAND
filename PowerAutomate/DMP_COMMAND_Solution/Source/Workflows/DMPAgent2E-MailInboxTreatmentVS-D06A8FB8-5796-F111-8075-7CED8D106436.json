@@ -8263,6 +8263,11 @@
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "AddRowV2"
                 },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
+                },
                 "authentication": "@parameters('$authentication')"
               },
               "description": "Writes the Agent 2 run summary into the central audit table and preserves run-level traceability for monitoring, diagnostics, and compliance."
@@ -8287,6 +8292,11 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "GetItem"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
                 },
                 "authentication": "@parameters('$authentication')"
               },
@@ -8390,6 +8400,11 @@
                           "connectionName": "shared_excelonlinebusiness",
                           "operationId": "AddRowV2"
                         },
+                        "retryPolicy": {
+                          "type": "fixed",
+                          "count": 4,
+                          "interval": "PT10S"
+                        },
                         "authentication": "@parameters('$authentication')"
                       },
                       "description": "Writes all buffered step-level audit events into the central audit table to ensure complete operational traceability across the full processing path."
@@ -8447,6 +8462,11 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "PatchItem"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
                 },
                 "authentication": "@parameters('$authentication')"
               },

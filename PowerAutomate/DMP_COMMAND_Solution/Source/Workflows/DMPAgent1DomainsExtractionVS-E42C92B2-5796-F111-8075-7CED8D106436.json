@@ -296,7 +296,7 @@
                 ]
               },
               "type": "Compose",
-              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Global Flow Failure ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
+              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Global Flow Failure ',\n  '[EC:A1-GLOBALFAIL][RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
               "description": "Builds the subject of the Agent 1 alert mail for an unexpected global flow failure."
             },
             "TICKS_Alert_E-Mail_(Move_Global_Fail_Mail)": {
@@ -611,6 +611,11 @@
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "AddRowV2"
                 },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
+                },
                 "authentication": "@parameters('$authentication')"
               },
               "description": "Writes the final Agent 1 run summary to the central audit trail after main processing and error handling have completed."
@@ -635,6 +640,11 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "GetItem"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
                 },
                 "authentication": "@parameters('$authentication')"
               },
@@ -737,6 +747,11 @@
                           "connectionName": "shared_excelonlinebusiness",
                           "operationId": "AddRowV2"
                         },
+                        "retryPolicy": {
+                          "type": "fixed",
+                          "count": 4,
+                          "interval": "PT10S"
+                        },
                         "authentication": "@parameters('$authentication')"
                       },
                       "description": "Writes one buffered Agent 1 audit event to the central audit trail."
@@ -788,6 +803,11 @@
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
                   "connectionName": "shared_excelonlinebusiness",
                   "operationId": "PatchItem"
+                },
+                "retryPolicy": {
+                  "type": "fixed",
+                  "count": 4,
+                  "interval": "PT10S"
                 },
                 "authentication": "@parameters('$authentication')"
               },
@@ -1152,7 +1172,7 @@
                 ]
               },
               "type": "Compose",
-              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Mailbox Setup Failed ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
+              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Mailbox Setup Failed ',\n  '[EC:A1-MBOXSETUP][RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
               "description": "Builds the subject of the Agent 1 alert mail for a mailbox setup failure."
             },
             "Set_LastSentSubject_(Mailbox_Setup_Failed)": {
@@ -1523,7 +1543,7 @@
                               ]
                             },
                             "type": "Compose",
-                            "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] External Domains file write failed ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
+                            "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] External Domains file write failed ',\n  '[EC:A1-FILEWRITE][RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
                             "description": "Builds the subject of the Agent 1 alert mail indicating that writing the external domains reference file failed."
                           },
                           "Get_Sent_Email_By_Subject_(Write_Domains_File_Failed)": {
@@ -2254,7 +2274,7 @@
                                 ]
                               },
                               "type": "Compose",
-                              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Domain extraction technical failure ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
+                              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] Domain extraction technical failure ',\n  '[EC:A1-TECHERROR][RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
                               "description": "Builds the subject of the Agent 1 alert mail for a technical domain extraction failure."
                             },
                             "Get_Sent_Email_By_Subject_(Failed_Domains_Extraction_-_TE)": {
@@ -2732,7 +2752,7 @@
                                   ]
                                 },
                                 "type": "Compose",
-                                "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] No domains found in source worksheet ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
+                                "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][FAILED] No domains found in source worksheet ',\n  '[EC:A1-NODOMAINS][RID:',\n  workflow()?['run']?['name'],\n  '|SC:',\n  formatNumber(variables('StepCounter'),'000'),\n  ']'\n)",
                                 "description": "Builds the subject of the Agent 1 alert mail for the case that no valid domains were found in the configured source worksheet."
                               },
                               "Get_Sent_Email_By_Subject_(Failed_Domains_Extraction_-_No_Domains_Found)": {
@@ -3156,7 +3176,7 @@
                 ]
               },
               "type": "Compose",
-              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][WARNING] Audit Trail Write Failed ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+              "inputs": "@concat(\n  outputs('CMP_ConfigObject')?['SubjectPrefix'],\n  '[Agent 1][WARNING] Audit Trail Write Failed ',\n  '[EC:A1-AUDITWRITE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
               "description": "Builds the subject of the Agent 1 fallback alert mail for a failed audit trail write."
             },
             "Set_LastSentSubject_(Audit_Write_Failed)": {
