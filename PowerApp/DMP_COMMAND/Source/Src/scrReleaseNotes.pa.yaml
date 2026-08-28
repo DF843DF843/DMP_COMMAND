@@ -99,13 +99,55 @@ Screens:
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
                 Children:
-                  - conReleaseV170:
+                  - conReleaseV180:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
                       Properties:
                         BorderColor: =RGBA(0,206,125,0.5)
                         BorderThickness: =2
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV180Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.8.0 - 2026-08-28 (current)"
+                              Wrap: =false
+                        - lblReleaseV180Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Sidebar logo fixed - the source image had ~20-25% built-in padding on every side, so no resize ever actually made it bigger; it is now cropped to the real artwork and fills the sidebar width" & Char(10) & "- Major width reduction across the whole Cockpit header row to fit 100% browser zoom (was previously only fully visible at 75%) - narrower Operating State / Maintenance Domains / Files columns, narrower buttons, smaller ring padding, tighter gaps, narrower sidebar" & Char(10) & "- Operating State - ""Mode"" merged into the title area (color-coded like the screen border, blinks while switching), all labels made smaller/consistent, matching the Files card style" & Char(10) & "- Emails card - legend converted to a tooltip on the ring itself, so the ring can stay full size while the card gets much narrower" & Char(10) & "- Light mode - several too-light grey texts (Files status/time, Maintenance Domains counts) darkened for readability" & Char(10) & "- New diagnostics tile on the Admin page showing App.Width/App.Height for reporting layout issues"
+                              Wrap: =true
+                  - conReleaseV170:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -128,7 +170,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.7.0 - 2026-08-28 (current)"
+                              Text: ="v1.7.0 - 2026-08-28"
                               Wrap: =false
                         - lblReleaseV170Notes:
                             Control: Label@2.5.1
