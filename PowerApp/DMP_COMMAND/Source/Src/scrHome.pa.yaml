@@ -1303,6 +1303,20 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =44
+                                    - lblInternalDomainsDash1:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="-"
+                                          Width: =12
+                                          Wrap: =false
+                                          X: =54
+                                          Y: =46
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1313,10 +1327,24 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
-                                          Text: ="- INTERNAL"
-                                          Width: =92
+                                          Text: ="INTERNAL"
+                                          Width: =80
                                           Wrap: =false
-                                          X: =56
+                                          X: =70
+                                          Y: =46
+                                    - lblInternalDomainsDash2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="-"
+                                          Width: =12
+                                          Wrap: =false
+                                          X: =154
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1338,7 +1366,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =54
-                                          X: =156
+                                          X: =170
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1360,7 +1388,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =58
-                                          X: =218
+                                          X: =230
                                           Y: =44
                                     - lblExternalDomainsCount:
                                         Control: Label@2.5.1
@@ -1378,6 +1406,20 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =96
+                                    - lblExternalDomainsDash1:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="-"
+                                          Width: =12
+                                          Wrap: =false
+                                          X: =54
+                                          Y: =98
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1388,10 +1430,24 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
-                                          Text: ="- EXTERNAL"
-                                          Width: =92
+                                          Text: ="EXTERNAL"
+                                          Width: =80
                                           Wrap: =false
-                                          X: =56
+                                          X: =70
+                                          Y: =98
+                                    - lblExternalDomainsDash2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          Size: =13
+                                          Text: ="-"
+                                          Width: =12
+                                          Wrap: =false
+                                          X: =154
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1413,7 +1469,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =54
-                                          X: =156
+                                          X: =170
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1435,7 +1491,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =58
-                                          X: =218
+                                          X: =230
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1451,7 +1507,7 @@ Screens:
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
                                           Width: =90
-                                          X: =284
+                                          X: =296
                                           Y: =98
                                         Children:
                                           - lblReplaceFake:
@@ -1547,7 +1603,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =382
+                                          X: =394
                                           Y: =105
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
