@@ -128,7 +128,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.9.1 - 2026-08-28 (current)"
+                              Text: ="v1.9.2 - 2026-08-28 (current)"
                               Wrap: =false
                         - lblReleaseV190Notes:
                             Control: Label@2.5.1
@@ -137,9 +137,9 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =240
+                              Height: =260
                               Size: =12
-                              Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - count (green) - LOCATION - actions, e.g. ""19 - INTERNAL - View Edit"" and ""6 - EXTERNAL - View Edit Replace""" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap" & Char(10) & "- v1.9.1 - added the missing second dash (between location and actions) to the Maintenance Domains format"
+                              Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - count (green) - LOCATION - actions, e.g. ""19 - INTERNAL - View Edit"" and ""6 - EXTERNAL - View Edit Replace""" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap" & Char(10) & "- v1.9.1 - added the missing second dash (between location and actions) to the Maintenance Domains format" & Char(10) & "- v1.9.2 - enlarged the invisible click area of the Replace button (Maintenance Domains - External) - was only slightly larger than the visible button, now has a generous margin on all sides without overlapping the neighboring Edit button or LED"
                               Wrap: =true
                   - conReleaseV180:
                       Control: GroupContainer@1.5.0

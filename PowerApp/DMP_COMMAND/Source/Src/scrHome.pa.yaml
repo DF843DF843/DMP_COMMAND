@@ -1534,7 +1534,7 @@ Screens:
                                                 Color: =RGBA(255,255,255,0.01)
                                                 Fill: =RGBA(255,255,255,0.01)
                                                 Font: =Font.'Segoe UI'
-                                                Height: =54
+                                                Height: =64
                                                 HoverColor: =RGBA(255,255,255,0.01)
                                                 HoverFill: =RGBA(255,255,255,0.01)
                                                 ItemColor: =RGBA(255,255,255,0.01)
@@ -1589,7 +1589,9 @@ Screens:
                                                 PressedColor: =RGBA(255,255,255,0.01)
                                                 PressedFill: =RGBA(255,255,255,0.01)
                                                 Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
-                                                Width: =95
+                                                Width: =102
+                                                X: =-6
+                                                Y: =-16
                                     - dotLedEmergencyReport:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
