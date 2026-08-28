@@ -1,4 +1,4 @@
-﻿# ************************************************************************************************
+# ************************************************************************************************
 # Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
 # Use the maker portal to create and edit your Power Apps.
 # 
@@ -478,7 +478,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =12
                               Size: =8.5
-                              Text: =If(varIsRefreshing, "âŸ³ Refresh ongoingâ€¦", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   Â·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
+                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
                               Width: =430
                               Wrap: =false
                               X: =20
@@ -1037,7 +1037,7 @@ Screens:
                               Height: =360
                               LayoutMaxHeight: =360
                               LayoutMinHeight: =360
-                              Width: =1186
+                              Width: =916
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
@@ -1054,7 +1054,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =550
+                                    Width: =420
                                     X: =0
                                     Y: =0
                                   Children:
@@ -1069,9 +1069,9 @@ Screens:
                                           Height: =18
                                           Size: =12
                                           Text: ="OPERATING STATE"
-                                          Width: =300
+                                          Width: =229
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =10
                                     - lblModeLabel:
                                         Control: Label@2.5.1
@@ -1084,9 +1084,9 @@ Screens:
                                           Height: =22
                                           Size: =13
                                           Text: ="Mode"
-                                          Width: =70
+                                          Width: =53
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =34
                                     - lblModeValue:
                                         Control: Label@2.5.1
@@ -1100,9 +1100,9 @@ Screens:
                                           Height: =22
                                           Size: =11.5
                                           Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
-                                          Width: =314
+                                          Width: =240
                                           Wrap: =false
-                                          X: =220
+                                          X: =168
                                           Y: =35
                                     - lblLastChangedLabel:
                                         Control: Label@2.5.1
@@ -1115,9 +1115,9 @@ Screens:
                                           Height: =22
                                           Size: =13
                                           Text: ="Last Changed"
-                                          Width: =190
+                                          Width: =145
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =60
                                     - lblLastChangedValue:
                                         Control: Label@2.5.1
@@ -1130,9 +1130,9 @@ Screens:
                                           Height: =22
                                           Size: =11.5
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
-                                          Width: =364
+                                          Width: =278
                                           Wrap: =false
-                                          X: =220
+                                          X: =168
                                           Y: =60
                                     - lblOperationalStateLabel:
                                         Control: Label@2.5.1
@@ -1145,9 +1145,9 @@ Screens:
                                           Height: =26
                                           Size: =13
                                           Text: ="Operational Mode"
-                                          Width: =190
+                                          Width: =145
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =90
                                     - tglOperationalState:
                                         Control: Classic/Toggle@2.1.0
@@ -1181,7 +1181,7 @@ Screens:
                                                     Coalesce(varOpModeResult.success, false),
                                                     Set(varOperationalModeIsDMP, true);
                                                     Set(varLedOperationalState, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " Â· " & User().FullName);
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
                                                     Notify("Operating State switched to DMP mode.", NotificationType.Success),
                                                     Set(varLedOperationalState, "Red");
                                                     Reset(tglOperationalState);
@@ -1206,7 +1206,7 @@ Screens:
                                                     Coalesce(varOpModeResult.success, false),
                                                     Set(varOperationalModeIsDMP, false);
                                                     Set(varLedOperationalState, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " Â· " & User().FullName);
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
                                                     Notify("Operating State switched to Normal mode.", NotificationType.Success),
                                                     Set(varLedOperationalState, "Red");
                                                     Reset(tglOperationalState);
@@ -1216,8 +1216,8 @@ Screens:
                                             )
                                           TrueFill: =RGBA(255,159,10,1)
                                           TrueText: ="DMP"
-                                          Width: =110
-                                          X: =220
+                                          Width: =84
+                                          X: =168
                                           Y: =88
                                     - dotLedOperationalState:
                                         Control: GroupContainer@1.5.0
@@ -1231,8 +1231,8 @@ Screens:
                                           RadiusBottomRight: =9
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
-                                          Width: =18
-                                          X: =344
+                                          Width: =14
+                                          X: =263
                                           Y: =92
                                     - lblApplicationModeLabel:
                                         Control: Label@2.5.1
@@ -1245,9 +1245,9 @@ Screens:
                                           Height: =26
                                           Size: =13
                                           Text: ="Environment"
-                                          Width: =190
+                                          Width: =145
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =122
                                     - tglApplicationMode:
                                         Control: Classic/Toggle@2.1.0
@@ -1284,7 +1284,7 @@ Screens:
                                                     Set(varOperationalModeIsDMP, false);
                                                     Set(varLedApplicationMode, "Green");
                                                     Set(varLedOperationalState, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " Â· " & User().FullName);
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
                                                     Notify("Environment switched to PROD" & If(tglOperationalState.Value, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
                                                     Set(varLedApplicationMode, "Red");
                                                     Reset(tglApplicationMode);
@@ -1309,7 +1309,7 @@ Screens:
                                                     Coalesce(varOpModeResult.success, false),
                                                     Set(varEnvironmentIsPROD, false);
                                                     Set(varLedApplicationMode, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " Â· " & User().FullName);
+                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
                                                     Notify("Environment switched to SIMU.", NotificationType.Success),
                                                     Set(varLedApplicationMode, "Red");
                                                     Reset(tglApplicationMode);
@@ -1319,8 +1319,8 @@ Screens:
                                             )
                                           TrueFill: =RGBA(196,43,28,1)
                                           TrueText: ="PROD"
-                                          Width: =110
-                                          X: =220
+                                          Width: =84
+                                          X: =168
                                           Y: =120
                                     - dotLedApplicationMode:
                                         Control: GroupContainer@1.5.0
@@ -1334,8 +1334,8 @@ Screens:
                                           RadiusBottomRight: =9
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
-                                          Width: =18
-                                          X: =344
+                                          Width: =14
+                                          X: =263
                                           Y: =124
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0
@@ -1350,8 +1350,8 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =620
-                                    X: =566
+                                    Width: =480
+                                    X: =436
                                     Y: =0
                                   Children:
                                     - lblMaintenanceDomainsTitle:
@@ -1365,9 +1365,9 @@ Screens:
                                           Height: =18
                                           Size: =12
                                           Text: ="MAINTENANCE - DOMAINS"
-                                          Width: =300
+                                          Width: =232
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =10
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1380,9 +1380,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="Internal"
-                                          Width: =140
+                                          Width: =108
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1403,8 +1403,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =70
-                                          X: =170
+                                          Width: =54
+                                          X: =132
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1425,8 +1425,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =80
-                                          X: =256
+                                          Width: =62
+                                          X: =198
                                           Y: =44
                                     - lblInternalDomainsCount:
                                         Control: Label@2.5.1
@@ -1439,9 +1439,9 @@ Screens:
                                           Height: =32
                                           Size: =11
                                           Text: =Coalesce(varInternalDomainsCount,0) & " (SharePoint)"
-                                          Width: =144
+                                          Width: =111
                                           Wrap: =false
-                                          X: =460
+                                          X: =356
                                           Y: =46
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1454,9 +1454,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="External"
-                                          Width: =140
+                                          Width: =108
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1477,8 +1477,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =70
-                                          X: =170
+                                          Width: =54
+                                          X: =132
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1499,8 +1499,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =80
-                                          X: =256
+                                          Width: =62
+                                          X: =198
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1515,8 +1515,8 @@ Screens:
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
-                                          Width: =90
-                                          X: =352
+                                          Width: =70
+                                          X: =273
                                           Y: =98
                                         Children:
                                           - lblReplaceFake:
@@ -1532,7 +1532,7 @@ Screens:
                                                 Height: =32
                                                 Size: =12
                                                 Text: ="Replace"
-                                                Width: =90
+                                                Width: =70
                                                 Y: =0
                                           - attExternalDomainsReplace:
                                               Control: Attachments@2.3.0
@@ -1598,7 +1598,7 @@ Screens:
                                                 PressedColor: =RGBA(255,255,255,0.01)
                                                 PressedFill: =RGBA(255,255,255,0.01)
                                                 Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
-                                                Width: =95
+                                                Width: =74
                                     - dotLedEmergencyReport:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -1611,8 +1611,8 @@ Screens:
                                           RadiusBottomRight: =9
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
-                                          Width: =18
-                                          X: =458
+                                          Width: =14
+                                          X: =355
                                           Y: =105
                                     - lblExternalDomainsCount:
                                         Control: Label@2.5.1
@@ -1625,9 +1625,9 @@ Screens:
                                           Height: =32
                                           Size: =11
                                           Text: =Coalesce(varExternalDomainsCount,0) & " (File)"
-                                          Width: =124
+                                          Width: =96
                                           Wrap: =false
-                                          X: =480
+                                          X: =372
                                           Y: =98
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
@@ -1642,7 +1642,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =550
+                                    Width: =420
                                     X: =0
                                     Y: =176
                                   Children:
@@ -1657,9 +1657,9 @@ Screens:
                                           Height: =16
                                           Size: =12
                                           Text: ="FILES"
-                                          Width: =120
+                                          Width: =92
                                           Wrap: =false
-                                          X: =16
+                                          X: =12
                                           Y: =10
                                     - lblFilesColHeaderStatus:
                                         Control: Label@2.5.1
@@ -1672,9 +1672,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="STATUS"
-                                          Width: =100
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =30
                                     - lblFilesColHeaderUpdated:
                                         Control: Label@2.5.1
@@ -1687,9 +1687,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="LAST UPDATED"
-                                          Width: =214
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =30
                                     - lblDotEmergencyReport:
                                         Control: Label@2.5.1
@@ -1700,9 +1700,9 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
-                                          Width: =16
-                                          X: =16
+                                          Text: ="●"
+                                          Width: =12
+                                          X: =12
                                           Y: =48
                                     - lblNameEmergencyReport:
                                         Control: Label@2.5.1
@@ -1714,9 +1714,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Emergency Report"
-                                          Width: =160
+                                          Width: =122
                                           Wrap: =false
-                                          X: =40
+                                          X: =31
                                           Y: =48
                                     - lblInfoEmergencyReport:
                                         Control: Label@2.5.1
@@ -1727,10 +1727,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loadingâ€¦", If(varEmergencyReportExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varEmergencyReportExists, "Operational", "Missing"))
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =48
                                     - lblTimeEmergencyReport:
                                         Control: Label@2.5.1
@@ -1741,10 +1741,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "â€“", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =214
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =48
                                     - lblDotInternalDomains:
                                         Control: Label@2.5.1
@@ -1755,9 +1755,9 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
-                                          Width: =16
-                                          X: =16
+                                          Text: ="●"
+                                          Width: =12
+                                          X: =12
                                           Y: =74
                                     - lblNameInternalDomains:
                                         Control: Label@2.5.1
@@ -1769,9 +1769,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Internal Domains"
-                                          Width: =160
+                                          Width: =122
                                           Wrap: =false
-                                          X: =40
+                                          X: =31
                                           Y: =74
                                     - lblInfoInternalDomains:
                                         Control: Label@2.5.1
@@ -1782,10 +1782,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loadingâ€¦", If(varInternalDomainsExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varInternalDomainsExists, "Operational", "Missing"))
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =74
                                     - lblTimeInternalDomains:
                                         Control: Label@2.5.1
@@ -1796,10 +1796,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "â€“", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =214
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "–", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =74
                                     - lblDotExternalDomains:
                                         Control: Label@2.5.1
@@ -1810,9 +1810,9 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
-                                          Width: =16
-                                          X: =16
+                                          Text: ="●"
+                                          Width: =12
+                                          X: =12
                                           Y: =100
                                     - lblNameExternalDomains:
                                         Control: Label@2.5.1
@@ -1824,9 +1824,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="External Domains"
-                                          Width: =160
+                                          Width: =122
                                           Wrap: =false
-                                          X: =40
+                                          X: =31
                                           Y: =100
                                     - lblInfoExternalDomains:
                                         Control: Label@2.5.1
@@ -1837,10 +1837,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loadingâ€¦", If(varExternalDomainsExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varExternalDomainsExists, "Operational", "Missing"))
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =100
                                     - lblTimeExternalDomains:
                                         Control: Label@2.5.1
@@ -1851,10 +1851,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "â€“", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =214
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =100
                                     - lblDotCounter:
                                         Control: Label@2.5.1
@@ -1865,9 +1865,9 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
-                                          Width: =16
-                                          X: =16
+                                          Text: ="●"
+                                          Width: =12
+                                          X: =12
                                           Y: =126
                                     - lblNameCounter:
                                         Control: Label@2.5.1
@@ -1879,9 +1879,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Counter File"
-                                          Width: =160
+                                          Width: =122
                                           Wrap: =false
-                                          X: =40
+                                          X: =31
                                           Y: =126
                                     - lblInfoCounter:
                                         Control: Label@2.5.1
@@ -1892,10 +1892,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loadingâ€¦", If(varCounterExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varCounterExists, "Operational", "Missing"))
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =126
                                     - lblTimeCounter:
                                         Control: Label@2.5.1
@@ -1906,10 +1906,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "â€“", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =214
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =126
                                     - lblDotAuditTrail:
                                         Control: Label@2.5.1
@@ -1920,9 +1920,9 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
-                                          Width: =16
-                                          X: =16
+                                          Text: ="●"
+                                          Width: =12
+                                          X: =12
                                           Y: =152
                                     - lblNameAuditTrail:
                                         Control: Label@2.5.1
@@ -1934,9 +1934,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Audit Trail File"
-                                          Width: =160
+                                          Width: =122
                                           Wrap: =false
-                                          X: =40
+                                          X: =31
                                           Y: =152
                                     - lblInfoAuditTrail:
                                         Control: Label@2.5.1
@@ -1947,10 +1947,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loadingâ€¦", If(varAuditTrailExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varAuditTrailExists, "Operational", "Missing"))
+                                          Width: =76
                                           Wrap: =false
-                                          X: =210
+                                          X: =160
                                           Y: =152
                                     - lblTimeAuditTrail:
                                         Control: Label@2.5.1
@@ -1961,10 +1961,10 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "â€“", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =214
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
+                                          Width: =163
                                           Wrap: =false
-                                          X: =320
+                                          X: =244
                                           Y: =152
                               - conFilesPlaceholder:
                                   Control: GroupContainer@1.5.0
@@ -1980,8 +1980,8 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =620
-                                    X: =566
+                                    Width: =480
+                                    X: =436
                                     Y: =176
                                   Children:
                                     - lblFilesPlaceholderTitle:
@@ -1996,20 +1996,8 @@ Screens:
                                           Height: =20
                                           Size: =11
                                           Text: ="RESERVED FOR FUTURE USE"
-                                          Width: =620
+                                          Width: =480
                                           Y: =82
-                  - conRow2:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        Fill: =RGBA(0,0,0,0)
-                        FillPortions: =0
-                        Height: =360
-                        LayoutDirection: =LayoutDirection.Horizontal
-                        LayoutGap: =16
-                        LayoutMaxHeight: =360
-                        LayoutMinHeight: =360
-                      Children:
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -2080,7 +2068,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =28
                                     Size: =12
-                                    Text: =If(IsBlank(varStatusLastRefreshed), "No DMP  Â·  Loadingâ€¦", "No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
+                                    Text: =If(IsBlank(varStatusLastRefreshed), "No DMP  ·  Loading…", "No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
                                     Width: =224
                                     Wrap: =false
                                     X: =372
@@ -2095,7 +2083,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =28
                                     Size: =12
-                                    Text: =If(IsBlank(varStatusLastRefreshed), "External  Â·  Loadingâ€¦", "External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
+                                    Text: =If(IsBlank(varStatusLastRefreshed), "External  ·  Loading…", "External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
                                     Width: =224
                                     Wrap: =false
                                     X: =372
@@ -2110,7 +2098,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =28
                                     Size: =12
-                                    Text: =If(IsBlank(varStatusLastRefreshed), "Internal  Â·  Loadingâ€¦", "Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
+                                    Text: =If(IsBlank(varStatusLastRefreshed), "Internal  ·  Loading…", "Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
                                     Width: =224
                                     Wrap: =false
                                     X: =372
@@ -2125,7 +2113,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =28
                                     Size: =12
-                                    Text: =If(IsBlank(varStatusLastRefreshed), "Not Effected  Â·  Loadingâ€¦", "Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
+                                    Text: =If(IsBlank(varStatusLastRefreshed), "Not Effected  ·  Loading…", "Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)")
                                     Width: =224
                                     Wrap: =false
                                     X: =372
@@ -2159,7 +2147,7 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =18
                               Size: =11
-                              Text: ="NEXT STEPS  Â·  Default Management Process"
+                              Text: ="NEXT STEPS  ·  Default Management Process"
                         - conNoMilestonesRow:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -2205,7 +2193,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},"â†’ " & m.milestone)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},"→ " & m.milestone)
                                     Width: =240
                               - lblMilestone1Detail:
                                   Control: Label@2.5.1
@@ -2220,7 +2208,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},m.responsibility & "  Â·  " & m.phase & "  Â·  " & m.status)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow2:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -2244,7 +2232,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},"â†’ " & m.milestone)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},"→ " & m.milestone)
                                     Width: =240
                               - lblMilestone2Detail:
                                   Control: Label@2.5.1
@@ -2259,7 +2247,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},m.responsibility & "  Â·  " & m.phase & "  Â·  " & m.status)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow3:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -2283,7 +2271,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},"â†’ " & m.milestone)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},"→ " & m.milestone)
                                     Width: =240
                               - lblMilestone3Detail:
                                   Control: Label@2.5.1
@@ -2298,7 +2286,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},m.responsibility & "  Â·  " & m.phase & "  Â·  " & m.status)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow4:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -2322,7 +2310,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},"â†’ " & m.milestone)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},"→ " & m.milestone)
                                     Width: =240
                               - lblMilestone4Detail:
                                   Control: Label@2.5.1
@@ -2337,7 +2325,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},m.responsibility & "  Â·  " & m.phase & "  Â·  " & m.status)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow5:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
@@ -2361,7 +2349,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},"â†’ " & m.milestone)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},"→ " & m.milestone)
                                     Width: =240
                               - lblMilestone5Detail:
                                   Control: Label@2.5.1
@@ -2376,7 +2364,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  Â·  " & m.phase & "  Â·  " & m.status)
+                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                   - conAutomationStatus:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -2430,7 +2418,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =32
                                     Size: =12
-                                    Text: =If(varIsRefreshing, "âŸ³ Loading configurationâ€¦", If(varStatusCallError="", "âœ“ Configuration loaded", "! Configuration load failed"))
+                                    Text: =If(varIsRefreshing, "⟳ Loading configuration…", If(varStatusCallError="", "✓ Configuration loaded", "! Configuration load failed"))
                                     Width: =240
                               - lblNextStep1Detail:
                                   Control: Label@2.5.1
@@ -2445,7 +2433,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =If(varIsRefreshing, "Requesting live status from Agent 4 - please waitâ€¦", If(varStatusCallError="", "Live status successfully retrieved from Agent 4 at " & Text(varLastAttemptTimestamp,"hh:mm:ss"), "Agent 4 status call failed at " & Text(varLastAttemptTimestamp,"hh:mm:ss") & " - showing fallback defaults (" & varStatusCallError & ")"))
+                                    Text: =If(varIsRefreshing, "Requesting live status from Agent 4 - please wait…", If(varStatusCallError="", "Live status successfully retrieved from Agent 4 at " & Text(varLastAttemptTimestamp,"hh:mm:ss"), "Agent 4 status call failed at " & Text(varLastAttemptTimestamp,"hh:mm:ss") & " - showing fallback defaults (" & varStatusCallError & ")"))
                                     Wrap: =true
                         - conStep2:
                             Control: GroupContainer@1.5.0
@@ -2470,7 +2458,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =32
                                     Size: =12
-                                    Text: =If(varInternalDomainsExists, "âœ“ Agent 1 domain extraction", "! Agent 1 domain extraction pending")
+                                    Text: =If(varInternalDomainsExists, "✓ Agent 1 domain extraction", "! Agent 1 domain extraction pending")
                                     Width: =240
                               - lblNextStep2Detail:
                                   Control: Label@2.5.1
@@ -2508,7 +2496,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: ="â†’ Check Agent 2 inbox"
+                                    Text: ="→ Check Agent 2 inbox"
                                     Width: =240
                               - lblNextStep3Detail:
                                   Control: Label@2.5.1
@@ -2546,7 +2534,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: ="â†’ Validate Emergency Report"
+                                    Text: ="→ Validate Emergency Report"
                                     Width: =240
                               - lblNextStep4Detail:
                                   Control: Label@2.5.1
@@ -2584,7 +2572,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: ="â†’ Audit Trail review"
+                                    Text: ="→ Audit Trail review"
                                     Width: =240
                               - lblNextStep5Detail:
                                   Control: Label@2.5.1
@@ -2622,7 +2610,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: ="â†’ End Fire Drill"
+                                    Text: ="→ End Fire Drill"
                                     Width: =240
                               - lblNextStep6Detail:
                                   Control: Label@2.5.1
@@ -2660,7 +2648,7 @@ Screens:
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     Size: =12
-                                    Text: ="â†’ Export weekly report"
+                                    Text: ="→ Export weekly report"
                                     Width: =240
                               - lblNextStep7Detail:
                                   Control: Label@2.5.1

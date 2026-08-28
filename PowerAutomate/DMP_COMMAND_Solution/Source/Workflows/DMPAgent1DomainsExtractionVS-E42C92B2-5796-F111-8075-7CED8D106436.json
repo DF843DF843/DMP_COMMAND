@@ -3318,7 +3318,7 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "Uri": "@concat('v1.0/users/', outputs('CMP_ConfigObject')?['SharedDMPMailbox'], '/messages/', outputs('Compose_Sent_Message_ID_(Failed_Domains_Extraction_-_No_Domains_Found)'), '/move')",
+                      "Uri": "@concat('v1.0/users/', outputs('CMP_ConfigObject')?['SharedDMPMailbox'], '/messages/', outputs('Compose_Sent_Message_ID_(Audit_Write_Failed)'), '/move')",
                       "Method": "POST",
                       "CustomHeader1": "Content-Type: application/json",
                       "Body": "{\n  \"destinationId\": \"@{body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_1_Alerts\"')?['value'][0]['id']}\"\n}",
