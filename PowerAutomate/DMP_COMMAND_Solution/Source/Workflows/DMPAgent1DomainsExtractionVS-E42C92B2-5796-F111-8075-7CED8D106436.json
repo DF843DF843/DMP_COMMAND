@@ -605,6 +605,83 @@
               },
               "description": "Writes the final Agent 1 run summary to the central audit trail after main processing and error handling have completed."
             },
+            "GET_AgentSummaryRow_Combined": {
+              "runAfter": {
+                "Write_RunSummary_To_AuditTrail": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "AgentAuditSummary",
+                  "idColumn": "AgentKey",
+                  "id": "Agent 01"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItem"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "description": "PERFORMANCE OPTIMIZATION (2026-08-28): Reads Agent 1's current Steps AND Runs counters from Agent Audit Summary in a single call, replacing the previous per-event GetItem inside the audit-events loop plus a separate GetItem for the run counter."
+            },
+            "SET_SucceededStepsDelta": {
+              "runAfter": {
+                "GET_AgentSummaryRow_Combined": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "SucceededStepsDelta",
+                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Succeeded')))"
+              },
+              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Succeeded."
+            },
+            "SET_WarningStepsDelta": {
+              "runAfter": {
+                "SET_SucceededStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "WarningStepsDelta",
+                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Warning')))"
+              },
+              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Warning."
+            },
+            "SET_FailedStepsDelta": {
+              "runAfter": {
+                "SET_WarningStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "FailedStepsDelta",
+                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Failed')))"
+              },
+              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Failed."
+            },
+            "SET_NewRunsCount": {
+              "runAfter": {
+                "SET_FailedStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "NewRunsCount",
+                "value": "@add(int(coalesce(body('GET_AgentSummaryRow_Combined')?[concat(variables('AuditOutcome'),'RunsCount')],0)), 1)"
+              },
+              "description": "Computes the incremented Runs counter value based on this run's final AuditOutcome."
+            },
             "Check_AuditEvents_Exist": {
               "actions": {
                 "Apply_to_each_AuditEvent": {
@@ -653,78 +730,14 @@
                         "authentication": "@parameters('$authentication')"
                       },
                       "description": "Writes one buffered Agent 1 audit event to the central audit trail."
-                    },
-                    "GET_AgentSummaryRow_ForStep": {
-                      "runAfter": {
-                        "Write_AuditEvents_To_AuditTrail": [
-                          "Succeeded"
-                        ]
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "parameters": {
-                          "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                          "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                          "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
-                          "table": "AgentAuditSummary",
-                          "idColumn": "AgentKey",
-                          "id": "Agent 01"
-                        },
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                          "connectionName": "shared_excelonlinebusiness",
-                          "operationId": "GetItem"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      },
-                      "description": "Reads Agent 1's current Steps counters from Agent Audit Summary."
-                    },
-                    "SET_NewStepsCount": {
-                      "runAfter": {
-                        "GET_AgentSummaryRow_ForStep": [
-                          "Succeeded"
-                        ]
-                      },
-                      "type": "SetVariable",
-                      "inputs": {
-                        "name": "NewStepsCount",
-                        "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForStep')?[concat(item()?['StepStatus'],'StepsCount')],0)), 1)"
-                      },
-                      "description": "Computes the incremented Steps counter value for this event's StepStatus."
-                    },
-                    "PATCH_AgentSummaryRow_ForStep": {
-                      "runAfter": {
-                        "SET_NewStepsCount": [
-                          "Succeeded"
-                        ]
-                      },
-                      "type": "OpenApiConnection",
-                      "inputs": {
-                        "parameters": {
-                          "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                          "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                          "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
-                          "table": "AgentAuditSummary",
-                          "idColumn": "AgentKey",
-                          "id": "Agent 01",
-                          "item": "@json(concat('{\"', item()?['StepStatus'], 'StepsCount\": ', string(variables('NewStepsCount')), ', \"', item()?['StepStatus'], 'StepsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
-                        },
-                        "host": {
-                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                          "connectionName": "shared_excelonlinebusiness",
-                          "operationId": "PatchItem"
-                        },
-                        "authentication": "@parameters('$authentication')"
-                      },
-                      "description": "Persists the incremented Steps counter and its last-update timestamp for this event's StepStatus back to Agent Audit Summary."
                     }
                   },
                   "type": "Foreach",
-                  "description": "Iterates over all buffered structured Agent 1 audit events and writes them individually to the central audit trail."
+                  "description": "Iterates over all buffered structured Agent 1 audit events and writes them individually to the central audit trail. PERFORMANCE OPTIMIZATION (2026-08-28): the per-event Agent Audit Summary step-counter GetItem/PatchItem calls were removed from this loop and replaced by a single combined read (GET_AgentSummaryRow_Combined) before this block and a single combined write (PATCH_AgentSummaryRow_Combined) after it."
                 }
               },
               "runAfter": {
-                "Write_RunSummary_To_AuditTrail": [
+                "SET_NewRunsCount": [
                   "Succeeded"
                 ]
               },
@@ -744,7 +757,7 @@
               "type": "If",
               "description": "Checks whether structured audit events were buffered during the run before attempting to write them to the central audit trail."
             },
-            "GET_AgentSummaryRow_ForRun": {
+            "PATCH_AgentSummaryRow_Combined": {
               "runAfter": {
                 "Check_AuditEvents_Exist": [
                   "Succeeded"
@@ -758,46 +771,8 @@
                   "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
                   "table": "AgentAuditSummary",
                   "idColumn": "AgentKey",
-                  "id": "Agent 01"
-                },
-                "host": {
-                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                  "connectionName": "shared_excelonlinebusiness",
-                  "operationId": "GetItem"
-                },
-                "authentication": "@parameters('$authentication')"
-              },
-              "description": "Reads Agent 1's current Runs counters from Agent Audit Summary."
-            },
-            "SET_NewRunsCount": {
-              "runAfter": {
-                "GET_AgentSummaryRow_ForRun": [
-                  "Succeeded"
-                ]
-              },
-              "type": "SetVariable",
-              "inputs": {
-                "name": "NewRunsCount",
-                "value": "@add(int(coalesce(body('GET_AgentSummaryRow_ForRun')?[concat(variables('AuditOutcome'),'RunsCount')],0)), 1)"
-              },
-              "description": "Computes the incremented Runs counter value based on this run's final AuditOutcome."
-            },
-            "PATCH_AgentSummaryRow_ForRun": {
-              "runAfter": {
-                "SET_NewRunsCount": [
-                  "Succeeded"
-                ]
-              },
-              "type": "OpenApiConnection",
-              "inputs": {
-                "parameters": {
-                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
-                  "table": "AgentAuditSummary",
-                  "idColumn": "AgentKey",
                   "id": "Agent 01",
-                  "item": "@json(concat('{\"', variables('AuditOutcome'), 'RunsCount\": ', string(variables('NewRunsCount')), ', \"', variables('AuditOutcome'), 'RunsCountLastUpdateUtc\": \"', utcNow(), '\"}'))"
+                  "item": "@json(concat( '{', if(greater(variables('SucceededStepsDelta'), 0), concat('\"SucceededStepsCount\":', string(add(int(coalesce(body('GET_AgentSummaryRow_Combined')?['SucceededStepsCount'],0)), variables('SucceededStepsDelta'))), ',\"SucceededStepsCountLastUpdateUtc\":\"', utcNow(), '\",'), ''), if(greater(variables('WarningStepsDelta'), 0), concat('\"WarningStepsCount\":', string(add(int(coalesce(body('GET_AgentSummaryRow_Combined')?['WarningStepsCount'],0)), variables('WarningStepsDelta'))), ',\"WarningStepsCountLastUpdateUtc\":\"', utcNow(), '\",'), ''), if(greater(variables('FailedStepsDelta'), 0), concat('\"FailedStepsCount\":', string(add(int(coalesce(body('GET_AgentSummaryRow_Combined')?['FailedStepsCount'],0)), variables('FailedStepsDelta'))), ',\"FailedStepsCountLastUpdateUtc\":\"', utcNow(), '\",'), ''), '\"', variables('AuditOutcome'), 'RunsCount\":', string(variables('NewRunsCount')), ',\"', variables('AuditOutcome'), 'RunsCountLastUpdateUtc\":\"', utcNow(), '\"', '}' ))"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
@@ -806,11 +781,11 @@
                 },
                 "authentication": "@parameters('$authentication')"
               },
-              "description": "Persists the incremented Runs counter and its last-update timestamp for this run's final AuditOutcome back to Agent Audit Summary."
+              "description": "PERFORMANCE OPTIMIZATION (2026-08-28): Persists only the Steps counters that actually changed in this run (Succeeded/Warning/Failed, each included only if its delta > 0) together with the incremented Runs counter, in a single PatchItem call, replacing the previous per-event PatchItem inside the audit-events loop plus a separate PatchItem for the run counter."
             },
             "GET_StatusRow_Agent_01": {
               "runAfter": {
-                "PATCH_AgentSummaryRow_ForRun": [
+                "PATCH_AgentSummaryRow_Combined": [
                   "Succeeded"
                 ]
               },

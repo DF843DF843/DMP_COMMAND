@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{d06a8fb8-5796-f111-8075-7ced8d106436}" Name="DMP Agent 2 (E-Mail Inbox Treatment) [1.0.1]" Description="This process performs a surveillance of the &quot;Default@eurex.com&quot; inbox and responds to all incoming e-mails depending on the detected sender domain." xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow WorkflowId="{d06a8fb8-5796-f111-8075-7ced8d106436}" Name="DMP Agent 2 (E-Mail Inbox Treatment) [1.0.2]" Description="This process performs a surveillance of the &quot;Default@eurex.com&quot; inbox and responds to all incoming e-mails depending on the detected sender domain." xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <JsonFileName>/Workflows/DMPAgent2E-MailInboxTreatmentVS-D06A8FB8-5796-F111-8075-7CED8D106436.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
@@ -22,7 +22,7 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 2 (E-Mail Inbox Treatment) [1.0.1]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 2 (E-Mail Inbox Treatment) [1.0.2]" />
   </LocalizedNames>
   <Descriptions>
     <Description languagecode="1033" description="This process performs a surveillance of the &quot;Default@eurex.com&quot; inbox and responds to all incoming e-mails depending on the detected sender domain." />
