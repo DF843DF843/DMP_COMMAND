@@ -1700,7 +1700,7 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
+                                          Text: ="●"
                                           Width: =16
                                           X: =16
                                           Y: =48
@@ -1741,7 +1741,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "â€“", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1755,7 +1755,7 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
+                                          Text: ="●"
                                           Width: =16
                                           X: =16
                                           Y: =74
@@ -1796,7 +1796,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "â€“", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "–", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1810,7 +1810,7 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
+                                          Text: ="●"
                                           Width: =16
                                           X: =16
                                           Y: =100
@@ -1851,7 +1851,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "â€“", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1865,7 +1865,7 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
+                                          Text: ="●"
                                           Width: =16
                                           X: =16
                                           Y: =126
@@ -1906,7 +1906,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "â€“", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1920,7 +1920,7 @@ Screens:
                                           Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
                                           Font: =Font.'Segoe UI'
                                           Height: =18
-                                          Text: ="â—"
+                                          Text: ="●"
                                           Width: =16
                                           X: =16
                                           Y: =152
@@ -1961,7 +1961,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "â€“", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
