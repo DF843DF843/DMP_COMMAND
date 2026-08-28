@@ -733,7 +733,7 @@
                     }
                   },
                   "type": "Foreach",
-                  "description": "Iterates over all buffered structured Agent 1 audit events and writes them individually to the central audit trail. PERFORMANCE OPTIMIZATION (2026-08-28): the per-event Agent Audit Summary step-counter GetItem/PatchItem calls were removed from this loop and replaced by a single combined read (GET_AgentSummaryRow_Combined) before this block and a single combined write (PATCH_AgentSummaryRow_Combined) after it."
+                  "description": "Iterates over all buffered structured Agent 1 audit events and writes them individually to the central audit trail. Step-counter GetItem/PatchItem calls were moved out of this loop into GET/PATCH_AgentSummaryRow_Combined (perf note 2026-08-28)."
                 }
               },
               "runAfter": {
@@ -781,7 +781,7 @@
                 },
                 "authentication": "@parameters('$authentication')"
               },
-              "description": "PERFORMANCE OPTIMIZATION (2026-08-28): Persists only the Steps counters that actually changed in this run (Succeeded/Warning/Failed, each included only if its delta > 0) together with the incremented Runs counter, in a single PatchItem call, replacing the previous per-event PatchItem inside the audit-events loop plus a separate PatchItem for the run counter."
+              "description": "Persists only the Steps counters that changed this run (Succeeded/Warning/Failed, only if delta>0) plus the incremented Runs counter, in one combined PatchItem call. Replaces the previous per-event Patch plus separate run-counter Patch."
             },
             "GET_StatusRow_Agent_01": {
               "runAfter": {
