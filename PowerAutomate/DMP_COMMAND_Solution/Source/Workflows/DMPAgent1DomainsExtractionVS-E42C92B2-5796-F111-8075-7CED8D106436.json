@@ -132,7 +132,7 @@
           },
           "description": "Stores all structured audit events temporarily before they are written to the central audit trail."
         },
-        "VAR_NewStepsCount": {
+        "VAR_StepsDeltaCounters": {
           "runAfter": {
             "VAR_AuditEvents": [
               "Succeeded"
@@ -142,13 +142,23 @@
           "inputs": {
             "variables": [
               {
-                "name": "NewStepsCount",
+                "name": "SucceededStepsDelta",
+                "type": "integer",
+                "value": 0
+              },
+              {
+                "name": "WarningStepsDelta",
+                "type": "integer",
+                "value": 0
+              },
+              {
+                "name": "FailedStepsDelta",
                 "type": "integer",
                 "value": 0
               }
             ]
           },
-          "description": "Holds the incremented Steps counter value while writing it to Agent Audit Summary."
+          "description": "Holds the per-status counts of buffered audit events for the batched Agent Audit Summary counter update (perf note 2026-08-28)."
         },
         "VAR_NewRunsCount": {
           "runAfter": {
