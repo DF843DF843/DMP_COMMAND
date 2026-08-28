@@ -84,7 +84,7 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =20
                         Size: =11.5
-                        Text: ="DMP COMMAND - current version: " & varAppVersion
+                        Text: ="DMP COMMAND - current version " & varAppVersion
                         Width: =500
                         Wrap: =false
                         X: =230
@@ -139,7 +139,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =160
                               Size: =12
-                              Text: ="- Every sidebar menu item now has its own real screen instead of a ""coming next"" popup: Admin Functions moved to its own page, and Agent Monitoring / Operational Board / Audit Trail (Detail) / Configuration (Lists) / Maintenance each got a first ""Coming Soon"" placeholder screen (content to be filled in step by step)" & Char(10) & "- New change-notification LEDs on the Critical / Warnings / Agents Active header tiles: a small blue LED lights up (blinking) whenever one of these values changes since you last acknowledged it - click the tile to acknowledge; a new warning or critical lights the LED again automatically" & Char(10) & "- Version badge (top right) now links to this Release Notes page"
+                              Text: ="- Every sidebar menu item now has its own real screen instead of a ""coming next"" popup - Admin Functions moved to its own page, and Agent Monitoring / Operational Board / Audit Trail (Detail) / Configuration (Lists) / Maintenance each got a first ""Coming Soon"" placeholder screen (content to be filled in step by step)" & Char(10) & "- New change-notification LEDs on the Critical / Warnings / Agents Active header tiles - a small blue LED lights up (blinking) whenever one of these values changes since you last acknowledged it - click the tile to acknowledge; a new warning or critical lights the LED again automatically" & Char(10) & "- Version badge (top right) now links to this Release Notes page"
                               Wrap: =true
                   - conReleaseV164:
                       Control: GroupContainer@1.5.0
@@ -181,7 +181,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =260
                               Size: =12
-                              Text: ="Frontend:" & Char(10) & "- Sidebar logo enlarged (280x188 -> 288x194 px), sidebar padding reduced" & Char(10) & "- Emails card (Agent 2 status) narrowed from 620 to 560px" & Char(10) & "- Next Steps: milestone text line-wrap fixed" & Char(10) & "- Display glitch during loading (garbled characters) fixed" & Char(10) & "- Reverted an over-aggressive container shrink that had truncated labels" & Char(10) & Char(10) & "Backend:" & Char(10) & "- New Error-ID system (e.g. [EC:A2-MBOXFOLDER-ND]) added across all 5 agents for faster troubleshooting" & Char(10) & "- Agent 1 & 2 performance improved (Excel counters now batched instead of updated per email)" & Char(10) & "- False ""folder already exists"" alarm fixed in Agent 3 & 4" & Char(10) & "- Copy-paste bug in Agent 1's error-mail move action fixed"
+                              Text: ="Frontend:" & Char(10) & "- Sidebar logo enlarged (280x188 -> 288x194 px), sidebar padding reduced" & Char(10) & "- Emails card (Agent 2 status) narrowed from 620 to 560px" & Char(10) & "- Next Steps - milestone text line-wrap fixed" & Char(10) & "- Display glitch during loading (garbled characters) fixed" & Char(10) & "- Reverted an over-aggressive container shrink that had truncated labels" & Char(10) & Char(10) & "Backend:" & Char(10) & "- New Error-ID system (e.g. [EC:A2-MBOXFOLDER-ND]) added across all 5 agents for faster troubleshooting" & Char(10) & "- Agent 1 & 2 performance improved (Excel counters now batched instead of updated per email)" & Char(10) & "- False ""folder already exists"" alarm fixed in Agent 3 & 4" & Char(10) & "- Copy-paste bug in Agent 1's error-mail move action fixed"
                               Wrap: =true
                         - imgReleaseV164Screenshot:
                             Control: Image@2.2.3
