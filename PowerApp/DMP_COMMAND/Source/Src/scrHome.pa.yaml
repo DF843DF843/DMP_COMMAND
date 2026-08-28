@@ -1741,7 +1741,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(varEmergencyReportLastModified, "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(varEmergencyReportLastModified) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1796,7 +1796,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "–", Text(varInternalDomainsLastModified, "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(varInternalDomainsLastModified) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "–", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1851,7 +1851,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(varExternalDomainsLastModified, "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(varExternalDomainsLastModified) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1906,7 +1906,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(varCounterLastModified, "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(varCounterLastModified) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -1961,7 +1961,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(varAuditLastModified, "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(varAuditLastModified) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
                                           Width: =214
                                           Wrap: =false
                                           X: =320
@@ -2473,7 +2473,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
-                                    Text: =Coalesce(varInternalDomainsCount,0) & " internal domains currently on file" & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "", " (last updated " & Text(varInternalDomainsLastModified,"hh:mm:ss") & ")")
+                                    Text: =Coalesce(varInternalDomainsCount,0) & " internal domains currently on file" & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "", " (last updated " & Text(DateTimeValue(varInternalDomainsLastModified),"dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET") & ")")
                         - conStep3:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
