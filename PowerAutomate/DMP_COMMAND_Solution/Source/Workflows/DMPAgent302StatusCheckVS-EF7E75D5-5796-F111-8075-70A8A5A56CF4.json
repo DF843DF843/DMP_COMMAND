@@ -2637,7 +2637,7 @@
           "type": "SetVariable",
           "inputs": {
             "name": "AlertMailSubject",
-            "value": "[Agent 4][FAILED] Status Check - Configuration Load Failed"
+            "value": "[Agent 4][FAILED] Status Check - Configuration Load Failed [EC:A4-CONFIGLOAD]"
           },
           "description": "Builds the subject of the config-load-failed alert mail so it can later be reused for the Sent Items lookup and move operation. Uses hardcoded fallback values throughout this branch since the central configuration itself could not be loaded."
         },

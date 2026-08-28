@@ -650,44 +650,83 @@
               },
               "description": "PERFORMANCE OPTIMIZATION (2026-08-28): Reads Agent 1's current Steps AND Runs counters from Agent Audit Summary in a single call, replacing the previous per-event GetItem inside the audit-events loop plus a separate GetItem for the run counter."
             },
-            "SET_SucceededStepsDelta": {
+            "QUERY_SucceededEvents": {
               "runAfter": {
                 "GET_AgentSummaryRow_Combined": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Succeeded')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Succeeded, so their count can be added to the batched counter update."
+            },
+            "SET_SucceededStepsDelta": {
+              "runAfter": {
+                "QUERY_SucceededEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "SucceededStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Succeeded')))"
+                "value": "@length(body('QUERY_SucceededEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Succeeded."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Succeeded."
+            },
+            "QUERY_WarningEvents": {
+              "runAfter": {
+                "SET_SucceededStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Warning')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Warning, so their count can be added to the batched counter update."
             },
             "SET_WarningStepsDelta": {
               "runAfter": {
-                "SET_SucceededStepsDelta": [
+                "QUERY_WarningEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "WarningStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Warning')))"
+                "value": "@length(body('QUERY_WarningEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Warning."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Warning."
+            },
+            "QUERY_FailedEvents": {
+              "runAfter": {
+                "SET_WarningStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Failed')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Failed, so their count can be added to the batched counter update."
             },
             "SET_FailedStepsDelta": {
               "runAfter": {
-                "SET_WarningStepsDelta": [
+                "QUERY_FailedEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "FailedStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Failed')))"
+                "value": "@length(body('QUERY_FailedEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Failed."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Failed."
             },
             "SET_NewRunsCount": {
               "runAfter": {

@@ -876,7 +876,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AlertMailSubject",
-                "value": "[Agent 5][FAILED] Mailbox Evidence Folder Setup Failed"
+                "value": "[Agent 5][FAILED] Mailbox Evidence Folder Setup Failed [EC:A5-MBOXFOLDER]"
               },
               "description": "Builds the subject of the email-folder-creation-failed alert mail."
             },
@@ -943,7 +943,7 @@
           "type": "SetVariable",
           "inputs": {
             "name": "AlertMailSubject",
-            "value": "[Agent 5][FAILED] Operational State Update - Config Write Failed"
+            "value": "[Agent 5][FAILED] Operational State Update - Config Write Failed [EC:A5-CONFIGWRITE]"
           },
           "description": "Builds the subject of the config-update-failed alert mail so it can later be reused for the Sent Items lookup and move operation."
         },

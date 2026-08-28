@@ -590,7 +590,7 @@
                                     "type": "SetVariable",
                                     "inputs": {
                                       "name": "AlertMailSubject",
-                                      "value": "[Agent 3][FAILED] Emergency Report Upload - Missing Worksheet '@{trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName']))}'"
+                                      "value": "[Agent 3][FAILED] Emergency Report Upload - Missing Worksheet '@{trim(string(outputs('CMP_ConfigObject')?['RequiredWorksheetName']))}' [EC:A3-MISSINGWORKSHEET]"
                                     },
                                     "description": "Builds the subject of the missing-worksheet alert mail so it can later be reused for the Sent Items lookup and move operation."
                                   },
@@ -890,7 +890,7 @@
                                 "type": "SetVariable",
                                 "inputs": {
                                   "name": "AlertMailSubject",
-                                  "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid Workbook"
+                                  "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid Workbook [EC:A3-INVALIDWORKBOOK]"
                                 },
                                 "description": "Builds the subject of the invalid-workbook alert mail so it can later be reused for the Sent Items lookup and move operation."
                               },
@@ -1803,7 +1803,7 @@
                     "type": "SetVariable",
                     "inputs": {
                       "name": "AlertMailSubject",
-                      "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid File Type"
+                      "value": "[Agent 3][FAILED] Emergency Report Upload - Invalid File Type [EC:A3-INVALIDFILETYPE]"
                     },
                     "description": "Builds the subject of the invalid-file-type alert mail so it can later be reused for the Sent Items lookup and move operation."
                   }
@@ -1897,7 +1897,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AlertMailSubject",
-                "value": "[Agent 3][FAILED] Mailbox Evidence Folder Setup Failed"
+                "value": "[Agent 3][FAILED] Mailbox Evidence Folder Setup Failed [EC:A3-MBOXFOLDER]"
               },
               "description": "Builds the subject of the email-folder-creation-failed alert mail."
             },
@@ -2697,7 +2697,7 @@
               "type": "SetVariable",
               "inputs": {
                 "name": "AlertMailSubject",
-                "value": "[Agent 3][FAILED] Emergency Report Upload - Technical Failure"
+                "value": "[Agent 3][FAILED] Emergency Report Upload - Technical Failure [EC:A3-TECHFAILURE]"
               },
               "description": "Builds the subject of the generic technical-failure alert mail sent when the Agent 3 flow itself times out or fails unexpectedly."
             }

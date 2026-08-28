@@ -516,7 +516,7 @@
                     },
                     "Compose_Subject_(Mailbox_Folder_Error_ND)": {
                       "type": "Compose",
-                      "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][WARNING] Mailbox Folder Missing (No DMP) ',\r\n  '[RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
+                      "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][WARNING] Mailbox Folder Missing (No DMP) ',\r\n  '[EC:A2-MBOXFOLDER-ND][RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
                       "description": "Builds the exact subject of the internal Agent 2 No-DMP mailbox-folder warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                     },
                     "Set_LastSentSubject_(Mailbox_Folder_Error_ND)": {
@@ -1271,7 +1271,7 @@
                                 ]
                               },
                               "type": "Compose",
-                              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (No DMP) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (No DMP) ',\n  '[EC:A2-SENTNOTFOUND-ND][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                               "description": "Builds the exact subject of the internal Agent 2 No-DMP sent-mail-not-found warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                             },
                             "Set_LastSentSubject_(Sent_Mail_Not_Found_ND)": {
@@ -1625,7 +1625,7 @@
                     },
                     "Compose_Subject_(Counter_Update_Failed_ND)": {
                       "type": "Compose",
-                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (No DMP) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (No DMP) ',\n  '[EC:A2-COUNTERFAIL-ND][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                       "description": "Builds the exact subject of the internal Agent 2 No-DMP counter-update-failed mail so that the same subject can later be reused for Sent Items lookup and move operations."
                     },
                     "Set_LastSentSubject_(Counter_Update_Failed_ND)": {
@@ -2224,7 +2224,7 @@
                               },
                               "Compose_Subject_(Mailbox_Folder_Error_DIS)": {
                                 "type": "Compose",
-                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP internal Sender) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP internal Sender) ',\n  '[EC:A2-MBOXFOLDER-DIS][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                 "description": "Builds the exact subject of the internal Agent 2 DIS mailbox-folder warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                               },
                               "Set_LastSentSubject_(Mailbox_Folder_Error_DIS)": {
@@ -3203,7 +3203,7 @@
                               },
                               "Compose_Subject_(Counter_Update_Failed_DIS)": {
                                 "type": "Compose",
-                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (DMP internal Sender) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (DMP internal Sender) ',\n  '[EC:A2-COUNTERFAIL-DIS][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                 "description": "Builds the exact subject of the internal Agent 2 DIS counter-update-failed mail so that the same subject can later be reused for Sent Items lookup and move operations."
                               },
                               "Set_LastSentSubject_(Counter_Update_Failed_DIS)": {
@@ -3787,7 +3787,7 @@
                                     },
                                     "Compose_Subject_(Mailbox_Folder_Error_DEE)": {
                                       "type": "Compose",
-                                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP effected Member) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP effected Member) ',\n  '[EC:A2-MBOXFOLDER-DEE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                       "description": "Builds the exact subject of the internal Agent 2 DEE mailbox-folder warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                                     },
                                     "Set_LastSentSubject_(Mailbox_Folder_Error_DEE)": {
@@ -4533,7 +4533,7 @@
                                                 ]
                                               },
                                               "type": "Compose",
-                                              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (DMP effected Member) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (DMP effected Member) ',\n  '[EC:A2-SENTNOTFOUND-DEE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                               "description": "Extracts the message ID of the sent DEE sent-mail-not-found warning mail if the Sent Items lookup returned a result."
                                             },
                                             "Set_LastSentSubject_(Sent_Mail_Not_Found_DEE)": {
@@ -5071,7 +5071,7 @@
                                           },
                                           "Compose_Subject_(Forward_Failed_DEE)": {
                                             "type": "Compose",
-                                            "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] E-Mail Forward to CAMS / Porting Failed (DEE) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                            "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] E-Mail Forward to CAMS / Porting Failed (DEE) ',\n  '[EC:A2-FWDFAILED-DEE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                             "description": "Builds the subject of the internal Agent 2 DEE forward-failure alert using the centrally configured operation-mode subject prefix."
                                           },
                                           "Set_LastSentSubject_(Forward_Failed_DEE)": {
@@ -5448,7 +5448,7 @@
                                     },
                                     "Compose_Subject_(Counter_Update_Failed_DEE)": {
                                       "type": "Compose",
-                                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (DMP effected Member) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                      "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Counter Update Failed (DMP effected Member) ',\n  '[EC:A2-COUNTERFAIL-DEE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                       "description": "Builds the exact subject of the internal Agent 2 DEE counter-update-failed mail so that the same subject can later be reused for Sent Items lookup and move operations."
                                     },
                                     "Set_LastSentSubject_(Counter_Update_Failed_DEE)": {
@@ -6030,7 +6030,7 @@
                                       },
                                       "Compose_Subject_(Mailbox_Folder_Error_DNES)": {
                                         "type": "Compose",
-                                        "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP not effected Sender) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)\n",
+                                        "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Mailbox Folder Missing (DMP not effected Sender) ',\n  '[EC:A2-MBOXFOLDER-DNES][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)\n",
                                         "description": "Builds the exact subject of the internal Agent 2 DNES mailbox-folder warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                                       },
                                       "Set_LastSentSubject_(Mailbox_Folder_Error_DNES)": {
@@ -6783,7 +6783,7 @@
                                                   ]
                                                 },
                                                 "type": "Compose",
-                                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (DMP not effected Sender) ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                                                "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Sent Response Mail Not Found (DMP not effected Sender) ',\n  '[EC:A2-SENTNOTFOUND-DNES][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                                                 "description": "Builds the exact subject of the internal Agent 2 DNES sent-mail-not-found warning mail so that the same subject can later be reused for Sent Items lookup and move operations."
                                               },
                                               "Set_LastSentSubject_(Sent_Mail_Not_Found_DNES)": {
@@ -7167,7 +7167,7 @@
                                       },
                                       "Compose_Subject_(Counter_Update_Failed_DNES)": {
                                         "type": "Compose",
-                                        "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][FAILED] Counter Update Failed (DMP not effected Sender) ',\r\n  '[RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
+                                        "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][FAILED] Counter Update Failed (DMP not effected Sender) ',\r\n  '[EC:A2-COUNTERFAIL-DNES][RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
                                         "description": "Builds the exact subject of the internal Agent 2 DNES counter-update-failed mail so that the same subject can later be reused for Sent Items lookup and move operations."
                                       },
                                       "Set_LastSentSubject_(Counter_Update_Failed_DNES)": {
@@ -7818,7 +7818,7 @@
                             ]
                           },
                           "type": "Compose",
-                          "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Missing Internal Domains Reference File ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+                          "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Missing Internal Domains Reference File ',\n  '[EC:A2-INTDOMAINS-MISSING][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
                           "description": "Builds the exact subject of the internal Agent 2 alert e-mail for a missing internal domains reference file so that the same subject can later be reused for Sent Items lookup and move operations."
                         },
                         "Set_LastSentSubject_(Internal_Domains_List_Missing)": {
@@ -8302,44 +8302,83 @@
               },
               "description": "PERFORMANCE OPTIMIZATION (2026-08-28): Reads Agent 2's current Steps AND Runs counters from Agent Audit Summary in a single call, replacing the previous per-event GetItem inside the audit-events loop plus a separate GetItem for the run counter."
             },
-            "SET_SucceededStepsDelta": {
+            "QUERY_SucceededEvents": {
               "runAfter": {
                 "GET_AgentSummaryRow_Combined": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Succeeded')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Succeeded, so their count can be added to the batched counter update."
+            },
+            "SET_SucceededStepsDelta": {
+              "runAfter": {
+                "QUERY_SucceededEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "SucceededStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Succeeded')))"
+                "value": "@length(body('QUERY_SucceededEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Succeeded."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Succeeded."
+            },
+            "QUERY_WarningEvents": {
+              "runAfter": {
+                "SET_SucceededStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Warning')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Warning, so their count can be added to the batched counter update."
             },
             "SET_WarningStepsDelta": {
               "runAfter": {
-                "SET_SucceededStepsDelta": [
+                "QUERY_WarningEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "WarningStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Warning')))"
+                "value": "@length(body('QUERY_WarningEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Warning."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Warning."
+            },
+            "QUERY_FailedEvents": {
+              "runAfter": {
+                "SET_WarningStepsDelta": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@variables('AuditEvents')",
+                "where": "@equals(item()?['StepStatus'], 'Failed')"
+              },
+              "description": "Filters the buffered audit events down to those with StepStatus=Failed, so their count can be added to the batched counter update."
             },
             "SET_FailedStepsDelta": {
               "runAfter": {
-                "SET_WarningStepsDelta": [
+                "QUERY_FailedEvents": [
                   "Succeeded"
                 ]
               },
               "type": "SetVariable",
               "inputs": {
                 "name": "FailedStepsDelta",
-                "value": "@length(filter(variables('AuditEvents'), equals(item()?['StepStatus'], 'Failed')))"
+                "value": "@length(body('QUERY_FailedEvents'))"
               },
-              "description": "Counts, in memory (no API call), how many buffered audit events in this run have StepStatus=Failed."
+              "description": "Counts, in memory (no extra Excel call), how many buffered audit events in this run have StepStatus=Failed."
             },
             "SET_NewRunsCount": {
               "runAfter": {
@@ -8775,7 +8814,7 @@
             },
             "Compose_Subject_(Missing_Counter_File)": {
               "type": "Compose",
-              "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][FAILED] Missing Counter File ',\r\n  '[RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
+              "inputs": "@concat(\r\n  outputs('Mail_Mode_Subject_Prefix'),\r\n  '[Agent 2][FAILED] Missing Counter File ',\r\n  '[EC:A2-COUNTERFILE-MISSING][RID:',\r\n  workflow()?['run']?['name'],\r\n  ']'\r\n)",
               "description": "Builds the exact subject of the internal Agent 2 alert e-mail for a missing counter file so that the same subject can later be reused for Sent Items lookup and move operations."
             },
             "Set_LastSentSubject_(Missing_Counter_File)": {
@@ -9138,7 +9177,7 @@
                 ]
               },
               "type": "Compose",
-              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Audit Trail Write Failed ',\n  '[RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][WARNING] Audit Trail Write Failed ',\n  '[EC:A2-AUDITWRITE][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
               "description": "Builds the exact subject of the internal Agent 2 audit-write-failure mail so that the same subject can later be reused for Sent Items lookup and move operations."
             },
             "Set_LastSentSubject_(Audit_Write_Failed)": {
