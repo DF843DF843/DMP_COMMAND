@@ -2249,7 +2249,7 @@
                 "name": "AlertTargetFolderId",
                 "value": "@coalesce(body('Get_DMP_Mailbox_Subfolder_ID_for_\"Agent_3_Alerts\"')?['value']?[0]?['id'], '')"
               },
-              "description": "Always runs (even if Create/Get above were tolerated as Failed) so this scope stays Succeeded; a real resolution failure is detected downstream from an empty value.\nStores the mailbox folder ID of the Agent 3 Alerts folder.\nUsed for:\n- Moving sent alert mails\n- Audit evidence\n- Operational traceability"
+              "description": "Always runs (even if Create/Get above were tolerated as Failed) so this scope stays Succeeded. Stores the Agent 3 Alerts folder ID; a real resolution failure is detected downstream from an empty value."
             }
           },
           "runAfter": {
