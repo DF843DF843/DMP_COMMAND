@@ -675,6 +675,18 @@ Screens:
                               Width: =12
                               X: =Parent.Width - 572
                               Y: =15
+                        - btnAckCriticalHitArea:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =66
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
+                              Text: =""
+                              Width: =96
+                              X: =Parent.Width - 656
+                              Y: =15
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -724,6 +736,18 @@ Screens:
                               Width: =12
                               X: =Parent.Width - 464
                               Y: =15
+                        - btnAckWarningsHitArea:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =66
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
+                              Text: =""
+                              Width: =116
+                              X: =Parent.Width - 568
+                              Y: =15
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -772,6 +796,18 @@ Screens:
                               Visible: =Coalesce(varAgentsHealthyCount,0)<>Coalesce(varLastAckAgentsHealthyCount,0)
                               Width: =12
                               X: =Parent.Width - 294
+                              Y: =15
+                        - btnAckAgentsHitArea:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =66
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
+                              Text: =""
+                              Width: =146
+                              X: =Parent.Width - 428
                               Y: =15
                         - lblVersionTag:
                             Control: Label@2.5.1
@@ -1026,7 +1062,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
-                                          Text: ="OPERATIONAL MODE"
+                                          Text: ="MODE"
                                           Width: =100
                                           Wrap: =false
                                           X: =16
@@ -1232,9 +1268,9 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =500
-                                    X: =448
-                                    Y: =0
+                                    Width: =440
+                                    X: =0
+                                    Y: =176
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
@@ -1251,6 +1287,22 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =10
+                                    - lblInternalDomainsCount:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Left
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(0,206,125,1)
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =32
+                                          Size: =14
+                                          Text: =Coalesce(varInternalDomainsCount,0)
+                                          Width: =36
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =44
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1261,10 +1313,10 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
-                                          Text: ="Internal"
-                                          Width: =70
+                                          Text: ="- INTERNAL"
+                                          Width: =92
                                           Wrap: =false
-                                          X: =16
+                                          X: =56
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1285,8 +1337,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =56
-                                          X: =94
+                                          Width: =54
+                                          X: =156
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1307,24 +1359,25 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =60
-                                          X: =158
+                                          Width: =58
+                                          X: =218
                                           Y: =44
-                                    - lblInternalDomainsCount:
+                                    - lblExternalDomainsCount:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Align: =Align.Right
+                                          Align: =Align.Left
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Bold
                                           Height: =32
-                                          Size: =11
-                                          Text: =Coalesce(varInternalDomainsCount,0) & " (SharePoint)"
-                                          Width: =110
+                                          Size: =14
+                                          Text: =Coalesce(varExternalDomainsCount,0)
+                                          Width: =36
                                           Wrap: =false
-                                          X: =364
-                                          Y: =46
+                                          X: =16
+                                          Y: =96
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1335,10 +1388,10 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
-                                          Text: ="External"
-                                          Width: =70
+                                          Text: ="- EXTERNAL"
+                                          Width: =92
                                           Wrap: =false
-                                          X: =16
+                                          X: =56
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1359,8 +1412,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =56
-                                          X: =94
+                                          Width: =54
+                                          X: =156
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1381,8 +1434,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =60
-                                          X: =158
+                                          Width: =58
+                                          X: =218
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1398,7 +1451,7 @@ Screens:
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
                                           Width: =90
-                                          X: =230
+                                          X: =284
                                           Y: =98
                                         Children:
                                           - lblReplaceFake:
@@ -1494,23 +1547,8 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =328
+                                          X: =382
                                           Y: =105
-                                    - lblExternalDomainsCount:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          Align: =Align.Right
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          Size: =11
-                                          Text: =Coalesce(varExternalDomainsCount,0) & " (File)"
-                                          Width: =110
-                                          Wrap: =false
-                                          X: =364
-                                          Y: =98
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
@@ -1519,14 +1557,14 @@ Screens:
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
-                                    Height: =184
+                                    Height: =158
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =440
-                                    X: =0
-                                    Y: =176
+                                    Width: =530
+                                    X: =448
+                                    Y: =0
                                   Children:
                                     - lblFilesRowTitle:
                                         Control: Label@2.5.1
@@ -1554,9 +1592,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="STATUS"
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =168
+                                          X: =200
                                           Y: =30
                                     - lblFilesColHeaderUpdated:
                                         Control: Label@2.5.1
@@ -1569,9 +1607,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="LAST UPDATED"
-                                          Width: =165
+                                          Width: =200
                                           Wrap: =false
-                                          X: =256
+                                          X: =310
                                           Y: =30
                                     - lblDotEmergencyReport:
                                         Control: Label@2.5.1
@@ -1596,7 +1634,7 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Emergency Report"
-                                          Width: =120
+                                          Width: =150
                                           Wrap: =false
                                           X: =40
                                           Y: =48
@@ -1610,9 +1648,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varEmergencyReportExists, "Operational", "Missing"))
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =168
+                                          X: =200
                                           Y: =48
                                     - lblTimeEmergencyReport:
                                         Control: Label@2.5.1
@@ -1624,65 +1662,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =165
+                                          Width: =200
                                           Wrap: =false
-                                          X: =256
+                                          X: =310
                                           Y: =48
-                                    - lblDotInternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          Align: =Align.Center
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Text: ="●"
-                                          Width: =16
-                                          X: =16
-                                          Y: =74
-                                    - lblNameInternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =11
-                                          Text: ="Internal Domains"
-                                          Width: =120
-                                          Wrap: =false
-                                          X: =40
-                                          Y: =74
-                                    - lblInfoInternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varInternalDomainsExists, "Operational", "Missing"))
-                                          Width: =80
-                                          Wrap: =false
-                                          X: =168
-                                          Y: =74
-                                    - lblTimeInternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "–", Text(DateTimeValue(varInternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =165
-                                          Wrap: =false
-                                          X: =256
-                                          Y: =74
                                     - lblDotExternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1695,7 +1678,7 @@ Screens:
                                           Text: ="●"
                                           Width: =16
                                           X: =16
-                                          Y: =100
+                                          Y: =74
                                     - lblNameExternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1706,10 +1689,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="External Domains"
-                                          Width: =120
+                                          Width: =150
                                           Wrap: =false
                                           X: =40
-                                          Y: =100
+                                          Y: =74
                                     - lblInfoExternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1720,10 +1703,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varExternalDomainsExists, "Operational", "Missing"))
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =168
-                                          Y: =100
+                                          X: =200
+                                          Y: =74
                                     - lblTimeExternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1734,10 +1717,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =165
+                                          Width: =200
                                           Wrap: =false
-                                          X: =256
-                                          Y: =100
+                                          X: =310
+                                          Y: =74
                                     - lblDotCounter:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1750,7 +1733,7 @@ Screens:
                                           Text: ="●"
                                           Width: =16
                                           X: =16
-                                          Y: =126
+                                          Y: =100
                                     - lblNameCounter:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1761,10 +1744,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Counter File"
-                                          Width: =120
+                                          Width: =150
                                           Wrap: =false
                                           X: =40
-                                          Y: =126
+                                          Y: =100
                                     - lblInfoCounter:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1775,10 +1758,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varCounterExists, "Operational", "Missing"))
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =168
-                                          Y: =126
+                                          X: =200
+                                          Y: =100
                                     - lblTimeCounter:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1789,10 +1772,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =165
+                                          Width: =200
                                           Wrap: =false
-                                          X: =256
-                                          Y: =126
+                                          X: =310
+                                          Y: =100
                                     - lblDotAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1805,7 +1788,7 @@ Screens:
                                           Text: ="●"
                                           Width: =16
                                           X: =16
-                                          Y: =152
+                                          Y: =126
                                     - lblNameAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1816,10 +1799,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Audit Trail File"
-                                          Width: =120
+                                          Width: =150
                                           Wrap: =false
                                           X: =40
-                                          Y: =152
+                                          Y: =126
                                     - lblInfoAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1830,10 +1813,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varAuditTrailExists, "Operational", "Missing"))
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =168
-                                          Y: =152
+                                          X: =200
+                                          Y: =126
                                     - lblTimeAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1844,10 +1827,10 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =165
+                                          Width: =200
                                           Wrap: =false
-                                          X: =256
-                                          Y: =152
+                                          X: =310
+                                          Y: =126
                               - conFilesPlaceholder:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
@@ -1862,7 +1845,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =500
+                                    Width: =530
                                     X: =448
                                     Y: =176
                                   Children:
@@ -1878,7 +1861,7 @@ Screens:
                                           Height: =20
                                           Size: =11
                                           Text: ="RESERVED FOR FUTURE USE"
-                                          Width: =500
+                                          Width: =530
                                           Y: =82
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0

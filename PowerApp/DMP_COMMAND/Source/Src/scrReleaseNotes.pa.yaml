@@ -99,6 +99,48 @@ Screens:
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
                 Children:
+                  - conReleaseV190:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV190Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.9.0 - 2026-08-28 (current)"
+                              Wrap: =false
+                        - lblReleaseV190Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - domain count number (green, bold) directly followed by "" - INTERNAL""/"" - EXTERNAL"" label, instead of a separate right-aligned count column" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap"
+                              Wrap: =true
                   - conReleaseV180:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -128,7 +170,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.8.1 - 2026-08-28 (current)"
+                              Text: ="v1.8.1 - 2026-08-28"
                               Wrap: =false
                         - lblReleaseV180Notes:
                             Control: Label@2.5.1
