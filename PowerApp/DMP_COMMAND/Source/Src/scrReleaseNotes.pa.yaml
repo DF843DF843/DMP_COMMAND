@@ -99,13 +99,55 @@ Screens:
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
                 Children:
-                  - conReleaseV164:
+                  - conReleaseV170:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
                       Properties:
                         BorderColor: =RGBA(0,206,125,0.5)
                         BorderThickness: =2
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV170Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.7.0 - 2026-08-28 (current)"
+                              Wrap: =false
+                        - lblReleaseV170Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =160
+                              Size: =12
+                              Text: ="- Every sidebar menu item now has its own real screen instead of a ""coming next"" popup: Admin Functions moved to its own page, and Agent Monitoring / Operational Board / Audit Trail (Detail) / Configuration (Lists) / Maintenance each got a first ""Coming Soon"" placeholder screen (content to be filled in step by step)" & Char(10) & "- New change-notification LEDs on the Critical / Warnings / Agents Active header tiles: a small blue LED lights up (blinking) whenever one of these values changes since you last acknowledged it - click the tile to acknowledge; a new warning or critical lights the LED again automatically" & Char(10) & "- Version badge (top right) now links to this Release Notes page"
+                              Wrap: =true
+                  - conReleaseV164:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
@@ -128,7 +170,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.6.4 - 2026-08-28 (current)"
+                              Text: ="v1.6.4 - 2026-08-28"
                               Wrap: =false
                         - lblReleaseV164Notes:
                             Control: Label@2.5.1

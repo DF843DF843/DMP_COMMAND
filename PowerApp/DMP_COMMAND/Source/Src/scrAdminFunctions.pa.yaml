@@ -1,0 +1,256 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrAdminFunctions:
+    Properties:
+      Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
+      LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
+    Children:
+      - conAdminFunctionsRoot:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
+            Height: =Parent.Height
+            Width: =Parent.Width
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =16
+          Children:
+            - conAdminFunctionsHeader:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(32,23,81,1)
+                  Height: =72
+                  LayoutMaxHeight: =72
+                  LayoutMinHeight: =72
+                  RadiusBottomLeft: =18
+                  RadiusBottomRight: =18
+                  RadiusTopLeft: =18
+                  RadiusTopRight: =18
+                Children:
+                  - btnBackToCockpitFromAdmin:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(255,255,255,1)
+                        Fill: =RGBA(255,255,255,0.12)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =36
+                        HoverFill: =RGBA(255,255,255,0.22)
+                        OnSelect: =Navigate(scrHome, ScreenTransition.None)
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Text: ="< Back to Cockpit"
+                        Width: =190
+                        X: =20
+                        Y: =18
+                  - lblAdminFunctionsPageTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(255,255,255,1)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =31
+                        Size: =20
+                        Text: ="Admin Functions"
+                        Width: =500
+                        Wrap: =false
+                        X: =230
+                        Y: =12
+                  - lblAdminFunctionsPageSubtitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(215,210,235,1)
+                        Font: =Font.'Segoe UI'
+                        Height: =20
+                        Size: =11.5
+                        Text: ="DMP COMMAND - test / reset operations (destructive, use with care)"
+                        Width: =500
+                        Wrap: =false
+                        X: =230
+                        Y: =42
+            - conAdminFunctions:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
+                  BorderColor: =RGBA(220,53,69,1)
+                  BorderThickness: =3
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =10
+                  PaddingBottom: =16
+                  PaddingLeft: =16
+                  PaddingRight: =16
+                  PaddingTop: =16
+                  RadiusBottomLeft: =8
+                  RadiusBottomRight: =8
+                  RadiusTopLeft: =8
+                  RadiusTopRight: =8
+                Children:
+                  - lblAdminFunctionsTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        Size: =16
+                        Text: ="Admin Functions (Test / Reset Only)"
+                  - lblAdminFunctionsHint:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                        Font: =Font.'Segoe UI'
+                        Height: =24
+                        Size: =12
+                        Text: ="These actions are for testing/reset purposes only and can be destructive. Use with care."
+                  - conAdminDeleteRow:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =44
+                        LayoutAlignItems: =LayoutAlignItems.Center
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =8
+                        LayoutMaxHeight: =44
+                        LayoutMinHeight: =44
+                      Children:
+                        - lblAdminDeleteLabel:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              FillPortions: =1
+                              Font: =Font.'Segoe UI'
+                              Height: =28
+                              Size: =12
+                              Text: ="Delete 'PA Processed Mails' folder tree"
+                        - btnAdminDeleteProcessedMailsFolder:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(220,53,69,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              HoverFill: =RGBA(189,45,59,1)
+                              OnSelect: =Set(varConfirmDeleteMailboxFolders,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="Delete..."
+                              Width: =110
+                  - conAdminConfirmDelete:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Visible: =varConfirmDeleteMailboxFolders
+                        Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =12
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        PaddingTop: =12
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                      Children:
+                        - lblConfirmDeleteText:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =48
+                              Size: =12
+                              Text: ="Are you sure? This deletes 'PA Processed Mails' and everything below it (including 'Agent 5 Alerts') in the shared mailbox. This cannot be easily undone."
+                        - conConfirmDeleteButtons:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =36
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                            Children:
+                              - btnConfirmDeleteYes:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: |
+                                      =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
+                                      Set(varConfirmDeleteMailboxFolders,false);
+                                      If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Text: ="Yes, delete"
+                                    Width: =110
+                              - btnConfirmDeleteCancel:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
+                                    BorderThickness: =3
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Fill: =RGBA(0,0,0,0)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(255,255,255,0.08)
+                                    OnSelect: =Set(varConfirmDeleteMailboxFolders,false)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Text: ="Cancel"
+                                    Width: =90
+                  - lblAdminActionResult:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                        Font: =Font.'Segoe UI'
+                        Height: =40
+                        Size: =11
+                        Text: =varAdminActionResult.message
+                        Visible: =Len(varAdminActionResult.message)>0

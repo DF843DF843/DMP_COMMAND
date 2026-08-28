@@ -28,6 +28,16 @@ App:
       Set(varConfirmDeleteMailboxFolders,false);
       Set(varAdminActionResult,{success:false,message:"",requestedaction:"",deletedcount:0});
 
+      // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles in scrHome's header):
+      // varBaselineAcknowledged is set true exactly once, on the first successful status refresh
+      // (see scrHome.OnVisible) - that is when varLastAck* is populated with the then-current values.
+      // From then on, any KPI value that drifts away from its varLastAck* baseline lights the matching
+      // LED, until the user acknowledges it (click on the KPI tile sets varLastAck* = current value).
+      Set(varLastAckCriticalCount,0);
+      Set(varLastAckWarningCount,0);
+      Set(varLastAckAgentsHealthyCount,6);
+      Set(varBaselineAcknowledged,false);
+
       Set(varEmergencyReportExists,false);
       Set(varEmergencyReportLastModified,Blank());
 

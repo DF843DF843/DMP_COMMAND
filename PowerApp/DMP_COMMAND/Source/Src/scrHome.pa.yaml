@@ -65,6 +65,19 @@ Screens:
             Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
             Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
             Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
+            // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles): establish the
+            // "last acknowledged" baseline exactly once, on the very first successful refresh of this
+            // session. Later refreshes (tmrAutoRefreshTick) deliberately do NOT touch this baseline -
+            // only the user clicking a KPI tile (btnAck*/lbl*OnSelect) does. This way, any drift away
+            // from the acknowledged baseline (new warning, new critical, agent count change) lights the
+            // matching LED again, exactly as requested ("neue Warnung lässt die LED erneut leuchten").
+            If(
+                !varBaselineAcknowledged && varStatusCallError="",
+                Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0));
+                Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0));
+                Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0));
+                Set(varBaselineAcknowledged, true)
+            );
             // The guard is intentionally NOT lifted here: the toggle's Default-driven OnCheck/OnUncheck
             // reaction to the values just set above can fire a moment later (next render pass), which was
             // still catching the guard as already-lifted and showing a spurious "switched" notification.
@@ -129,10 +142,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(8,33,15,1)
                         HoverFill: =RGBA(0,206,125,1)
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Already on Cockpit", NotificationType.Information)
+                        OnSelect: =Notify("Already on Cockpit", NotificationType.Information)
                         PaddingLeft: =12
                         PressedColor: =RGBA(8,33,15,1)
                         PressedFill: =RGBA(0,180,110,1)
@@ -149,10 +159,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Agent Monitoring screen - coming next", NotificationType.Information)
+                        OnSelect: =Navigate(scrAgentMonitoring, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Agent Monitoring"
@@ -168,10 +175,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Operational Board screen - coming next", NotificationType.Information)
+                        OnSelect: =Navigate(scrOperationalBoard, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Operational Board"
@@ -187,10 +191,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Audit Trail detail screen - coming next", NotificationType.Information)
+                        OnSelect: =Navigate(scrAuditTrail, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Audit Trail (Detail)"
@@ -206,10 +207,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Configuration (Lists) screen - coming next", NotificationType.Information)
+                        OnSelect: =Navigate(scrConfiguration, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Configuration (Lists)"
@@ -225,10 +223,7 @@ Screens:
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: |-
-                          =Set(varShowAdminPanel, false);
-                          Set(varConfirmDeleteMailboxFolders, false);
-                          Notify("Maintenance screen - coming next", NotificationType.Information)
+                        OnSelect: =Navigate(scrMaintenance, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Maintenance"
@@ -238,13 +233,13 @@ Screens:
                         Align: =Align.Left
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
-                        Color: =If(varShowAdminPanel,RGBA(8,33,15,1),RGBA(154,154,160,1))
-                        Fill: =If(varShowAdminPanel,RGBA(0,206,125,1),RGBA(0,0,0,0))
+                        Color: =RGBA(154,154,160,1)
+                        Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        OnSelect: =Set(varShowAdminPanel,!varShowAdminPanel)
+                        OnSelect: =Navigate(scrAdminFunctions, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Admin Functions (Test Only)"
@@ -261,172 +256,6 @@ Screens:
                   PaddingRight: =20
                   PaddingTop: =16
                 Children:
-                  - conAdminFunctions:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        Visible: =varShowAdminPanel
-                        Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
-                        BorderColor: =RGBA(220,53,69,1)
-                        BorderThickness: =3
-                        LayoutAlignItems: =LayoutAlignItems.Stretch
-                        LayoutDirection: =LayoutDirection.Vertical
-                        LayoutGap: =10
-                        PaddingBottom: =16
-                        PaddingLeft: =16
-                        PaddingRight: =16
-                        PaddingTop: =16
-                        RadiusBottomLeft: =8
-                        RadiusBottomRight: =8
-                        RadiusTopLeft: =8
-                        RadiusTopRight: =8
-                      Children:
-                        - lblAdminFunctionsTitle:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              FontWeight: =FontWeight.Bold
-                              Height: =28
-                              Size: =16
-                              Text: ="Admin Functions (Test / Reset Only)"
-                        - lblAdminFunctionsHint:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =24
-                              Size: =12
-                              Text: ="These actions are for testing/reset purposes only and can be destructive. Use with care."
-                        - conAdminDeleteRow:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              Height: =44
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =8
-                              LayoutMaxHeight: =44
-                              LayoutMinHeight: =44
-                            Children:
-                              - lblAdminDeleteLabel:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =28
-                                    Size: =12
-                                    Text: ="Delete 'PA Processed Mails' folder tree"
-                              - btnAdminDeleteProcessedMailsFolder:
-                                  Control: Classic/Button@2.2.0
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =RGBA(255,255,255,1)
-                                    Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    HoverFill: =RGBA(189,45,59,1)
-                                    OnSelect: =Set(varConfirmDeleteMailboxFolders,true)
-                                    RadiusBottomLeft: =8
-                                    RadiusBottomRight: =8
-                                    RadiusTopLeft: =8
-                                    RadiusTopRight: =8
-                                    Text: ="Delete..."
-                                    Width: =110
-                        - conAdminConfirmDelete:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =varConfirmDeleteMailboxFolders
-                              Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
-                              LayoutAlignItems: =LayoutAlignItems.Stretch
-                              LayoutDirection: =LayoutDirection.Vertical
-                              LayoutGap: =8
-                              PaddingBottom: =12
-                              PaddingLeft: =12
-                              PaddingRight: =12
-                              PaddingTop: =12
-                              RadiusBottomLeft: =6
-                              RadiusBottomRight: =6
-                              RadiusTopLeft: =6
-                              RadiusTopRight: =6
-                            Children:
-                              - lblConfirmDeleteText:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =48
-                                    Size: =12
-                                    Text: ="Are you sure? This deletes 'PA Processed Mails' and everything below it (including 'Agent 5 Alerts') in the shared mailbox. This cannot be easily undone."
-                              - conConfirmDeleteButtons:
-                                  Control: GroupContainer@1.5.0
-                                  Variant: AutoLayout
-                                  Properties:
-                                    Fill: =RGBA(0,0,0,0)
-                                    Height: =36
-                                    LayoutDirection: =LayoutDirection.Horizontal
-                                    LayoutGap: =8
-                                  Children:
-                                    - btnConfirmDeleteYes:
-                                        Control: Classic/Button@2.2.0
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =RGBA(255,255,255,1)
-                                          Fill: =RGBA(220,53,69,1)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          HoverFill: =RGBA(189,45,59,1)
-                                          OnSelect: |
-                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
-                                            Set(varConfirmDeleteMailboxFolders,false);
-                                            If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
-                                          RadiusBottomLeft: =8
-                                          RadiusBottomRight: =8
-                                          RadiusTopLeft: =8
-                                          RadiusTopRight: =8
-                                          Text: ="Yes, delete"
-                                          Width: =110
-                                    - btnConfirmDeleteCancel:
-                                        Control: Classic/Button@2.2.0
-                                        Properties:
-                                          BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                          BorderThickness: =3
-                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          HoverFill: =RGBA(255,255,255,0.08)
-                                          OnSelect: =Set(varConfirmDeleteMailboxFolders,false)
-                                          RadiusBottomLeft: =8
-                                          RadiusBottomRight: =8
-                                          RadiusTopLeft: =8
-                                          RadiusTopRight: =8
-                                          Text: ="Cancel"
-                                          Width: =90
-                        - lblAdminActionResult:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =40
-                              Size: =11
-                              Text: =varAdminActionResult.message
-                              Visible: =Len(varAdminActionResult.message)>0
                   - conTopHeader:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -807,6 +636,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
                               Size: =32
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =90
@@ -822,12 +652,29 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
                               Size: =13
                               Text: ="CRITICAL"
                               Width: =90
                               Wrap: =false
                               X: =Parent.Width - 656
                               Y: =62
+                        - dotLedCriticalChanged:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0.3)
+                              BorderThickness: =1
+                              Fill: =If(varBlinkPhase, RGBA(0,120,215,1), RGBA(0,120,215,0.35))
+                              Height: =12
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Visible: =Coalesce(varAuditFailedCount,0)<>Coalesce(varLastAckCriticalCount,0)
+                              Width: =12
+                              X: =Parent.Width - 572
+                              Y: =15
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -838,6 +685,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
                               Size: =32
                               Text: =Text(Coalesce(varAuditWarningCount,0))
                               Width: =110
@@ -853,12 +701,29 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
                               Size: =13
                               Text: ="WARNINGS"
                               Width: =110
                               Wrap: =false
                               X: =Parent.Width - 568
                               Y: =62
+                        - dotLedWarningsChanged:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0.3)
+                              BorderThickness: =1
+                              Fill: =If(varBlinkPhase, RGBA(0,120,215,1), RGBA(0,120,215,0.35))
+                              Height: =12
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Visible: =Coalesce(varAuditWarningCount,0)<>Coalesce(varLastAckWarningCount,0)
+                              Width: =12
+                              X: =Parent.Width - 464
+                              Y: =15
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
                             Properties:
@@ -869,6 +734,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
                               Size: =32
                               Text: =If(IsBlank(varStatusLastRefreshed), "?/6", Coalesce(varAgentsHealthyCount,0) & "/6")
                               Width: =140
@@ -884,12 +750,29 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
                               Size: =13
                               Text: ="AGENTS ACTIVE"
                               Width: =140
                               Wrap: =false
                               X: =Parent.Width - 428
                               Y: =62
+                        - dotLedAgentsChanged:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0.3)
+                              BorderThickness: =1
+                              Fill: =If(varBlinkPhase, RGBA(0,120,215,1), RGBA(0,120,215,0.35))
+                              Height: =12
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Visible: =Coalesce(varAgentsHealthyCount,0)<>Coalesce(varLastAckAgentsHealthyCount,0)
+                              Width: =12
+                              X: =Parent.Width - 294
+                              Y: =15
                         - lblVersionTag:
                             Control: Label@2.5.1
                             Properties:
