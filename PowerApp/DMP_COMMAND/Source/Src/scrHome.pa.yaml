@@ -901,6 +901,8 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =38
+                              HoverFill: =RGBA(0,206,125,0.45)
+                              OnSelect: =Navigate(scrReleaseNotes, ScreenTransition.Fade)
                               PaddingLeft: =1
                               PaddingRight: =1
                               Size: =12
