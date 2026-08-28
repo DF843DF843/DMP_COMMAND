@@ -128,7 +128,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.8.0 - 2026-08-28 (current)"
+                              Text: ="v1.8.1 - 2026-08-28 (current)"
                               Wrap: =false
                         - lblReleaseV180Notes:
                             Control: Label@2.5.1
@@ -137,9 +137,9 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =220
+                              Height: =240
                               Size: =12
-                              Text: ="- Sidebar logo fixed - the source image had ~20-25% built-in padding on every side, so no resize ever actually made it bigger; it is now cropped to the real artwork and fills the sidebar width" & Char(10) & "- Major width reduction across the whole Cockpit header row to fit 100% browser zoom (was previously only fully visible at 75%) - narrower Operating State / Maintenance Domains / Files columns, narrower buttons, smaller ring padding, tighter gaps, narrower sidebar" & Char(10) & "- Operating State - ""Mode"" merged into the title area (color-coded like the screen border, blinks while switching), all labels made smaller/consistent, matching the Files card style" & Char(10) & "- Emails card - legend converted to a tooltip on the ring itself, so the ring can stay full size while the card gets much narrower" & Char(10) & "- Light mode - several too-light grey texts (Files status/time, Maintenance Domains counts) darkened for readability" & Char(10) & "- New diagnostics tile on the Admin page showing App.Width/App.Height for reporting layout issues"
+                              Text: ="- Sidebar logo fixed - the source image had ~20-25% built-in padding on every side, so no resize ever actually made it bigger; it is now cropped to the real artwork and fills the sidebar width" & Char(10) & "- Major width reduction across the whole Cockpit header row to fit 100% browser zoom (was previously only fully visible at 75%) - narrower Operating State / Maintenance Domains / Files columns, narrower buttons, smaller ring padding, tighter gaps, narrower sidebar" & Char(10) & "- Operating State - ""Mode"" merged into the title area (color-coded like the screen border, blinks while switching), all labels made smaller/consistent, matching the Files card style" & Char(10) & "- Emails card - legend converted to a tooltip on the ring itself, so the ring can stay full size while the card gets much narrower" & Char(10) & "- Light mode - several too-light grey texts (Files status/time, Maintenance Domains counts) darkened for readability" & Char(10) & "- New diagnostics tile on the Admin page showing App.Width/App.Height for reporting layout issues" & Char(10) & "- v1.8.1 - fixed a sibling-indentation bug in this very file that blocked Studio from opening v1.8.0"
                               Wrap: =true
                   - conReleaseV170:
                       Control: GroupContainer@1.5.0

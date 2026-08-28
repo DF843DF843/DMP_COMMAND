@@ -1880,75 +1880,75 @@ Screens:
                                           Text: ="RESERVED FOR FUTURE USE"
                                           Width: =500
                                           Y: =82
-                       - conEmailsCard:
-                           Control: GroupContainer@1.5.0
-                           Variant: ManualLayout
-                           Properties:
-                             BorderColor: =RGBA(0,206,125,0.7)
-                             BorderThickness: =3
-                             Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                             FillPortions: =0
-                             Height: =360
-                             RadiusBottomLeft: =18
-                             RadiusBottomRight: =18
-                             RadiusTopLeft: =18
-                             RadiusTopRight: =18
-                             Width: =344
-                           Children:
-                             - imgEmailsWheel:
-                                 Control: Image@2.2.3
-                                 Properties:
-                                   BorderColor: =RGBA(0,0,0,0)
-                                   BorderStyle: =BorderStyle.None
-                                   Height: =328
-                                   Image: |-
-                                     =With(
-                                         {
-                                             vNeverSucceeded: IsBlank(varStatusLastRefreshed),
-                                             vLabelColor: If(varDarkMode, "rgb(200,195,225)", "rgb(60,55,80)"),
-                                             vNoDMP: varCounterNoDMP,
-                                             vDEE: varCounterEffected,
-                                             vDIS: varCounterInternalSender,
-                                             vDNES: varCounterNotEffected
-                                         },
-                                         With(
-                                             { vTotal: Max(vNoDMP + vDEE + vDIS + vDNES, 1) },
-                                             With(
-                                                 {
-                                                     vLen1: (vNoDMP/vTotal)*408.407 - 8,
-                                                     vLen2: (vDEE/vTotal)*408.407 - 8,
-                                                     vLen3: (vDIS/vTotal)*408.407 - 8,
-                                                     vLen4: (vDNES/vTotal)*408.407 - 8,
-                                                     vOff2: -((vNoDMP/vTotal)*408.407),
-                                                     vOff3: -(((vNoDMP+vDEE)/vTotal)*408.407),
-                                                     vOff4: -(((vNoDMP+vDEE+vDIS)/vTotal)*408.407)
-                                                 },
-                                                 If(
-                                                     vNeverSucceeded,
-                                                     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(150,150,158)' stroke-width='20' stroke-opacity='0.35'/><text x='90' y='95' text-anchor='middle' font-family='Segoe UI' font-size='16' font-weight='bold' fill='" & vLabelColor & "'>Loading...</text></svg>",
-                                                     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'>" &
-                                                     "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                     "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                     "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(153,102,178)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                     "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,159,10)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                     "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='rgb(60,125,190)'>" & Text(vTotal,"0") & "</text>" &
-                                                     "<text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>EMAILS PROCESSED</text></svg>"
-                                                 )
-                                             )
-                                         )
-                                     )
-                                   Tooltip: |-
-                                     =If(
-                                         IsBlank(varStatusLastRefreshed),
-                                         "Loading...",
-                                         "No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                         "External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                         "Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                         "Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
-                                     )
-                                   Width: =328
-                                   X: =8
-                                   Y: =16
+                        - conEmailsCard:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.7)
+                              BorderThickness: =3
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              FillPortions: =0
+                              Height: =360
+                              RadiusBottomLeft: =18
+                              RadiusBottomRight: =18
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =344
+                            Children:
+                              - imgEmailsWheel:
+                                  Control: Image@2.2.3
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Height: =328
+                                    Image: |-
+                                      =With(
+                                          {
+                                              vNeverSucceeded: IsBlank(varStatusLastRefreshed),
+                                              vLabelColor: If(varDarkMode, "rgb(200,195,225)", "rgb(60,55,80)"),
+                                              vNoDMP: varCounterNoDMP,
+                                              vDEE: varCounterEffected,
+                                              vDIS: varCounterInternalSender,
+                                              vDNES: varCounterNotEffected
+                                          },
+                                          With(
+                                              { vTotal: Max(vNoDMP + vDEE + vDIS + vDNES, 1) },
+                                              With(
+                                                  {
+                                                      vLen1: (vNoDMP/vTotal)*408.407 - 8,
+                                                      vLen2: (vDEE/vTotal)*408.407 - 8,
+                                                      vLen3: (vDIS/vTotal)*408.407 - 8,
+                                                      vLen4: (vDNES/vTotal)*408.407 - 8,
+                                                      vOff2: -((vNoDMP/vTotal)*408.407),
+                                                      vOff3: -(((vNoDMP+vDEE)/vTotal)*408.407),
+                                                      vOff4: -(((vNoDMP+vDEE+vDIS)/vTotal)*408.407)
+                                                  },
+                                                  If(
+                                                      vNeverSucceeded,
+                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(150,150,158)' stroke-width='20' stroke-opacity='0.35'/><text x='90' y='95' text-anchor='middle' font-family='Segoe UI' font-size='16' font-weight='bold' fill='" & vLabelColor & "'>Loading...</text></svg>",
+                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(153,102,178)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,159,10)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='rgb(60,125,190)'>" & Text(vTotal,"0") & "</text>" &
+                                                      "<text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>EMAILS PROCESSED</text></svg>"
+                                                  )
+                                              )
+                                          )
+                                      )
+                                    Tooltip: |-
+                                      =If(
+                                          IsBlank(varStatusLastRefreshed),
+                                          "Loading...",
+                                          "No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
+                                          "External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
+                                          "Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
+                                          "Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                      )
+                                    Width: =328
+                                    X: =8
+                                    Y: =16
                   - conNextSteps:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
