@@ -918,14 +918,14 @@ Screens:
                               LayoutMaxHeight: =360
                               LayoutMinHeight: =360
                               PaddingBottom: =16
-                              PaddingLeft: =8
-                              PaddingRight: =8
+                              PaddingLeft: =4
+                              PaddingRight: =4
                               PaddingTop: =16
                               RadiusBottomLeft: =18
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
-                              Width: =344
+                              Width: =336
                             Children:
                               - imgHeartbeatWheel:
                                   Control: Image@2.2.3
@@ -1620,7 +1620,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =530
+                                    Width: =490
                                     X: =448
                                     Y: =0
                                   Children:
@@ -1650,9 +1650,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="STATUS"
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =200
+                                          X: =180
                                           Y: =30
                                     - lblFilesColHeaderUpdated:
                                         Control: Label@2.5.1
@@ -1665,9 +1665,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="LAST UPDATED"
-                                          Width: =200
+                                          Width: =190
                                           Wrap: =false
-                                          X: =310
+                                          X: =280
                                           Y: =30
                                     - lblDotEmergencyReport:
                                         Control: Label@2.5.1
@@ -1692,7 +1692,7 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Emergency Report"
-                                          Width: =150
+                                          Width: =130
                                           Wrap: =false
                                           X: =40
                                           Y: =48
@@ -1706,9 +1706,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varEmergencyReportExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =200
+                                          X: =180
                                           Y: =48
                                     - lblTimeEmergencyReport:
                                         Control: Label@2.5.1
@@ -1720,9 +1720,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =200
+                                          Width: =190
                                           Wrap: =false
-                                          X: =310
+                                          X: =280
                                           Y: =48
                                     - lblDotExternalDomains:
                                         Control: Label@2.5.1
@@ -1747,7 +1747,7 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="External Domains"
-                                          Width: =150
+                                          Width: =130
                                           Wrap: =false
                                           X: =40
                                           Y: =74
@@ -1761,9 +1761,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varExternalDomainsExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =200
+                                          X: =180
                                           Y: =74
                                     - lblTimeExternalDomains:
                                         Control: Label@2.5.1
@@ -1775,9 +1775,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =200
+                                          Width: =190
                                           Wrap: =false
-                                          X: =310
+                                          X: =280
                                           Y: =74
                                     - lblDotCounter:
                                         Control: Label@2.5.1
@@ -1802,7 +1802,7 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Counter File"
-                                          Width: =150
+                                          Width: =130
                                           Wrap: =false
                                           X: =40
                                           Y: =100
@@ -1816,9 +1816,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varCounterExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =200
+                                          X: =180
                                           Y: =100
                                     - lblTimeCounter:
                                         Control: Label@2.5.1
@@ -1830,9 +1830,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =200
+                                          Width: =190
                                           Wrap: =false
-                                          X: =310
+                                          X: =280
                                           Y: =100
                                     - lblDotAuditTrail:
                                         Control: Label@2.5.1
@@ -1857,7 +1857,7 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: ="Audit Trail File"
-                                          Width: =150
+                                          Width: =130
                                           Wrap: =false
                                           X: =40
                                           Y: =126
@@ -1871,9 +1871,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varAuditTrailExists, "Operational", "Missing"))
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =200
+                                          X: =180
                                           Y: =126
                                     - lblTimeAuditTrail:
                                         Control: Label@2.5.1
@@ -1885,9 +1885,9 @@ Screens:
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =200
+                                          Width: =190
                                           Wrap: =false
-                                          X: =310
+                                          X: =280
                                           Y: =126
                               - conFilesPlaceholder:
                                   Control: GroupContainer@1.5.0
@@ -1903,7 +1903,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =530
+                                    Width: =490
                                     X: =448
                                     Y: =176
                                   Children:
@@ -1919,7 +1919,7 @@ Screens:
                                           Height: =20
                                           Size: =11
                                           Text: ="RESERVED FOR FUTURE USE"
-                                          Width: =530
+                                          Width: =490
                                           Y: =82
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
@@ -1934,7 +1934,7 @@ Screens:
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
                               RadiusTopRight: =18
-                              Width: =344
+                              Width: =336
                             Children:
                               - imgEmailsWheel:
                                   Control: Image@2.2.3
@@ -1978,18 +1978,223 @@ Screens:
                                               )
                                           )
                                       )
-                                    Tooltip: |-
-                                      =If(
-                                          IsBlank(varStatusLastRefreshed),
-                                          "Loading...",
-                                          "No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                          "External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                          "Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)" & Char(10) &
-                                          "Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
-                                      )
                                     Width: =328
-                                    X: =8
+                                    X: =4
                                     Y: =16
+                              - btnEmailsLegendToggle:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderStyle: =BorderStyle.None
+                                    Fill: =RGBA(255,255,255,0.01)
+                                    HoverFill: =RGBA(255,255,255,0.05)
+                                    PressedFill: =RGBA(255,255,255,0.08)
+                                    Text: =""
+                                    Tooltip: ="Click for a colour-matched legend"
+                                    Height: =328
+                                    Width: =328
+                                    X: =4
+                                    Y: =16
+                                    OnSelect: =Set(varShowEmailsLegend, !varShowEmailsLegend)
+                              - conEmailsLegendPopup:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Visible: =varShowEmailsLegend
+                                    BorderColor: =RGBA(0,206,125,0.6)
+                                    BorderThickness: =2
+                                    Fill: =If(varDarkMode,RGBA(20,18,30,0.97),RGBA(255,255,255,0.98))
+                                    LayoutAlignItems: =LayoutAlignItems.Stretch
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =6
+                                    PaddingBottom: =10
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    PaddingTop: =10
+                                    RadiusBottomLeft: =10
+                                    RadiusBottomRight: =10
+                                    RadiusTopLeft: =10
+                                    RadiusTopRight: =10
+                                    Width: =312
+                                    X: =12
+                                    Y: =90
+                                  Children:
+                                    - conEmailsLegendHeaderRow:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =20
+                                          Width: =288
+                                        Children:
+                                          - lblEmailsLegendTitle:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =18
+                                                Size: =11
+                                                Text: ="EMAILS PROCESSED - LEGEND"
+                                                Width: =248
+                                                Wrap: =false
+                                                X: =0
+                                                Y: =0
+                                          - btnCloseEmailsLegend:
+                                              Control: Classic/Button@2.2.0
+                                              Properties:
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Fill: =RGBA(0,0,0,0)
+                                                FontWeight: =FontWeight.Bold
+                                                HoverFill: =RGBA(255,255,255,0.08)
+                                                OnSelect: =Set(varShowEmailsLegend, false)
+                                                Text: ="✕"
+                                                Height: =18
+                                                Width: =20
+                                                X: =268
+                                                Y: =0
+                                    - conEmailsLegendRow1:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =18
+                                          Width: =288
+                                        Children:
+                                          - sqEmailsLegend1:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =RGBA(60,125,190,1)
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =2
+                                          - lblEmailsLegend1:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =18
+                                                Size: =10.5
+                                                Text: ="No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conEmailsLegendRow2:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =18
+                                          Width: =288
+                                        Children:
+                                          - sqEmailsLegend2:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =RGBA(102,52,142,1)
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =2
+                                          - lblEmailsLegend2:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =18
+                                                Size: =10.5
+                                                Text: ="External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conEmailsLegendRow3:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =18
+                                          Width: =288
+                                        Children:
+                                          - sqEmailsLegend3:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =RGBA(153,102,178,1)
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =2
+                                          - lblEmailsLegend3:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =18
+                                                Size: =10.5
+                                                Text: ="Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conEmailsLegendRow4:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =18
+                                          Width: =288
+                                        Children:
+                                          - sqEmailsLegend4:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =RGBA(255,159,10,1)
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =2
+                                          - lblEmailsLegend4:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =18
+                                                Size: =10.5
+                                                Text: ="Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
                   - conNextSteps:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout

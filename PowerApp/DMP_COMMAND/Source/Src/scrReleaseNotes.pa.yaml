@@ -89,6 +89,38 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
+                  - btnCopyReleaseNotesToClipboard:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(11,11,13,1)
+                        Fill: =RGBA(0,206,125,1)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =36
+                        HoverFill: =RGBA(45,230,155,1)
+                        OnSelect: |-
+                          =IfError(
+                              Copy(
+                                  lblReleaseV190Header.Text & Char(10) & lblReleaseV190Notes.Text & Char(10) & Char(10) &
+                                  lblReleaseV180Header.Text & Char(10) & lblReleaseV180Notes.Text & Char(10) & Char(10) &
+                                  lblReleaseV170Header.Text & Char(10) & lblReleaseV170Notes.Text & Char(10) & Char(10) &
+                                  lblReleaseV164Header.Text & Char(10) & lblReleaseV164Notes.Text & Char(10) & Char(10) &
+                                  lblReleaseV161to163Header.Text & Char(10) & lblReleaseV161to163Notes.Text & Char(10) & Char(10) &
+                                  lblReleaseOlderHeader.Text & Char(10) & lblReleaseOlderNotes.Text
+                              ),
+                              Notify("Release Notes wurden in die Zwischenablage kopiert.", NotificationType.Success),
+                              Notify("Kopieren in die Zwischenablage ist in diesem Kontext nicht verfuegbar.", NotificationType.Warning)
+                          )
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Text: ="Copy to Clipboard"
+                        Width: =190
+                        X: =Parent.Width - 210
+                        Y: =18
             - conReleaseNotesList:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
@@ -98,6 +130,7 @@ Screens:
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
+                  LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
                   - conReleaseV190:
                       Control: GroupContainer@1.5.0
@@ -128,18 +161,19 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.9.2 - 2026-08-28 (current)"
+                              Text: ="v1.9.3 - 2026-08-28 (current)"
                               Wrap: =false
                         - lblReleaseV190Notes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
                               Height: =260
                               Size: =12
-                              Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - count (green) - LOCATION - actions, e.g. ""19 - INTERNAL - View Edit"" and ""6 - EXTERNAL - View Edit Replace""" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap" & Char(10) & "- v1.9.1 - added the missing second dash (between location and actions) to the Maintenance Domains format" & Char(10) & "- v1.9.2 - enlarged the invisible click area of the Replace button (Maintenance Domains - External) - was only slightly larger than the visible button, now has a generous margin on all sides without overlapping the neighboring Edit button or LED"
+                              Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - count (green) - LOCATION - actions, e.g. ""19 - INTERNAL - View Edit"" and ""6 - EXTERNAL - View Edit Replace""" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap" & Char(10) & "- v1.9.1 - added the missing second dash (between location and actions) to the Maintenance Domains format" & Char(10) & "- v1.9.2 - enlarged the invisible click area of the Replace button (Maintenance Domains - External) - was only slightly larger than the visible button, now has a generous margin on all sides without overlapping the neighboring Edit button or LED" & Char(10) & "- v1.9.3 - Release Notes text was getting cut off on longer entries - all entries now auto-size to their real content height" & Char(10) & "- v1.9.3 - Release Notes list is now scrollable, and a new ""Copy to Clipboard"" button copies the full version history as plain text" & Char(10) & "- v1.9.3 - Files card - right edge was poking out past its container on some screens - narrowed the card and tightened the Status/Last Updated column gaps further" & Char(10) & "- v1.9.3 - Heartbeat and Emails Processed ring cards - reduced the inner padding further to save horizontal space" & Char(10) & "- v1.9.3 - Emails Processed ring - the old plain-text tooltip could not show colours, so it was replaced with a click-to-open legend popup with real colour swatches matching each ring segment"
                               Wrap: =true
                   - conReleaseV180:
                       Control: GroupContainer@1.5.0
@@ -175,6 +209,7 @@ Screens:
                         - lblReleaseV180Notes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
@@ -217,6 +252,7 @@ Screens:
                         - lblReleaseV170Notes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
@@ -259,6 +295,7 @@ Screens:
                         - lblReleaseV164Notes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
@@ -323,6 +360,7 @@ Screens:
                         - lblReleaseV161to163Notes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
@@ -365,6 +403,7 @@ Screens:
                         - lblReleaseOlderNotes:
                             Control: Label@2.5.1
                             Properties:
+                              AutoHeight: =true
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
