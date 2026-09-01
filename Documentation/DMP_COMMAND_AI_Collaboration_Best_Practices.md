@@ -22,7 +22,20 @@
 
 ---
 
-## 3. Documentation as a First-Class Deliverable
+## 3. Concrete Engineering & Documentation Best Practices
+
+These are the specific, recurring practices that make the collaboration reliable and auditable in daily work — not abstract principles, but concrete habits applied on every change:
+
+- **SharePoint Lists as the single source of truth for variables and configuration.** Hardcoded values are systematically avoided in favor of a central configuration list; any value that could plausibly change (thresholds, recipient addresses, folder names, feature toggles) lives in a SharePoint list, not scattered across code. Where a data store still lives in a plain file (Excel/text), migrating it to a proper SharePoint list is treated as a concrete, prioritized improvement, not a nice-to-have — file-based storage is considered a legacy state to be phased out, one component at a time, starting with the lowest-risk one.
+- **A central Audit Trail is mandatory, not optional.** Every automated component logs its own run outcome (success/warning/failure, what changed, when) to a shared, structured audit list, so the full operational history is queryable in one place instead of scattered across individual run logs.
+- **Proactive warning e-mails for every critical condition.** Silent failures are treated as unacceptable; whenever something goes wrong or needs human attention, an e-mail notification is sent automatically rather than relying on someone noticing a dashboard change.
+- **Release Notes are a first-class, disciplined deliverable, not an afterthought.** Every shipped change gets a dated, human-readable entry describing what changed and why, visible directly inside the application itself — and that in-app content is treated as the single source of truth, with any external copy (e.g., a standalone document) regenerated from it, never maintained by hand in two places.
+- **A living backlog captures every deferred decision, system-wide.** When a good idea or a known limitation is identified but deliberately not tackled immediately, it is written into a single backlog document that spans the whole system (not just the component currently being worked on) — so nothing gets lost between sessions, and the reasoning behind "why later, not now" is preserved.
+- **Version control (GitHub) is the backbone of accountability.** Every change is committed with a descriptive message explaining what changed and why, kept fully in sync with the working copy used day-to-day, and — for anything touching a production-critical path — deliberately committed without being deployed live until a human explicitly approves the rollout. The commit history itself becomes a second, code-level audit trail of the collaboration.
+
+---
+
+## 4. Documentation as a First-Class Deliverable
 
 - **A single "working rules" document accumulates every hard-won lesson.** When a bug is traced to a root cause, the fix is not just applied — the underlying rule ("never do X without also checking Y") is written down permanently, dated, and referenced in future work so the same class of bug is prevented, not just patched once.
 - **A separate backlog document tracks deferred, larger-scope items** across the entire system (not just the most recently touched component), so nothing gets forgotten between sessions.
@@ -32,7 +45,7 @@
 
 ---
 
-## 4. Engineering Discipline & Validation Culture
+## 5. Engineering Discipline & Validation Culture
 
 - **A fixed, non-negotiable validation checklist runs before every deployment**, regardless of how small the change appears: syntax validity, structural reference integrity (no dangling references between components), field-length/schema limits, and a full round-trip pack/unpack comparison to catch silent corruption. Skipping any single check "because the change is tiny" has repeatedly caused avoidable failures — the discipline applies uniformly, with no size-based exceptions.
 - **The validation checklist itself evolves.** Each time a bug slips through the existing checks, a new automated check is added to the checklist rather than relying on manual care next time. The checklist is treated as the single source of truth for "is this ready" — not personal judgement.
@@ -42,7 +55,7 @@
 
 ---
 
-## 5. Risk-Based Rollout Strategy
+## 6. Risk-Based Rollout Strategy
 
 - **Changes are staged by risk, not by convenience.** When multiple related components need the same kind of migration, the lowest-risk, most isolated component is changed and verified first, then progressively riskier or more production-critical components follow — never the reverse.
 - **"Committed to version control" and "live in production" are treated as two distinct, separately-confirmed states.** A change can be fully built, validated, and committed while deliberately not yet being deployed live, especially when it touches a production-critical path (e.g., live email processing) — the human explicitly decides when to cross that line, not the AI.
@@ -51,7 +64,7 @@
 
 ---
 
-## 6. Root-Cause-First Problem Solving
+## 7. Root-Cause-First Problem Solving
 
 - **Symptom-only fixes are avoided; the underlying mechanism is identified before writing a fix.** A recurring bug is treated as a signal that a whole class of similar code may share the same latent flaw — the fix is searched for and applied everywhere the same pattern occurs, not just at the one reported location.
 - **When investigating a report from the human, the exact reported detail is respected precisely**, and any real ambiguity is clarified rather than reinterpreted based on assumption — misreading a description and building the wrong fix wastes more time than a short clarifying question.
@@ -59,9 +72,10 @@
 
 ---
 
-## 7. Summary – Key Takeaways (presentation-ready)
+## 8. Summary – Key Takeaways (presentation-ready)
 
 - Plain-text, non-blocking communication; reasoned assumptions over stalling questions.
+- SharePoint lists as the single source of truth for variables/configuration; central Audit Trail; proactive warning e-mails; disciplined Release Notes; a living, system-wide Backlog; GitHub as the accountability backbone.
 - Every root cause becomes a permanent, dated rule — mistakes are not repeated silently.
 - A fixed, ever-growing validation checklist runs before every single deployment, no exceptions for "small" changes.
 - Documentation is kept as close to real-time accurate as the code itself, synchronized across all copies.
