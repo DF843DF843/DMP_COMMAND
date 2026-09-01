@@ -173,18 +173,18 @@ Screens:
                         Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Semibold
-                        Height: =32
+                        Height: =26
                         HoverFill: =RGBA(0,206,125,0.12)
                         OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/AuditTrail.xlsx")
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
-                        Size: =11.5
+                        Size: =11
                         Text: ="Open full Audit Trail file"
-                        Width: =230
-                        X: =886
-                        Y: =12
+                        Width: =196
+                        X: =920
+                        Y: =14
             - conAuditTrailPanels:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout

@@ -105,6 +105,7 @@ Screens:
                               Copy(
                                   If(
                                       varReleaseNotesTab="App",
+                                      lblReleaseV1210Header.Text & Char(10) & lblReleaseV1210Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1200Header.Text & Char(10) & lblReleaseV1200Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1190Header.Text & Char(10) & lblReleaseV1190Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1180Header.Text & Char(10) & lblReleaseV1180Notes.Text & Char(10) & Char(10) &
@@ -210,6 +211,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1210:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1210Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.21.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1210Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Refresh indicator (gray on very first load, yellow blinking on every later refresh) extended to all reloading displays across the app - the System Health legend popup dots and all 6 Agent Monitoring status dots now follow the same convention as the Files panel and Automation Status" & Char(10) & "- Emails Processed colors reassigned to match the requested convention - Blue=No DMP, Green=Not Effected, Purple=Internal, Red=External" & Char(10) & "- Maintenance Domains - all View/Edit/Replace buttons shifted slightly left so Replace no longer sits almost flush with the card's right edge" & Char(10) & "- Audit Trail - Open full Audit Trail file button made smaller (less empty space around the text)" & Char(10) & "- Note - the Audit Trail button still opens the raw Excel file (triggers a browser Save dialog); switching it to a proper SharePoint view will happen together with the already-planned Audit Trail SharePoint migration, not as a standalone guess"
+                              Wrap: =true
                   - conReleaseV1200:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -241,7 +287,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.20.0 - 2026-09-01 (current)"
+                              Text: ="v1.20.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1200Notes:
                             Control: Label@2.5.1
@@ -1451,6 +1497,24 @@ Screens:
                         RadiusTopRight: =12
                         Width: =170
                       Children:
+                        - btnAppReleaseV1210:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1210",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1210",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1210",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1210",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1210")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.21.0"
                         - btnAppReleaseV1200:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1842,7 +1906,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedAppRelease, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV1200Header.Text)
+                              Text: =Switch(varSelectedAppRelease, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV1210Header.Text)
                               Wrap: =false
                         - lblReleaseDetailAppNotes:
                             Control: Label@2.5.1
@@ -1853,7 +1917,7 @@ Screens:
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
                               Size: =12
-                              Text: =Switch(varSelectedAppRelease, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV1200Notes.Text)
+                              Text: =Switch(varSelectedAppRelease, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV1210Notes.Text)
                               Wrap: =true
             - conReleaseNotesSplitAgents:
                 Control: GroupContainer@1.5.0

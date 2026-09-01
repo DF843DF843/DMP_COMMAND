@@ -12,7 +12,10 @@ Screens:
       Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
       LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
       OnVisible: |-
-        =Refresh('DMP Command Agent Status')
+        =Set(varAgentMonitoringRefreshing, true);
+        Refresh('DMP Command Agent Status');
+        Set(varAgentMonitoringRefreshing, false);
+        Set(varAgentMonitoringEverLoaded, true)
     Children:
       - conAgentMonitoringRoot:
           Control: GroupContainer@1.5.0
@@ -121,7 +124,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7
@@ -206,7 +209,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7
@@ -291,7 +294,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7
@@ -387,7 +390,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7
@@ -472,7 +475,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7
@@ -557,7 +560,7 @@ Screens:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_06").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Fill: =If(!varAgentMonitoringEverLoaded, RGBA(150,150,158,1), If(varAgentMonitoringRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_06").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))))
                               Height: =14
                               RadiusBottomLeft: =7
                               RadiusBottomRight: =7

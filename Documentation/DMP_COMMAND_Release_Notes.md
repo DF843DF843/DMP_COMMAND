@@ -4,7 +4,15 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.20.0 - 2026-09-01 (current)
+### v1.21.0 - 2026-09-01 (current)
+
+- Refresh indicator (gray on very first load, yellow blinking on every later refresh) extended to all reloading displays across the app - the System Health legend popup dots and all 6 Agent Monitoring status dots now follow the same convention as the Files panel and Automation Status
+- Emails Processed colors reassigned to match the requested convention - Blue=No DMP, Green=Not Effected, Purple=Internal, Red=External
+- Maintenance Domains - all View/Edit/Replace buttons shifted slightly left so Replace no longer sits almost flush with the card's right edge
+- Audit Trail - Open full Audit Trail file button made smaller (less empty space around the text)
+- Note - the Audit Trail button still opens the raw Excel file (triggers a browser Save dialog); switching it to a proper SharePoint view will happen together with the already-planned Audit Trail SharePoint migration, not as a standalone guess
+
+### v1.20.0 - 2026-09-01
 
 - Help / Operational Manual redesigned with the same version-menu pattern as Release Notes - a small section menu on the left (About this manual, Colour/LED legend, Top bar, Operating State, Maintenance Domains, Files, System Health, Emails Processed, Automation Status, Next Steps, Sidebar navigation), one large readable container on the right
 - The right side is now split in two - a screenshot area on the left (currently a placeholder until real screenshots are provided) and the description text on the right, as requested
