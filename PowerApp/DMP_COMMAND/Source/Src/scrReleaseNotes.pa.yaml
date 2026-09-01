@@ -186,6 +186,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1120:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1120Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.12.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1120Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =260
+                              Size: =12
+                              Text: ="- Help / Operational Manual page filled in - a full container-by-container explanation of the Cockpit (what every tile shows, what every button does, and what the colours/LEDs mean), reachable from the sidebar" & Char(10) & "- Sidebar renamed ""Operational Board"" to ""Help / Operational Manual""" & Char(10) & "- Configuration (Lists) page filled in - direct View/New links and live active-row counts for all 3 SharePoint configuration lists" & Char(10) & "- Maintenance page filled in - live connection diagnostics for the 3 SharePoint lists, app/agent version overview, and quick links to the Power Automate, SharePoint and Power Apps maker portals" & Char(10) & "- Admin Functions - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL), each with a confirmation step; the previous value is written to the Audit Trail as an Operational History record before the reset (Agent 6 v1.2.0)"
+                              Wrap: =true
                   - conReleaseV1100:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -217,7 +262,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.11.0 - 2026-09-01 (current)"
+                              Text: ="v1.11.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1100Notes:
                             Control: Label@2.5.1
@@ -794,7 +839,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 6 (Admin Functions) - v1.1.0 (current)"
+                              Text: ="Agent 6 (Admin Functions) - v1.2.0 (current)"
                               Wrap: =false
                         - lblAgentNote6Notes:
                             Control: Label@2.5.1
@@ -806,5 +851,5 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =300
                               Size: =12
-                              Text: ="- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion, triggered from the Cockpit's Admin page"
+                              Text: ="- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0" & Char(10) & "- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page"
                               Wrap: =true

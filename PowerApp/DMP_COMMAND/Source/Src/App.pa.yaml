@@ -27,6 +27,9 @@ App:
       Set(varShowAdminPanel,false);
       Set(varConfirmDeleteMailboxFolders,false);
       Set(varAdminActionResult,{success:false,message:"",requestedaction:"",deletedcount:0});
+      Set(varConfirmResetCounter,false);
+      Set(varPendingResetAction,"");
+      Set(varPendingResetLabel,"");
       Set(varShowEmailsLegend,false);
       Set(varShowHeartbeatLegend,false);
       Set(varReleaseNotesTab,"App");

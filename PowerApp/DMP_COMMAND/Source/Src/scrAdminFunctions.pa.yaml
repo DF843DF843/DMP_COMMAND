@@ -295,6 +295,203 @@ Screens:
                                     RadiusTopRight: =8
                                     Text: ="Cancel"
                                     Width: =90
+                  - lblAdminResetCountersTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        Size: =13
+                        Text: ="Reset e-mail counters (previous value is recorded in the Audit Trail / Operational History first)"
+                  - conAdminResetCountersRow:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =44
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutGap: =8
+                        LayoutMaxHeight: =44
+                        LayoutMinHeight: =44
+                      Children:
+                        - btnResetCounterNoDMP:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(220,53,69,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              HoverFill: =RGBA(189,45,59,1)
+                              OnSelect: |
+                                =Set(varPendingResetAction,"ResetCounter_NoDMP");
+                                Set(varPendingResetLabel,"No DMP");
+                                Set(varConfirmResetCounter,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="No DMP"
+                              Width: =110
+                        - btnResetCounterInternalSender:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(220,53,69,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              HoverFill: =RGBA(189,45,59,1)
+                              OnSelect: |
+                                =Set(varPendingResetAction,"ResetCounter_InternalSender");
+                                Set(varPendingResetLabel,"DMP internal Sender");
+                                Set(varConfirmResetCounter,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="Internal Sender"
+                              Width: =130
+                        - btnResetCounterEffected:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(220,53,69,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              HoverFill: =RGBA(189,45,59,1)
+                              OnSelect: |
+                                =Set(varPendingResetAction,"ResetCounter_Effected");
+                                Set(varPendingResetLabel,"DMP effected Member (External)");
+                                Set(varConfirmResetCounter,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="External"
+                              Width: =110
+                        - btnResetCounterNotEffected:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(220,53,69,1)
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              HoverFill: =RGBA(189,45,59,1)
+                              OnSelect: |
+                                =Set(varPendingResetAction,"ResetCounter_NotEffected");
+                                Set(varPendingResetLabel,"DMP not effected Sender");
+                                Set(varConfirmResetCounter,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="Not Effected"
+                              Width: =130
+                        - btnResetAllCounters:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =RGBA(140,20,30,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =32
+                              HoverFill: =RGBA(110,15,23,1)
+                              OnSelect: |
+                                =Set(varPendingResetAction,"ResetAllCounters");
+                                Set(varPendingResetLabel,"ALL counters");
+                                Set(varConfirmResetCounter,true)
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Text: ="Reset ALL"
+                              Width: =110
+                  - conAdminConfirmResetCounter:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Visible: =varConfirmResetCounter
+                        Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =12
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        PaddingTop: =12
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                      Children:
+                        - lblConfirmResetCounterText:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =48
+                              Size: =12
+                              Text: ="Are you sure? This resets the '" & varPendingResetLabel & "' counter(s) to 0. The current value is written to the Audit Trail (as an Operational History record) before the reset, so it is not lost."
+                        - conConfirmResetCounterButtons:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =36
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                            Children:
+                              - btnConfirmResetCounterYes:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: |
+                                      =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction));
+                                      Set(varConfirmResetCounter,false);
+                                      If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Text: ="Yes, reset"
+                                    Width: =110
+                              - btnConfirmResetCounterCancel:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
+                                    BorderThickness: =3
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Fill: =RGBA(0,0,0,0)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(255,255,255,0.08)
+                                    OnSelect: =Set(varConfirmResetCounter,false)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Text: ="Cancel"
+                                    Width: =90
                   - lblAdminActionResult:
                       Control: Label@2.5.1
                       Properties:
