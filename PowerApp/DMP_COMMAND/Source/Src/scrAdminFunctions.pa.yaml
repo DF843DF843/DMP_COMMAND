@@ -172,7 +172,7 @@ Screens:
                                     Height: =28
                                     Size: =12
                                     Text: ="Delete 'PA Processed Mails' folder tree"
-                                    Width: =280
+                                    Width: =320
                                     Wrap: =false
                               - btnAdminDeleteProcessedMailsFolder:
                                   Control: Classic/Button@2.2.0

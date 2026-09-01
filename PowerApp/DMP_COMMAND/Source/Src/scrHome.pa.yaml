@@ -63,6 +63,12 @@ Screens:
             Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
             Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
             Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
+            // Toggle.Default is only an INITIAL value in Power Apps - once a Classic/Toggle has rendered,
+            // it does not reliably re-sync its visual position when the variable behind Default changes
+            // from OUTSIDE the toggle's own OnCheck/OnUncheck (e.g. here, from a background refresh).
+            // Force an explicit re-sync every time these values are refreshed from live data.
+            Reset(tglOperationalState);
+            Reset(tglApplicationMode);
             Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
             Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
             // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles): establish the
@@ -83,8 +89,7 @@ Screens:
             // still catching the guard as already-lifted and showing a spurious "switched" notification.
             // tmrAutoRefreshTick lifts the guard one full second later instead, safely after that.
             Set(varReadyToLiftToggleGuard, true)
-        );
-        Reset(tmrAutoRefreshTick)
+        )
     Children:
       - ScreenContainer1:
           Control: GroupContainer@1.5.0
@@ -391,6 +396,10 @@ Screens:
                                     If(varAgent6Healthy,1,0)
                                 );
                                 Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
+                                Reset(tglOperationalState);
+                                Reset(tglApplicationMode);
                                 Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
@@ -538,6 +547,8 @@ Screens:
                                     Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
                                     Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
                                     Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
+                                    Reset(tglOperationalState);
+                                    Reset(tglApplicationMode);
                                     Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
                                     Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
                                     Set(varReadyToLiftToggleGuard, true)
@@ -615,6 +626,10 @@ Screens:
                                             If(varAgent6Healthy,1,0)
                                         );
                                         Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                        Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                        Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
+                                        Reset(tglOperationalState);
+                                        Reset(tglApplicationMode);
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                                         ,
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
@@ -1618,7 +1633,7 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
-                                          Width: =30
+                                          Width: =46
                                           Wrap: =false
                                           X: =32
                                           Y: =44
@@ -1633,9 +1648,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="INTERNAL"
-                                          Width: =120
+                                          Width: =110
                                           Wrap: =false
-                                          X: =76
+                                          X: =86
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1706,7 +1721,7 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =Coalesce(varExternalDomainsCount,0)
-                                          Width: =30
+                                          Width: =46
                                           Wrap: =false
                                           X: =32
                                           Y: =96
@@ -1721,9 +1736,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="EXTERNAL"
-                                          Width: =120
+                                          Width: =110
                                           Wrap: =false
-                                          X: =76
+                                          X: =86
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -2169,9 +2184,9 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="SOURCE"
-                                          Width: =90
+                                          Width: =80
                                           Wrap: =false
-                                          X: =180
+                                          X: =195
                                           Y: =30
                                     - lblAutomationStatusColHeaderActive:
                                         Control: Label@2.5.1

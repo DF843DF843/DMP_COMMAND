@@ -188,6 +188,96 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1160:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1160Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.16.0 - 2026-09-02 (current)"
+                              Wrap: =false
+                        - lblReleaseV1160Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Fixed Operating State inconsistency - the header text and the Mode/Application toggles could show contradicting values (e.g. header ""SIMULATION"" while toggle showed ""Normal""). Root cause - only the initial screen load resynced the toggles from the refreshed data; clicking ""Now"" or waiting for the periodic auto-update refreshed the underlying values but never told the toggle controls to redraw, since a Toggle's Default property only applies on first render" & Char(10) & "- Added an explicit Reset() of both toggles at all four places the operating mode is refreshed (initial load, kickstart timer, Now button, periodic auto-update) so the toggles always redraw in sync with the header" & Char(10) & "- No other visual changes in this release"
+                              Wrap: =true
+                  - conReleaseV1150:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1150Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.15.0 - 2026-09-01"
+                              Wrap: =false
+                        - lblReleaseV1150Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Timer stability fix - removed a redundant manual Reset() on the auto-refresh timer that was fighting with the timer's own AutoStart mechanism, likely causing it to stop and not restart after navigating away from the Cockpit (e.g. clicking a KPI tile)" & Char(10) & "- Maintenance Domains - widened the count numbers further (still clipping to ""1..'' for two-digit counts)" & Char(10) & "- Automation Status - widened the Agent 4 Live Status name column (was clipping to ""Agent 4 Live Stat…"")" & Char(10) & "- Admin Functions - widened the mailbox cleanup description so it no longer clips"
+                              Wrap: =true
                   - conReleaseV1140:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
