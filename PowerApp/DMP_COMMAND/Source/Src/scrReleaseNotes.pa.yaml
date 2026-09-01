@@ -122,18 +122,68 @@ Screens:
                         Width: =190
                         X: =Parent.Width - 210
                         Y: =18
+            - conReleaseNotesTabs:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(0,0,0,0)
+                  Height: =40
+                  LayoutMaxHeight: =40
+                  LayoutMinHeight: =40
+                Children:
+                  - btnReleaseNotesTabApp:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varReleaseNotesTab="App",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                        Fill: =If(varReleaseNotesTab="App",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =40
+                        HoverFill: =If(varReleaseNotesTab="App",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                        OnSelect: =Set(varReleaseNotesTab,"App")
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Text: ="App Changes"
+                        Width: =160
+                        X: =0
+                        Y: =0
+                  - btnReleaseNotesTabAgents:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varReleaseNotesTab="Agents",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                        Fill: =If(varReleaseNotesTab="Agents",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =40
+                        HoverFill: =If(varReleaseNotesTab="Agents",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                        OnSelect: =Set(varReleaseNotesTab,"Agents")
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Text: ="Agent (Flow) Changes"
+                        Width: =200
+                        X: =168
+                        Y: =0
             - conReleaseNotesList:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
                 Properties:
+                  Visible: =varReleaseNotesTab="App"
                   Fill: =RGBA(0,0,0,0)
                   FillPortions: =1
-                  Height: =Parent.Height - 120
+                  Height: =Parent.Height - 176
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
-                  LayoutMaxHeight: =Parent.Height - 120
-                  LayoutMinHeight: =Parent.Height - 120
+                  LayoutMaxHeight: =Parent.Height - 176
+                  LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
                   - conReleaseV1100:
@@ -167,7 +217,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.10.1 - 2026-09-01 (current)"
+                              Text: ="v1.10.2 - 2026-09-01 (current)"
                               Wrap: =false
                         - lblReleaseV1100Notes:
                             Control: Label@2.5.1
@@ -179,7 +229,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =700
                               Size: =12
-                              Text: ="- New - direct SharePoint connections added for ""DMP Command Configuration"", ""DMP Command Agent Status"" and the brand-new ""DMP Command Internal Domains"" list (Title/Active columns)" & Char(10) & "- Internal Domains management now reads/links directly to the new SharePoint list (count + View/Edit buttons) instead of the old flat text file - backend agents still write the text file for now, that migration is planned separately" & Char(10) & "- Automation Status redesigned as a compact 4-line panel (Agent 4 Live Status, Internal Domains active count, Config Parameters active count, Agent Status entries count), moved into the former ""Reserved for future use"" tile" & Char(10) & "- Removed the old separate Automation Status checklist section (generic manual next-step items) to make room - see backlog for the removed items" & Char(10) & "- All container gaps unified to a single, minimal 8px spacing (previously a mix of 8/16px)" & Char(10) & "- Maintenance Domains - removed the extra dashes around INTERNAL/EXTERNAL, widened the labels, narrowed the card to match Operating State's width" & Char(10) & "- Files card narrowed further, tighter column spacing" & Char(10) & "- System Health / Emails Processed rings resized so their combined card height lines up exactly with Operating State + Maintenance Domains" & Char(10) & "- System Health ring - the plain-text tooltip was unreliable (sometimes showed nothing at all), replaced with the same click-to-open colour legend popup already used on Emails Processed" & Char(10) & "- Release Notes list scrollbar fix - it needed an explicit calculated height, not just automatic space-sharing, to actually start scrolling" & Char(10) & "- Fixed a recurring backend issue where the Agent 4 connection had to be manually deleted and re-added after almost every deployment - traced to a stale internal reference that is now kept in sync" & Char(10) & "- v1.10.1 - Release Notes cards still cut off long text - AutoHeight alone was not reliable, so each card now has its own fixed max height with a scrollbar (in addition to the outer list scrollbar)" & Char(10) & "- v1.10.1 - Automation Status - fixed the third bullet (Config Parameters) showing no text at all - the Active column in DMP Command Configuration is a Choice field, needed .Value" & Char(10) & "- v1.10.1 - Automation Status tile border changed to solid green to match all other Cockpit cards (was still the old dashed placeholder style)" & Char(10) & "- v1.10.1 - Agent 6 (Admin Functions) was stuck in Draft/Inactive state in Dataverse, which made it show up oddly in the Power Automate panel - activated"
+                              Text: ="- New - direct SharePoint connections added for ""DMP Command Configuration"", ""DMP Command Agent Status"" and the brand-new ""DMP Command Internal Domains"" list (Title/Active columns)" & Char(10) & "- Internal Domains management now reads/links directly to the new SharePoint list (count + View/Edit buttons) instead of the old flat text file - backend agents still write the text file for now, that migration is planned separately" & Char(10) & "- Automation Status redesigned as a compact 4-line panel (Agent 4 Live Status, Internal Domains active count, Config Parameters active count, Agent Status entries count), moved into the former ""Reserved for future use"" tile" & Char(10) & "- Removed the old separate Automation Status checklist section (generic manual next-step items) to make room - see backlog for the removed items" & Char(10) & "- All container gaps unified to a single, minimal 8px spacing (previously a mix of 8/16px)" & Char(10) & "- Maintenance Domains - removed the extra dashes around INTERNAL/EXTERNAL, widened the labels, narrowed the card to match Operating State's width" & Char(10) & "- Files card narrowed further, tighter column spacing" & Char(10) & "- System Health / Emails Processed rings resized so their combined card height lines up exactly with Operating State + Maintenance Domains" & Char(10) & "- System Health ring - the plain-text tooltip was unreliable (sometimes showed nothing at all), replaced with the same click-to-open colour legend popup already used on Emails Processed" & Char(10) & "- Release Notes list scrollbar fix - it needed an explicit calculated height, not just automatic space-sharing, to actually start scrolling" & Char(10) & "- Fixed a recurring backend issue where the Agent 4 connection had to be manually deleted and re-added after almost every deployment - traced to a stale internal reference that is now kept in sync" & Char(10) & "- v1.10.1 - Release Notes cards still cut off long text - AutoHeight alone was not reliable, so each card now has its own fixed max height with a scrollbar (in addition to the outer list scrollbar)" & Char(10) & "- v1.10.1 - Automation Status - fixed the third bullet (Config Parameters) showing no text at all - the Active column in DMP Command Configuration is a Choice field, needed .Value" & Char(10) & "- v1.10.1 - Automation Status tile border changed to solid green to match all other Cockpit cards (was still the old dashed placeholder style)" & Char(10) & "- v1.10.1 - Agent 6 (Admin Functions) was stuck in Draft/Inactive state in Dataverse, which made it show up oddly in the Power Automate panel - activated" & Char(10) & "- v1.10.2 - Release Notes now also has an ""Agent (Flow) Changes"" tab alongside ""App Changes"", listing each agent's current version and recent changes" & Char(10) & "- v1.10.2 - Replace button LED - the ""processing"" yellow blink never actually rendered because the upload and the flow call ran in the same formula with no repaint in between; the flow call now runs a moment later via a timer so the blink is visible" & Char(10) & "- v1.10.2 - All green status dots across the Cockpit (Files, Automation Status, System Health legend, Maintenance Domains) are now the same size and shape (14px circles) - previously a mix of text bullets and different-radius shapes" & Char(10) & "- v1.10.2 - Maintenance Domains - added a status dot in front of the count, matching the Files/Automation Status pattern" & Char(10) & "- v1.10.2 - Maintenance Domains - Edit now opens a quick ""add new domain"" form instead of duplicating the View link" & Char(10) & "- v1.10.2 - Header bar width aligned with the card row and Next Steps width for a clean edge-to-edge look"
                               Wrap: =true
                   - conReleaseV190:
                       Control: GroupContainer@1.5.0
@@ -472,4 +522,289 @@ Screens:
                               Height: =56
                               Size: =12
                               Text: ="- Older changes are documented in detail in the backlog document (DMP_COMMAND_Backlog.md), including the timestamp-format fix and earlier layout adjustments" & Char(10) & "- Starting with v1.6.4, this Release Notes page is updated with every new version"
+                              Wrap: =true
+            - conAgentReleaseNotesList:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Visible: =varReleaseNotesTab="Agents"
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =1
+                  Height: =Parent.Height - 176
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =16
+                  LayoutMaxHeight: =Parent.Height - 176
+                  LayoutMinHeight: =Parent.Height - 176
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                Children:
+                  - conAgentNote2:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote2Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 2 (E-Mail Inbox Treatment) - v1.0.7 (current)"
+                              Wrap: =false
+                        - lblAgentNote2Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =400
+                              Size: =12
+                              Text: ="- v1.0.7 (2026-09-01) - Internal sender classification now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail" & Char(10) & "- v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting"
+                              Wrap: =true
+                  - conAgentNote4:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote4Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 4 (Status Check) - v1.3.0 (current)"
+                              Wrap: =false
+                        - lblAgentNote4Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- v1.3.0 (2026-09-01) - Internal Domains status check now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before"
+                              Wrap: =true
+                  - conAgentNote1:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote1Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 1 (Domains Extraction) - v1.0.7 (current)"
+                              Wrap: =false
+                        - lblAgentNote1Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting"
+                              Wrap: =true
+                  - conAgentNote3:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote3Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 3 (Emergency Report Management) - v1.1.4 (current)"
+                              Wrap: =false
+                        - lblAgentNote3Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains"
+                              Wrap: =true
+                  - conAgentNote5:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote5Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 5 (Operational State Management) - v1.1.6 (current)"
+                              Wrap: =false
+                        - lblAgentNote5Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit"
+                              Wrap: =true
+                  - conAgentNote6:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote6Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 6 (Admin Functions) - v1.1.0 (current)"
+                              Wrap: =false
+                        - lblAgentNote6Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion, triggered from the Cockpit's Admin page"
                               Wrap: =true

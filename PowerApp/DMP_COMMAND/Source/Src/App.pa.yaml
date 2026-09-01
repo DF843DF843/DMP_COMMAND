@@ -29,6 +29,8 @@ App:
       Set(varAdminActionResult,{success:false,message:"",requestedaction:"",deletedcount:0});
       Set(varShowEmailsLegend,false);
       Set(varShowHeartbeatLegend,false);
+      Set(varReleaseNotesTab,"App");
+      Set(varTriggerEmergencyUpload,false);
 
       // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles in scrHome's header):
       // varBaselineAcknowledged is set true exactly once, on the first successful status refresh

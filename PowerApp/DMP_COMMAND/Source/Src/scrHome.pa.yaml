@@ -267,6 +267,7 @@ Screens:
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
+                        Width: =1566
                       Children:
                         - lblAppTitle:
                             Control: Label@2.5.1
@@ -618,6 +619,36 @@ Screens:
                                         ,
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
                                     )
+                                );
+                                If(
+                                    varTriggerEmergencyUpload,
+                                    Set(varTriggerEmergencyUpload, false);
+                                    IfError(
+                                        Set(
+                                            varEmergencyReportUploadResult,
+                                            'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(
+                                                User().Email,
+                                                {
+                                                    file: {
+                                                        name: First(attExternalDomainsReplace.Attachments).Name,
+                                                        contentBytes: First(attExternalDomainsReplace.Attachments).Value
+                                                    }
+                                                }
+                                            )
+                                        ),
+                                        Set(
+                                            varEmergencyReportUploadResult,
+                                            {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
+                                        )
+                                    );
+                                    If(
+                                        Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
+                                        Set(varLedEmergencyReport, "Green");
+                                        Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
+                                        Set(varLedEmergencyReport, "Red");
+                                        Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
+                                    );
+                                    Reset(attExternalDomainsReplace)
                                 )
                               Repeat: =true
                               AutoStart: =true
@@ -1032,10 +1063,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varEmergencyReportExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1067,10 +1098,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varInternalDomainsExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1102,10 +1133,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varExternalDomainsExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1137,10 +1168,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varCounterExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1172,10 +1203,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varAuditTrailExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1207,10 +1238,10 @@ Screens:
                                               Properties:
                                                 Fill: =If(varAgent6Healthy,RGBA(0,206,125,1),RGBA(255,69,58,1))
                                                 Height: =14
-                                                RadiusBottomLeft: =3
-                                                RadiusBottomRight: =3
-                                                RadiusTopLeft: =3
-                                                RadiusTopRight: =3
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
                                                 Width: =14
                                                 X: =0
                                                 Y: =1
@@ -1555,6 +1586,19 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =10
+                                    - dotInternalDomains:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,206,125,1)
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =53
                                     - lblInternalDomainsCount:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1567,9 +1611,9 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
-                                          Width: =36
+                                          Width: =34
                                           Wrap: =false
-                                          X: =16
+                                          X: =34
                                           Y: =44
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1582,9 +1626,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="INTERNAL"
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =58
+                                          X: =74
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1620,7 +1664,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =RGBA(0,206,125,0.12)
-                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/AllItems.aspx")
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/NewForm.aspx")
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
@@ -1630,6 +1674,19 @@ Screens:
                                           Width: =58
                                           X: =228
                                           Y: =44
+                                    - dotExternalDomainsMD:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,206,125,1)
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =105
                                     - lblExternalDomainsCount:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1642,9 +1699,9 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =Coalesce(varExternalDomainsCount,0)
-                                          Width: =36
+                                          Width: =34
                                           Wrap: =false
-                                          X: =16
+                                          X: =34
                                           Y: =96
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1657,9 +1714,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="EXTERNAL"
-                                          Width: =100
+                                          Width: =90
                                           Wrap: =false
-                                          X: =58
+                                          X: =74
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1770,32 +1827,7 @@ Screens:
                                                           Reset(attExternalDomainsReplace),
                                                           Set(varLedEmergencyReport, "Yellow");
                                                           Notify("Emergency Report submitted for processing. Agent 3 will regenerate External Domains.", NotificationType.Information);
-                                                          IfError(
-                                                              Set(
-                                                                  varEmergencyReportUploadResult,
-                                                                  'DMPAgent3.01(EmergencyReportManagement)=>VS'.Run(
-                                                                      User().Email,
-                                                                      {
-                                                                          file: {
-                                                                              name: First(attExternalDomainsReplace.Attachments).Name,
-                                                                              contentBytes: First(attExternalDomainsReplace.Attachments).Value
-                                                                          }
-                                                                      }
-                                                                  )
-                                                              ),
-                                                              Set(
-                                                                  varEmergencyReportUploadResult,
-                                                                  {responsecode: "NO_FLOW_RESPONSE", responsemessage: "Agent 3 did not return a processing result.", responsestatus: "FAILED"}
-                                                              )
-                                                          );
-                                                          If(
-                                                              Upper(Coalesce(varEmergencyReportUploadResult.responsestatus, "")) = "SUCCESS",
-                                                              Set(varLedEmergencyReport, "Green");
-                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report uploaded successfully."), NotificationType.Success),
-                                                              Set(varLedEmergencyReport, "Red");
-                                                              Notify(Coalesce(varEmergencyReportUploadResult.responsemessage, "Emergency Report processing failed."), NotificationType.Error)
-                                                          );
-                                                          Reset(attExternalDomainsReplace)
+                                                          Set(varTriggerEmergencyUpload, true)
                                                       )
                                                   )
                                                 PressedColor: =RGBA(255,255,255,0.01)
@@ -1881,19 +1913,19 @@ Screens:
                                           Wrap: =false
                                           X: =280
                                           Y: =30
-                                    - lblDotEmergencyReport:
-                                        Control: Label@2.5.1
+                                    - dotEmergencyReport:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
                                         Properties:
-                                          Align: =Align.Center
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Text: ="●"
-                                          Width: =16
-                                          X: =16
-                                          Y: =48
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =50
                                     - lblNameEmergencyReport:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1936,19 +1968,19 @@ Screens:
                                           Wrap: =false
                                           X: =280
                                           Y: =48
-                                    - lblDotExternalDomains:
-                                        Control: Label@2.5.1
+                                    - dotExternalDomains:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
                                         Properties:
-                                          Align: =Align.Center
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Text: ="●"
-                                          Width: =16
-                                          X: =16
-                                          Y: =74
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =76
                                     - lblNameExternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1991,19 +2023,19 @@ Screens:
                                           Wrap: =false
                                           X: =280
                                           Y: =74
-                                    - lblDotCounter:
-                                        Control: Label@2.5.1
+                                    - dotCounter:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
                                         Properties:
-                                          Align: =Align.Center
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Text: ="●"
-                                          Width: =16
-                                          X: =16
-                                          Y: =100
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =102
                                     - lblNameCounter:
                                         Control: Label@2.5.1
                                         Properties:
@@ -2046,19 +2078,19 @@ Screens:
                                           Wrap: =false
                                           X: =280
                                           Y: =100
-                                    - lblDotAuditTrail:
-                                        Control: Label@2.5.1
+                                    - dotAuditTrail:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
                                         Properties:
-                                          Align: =Align.Center
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =18
-                                          Text: ="●"
-                                          Width: =16
-                                          X: =16
-                                          Y: =126
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =128
                                     - lblNameAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
