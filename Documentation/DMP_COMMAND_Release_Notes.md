@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.18.0 - 2026-09-01 (current)
+### v1.19.0 - 2026-09-01 (current)
+
+- Release Notes redesigned - a small version menu now sits on the left (click any version to view it), with one large, fully readable container on the right showing the selected version's full description, for both the App Changes and Agent (Flow) Changes tabs
+- Fixed the Copy to Clipboard button, which had not been updated since around v1.11.0 and was silently missing nine newer versions - it now always copies the complete history of the currently selected tab
+- The previous stacked-cards layout still exists underneath (hidden) as the data source for the new menu - no release history was lost in the redesign
+
+### v1.18.0 - 2026-09-01
 
 - LED refresh behaviour further refined per feedback - gray only on the very first app load, yellow blinking on every later refresh (kept from v1.17.1)
 - Colors aligned with the official Eurex Brand Manual - the Emails Processed donut now uses the official secondary/tertiary colors (Light Blue, Purple, Aqua Mint, Peach) instead of two non-brand shades
@@ -150,7 +156,9 @@ Frontend:
 - Emails card (Agent 2 status) narrowed from 620 to 560px
 - Next Steps - milestone text line-wrap fixed
 - Display glitch during loading (garbled characters) fixed
-- Reverted an over-aggressive container shrink that had truncated labels" & Char(10) & Char(10) & "Backend:
+- Reverted an over-aggressive container shrink that had truncated labels
+
+Backend:
 - New Error-ID system (e.g. [EC:A2-MBOXFOLDER-ND]) added across all 5 agents for faster troubleshooting
 - Agent 1 & 2 performance improved (Excel counters now batched instead of updated per email)
 - False "folder already exists" alarm fixed in Agent 3 & 4
@@ -160,6 +168,11 @@ Frontend:
 
 - Emails card visibility issue fixed (layout width)
 - Several intermediate width-tuning iterations (superseded by v1.6.4)
+
+### v1.5.x and earlier
+
+- Older changes are documented in detail in the backlog document (DMP_COMMAND_Backlog.md), including the timestamp-format fix and earlier layout adjustments
+- Starting with v1.6.4, this Release Notes page is updated with every new version
 
 ## Agent (Flow) Changes
 
@@ -195,7 +208,5 @@ Frontend:
 
 ### Agent 6 (Admin Functions) - v1.2.0 (current)
 
-- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0
-- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated
-- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page
+v1.5.x & older
 

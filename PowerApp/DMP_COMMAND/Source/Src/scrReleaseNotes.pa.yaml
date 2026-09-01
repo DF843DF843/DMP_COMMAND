@@ -103,13 +103,34 @@ Screens:
                         OnSelect: |-
                           =IfError(
                               Copy(
-                                  lblReleaseV1100Header.Text & Char(10) & lblReleaseV1100Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseV190Header.Text & Char(10) & lblReleaseV190Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseV180Header.Text & Char(10) & lblReleaseV180Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseV170Header.Text & Char(10) & lblReleaseV170Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseV164Header.Text & Char(10) & lblReleaseV164Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseV161to163Header.Text & Char(10) & lblReleaseV161to163Notes.Text & Char(10) & Char(10) &
-                                  lblReleaseOlderHeader.Text & Char(10) & lblReleaseOlderNotes.Text
+                                  If(
+                                      varReleaseNotesTab="App",
+                                      lblReleaseV1190Header.Text & Char(10) & lblReleaseV1190Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1180Header.Text & Char(10) & lblReleaseV1180Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1171Header.Text & Char(10) & lblReleaseV1171Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1170Header.Text & Char(10) & lblReleaseV1170Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1161Header.Text & Char(10) & lblReleaseV1161Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1160Header.Text & Char(10) & lblReleaseV1160Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1150Header.Text & Char(10) & lblReleaseV1150Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1140Header.Text & Char(10) & lblReleaseV1140Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1131Header.Text & Char(10) & lblReleaseV1131Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1130Header.Text & Char(10) & lblReleaseV1130Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1121Header.Text & Char(10) & lblReleaseV1121Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1120Header.Text & Char(10) & lblReleaseV1120Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV1100Header.Text & Char(10) & lblReleaseV1100Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV190Header.Text & Char(10) & lblReleaseV190Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV180Header.Text & Char(10) & lblReleaseV180Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV170Header.Text & Char(10) & lblReleaseV170Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV164Header.Text & Char(10) & lblReleaseV164Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseV161to163Header.Text & Char(10) & lblReleaseV161to163Notes.Text & Char(10) & Char(10) &
+                                      lblReleaseOlderHeader.Text & Char(10) & lblReleaseOlderNotes.Text,
+                                      lblAgentNote1Header.Text & Char(10) & lblAgentNote1Notes.Text & Char(10) & Char(10) &
+                                      lblAgentNote2Header.Text & Char(10) & lblAgentNote2Notes.Text & Char(10) & Char(10) &
+                                      lblAgentNote3Header.Text & Char(10) & lblAgentNote3Notes.Text & Char(10) & Char(10) &
+                                      lblAgentNote4Header.Text & Char(10) & lblAgentNote4Notes.Text & Char(10) & Char(10) &
+                                      lblAgentNote5Header.Text & Char(10) & lblAgentNote5Notes.Text & Char(10) & Char(10) &
+                                      lblAgentNote6Header.Text & Char(10) & lblAgentNote6Notes.Text
+                                  )
                               ),
                               Notify("Release Notes wurden in die Zwischenablage kopiert.", NotificationType.Success),
                               Notify("Kopieren in die Zwischenablage ist in diesem Kontext nicht verfuegbar.", NotificationType.Warning)
@@ -177,7 +198,7 @@ Screens:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
                 Properties:
-                  Visible: =varReleaseNotesTab="App"
+                  Visible: =false
                   Fill: =RGBA(0,0,0,0)
                   FillPortions: =1
                   Height: =Parent.Height - 176
@@ -188,6 +209,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1190:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1190Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.19.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1190Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Release Notes redesigned - a small version menu now sits on the left (click any version to view it), with one large, fully readable container on the right showing the selected version's full description, for both the App Changes and Agent (Flow) Changes tabs" & Char(10) & "- Fixed the Copy to Clipboard button, which had not been updated since around v1.11.0 and was silently missing nine newer versions - it now always copies the complete history of the currently selected tab" & Char(10) & "- The previous stacked-cards layout still exists underneath (hidden) as the data source for the new menu - no release history was lost in the redesign"
+                              Wrap: =true
                   - conReleaseV1180:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -219,7 +285,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.18.0 - 2026-09-01 (current)"
+                              Text: ="v1.18.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1180Notes:
                             Control: Label@2.5.1
@@ -1024,7 +1090,7 @@ Screens:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
                 Properties:
-                  Visible: =varReleaseNotesTab="Agents"
+                  Visible: =false
                   Fill: =RGBA(0,0,0,0)
                   FillPortions: =1
                   Height: =Parent.Height - 176
@@ -1304,4 +1370,610 @@ Screens:
                               Height: =300
                               Size: =12
                               Text: ="- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0" & Char(10) & "- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page"
+                              Wrap: =true
+            - conReleaseNotesSplitApp:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Visible: =varReleaseNotesTab="App"
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =1
+                  Height: =Parent.Height - 176
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =16
+                  LayoutMaxHeight: =Parent.Height - 176
+                  LayoutMinHeight: =Parent.Height - 176
+                Children:
+                  - conReleaseMenuApp:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        FillPortions: =0
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =6
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =8
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PaddingTop: =8
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                        Width: =170
+                      Children:
+                        - btnAppReleaseV1190:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1190",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1190",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1190",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1190",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1190")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.19.0"
+                        - btnAppReleaseV1180:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1180",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1180",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1180",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1180",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1180")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.18.0"
+                        - btnAppReleaseV1171:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1171",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1171",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1171",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1171",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1171")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.17.1"
+                        - btnAppReleaseV1170:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1170",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1170",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1170",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1170",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1170")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.17.0"
+                        - btnAppReleaseV1161:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1161",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1161",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1161",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1161",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1161")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.16.1"
+                        - btnAppReleaseV1160:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1160",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1160",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1160",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1160",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1160")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.16.0"
+                        - btnAppReleaseV1150:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1150",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1150",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1150",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1150",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1150")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.15.0"
+                        - btnAppReleaseV1140:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1140",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1140",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1140",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1140",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1140")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.14.0"
+                        - btnAppReleaseV1131:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1131",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1131",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1131",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1131",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1131")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.13.1"
+                        - btnAppReleaseV1130:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1130",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1130",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1130",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1130",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1130")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.13.0"
+                        - btnAppReleaseV1121:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1121",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1121",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1121",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1121",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1121")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.12.1"
+                        - btnAppReleaseV1120:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1120",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1120",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1120",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1120",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1120")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.12.0"
+                        - btnAppReleaseV1100:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1100",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1100",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V1100",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1100",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1100")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.11.0"
+                        - btnAppReleaseV190:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V190",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V190",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V190",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V190",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V190")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.9.3"
+                        - btnAppReleaseV180:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V180",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V180",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V180",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V180",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V180")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.8.1"
+                        - btnAppReleaseV170:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V170",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V170",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V170",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V170",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V170")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.7.0"
+                        - btnAppReleaseV164:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V164",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V164",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V164",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V164",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V164")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.6.4"
+                        - btnAppReleaseV161to163:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V161to163",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V161to163",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="V161to163",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V161to163",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V161to163")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.6.1-163"
+                        - btnAppReleaseOlder:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="Older",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="Older",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAppRelease="Older",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="Older",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"Older")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.5.x & older"
+                  - conReleaseDetailApp:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseDetailAppHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: =Switch(varSelectedAppRelease, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV1190Header.Text)
+                              Wrap: =false
+                        - lblReleaseDetailAppNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Size: =12
+                              Text: =Switch(varSelectedAppRelease, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV1190Notes.Text)
+                              Wrap: =true
+            - conReleaseNotesSplitAgents:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Visible: =varReleaseNotesTab="Agents"
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =1
+                  Height: =Parent.Height - 176
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =16
+                  LayoutMaxHeight: =Parent.Height - 176
+                  LayoutMinHeight: =Parent.Height - 176
+                Children:
+                  - conReleaseMenuAgents:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        FillPortions: =0
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =6
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =8
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PaddingTop: =8
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                        Width: =170
+                      Children:
+                        - btnAgentRelease1:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="1",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="1",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="1",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="1",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"1")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 1"
+                        - btnAgentRelease2:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="2",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="2",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="2",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="2",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"2")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 2"
+                        - btnAgentRelease3:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="3",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="3",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="3",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="3",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"3")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 3"
+                        - btnAgentRelease4:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="4",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="4",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="4",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="4",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"4")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 4"
+                        - btnAgentRelease5:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="5",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="5",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="5",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="5",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"5")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 5"
+                        - btnAgentRelease6:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAgentRelease="6",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAgentRelease="6",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =If(varSelectedAgentRelease="6",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAgentRelease="6",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAgentRelease,"6")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent 6"
+                  - conReleaseDetailAgents:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseDetailAgentHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: =Switch(varSelectedAgentRelease, "1", lblAgentNote1Header.Text, "2", lblAgentNote2Header.Text, "3", lblAgentNote3Header.Text, "4", lblAgentNote4Header.Text, "5", lblAgentNote5Header.Text, "6", lblAgentNote6Header.Text, lblAgentNote1Header.Text)
+                              Wrap: =false
+                        - lblReleaseDetailAgentNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Size: =12
+                              Text: =Switch(varSelectedAgentRelease, "1", lblAgentNote1Notes.Text, "2", lblAgentNote2Notes.Text, "3", lblAgentNote3Notes.Text, "4", lblAgentNote4Notes.Text, "5", lblAgentNote5Notes.Text, "6", lblAgentNote6Notes.Text, lblAgentNote1Notes.Text)
                               Wrap: =true
