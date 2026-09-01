@@ -186,6 +186,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1121:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1121Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.12.1 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1121Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =100
+                              Size: =12
+                              Text: ="- Hotfix - v1.12.0 could not be opened or published in Studio (YAML parsing error on 3 new labels that had a colon immediately followed by a space inside the quoted text, e.g. the words ""Active rows"" followed directly by a colon and a space). Rewritten so the colon is now the very last character of its own quoted segment - parses cleanly, no visible or functional change."
+                              Wrap: =true
                   - conReleaseV1120:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -217,7 +262,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.12.0 - 2026-09-01 (current)"
+                              Text: ="v1.12.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1120Notes:
                             Control: Label@2.5.1

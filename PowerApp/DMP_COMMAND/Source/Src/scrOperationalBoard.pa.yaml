@@ -442,7 +442,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =180
                               Size: =12
-                              Text: ="Shows the running split of every e-mail Agent 2 has classified since the counters were last reset, as a proportional ring with 4 categories: No DMP, External, Internal Sender and Not Effected." & Char(10) & "Click the ring to open the legend popup, which lists the exact count and percentage for each of the 4 categories - useful for spotting an unusual spike (e.g. a sudden jump in ""No DMP"" e-mails)."
+                              Text: ="Shows the running split of every e-mail Agent 2 has classified since the counters were last reset, as a proportional ring with 4 categories:" & " " & "No DMP, External, Internal Sender and Not Effected." & Char(10) & "Click the ring to open the legend popup, which lists the exact count and percentage for each of the 4 categories - useful for spotting an unusual spike (e.g. a sudden jump in ""No DMP"" e-mails)."
                               Wrap: =true
                   - conManualAutomationStatus:
                       Control: GroupContainer@1.5.0

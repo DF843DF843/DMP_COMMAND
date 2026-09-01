@@ -142,7 +142,7 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =20
                         Size: =12
-                        Text: ="Active rows: " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
+                        Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
                         Width: =300
                         Wrap: =false
                         X: =16
@@ -242,7 +242,7 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =20
                         Size: =12
-                        Text: ="Total rows: " & CountRows('DMP Command Agent Status')
+                        Text: ="Total rows:" & " " & CountRows('DMP Command Agent Status')
                         Width: =300
                         Wrap: =false
                         X: =16
@@ -321,7 +321,7 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =20
                         Size: =12
-                        Text: ="Active rows: " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
+                        Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
                         Width: =300
                         Wrap: =false
                         X: =16
