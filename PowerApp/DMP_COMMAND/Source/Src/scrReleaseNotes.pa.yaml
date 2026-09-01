@@ -103,6 +103,7 @@ Screens:
                         OnSelect: |-
                           =IfError(
                               Copy(
+                                  lblReleaseV1100Header.Text & Char(10) & lblReleaseV1100Notes.Text & Char(10) & Char(10) &
                                   lblReleaseV190Header.Text & Char(10) & lblReleaseV190Notes.Text & Char(10) & Char(10) &
                                   lblReleaseV180Header.Text & Char(10) & lblReleaseV180Notes.Text & Char(10) & Char(10) &
                                   lblReleaseV170Header.Text & Char(10) & lblReleaseV170Notes.Text & Char(10) & Char(10) &
@@ -127,11 +128,57 @@ Screens:
                 Properties:
                   Fill: =RGBA(0,0,0,0)
                   FillPortions: =1
+                  Height: =Parent.Height - 120
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
+                  LayoutMaxHeight: =Parent.Height - 120
+                  LayoutMinHeight: =Parent.Height - 120
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1100:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1100Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.10.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1100Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =260
+                              Size: =12
+                              Text: ="- New - direct SharePoint connections added for ""DMP Command Configuration"", ""DMP Command Agent Status"" and the brand-new ""DMP Command Internal Domains"" list (Title/Active columns)" & Char(10) & "- Internal Domains management now reads/links directly to the new SharePoint list (count + View/Edit buttons) instead of the old flat text file - backend agents still write the text file for now, that migration is planned separately" & Char(10) & "- Automation Status redesigned as a compact 4-line panel (Agent 4 Live Status, Internal Domains active count, Config Parameters active count, Agent Status entries count), moved into the former ""Reserved for future use"" tile" & Char(10) & "- Removed the old separate Automation Status checklist section (generic manual next-step items) to make room - see backlog for the removed items" & Char(10) & "- All container gaps unified to a single, minimal 8px spacing (previously a mix of 8/16px)" & Char(10) & "- Maintenance Domains - removed the extra dashes around INTERNAL/EXTERNAL, widened the labels, narrowed the card to match Operating State's width" & Char(10) & "- Files card narrowed further, tighter column spacing" & Char(10) & "- System Health / Emails Processed rings resized so their combined card height lines up exactly with Operating State + Maintenance Domains" & Char(10) & "- System Health ring - the plain-text tooltip was unreliable (sometimes showed nothing at all), replaced with the same click-to-open colour legend popup already used on Emails Processed" & Char(10) & "- Release Notes list scrollbar fix - it needed an explicit calculated height, not just automatic space-sharing, to actually start scrolling" & Char(10) & "- Fixed a recurring backend issue where the Agent 4 connection had to be manually deleted and re-added after almost every deployment - traced to a stale internal reference that is now kept in sync"
+                              Wrap: =true
                   - conReleaseV190:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -161,7 +208,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.9.3 - 2026-08-28 (current)"
+                              Text: ="v1.9.3 - 2026-08-28"
                               Wrap: =false
                         - lblReleaseV190Notes:
                             Control: Label@2.5.1

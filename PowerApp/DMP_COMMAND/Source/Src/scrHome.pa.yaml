@@ -250,7 +250,7 @@ Screens:
                   Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
-                  LayoutGap: =16
+                  LayoutGap: =8
                   PaddingBottom: =16
                   PaddingLeft: =20
                   PaddingRight: =20
@@ -897,30 +897,23 @@ Screens:
                       Properties:
                         Fill: =RGBA(0,0,0,0)
                         FillPortions: =0
-                        Height: =360
+                        Height: =328
                         LayoutDirection: =LayoutDirection.Horizontal
                         LayoutGap: =8
-                        LayoutMaxHeight: =360
-                        LayoutMinHeight: =360
+                        LayoutMaxHeight: =328
+                        LayoutMinHeight: =328
                       Children:
                         - conHeartbeatCard:
                             Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
+                            Variant: ManualLayout
                             Properties:
                               BorderColor: =RGBA(0,206,125,0.55)
                               BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                               FillPortions: =0
-                              Height: =360
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Vertical
-                              LayoutJustifyContent: =LayoutJustifyContent.Center
-                              LayoutMaxHeight: =360
-                              LayoutMinHeight: =360
-                              PaddingBottom: =16
-                              PaddingLeft: =4
-                              PaddingRight: =4
-                              PaddingTop: =16
+                              Height: =328
+                              LayoutMaxHeight: =328
+                              LayoutMinHeight: =328
                               RadiusBottomLeft: =18
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
@@ -932,7 +925,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Height: =328
+                                    Height: =312
                                     Image: |-
                                       =With(
                                           {
@@ -945,31 +938,306 @@ Screens:
                                                   vPercentText: If(vNeverSucceeded, "N/A", Text(varSystemHealthPercent,"0") & "%"),
                                                   vArcLength: If(vNeverSucceeded, 0, (varSystemHealthPercent/100)*408.407)
                                               },
-                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-opacity='0.18' stroke-width='20'/><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-width='20' stroke-dasharray='" & Text(vArcLength,"0.00","en-US") & " 408.407' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/><text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & vColor & "'>" & vPercentText & "</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>SYSTEM HEALTH</text></svg>"
+                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-opacity='0.18' stroke-width='20'/><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-width='20' stroke-dasharray='" & Text(vArcLength,"0.00","en-US") & " 408.407' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/><text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & vColor & "'>" & vPercentText & "</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>SYSTEM HEALTH</text></svg>"
                                           )
                                       )
-                                    Tooltip: |-
-                                      =If(
-                                          IsBlank(varStatusLastRefreshed),
-                                          "Loading...",
-                                          "Emergency Report - " & If(varEmergencyReportExists,"OK","Missing") & Char(10) &
-                                          "Internal Domains - " & If(varInternalDomainsExists,"OK","Missing") & Char(10) &
-                                          "External Domains - " & If(varExternalDomainsExists,"OK","Missing") & Char(10) &
-                                          "Counter File - " & If(varCounterExists,"OK","Missing") & Char(10) &
-                                          "Audit Trail - " & If(varAuditTrailExists,"OK","Missing") & Char(10) &
-                                          "Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
-                                      )
-                                    Width: =328
+                                    Width: =312
+                                    X: =12
+                                    Y: =8
+                              - btnHeartbeatLegendToggle:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderStyle: =BorderStyle.None
+                                    Fill: =RGBA(255,255,255,0.01)
+                                    HoverFill: =RGBA(255,255,255,0.05)
+                                    PressedFill: =RGBA(255,255,255,0.08)
+                                    Text: =""
+                                    Tooltip: ="Click for system health details"
+                                    Height: =312
+                                    Width: =312
+                                    X: =12
+                                    Y: =8
+                                    OnSelect: =Set(varShowHeartbeatLegend, !varShowHeartbeatLegend)
+                              - conHeartbeatLegendPopup:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Visible: =varShowHeartbeatLegend
+                                    BorderColor: =RGBA(0,206,125,0.6)
+                                    BorderThickness: =2
+                                    Fill: =If(varDarkMode,RGBA(20,18,30,0.97),RGBA(255,255,255,0.98))
+                                    LayoutAlignItems: =LayoutAlignItems.Stretch
+                                    LayoutDirection: =LayoutDirection.Vertical
+                                    LayoutGap: =5
+                                    PaddingBottom: =10
+                                    PaddingLeft: =12
+                                    PaddingRight: =12
+                                    PaddingTop: =10
+                                    RadiusBottomLeft: =10
+                                    RadiusBottomRight: =10
+                                    RadiusTopLeft: =10
+                                    RadiusTopRight: =10
+                                    Width: =312
+                                    X: =12
+                                    Y: =68
+                                  Children:
+                                    - conHeartbeatLegendHeaderRow:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =20
+                                          Width: =288
+                                        Children:
+                                          - lblHeartbeatLegendTitle:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                FontWeight: =FontWeight.Bold
+                                                Height: =18
+                                                Size: =11
+                                                Text: ="SYSTEM HEALTH - DETAILS"
+                                                Width: =248
+                                                Wrap: =false
+                                                X: =0
+                                                Y: =0
+                                          - btnCloseHeartbeatLegend:
+                                              Control: Classic/Button@2.2.0
+                                              Properties:
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Fill: =RGBA(0,0,0,0)
+                                                FontWeight: =FontWeight.Bold
+                                                HoverFill: =RGBA(255,255,255,0.08)
+                                                OnSelect: =Set(varShowHeartbeatLegend, false)
+                                                Text: ="✕"
+                                                Height: =18
+                                                Width: =20
+                                                X: =268
+                                                Y: =0
+                                    - conHeartbeatLegendRow1:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend1:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varEmergencyReportExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend1:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Emergency Report - " & If(varEmergencyReportExists,"OK","Missing")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRow2:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend2:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varInternalDomainsExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend2:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Internal Domains - " & If(varInternalDomainsExists,"OK","Missing")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRow3:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend3:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varExternalDomainsExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend3:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="External Domains - " & If(varExternalDomainsExists,"OK","Missing")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRow4:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend4:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varCounterExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend4:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Counter File - " & If(varCounterExists,"OK","Missing")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRow5:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend5:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varAuditTrailExists,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend5:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Audit Trail - " & If(varAuditTrailExists,"OK","Missing")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRow6:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegend6:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(varAgent6Healthy,RGBA(0,206,125,1),RGBA(255,69,58,1))
+                                                Height: =14
+                                                RadiusBottomLeft: =3
+                                                RadiusBottomRight: =3
+                                                RadiusTopLeft: =3
+                                                RadiusTopRight: =3
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegend6:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Segoe UI'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
                         - conMiddleColumn:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
                               FillPortions: =0
-                              Height: =360
-                              LayoutMaxHeight: =360
-                              LayoutMinHeight: =360
-                              Width: =948
+                              Height: =328
+                              LayoutMaxHeight: =328
+                              LayoutMinHeight: =328
+                              Width: =878
                             Children:
                               - conOperatingState:
                                   Control: GroupContainer@1.5.0
@@ -986,7 +1254,7 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =440
+                                    Width: =400
                                     X: =0
                                     Y: =0
                                   Children:
@@ -1268,9 +1536,9 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =440
+                                    Width: =400
                                     X: =0
-                                    Y: =176
+                                    Y: =168
                                   Children:
                                     - lblMaintenanceDomainsTitle:
                                         Control: Label@2.5.1
@@ -1298,25 +1566,11 @@ Screens:
                                           FontWeight: =FontWeight.Bold
                                           Height: =32
                                           Size: =14
-                                          Text: =Coalesce(varInternalDomainsCount,0)
+                                          Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
                                           Width: =36
                                           Wrap: =false
                                           X: =16
                                           Y: =44
-                                    - lblInternalDomainsDash1:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          Size: =13
-                                          Text: ="-"
-                                          Width: =12
-                                          Wrap: =false
-                                          X: =54
-                                          Y: =46
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1328,23 +1582,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="INTERNAL"
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =70
-                                          Y: =46
-                                    - lblInternalDomainsDash2:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          Size: =13
-                                          Text: ="-"
-                                          Width: =12
-                                          Wrap: =false
-                                          X: =154
+                                          X: =58
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1358,7 +1598,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
-                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt")
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/AllItems.aspx")
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
@@ -1366,7 +1606,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =54
-                                          X: =170
+                                          X: =168
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1380,7 +1620,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =RGBA(0,206,125,0.12)
-                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/Internal_Domains_Storage/Internal_Domains.txt?csf=1&web=1&e=0RnJFW")
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/AllItems.aspx")
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
@@ -1388,7 +1628,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =58
-                                          X: =230
+                                          X: =228
                                           Y: =44
                                     - lblExternalDomainsCount:
                                         Control: Label@2.5.1
@@ -1406,20 +1646,6 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =96
-                                    - lblExternalDomainsDash1:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          Size: =13
-                                          Text: ="-"
-                                          Width: =12
-                                          Wrap: =false
-                                          X: =54
-                                          Y: =98
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
                                         Properties:
@@ -1431,23 +1657,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="EXTERNAL"
-                                          Width: =80
+                                          Width: =100
                                           Wrap: =false
-                                          X: =70
-                                          Y: =98
-                                    - lblExternalDomainsDash2:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
-                                          Height: =32
-                                          Size: =13
-                                          Text: ="-"
-                                          Width: =12
-                                          Wrap: =false
-                                          X: =154
+                                          X: =58
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1469,7 +1681,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =54
-                                          X: =170
+                                          X: =168
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1491,7 +1703,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =58
-                                          X: =230
+                                          X: =228
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1507,8 +1719,8 @@ Screens:
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
                                           Width: =90
-                                          X: =296
-                                          Y: =98
+                                          X: =294
+                                          Y: =96
                                         Children:
                                           - lblReplaceFake:
                                               Control: Label@2.5.1
@@ -1599,14 +1811,14 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0.3)
                                           BorderThickness: =1
                                           Fill: =Switch(varLedEmergencyReport, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
-                                          Height: =18
-                                          RadiusBottomLeft: =9
-                                          RadiusBottomRight: =9
-                                          RadiusTopLeft: =9
-                                          RadiusTopRight: =9
-                                          Width: =18
-                                          X: =394
-                                          Y: =105
+                                          Height: =16
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Width: =16
+                                          X: =376
+                                          Y: =88
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
@@ -1620,8 +1832,8 @@ Screens:
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =490
-                                    X: =448
+                                    Width: =470
+                                    X: =408
                                     Y: =0
                                   Children:
                                     - lblFilesRowTitle:
@@ -1898,29 +2110,138 @@ Screens:
                                     BorderThickness: =2
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
                                     FillPortions: =0
-                                    Height: =184
+                                    Height: =162
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
-                                    Width: =490
-                                    X: =448
-                                    Y: =176
+                                    Width: =470
+                                    X: =408
+                                    Y: =166
                                   Children:
                                     - lblFilesPlaceholderTitle:
                                         Control: Label@2.5.1
                                         Properties:
-                                          Align: =Align.Center
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(90,88,100,1),RGBA(180,178,190,1))
+                                          Color: =RGBA(0,206,125,1)
                                           Font: =Font.'Segoe UI'
-                                          FontWeight: =FontWeight.Semibold
-                                          Height: =20
+                                          FontWeight: =FontWeight.Bold
+                                          Height: =18
+                                          Size: =12
+                                          Text: ="AUTOMATION STATUS"
+                                          Width: =300
+                                          Wrap: =false
+                                          X: =16
+                                          Y: =10
+                                    - dotAutomationStatusAgent4:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =If(varIsRefreshing, RGBA(160,155,190,1), If(varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =38
+                                    - lblAutomationStatusAgent4:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =22
                                           Size: =11
-                                          Text: ="RESERVED FOR FUTURE USE"
-                                          Width: =490
-                                          Y: =82
+                                          Text: ="Agent 4 Live Status - " & If(varIsRefreshing, "Loading...", If(varStatusCallError="", "Operational", "Error"))
+                                          Width: =418
+                                          Wrap: =false
+                                          X: =36
+                                          Y: =34
+                                    - dotAutomationStatusInternalDomains:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,206,125,1)
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =64
+                                    - lblAutomationStatusInternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =22
+                                          Size: =11
+                                          Text: ="Internal Domains (SharePoint) - " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes")) & " active"
+                                          Width: =418
+                                          Wrap: =false
+                                          X: =36
+                                          Y: =60
+                                    - dotAutomationStatusConfigParams:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,206,125,1)
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =90
+                                    - lblAutomationStatusConfigParams:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =22
+                                          Size: =11
+                                          Text: ="Config Parameters active - " & CountRows(Filter('DMP Command Configuration', Active = "Yes"))
+                                          Width: =418
+                                          Wrap: =false
+                                          X: =36
+                                          Y: =86
+                                    - dotAutomationStatusAgentStatus:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,206,125,1)
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =16
+                                          Y: =116
+                                    - lblAutomationStatusAgentStatus:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =22
+                                          Size: =11
+                                          Text: ="Agent Status entries - " & CountRows('DMP Command Agent Status')
+                                          Width: =418
+                                          Wrap: =false
+                                          X: =36
+                                          Y: =112
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1929,7 +2250,7 @@ Screens:
                               BorderThickness: =3
                               Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                               FillPortions: =0
-                              Height: =360
+                              Height: =328
                               RadiusBottomLeft: =18
                               RadiusBottomRight: =18
                               RadiusTopLeft: =18
@@ -1941,7 +2262,7 @@ Screens:
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Height: =328
+                                    Height: =312
                                     Image: |-
                                       =With(
                                           {
@@ -1966,8 +2287,8 @@ Screens:
                                                   },
                                                   If(
                                                       vNeverSucceeded,
-                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(150,150,158)' stroke-width='20' stroke-opacity='0.35'/><text x='90' y='95' text-anchor='middle' font-family='Segoe UI' font-size='16' font-weight='bold' fill='" & vLabelColor & "'>Loading...</text></svg>",
-                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='328' height='328' viewBox='0 0 180 180'>" &
+                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(150,150,158)' stroke-width='20' stroke-opacity='0.35'/><text x='90' y='95' text-anchor='middle' font-family='Segoe UI' font-size='16' font-weight='bold' fill='" & vLabelColor & "'>Loading...</text></svg>",
+                                                      "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" &
                                                       "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                       "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                       "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(153,102,178)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
@@ -1978,9 +2299,9 @@ Screens:
                                               )
                                           )
                                       )
-                                    Width: =328
-                                    X: =4
-                                    Y: =16
+                                    Width: =312
+                                    X: =12
+                                    Y: =8
                               - btnEmailsLegendToggle:
                                   Control: Classic/Button@2.2.0
                                   Properties:
@@ -1990,10 +2311,10 @@ Screens:
                                     PressedFill: =RGBA(255,255,255,0.08)
                                     Text: =""
                                     Tooltip: ="Click for a colour-matched legend"
-                                    Height: =328
-                                    Width: =328
-                                    X: =4
-                                    Y: =16
+                                    Height: =312
+                                    Width: =312
+                                    X: =12
+                                    Y: =8
                                     OnSelect: =Set(varShowEmailsLegend, !varShowEmailsLegend)
                               - conEmailsLegendPopup:
                                   Control: GroupContainer@1.5.0
@@ -2016,7 +2337,7 @@ Screens:
                                     RadiusTopRight: =10
                                     Width: =312
                                     X: =12
-                                    Y: =90
+                                    Y: =68
                                   Children:
                                     - conEmailsLegendHeaderRow:
                                         Control: GroupContainer@1.5.0
@@ -2213,6 +2534,7 @@ Screens:
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
+                        Width: =1566
                       Children:
                         - lblRealNextStepsTitle:
                             Control: Label@2.5.1
@@ -2447,305 +2769,6 @@ Screens:
                                     PaddingRight: =10
                                     Size: =11.5
                                     Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
-                  - conAutomationStatus:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        BorderColor: =If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.15))
-                        BorderThickness: =3
-                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        LayoutAlignItems: =LayoutAlignItems.Stretch
-                        LayoutDirection: =LayoutDirection.Vertical
-                        LayoutGap: =8
-                        PaddingBottom: =14
-                        PaddingLeft: =16
-                        PaddingRight: =16
-                        PaddingTop: =14
-                        RadiusBottomLeft: =18
-                        RadiusBottomRight: =18
-                        RadiusTopLeft: =18
-                        RadiusTopRight: =18
-                      Children:
-                        - lblNextStepsTitle:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                              Font: =Font.'Segoe UI'
-                              FontWeight: =FontWeight.Semibold
-                              Height: =18
-                              Size: =11
-                              Text: ="AUTOMATION STATUS"
-                        - conStep1:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =60
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =60
-                              LayoutMinHeight: =60
-                            Children:
-                              - lblNextStep1Done:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varIsRefreshing, RGBA(160,155,190,1), If(varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1)))
-                                    Font: =Font.'Segoe UI'
-                                    FontWeight: =FontWeight.Semibold
-                                    Height: =32
-                                    Size: =12
-                                    Text: =If(varIsRefreshing, "⟳ Loading configuration…", If(varStatusCallError="", "✓ Configuration loaded", "! Configuration load failed"))
-                                    Width: =240
-                              - lblNextStep1Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =56
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: =If(varIsRefreshing, "Requesting live status from Agent 4 - please wait…", If(varStatusCallError="", "Live status successfully retrieved from Agent 4 at " & Text(varLastAttemptTimestamp,"hh:mm:ss"), "Agent 4 status call failed at " & Text(varLastAttemptTimestamp,"hh:mm:ss") & " - showing fallback defaults (" & varStatusCallError & ")"))
-                                    Wrap: =true
-                        - conStep2:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep2Done:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,159,10,1))
-                                    Font: =Font.'Segoe UI'
-                                    FontWeight: =FontWeight.Semibold
-                                    Height: =32
-                                    Size: =12
-                                    Text: =If(varInternalDomainsExists, "✓ Agent 1 domain extraction", "! Agent 1 domain extraction pending")
-                                    Width: =240
-                              - lblNextStep2Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: =Coalesce(varInternalDomainsCount,0) & " internal domains currently on file" & If(IsBlank(varInternalDomainsLastModified) Or varInternalDomainsLastModified="", "", " (last updated " & Text(DateTimeValue(varInternalDomainsLastModified),"dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varInternalDomainsLastModified)) <= -90, "CEST", "CET") & ")")
-                        - conStep3:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep3:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="→ Check Agent 2 inbox"
-                                    Width: =240
-                              - lblNextStep3Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: ="Review pending emails in the shared DMP mailbox"
-                        - conStep4:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep4:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="→ Validate Emergency Report"
-                                    Width: =240
-                              - lblNextStep4Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: ="Confirm Emergency_Report.xlsx is up to date before Fire Drill"
-                        - conStep5:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep5:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="→ Audit Trail review"
-                                    Width: =240
-                              - lblNextStep5Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: ="Check latest audit events for warnings or failures"
-                        - conStep6:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep6:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="→ End Fire Drill"
-                                    Width: =240
-                              - lblNextStep6Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: ="Switch Operational Mode back to Normal when testing is complete"
-                        - conStep7:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblNextStep7:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="→ Export weekly report"
-                                    Width: =240
-                              - lblNextStep7Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Text: ="Generate and send the weekly summary report"
       - conFrameTop:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
