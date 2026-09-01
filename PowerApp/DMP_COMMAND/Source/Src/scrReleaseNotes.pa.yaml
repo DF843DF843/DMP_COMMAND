@@ -188,6 +188,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1180:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1180Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.18.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1180Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- LED refresh behaviour further refined per feedback - gray only on the very first app load, yellow blinking on every later refresh (kept from v1.17.1)" & Char(10) & "- Colors aligned with the official Eurex Brand Manual - the Emails Processed donut now uses the official secondary/tertiary colors (Light Blue, Purple, Aqua Mint, Peach) instead of two non-brand shades" & Char(10) & "- The DMP/SIMU (Operating State) toggle's active color, its status text, and the four screen-edge frame bars now use Eurex Purple for the SIMU+DMP combination instead of a non-brand orange" & Char(10) & "- Genuine danger/safety colors (PROD environment, PROD+DMP combination) intentionally left as-is - the Eurex palette has no red, and a universal danger signal was judged more important than brand purity there" & Char(10) & "- All future color and text/typography decisions will reference the official Eurex Brand Manual document"
+                              Wrap: =true
                   - conReleaseV1171:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -219,7 +264,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.17.1 - 2026-09-01 (current)"
+                              Text: ="v1.17.1 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1171Notes:
                             Control: Label@2.5.1

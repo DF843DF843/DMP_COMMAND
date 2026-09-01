@@ -1377,7 +1377,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: |-
-                                            =With({vModeColor: Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))}, If(varLedOperationalState="Yellow" Or varLedApplicationMode="Yellow", If(varBlinkPhase, vModeColor, RGBA(150,150,158,0.35)), vModeColor))
+                                            =With({vModeColor: Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))}, If(varLedOperationalState="Yellow" Or varLedApplicationMode="Yellow", If(varBlinkPhase, vModeColor, RGBA(150,150,158,0.35)), vModeColor))
                                           Font: =Font.'Segoe UI'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =18
@@ -1497,7 +1497,7 @@ Screens:
                                                 );
                                                 Set(varSuppressToggleEvents, false)
                                             )
-                                          TrueFill: =RGBA(255,159,10,1)
+                                          TrueFill: =RGBA(102,52,142,1)
                                           TrueText: ="DMP"
                                           Width: =110
                                           X: =120
@@ -2516,8 +2516,8 @@ Screens:
                                                       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" &
                                                       "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                       "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(153,102,178)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,159,10)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(160,220,200)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,170,161)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
                                                       "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='rgb(60,125,190)'>" & Text(vTotal,"0") & "</text>" &
                                                       "<text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & If(varIsRefreshing, "REFRESHING...", "EMAILS PROCESSED") & "</text></svg>"
                                                   )
@@ -2687,7 +2687,7 @@ Screens:
                                               Control: GroupContainer@1.5.0
                                               Variant: ManualLayout
                                               Properties:
-                                                Fill: =RGBA(153,102,178,1)
+                                                Fill: =RGBA(160,220,200,1)
                                                 Height: =14
                                                 RadiusBottomLeft: =3
                                                 RadiusBottomRight: =3
@@ -2723,7 +2723,7 @@ Screens:
                                               Control: GroupContainer@1.5.0
                                               Variant: ManualLayout
                                               Properties:
-                                                Fill: =RGBA(255,159,10,1)
+                                                Fill: =RGBA(255,170,161,1)
                                                 Height: =14
                                                 RadiusBottomLeft: =3
                                                 RadiusBottomRight: =3
@@ -3003,7 +3003,7 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
             Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
             Width: =Parent.Width
             X: =0
@@ -3012,7 +3012,7 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
             Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
             Width: =Parent.Width
             X: =0
@@ -3021,7 +3021,7 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
             Height: =Parent.Height
             Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
             X: =0
@@ -3030,7 +3030,7 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,159,10,1), RGBA(150,150,158,1))
+            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
             Height: =Parent.Height
             Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
             X: =Parent.Width - Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)

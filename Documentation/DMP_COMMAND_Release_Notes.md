@@ -4,7 +4,21 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.17.0 - 2026-09-01 (current)
+### v1.18.0 - 2026-09-01 (current)
+
+- LED refresh behaviour further refined per feedback - gray only on the very first app load, yellow blinking on every later refresh (kept from v1.17.1)
+- Colors aligned with the official Eurex Brand Manual - the Emails Processed donut now uses the official secondary/tertiary colors (Light Blue, Purple, Aqua Mint, Peach) instead of two non-brand shades
+- The DMP/SIMU (Operating State) toggle's active color, its status text, and the four screen-edge frame bars now use Eurex Purple for the SIMU+DMP combination instead of a non-brand orange
+- Genuine danger/safety colors (PROD environment, PROD+DMP combination) intentionally left as-is - the Eurex palette has no red, and a universal danger signal was judged more important than brand purity there
+- All future color and text/typography decisions will reference the official Eurex Brand Manual document
+
+### v1.17.1 - 2026-09-01
+
+- Hotfix for a v1.17.0 import error (PA1001, YamlInvalidSyntax) - two lines in scrHome.pa.yaml had drifted one space out of indentation during an earlier automated edit, which pac canvas pack does not catch but Studio's import does
+- LED refresh indicator refined per feedback - LEDs now show gray only during the very first app load (before any data has ever arrived); on every later refresh they blink yellow instead of turning gray, keeping the last known Green/Red status visible in between blinks
+- No other visual changes in this release
+
+### v1.17.0 - 2026-09-01
 
 - Fixed Timer/LED freeze during Replace - the file-replace flow call ran inside the same 1-second ticking timer as the auto-refresh, blocking its blink-phase and countdown for the whole call. Moved to its own dedicated timer
 - Automation Status column labels widened further, Agent 4 Live Status name no longer clips
@@ -141,6 +155,11 @@ Frontend:
 - Agent 1 & 2 performance improved (Excel counters now batched instead of updated per email)
 - False "folder already exists" alarm fixed in Agent 3 & 4
 - Copy-paste bug in Agent 1's error-mail move action fixed
+
+### v1.6.1 - v1.6.3 - 2026-08-27/28
+
+- Emails card visibility issue fixed (layout width)
+- Several intermediate width-tuning iterations (superseded by v1.6.4)
 
 ## Agent (Flow) Changes
 
