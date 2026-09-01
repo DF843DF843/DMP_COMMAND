@@ -242,7 +242,7 @@ Screens:
                         OnSelect: =Navigate(scrAdminFunctions, ScreenTransition.None)
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
-                        Text: ="Admin Functions (Test Only)"
+                        Text: ="Admin Functions"
             - conMain:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
@@ -667,7 +667,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
-                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =32
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =90
@@ -683,7 +683,7 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
-                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =13
                               Text: ="CRITICAL"
                               Width: =90
@@ -713,7 +713,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Fill: =RGBA(0,0,0,0)
                               Height: =66
-                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0))
+                              OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Text: =""
                               Width: =96
                               X: =Parent.Width - 656
@@ -728,7 +728,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
-                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =32
                               Text: =Text(Coalesce(varAuditWarningCount,0))
                               Width: =110
@@ -744,7 +744,7 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
-                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =13
                               Text: ="WARNINGS"
                               Width: =110
@@ -774,7 +774,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Fill: =RGBA(0,0,0,0)
                               Height: =66
-                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0))
+                              OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Text: =""
                               Width: =116
                               X: =Parent.Width - 568
@@ -789,7 +789,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
                               Height: =40
-                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Size: =32
                               Text: =If(IsBlank(varStatusLastRefreshed), "?/6", Coalesce(varAgentsHealthyCount,0) & "/6")
                               Width: =140
@@ -805,7 +805,7 @@ Screens:
                               Color: =RGBA(200,195,225,1)
                               Font: =Font.'Segoe UI'
                               Height: =19
-                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Size: =13
                               Text: ="AGENTS ACTIVE"
                               Width: =140
@@ -835,7 +835,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Fill: =RGBA(0,0,0,0)
                               Height: =66
-                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0))
+                              OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Text: =""
                               Width: =146
                               X: =Parent.Width - 428
@@ -921,7 +921,7 @@ Screens:
                         LayoutMinHeight: =28
                         Size: =11
                         Text: =If(!IsBlank(varStatusCallError), "DEBUG - Agent 4 call error - " & varStatusCallError, "DEBUG - Failed=" & varAuditFailedCount & " | Warning=" & varAuditWarningCount & " | RunSummary=" & varAuditRunSummaryCount & " | HealthyAgents=" & varAgentsHealthyCount & " | HealthPct=" & varSystemHealthPercent & " | AuditTrailExists=" & varAuditTrailExists)
-                        Visible: =false
+                        Visible: =true
                   - conRow1:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -1618,9 +1618,9 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
-                                          Width: =34
+                                          Width: =30
                                           Wrap: =false
-                                          X: =34
+                                          X: =32
                                           Y: =44
                                     - lblInternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1633,9 +1633,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="INTERNAL"
-                                          Width: =90
+                                          Width: =140
                                           Wrap: =false
-                                          X: =74
+                                          X: =66
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1656,8 +1656,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =54
-                                          X: =168
+                                          Width: =50
+                                          X: =210
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1678,14 +1678,14 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =58
-                                          X: =228
+                                          Width: =54
+                                          X: =264
                                           Y: =44
                                     - dotExternalDomainsMD:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
                                         Properties:
-                                          Fill: =RGBA(0,206,125,1)
+                                          Fill: =Switch(varLedEmergencyReport, "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
                                           Height: =14
                                           RadiusBottomLeft: =7
                                           RadiusBottomRight: =7
@@ -1706,9 +1706,9 @@ Screens:
                                           Height: =32
                                           Size: =14
                                           Text: =Coalesce(varExternalDomainsCount,0)
-                                          Width: =34
+                                          Width: =30
                                           Wrap: =false
-                                          X: =34
+                                          X: =32
                                           Y: =96
                                     - lblExternalDomainsLabel:
                                         Control: Label@2.5.1
@@ -1721,9 +1721,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="EXTERNAL"
-                                          Width: =90
+                                          Width: =140
                                           Wrap: =false
-                                          X: =74
+                                          X: =66
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1744,8 +1744,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="View"
-                                          Width: =54
-                                          X: =168
+                                          Width: =50
+                                          X: =210
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1766,8 +1766,8 @@ Screens:
                                           RadiusTopRight: =8
                                           Size: =12
                                           Text: ="Edit"
-                                          Width: =58
-                                          X: =228
+                                          Width: =54
+                                          X: =264
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1782,8 +1782,8 @@ Screens:
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
-                                          Width: =90
-                                          X: =294
+                                          Width: =70
+                                          X: =322
                                           Y: =96
                                         Children:
                                           - lblReplaceFake:
@@ -1799,7 +1799,7 @@ Screens:
                                                 Height: =32
                                                 Size: =12
                                                 Text: ="Replace"
-                                                Width: =90
+                                                Width: =70
                                                 Y: =0
                                           - attExternalDomainsReplace:
                                               Control: Attachments@2.3.0
@@ -1837,27 +1837,12 @@ Screens:
                                                           Set(varTriggerEmergencyUpload, true)
                                                       )
                                                   )
-                                                PressedColor: =RGBA(255,255,255,0.01)
-                                                PressedFill: =RGBA(255,255,255,0.01)
-                                                Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
-                                                Width: =102
-                                                X: =-6
-                                                Y: =-16
-                                    - dotLedEmergencyReport:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: ManualLayout
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0.3)
-                                          BorderThickness: =1
-                                          Fill: =Switch(varLedEmergencyReport, "Gray", RGBA(150,150,158,1), "Yellow", If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), "Red", If(varBlinkPhase, RGBA(255,69,58,1), RGBA(255,69,58,0.25)), RGBA(0,206,125,1))
-                                          Height: =16
-                                          RadiusBottomLeft: =8
-                                          RadiusBottomRight: =8
-                                          RadiusTopLeft: =8
-                                          RadiusTopRight: =8
-                                          Width: =16
-                                          X: =376
-                                          Y: =88
+                                          PressedColor: =RGBA(255,255,255,0.01)
+                                          PressedFill: =RGBA(255,255,255,0.01)
+                                          Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
+                                          Width: =82
+                                          X: =-6
+                                          Y: =-16
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout

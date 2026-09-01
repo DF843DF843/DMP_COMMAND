@@ -136,13 +136,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 1 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile01Status:
                             Control: Label@2.5.1
                             Properties:
@@ -221,13 +221,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 2 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile02Status:
                             Control: Label@2.5.1
                             Properties:
@@ -306,13 +306,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 3 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile03Status:
                             Control: Label@2.5.1
                             Properties:
@@ -402,13 +402,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 4 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile04Status:
                             Control: Label@2.5.1
                             Properties:
@@ -487,13 +487,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 5 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile05Status:
                             Control: Label@2.5.1
                             Properties:
@@ -572,13 +572,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =18
+                              Height: =22
                               Size: =13
                               Text: ="Agent 6 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_06").AgentDisplayName
                               Width: =380
                               Wrap: =false
                               X: =38
-                              Y: =11
+                              Y: =9
                         - lblAgentTile06Status:
                             Control: Label@2.5.1
                             Properties:

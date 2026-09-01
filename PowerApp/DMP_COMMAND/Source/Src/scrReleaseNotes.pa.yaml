@@ -186,6 +186,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1130:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1130Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.13.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1130Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =340
+                              Size: =12
+                              Text: ="- Debug status bar temporarily made visible again on the Cockpit to help diagnose a reported refresh issue - please report back what it shows" & Char(10) & "- Sidebar - ""Admin Functions (Test Only)"" renamed to plain ""Admin Functions""" & Char(10) & "- Maintenance Domains - the separate blinking LED next to Replace was removed; the leftmost status dot on the External row now does the slow blink itself while a replacement upload is processing" & Char(10) & "- Maintenance Domains - Internal/External rows reflowed with more room for the INTERNAL/EXTERNAL labels so they no longer get cut off with ""...""" & Char(10) & "- Agent Monitoring - fixed the green agent name headings having their descenders (e.g. the letter g) clipped off" & Char(10) & "- Help / Operational Manual - added a proper scrollbar to the section list (it was missing an explicit height, so long pages were not fully readable)" & Char(10) & "- Maintenance page - fixed clipped description text in Connection Diagnostics and Versions; the app version is now a clickable link to Release Notes; Admin portal link buttons no longer wrap their text" & Char(10) & "- Admin Functions - each action (mailbox cleanup, counter reset) now has its own bordered sub-section; Display Diagnostics made smaller and less prominent; the ""Internal Sender"" reset button no longer wraps its text; remaining ""Test""/""Test Only"" wording removed" & Char(10) & "- Cockpit - clicking the CRITICAL or WARNINGS KPI number/label now also opens Audit Trail (Detail); clicking AGENTS ACTIVE now also opens Agent Monitoring - both still acknowledge the change-notification LED as before"
+                              Wrap: =true
                   - conReleaseV1121:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -217,7 +262,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.12.1 - 2026-09-01 (current)"
+                              Text: ="v1.12.1 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1121Notes:
                             Control: Label@2.5.1

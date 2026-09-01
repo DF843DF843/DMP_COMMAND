@@ -98,7 +98,7 @@ Screens:
                   BorderThickness: =3
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                   FillPortions: =0
-                  Height: =190
+                  Height: =210
                   RadiusBottomLeft: =18
                   RadiusBottomRight: =18
                   RadiusTopLeft: =18
@@ -142,7 +142,7 @@ Screens:
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Configuration list - reachable"
-                        Width: =400
+                        Width: =460
                         Wrap: =false
                         X: =38
                         Y: =47
@@ -169,7 +169,7 @@ Screens:
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Agent Status list - reachable"
-                        Width: =400
+                        Width: =460
                         Wrap: =false
                         X: =38
                         Y: =73
@@ -196,7 +196,7 @@ Screens:
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Internal Domains list - reachable"
-                        Width: =400
+                        Width: =460
                         Wrap: =false
                         X: =38
                         Y: =99
@@ -207,13 +207,13 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                         Font: =Font.'Segoe UI'
-                        Height: =18
+                        Height: =40
                         Size: =10.5
                         Text: ="A red dot here means the app itself lost its SharePoint connection - refresh the app or check the connection under Power Apps > Settings."
-                        Width: =600
-                        Wrap: =false
+                        Width: =700
+                        Wrap: =true
                         X: =16
-                        Y: =128
+                        Y: =126
             - conMaintenanceVersions:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
@@ -223,7 +223,7 @@ Screens:
                   BorderThickness: =3
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                   FillPortions: =0
-                  Height: =90
+                  Height: =120
                   RadiusBottomLeft: =18
                   RadiusBottomRight: =18
                   RadiusTopLeft: =18
@@ -244,18 +244,24 @@ Screens:
                         Wrap: =false
                         X: =16
                         Y: =14
-                  - lblMaintenanceAppVersion:
-                      Control: Label@2.5.1
+                  - btnMaintenanceAppVersion:
+                      Control: Classic/Button@2.2.0
                       Properties:
+                        Align: =Align.Left
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Color: =RGBA(0,206,125,1)
+                        Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
                         Height: =20
+                        HoverColor: =RGBA(45,230,155,1)
+                        HoverFill: =RGBA(0,0,0,0)
+                        OnSelect: =Navigate(scrReleaseNotes, ScreenTransition.None)
                         Size: =12
-                        Text: ="Cockpit app:" & " " & varAppVersion
-                        Width: =300
-                        Wrap: =false
+                        Text: ="Cockpit app:" & " " & varAppVersion & " (see Release Notes)"
+                        Tooltip: ="Open Release Notes"
+                        Width: =320
                         X: =16
                         Y: =44
                   - lblMaintenanceAgentVersionsHint:
@@ -265,13 +271,13 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                         Font: =Font.'Segoe UI'
-                        Height: =20
+                        Height: =36
                         Size: =11
                         Text: ="Agent versions - see Release Notes > Agent Changes, or Agent Monitoring for live per-agent status"
-                        Width: =600
-                        Wrap: =false
-                        X: =230
-                        Y: =44
+                        Width: =700
+                        Wrap: =true
+                        X: =16
+                        Y: =70
             - conMaintenanceLinks:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
@@ -281,7 +287,7 @@ Screens:
                   BorderThickness: =3
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                   FillPortions: =0
-                  Height: =130
+                  Height: =100
                   RadiusBottomLeft: =18
                   RadiusBottomRight: =18
                   RadiusTopLeft: =18
@@ -305,6 +311,7 @@ Screens:
                   - btnMaintenanceLinkPowerAutomate:
                       Control: Classic/Button@2.2.0
                       Properties:
+                        Align: =Align.Center
                         BorderColor: =RGBA(0,206,125,0.6)
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
@@ -312,20 +319,23 @@ Screens:
                         Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Semibold
-                        Height: =32
+                        Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)
                         OnSelect: =Launch("https://make.powerautomate.com/environments/53617fa1-2ee3-e3c9-99ba-c508b1a68246/flows")
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
+                        Size: =12
                         Text: ="Power Automate flows"
-                        Width: =190
+                        Width: =260
+                        Wrap: =false
                         X: =16
                         Y: =48
                   - btnMaintenanceLinkSharePoint:
                       Control: Classic/Button@2.2.0
                       Properties:
+                        Align: =Align.Center
                         BorderColor: =RGBA(0,206,125,0.6)
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
@@ -333,20 +343,23 @@ Screens:
                         Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Semibold
-                        Height: =32
+                        Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)
                         OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication")
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
+                        Size: =12
                         Text: ="SharePoint site"
-                        Width: =190
-                        X: =216
+                        Width: =260
+                        Wrap: =false
+                        X: =296
                         Y: =48
                   - btnMaintenanceLinkMaker:
                       Control: Classic/Button@2.2.0
                       Properties:
+                        Align: =Align.Center
                         BorderColor: =RGBA(0,206,125,0.6)
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =1
@@ -354,14 +367,16 @@ Screens:
                         Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Semibold
-                        Height: =32
+                        Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)
                         OnSelect: =Launch("https://make.powerapps.com/environments/53617fa1-2ee3-e3c9-99ba-c508b1a68246/home")
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
+                        Size: =12
                         Text: ="Power Apps maker portal"
-                        Width: =190
-                        X: =16
-                        Y: =88
+                        Width: =260
+                        Wrap: =false
+                        X: =576
+                        Y: =48

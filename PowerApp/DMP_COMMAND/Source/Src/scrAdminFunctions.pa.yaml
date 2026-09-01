@@ -84,7 +84,7 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =20
                         Size: =11.5
-                        Text: ="DMP COMMAND - test / reset operations (destructive, use with care)"
+                        Text: ="DMP COMMAND - administrative reset operations (destructive, use with care)"
                         Width: =500
                         Wrap: =false
                         X: =230
@@ -94,31 +94,20 @@ Screens:
                 Variant: AutoLayout
                 Properties:
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
-                  BorderColor: =RGBA(0,120,215,0.5)
-                  BorderThickness: =2
-                  LayoutAlignItems: =LayoutAlignItems.Stretch
-                  LayoutDirection: =LayoutDirection.Vertical
-                  LayoutGap: =4
-                  PaddingBottom: =12
-                  PaddingLeft: =16
-                  PaddingRight: =16
-                  PaddingTop: =12
-                  RadiusBottomLeft: =12
-                  RadiusBottomRight: =12
-                  RadiusTopLeft: =12
-                  RadiusTopRight: =12
+                  BorderColor: =RGBA(0,120,215,0.35)
+                  BorderThickness: =1
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =10
+                  PaddingBottom: =8
+                  PaddingLeft: =14
+                  PaddingRight: =14
+                  PaddingTop: =8
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
                 Children:
-                  - lblDisplayDiagnosticsTitle:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                        Font: =Font.'Segoe UI'
-                        FontWeight: =FontWeight.Bold
-                        Height: =22
-                        Size: =13
-                        Text: ="Display diagnostics (for reporting zoom / width issues)"
                   - lblDisplayDiagnosticsValues:
                       Control: Label@2.5.1
                       Properties:
@@ -126,10 +115,11 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,120,215,1)
                         Font: =Font.'Segoe UI'
-                        FontWeight: =FontWeight.Bold
-                        Height: =26
-                        Size: =16
-                        Text: ="App.Width = " & Round(App.Width,0) & " px   -   App.Height = " & Round(App.Height,0) & " px"
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Display diagnostics -" & " " & "App.Width = " & Round(App.Width,0) & "px, App.Height = " & Round(App.Height,0) & "px"
+                        Wrap: =false
                   - lblDisplayDiagnosticsHint:
                       Control: Label@2.5.1
                       Properties:
@@ -137,28 +127,18 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                         Font: =Font.'Segoe UI'
-                        Height: =36
-                        Size: =11
-                        Text: ="Please send these two numbers together with your current browser zoom level (e.g. 100% or 75%) so the Cockpit header width can be calculated correctly."
-                        Wrap: =true
+                        Height: =18
+                        Size: =10
+                        Text: ="(send these with your browser zoom level if reporting a layout issue)"
+                        Wrap: =false
             - conAdminFunctions:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
                 Properties:
-                  Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
-                  BorderColor: =RGBA(220,53,69,1)
-                  BorderThickness: =3
+                  Fill: =RGBA(0,0,0,0)
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
-                  LayoutGap: =10
-                  PaddingBottom: =16
-                  PaddingLeft: =16
-                  PaddingRight: =16
-                  PaddingTop: =16
-                  RadiusBottomLeft: =8
-                  RadiusBottomRight: =8
-                  RadiusTopLeft: =8
-                  RadiusTopRight: =8
+                  LayoutGap: =12
                 Children:
                   - lblAdminFunctionsTitle:
                       Control: Label@2.5.1
@@ -170,7 +150,7 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: =28
                         Size: =16
-                        Text: ="Admin Functions (Test / Reset Only)"
+                        Text: ="Admin Functions"
                   - lblAdminFunctionsHint:
                       Control: Label@2.5.1
                       Properties:
@@ -180,282 +160,203 @@ Screens:
                         Font: =Font.'Segoe UI'
                         Height: =24
                         Size: =12
-                        Text: ="These actions are for testing/reset purposes only and can be destructive. Use with care."
-                  - conAdminDeleteRow:
+                        Text: ="These actions are destructive and cannot be easily undone. Use with care."
+                  - conFuncDeleteMailFolders:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
                       Properties:
-                        Fill: =RGBA(0,0,0,0)
-                        Height: =44
-                        LayoutAlignItems: =LayoutAlignItems.Center
-                        LayoutDirection: =LayoutDirection.Horizontal
-                        LayoutGap: =8
-                        LayoutMaxHeight: =44
-                        LayoutMinHeight: =44
-                      Children:
-                        - lblAdminDeleteLabel:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              FillPortions: =1
-                              Font: =Font.'Segoe UI'
-                              Height: =28
-                              Size: =12
-                              Text: ="Delete 'PA Processed Mails' folder tree"
-                        - btnAdminDeleteProcessedMailsFolder:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(220,53,69,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =32
-                              HoverFill: =RGBA(189,45,59,1)
-                              OnSelect: =Set(varConfirmDeleteMailboxFolders,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="Delete..."
-                              Width: =110
-                  - conAdminConfirmDelete:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        Visible: =varConfirmDeleteMailboxFolders
-                        Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                        Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
+                        BorderColor: =RGBA(220,53,69,1)
+                        BorderThickness: =2
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
-                        LayoutGap: =8
-                        PaddingBottom: =12
-                        PaddingLeft: =12
-                        PaddingRight: =12
-                        PaddingTop: =12
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
+                        LayoutGap: =10
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                       Children:
-                        - lblConfirmDeleteText:
+                        - lblFuncDeleteMailFoldersTitle:
                             Control: Label@2.5.1
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                              Font: =Font.'Segoe UI'
-                              Height: =48
-                              Size: =12
-                              Text: ="Are you sure? This deletes 'PA Processed Mails' and everything below it (including 'Agent 5 Alerts') in the shared mailbox. This cannot be easily undone."
-                        - conConfirmDeleteButtons:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Fill: =RGBA(0,0,0,0)
-                              Height: =36
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =8
-                            Children:
-                              - btnConfirmDeleteYes:
-                                  Control: Classic/Button@2.2.0
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =RGBA(255,255,255,1)
-                                    Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    HoverFill: =RGBA(189,45,59,1)
-                                    OnSelect: |
-                                      =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
-                                      Set(varConfirmDeleteMailboxFolders,false);
-                                      If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
-                                    RadiusBottomLeft: =8
-                                    RadiusBottomRight: =8
-                                    RadiusTopLeft: =8
-                                    RadiusTopRight: =8
-                                    Text: ="Yes, delete"
-                                    Width: =110
-                              - btnConfirmDeleteCancel:
-                                  Control: Classic/Button@2.2.0
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Fill: =RGBA(0,0,0,0)
-                                    Font: =Font.'Segoe UI'
-                                    Height: =32
-                                    HoverFill: =RGBA(255,255,255,0.08)
-                                    OnSelect: =Set(varConfirmDeleteMailboxFolders,false)
-                                    RadiusBottomLeft: =8
-                                    RadiusBottomRight: =8
-                                    RadiusTopLeft: =8
-                                    RadiusTopRight: =8
-                                    Text: ="Cancel"
-                                    Width: =90
-                  - lblAdminResetCountersTitle:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                        Font: =Font.'Segoe UI'
-                        FontWeight: =FontWeight.Bold
-                        Height: =24
-                        Size: =13
-                        Text: ="Reset e-mail counters (previous value is recorded in the Audit Trail / Operational History first)"
-                  - conAdminResetCountersRow:
-                      Control: GroupContainer@1.5.0
-                      Variant: AutoLayout
-                      Properties:
-                        Fill: =RGBA(0,0,0,0)
-                        Height: =44
-                        LayoutDirection: =LayoutDirection.Horizontal
-                        LayoutGap: =8
-                        LayoutMaxHeight: =44
-                        LayoutMinHeight: =44
-                      Children:
-                        - btnResetCounterNoDMP:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(220,53,69,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =32
-                              HoverFill: =RGBA(189,45,59,1)
-                              OnSelect: |
-                                =Set(varPendingResetAction,"ResetCounter_NoDMP");
-                                Set(varPendingResetLabel,"No DMP");
-                                Set(varConfirmResetCounter,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="No DMP"
-                              Width: =110
-                        - btnResetCounterInternalSender:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(220,53,69,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =32
-                              HoverFill: =RGBA(189,45,59,1)
-                              OnSelect: |
-                                =Set(varPendingResetAction,"ResetCounter_InternalSender");
-                                Set(varPendingResetLabel,"DMP internal Sender");
-                                Set(varConfirmResetCounter,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="Internal Sender"
-                              Width: =130
-                        - btnResetCounterEffected:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(220,53,69,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =32
-                              HoverFill: =RGBA(189,45,59,1)
-                              OnSelect: |
-                                =Set(varPendingResetAction,"ResetCounter_Effected");
-                                Set(varPendingResetLabel,"DMP effected Member (External)");
-                                Set(varConfirmResetCounter,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="External"
-                              Width: =110
-                        - btnResetCounterNotEffected:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(220,53,69,1)
-                              Font: =Font.'Segoe UI'
-                              Height: =32
-                              HoverFill: =RGBA(189,45,59,1)
-                              OnSelect: |
-                                =Set(varPendingResetAction,"ResetCounter_NotEffected");
-                                Set(varPendingResetLabel,"DMP not effected Sender");
-                                Set(varConfirmResetCounter,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="Not Effected"
-                              Width: =130
-                        - btnResetAllCounters:
-                            Control: Classic/Button@2.2.0
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(255,255,255,1)
-                              Fill: =RGBA(140,20,30,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =32
-                              HoverFill: =RGBA(110,15,23,1)
-                              OnSelect: |
-                                =Set(varPendingResetAction,"ResetAllCounters");
-                                Set(varPendingResetLabel,"ALL counters");
-                                Set(varConfirmResetCounter,true)
-                              RadiusBottomLeft: =8
-                              RadiusBottomRight: =8
-                              RadiusTopLeft: =8
-                              RadiusTopRight: =8
-                              Text: ="Reset ALL"
-                              Width: =110
-                  - conAdminConfirmResetCounter:
+                              Height: =22
+                              Size: =13
+                              Text: ="Mailbox cleanup"
+                        - conAdminDeleteRow:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =44
+                              LayoutAlignItems: =LayoutAlignItems.Center
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                              LayoutMaxHeight: =44
+                              LayoutMinHeight: =44
+                            Children:
+                              - lblAdminDeleteLabel:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    FillPortions: =1
+                                    Font: =Font.'Segoe UI'
+                                    Height: =28
+                                    Size: =12
+                                    Text: ="Delete 'PA Processed Mails' folder tree"
+                              - btnAdminDeleteProcessedMailsFolder:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: =Set(varConfirmDeleteMailboxFolders,true)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Text: ="Delete..."
+                                    Width: =110
+                        - conAdminConfirmDelete:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =varConfirmDeleteMailboxFolders
+                              Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =8
+                              PaddingBottom: =12
+                              PaddingLeft: =12
+                              PaddingRight: =12
+                              PaddingTop: =12
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                            Children:
+                              - lblConfirmDeleteText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =48
+                                    Size: =12
+                                    Text: ="Are you sure? This deletes 'PA Processed Mails' and everything below it (including 'Agent 5 Alerts') in the shared mailbox. This cannot be easily undone."
+                              - conConfirmDeleteButtons:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Fill: =RGBA(0,0,0,0)
+                                    Height: =36
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =8
+                                  Children:
+                                    - btnConfirmDeleteYes:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(255,255,255,1)
+                                          Fill: =RGBA(220,53,69,1)
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          HoverFill: =RGBA(189,45,59,1)
+                                          OnSelect: |
+                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
+                                            Set(varConfirmDeleteMailboxFolders,false);
+                                            If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Text: ="Yes, delete"
+                                          Width: =110
+                                    - btnConfirmDeleteCancel:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
+                                          BorderThickness: =3
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          HoverFill: =RGBA(255,255,255,0.08)
+                                          OnSelect: =Set(varConfirmDeleteMailboxFolders,false)
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Text: ="Cancel"
+                                          Width: =90
+                  - conFuncResetCounters:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
                       Properties:
-                        Visible: =varConfirmResetCounter
-                        Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                        Fill: =If(varDarkMode,RGBA(40,20,20,1),RGBA(255,240,240,1))
+                        BorderColor: =RGBA(220,53,69,1)
+                        BorderThickness: =2
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
-                        LayoutGap: =8
-                        PaddingBottom: =12
-                        PaddingLeft: =12
-                        PaddingRight: =12
-                        PaddingTop: =12
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
+                        LayoutGap: =10
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                       Children:
-                        - lblConfirmResetCounterText:
+                        - lblAdminResetCountersTitle:
                             Control: Label@2.5.1
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                               Font: =Font.'Segoe UI'
-                              Height: =48
-                              Size: =12
-                              Text: ="Are you sure? This resets the '" & varPendingResetLabel & "' counter(s) to 0. The current value is written to the Audit Trail (as an Operational History record) before the reset, so it is not lost."
-                        - conConfirmResetCounterButtons:
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =13
+                              Text: ="Reset e-mail counters"
+                        - lblAdminResetCountersHint:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="The previous value is recorded in the Audit Trail (Operational History) before each reset."
+                        - conAdminResetCountersRow:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
-                              Height: =36
+                              Height: =44
                               LayoutDirection: =LayoutDirection.Horizontal
                               LayoutGap: =8
+                              LayoutMaxHeight: =44
+                              LayoutMinHeight: =44
                             Children:
-                              - btnConfirmResetCounterYes:
+                              - btnResetCounterNoDMP:
                                   Control: Classic/Button@2.2.0
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
@@ -466,32 +367,180 @@ Screens:
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: |
-                                      =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction));
-                                      Set(varConfirmResetCounter,false);
-                                      If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
+                                      =Set(varPendingResetAction,"ResetCounter_NoDMP");
+                                      Set(varPendingResetLabel,"No DMP");
+                                      Set(varConfirmResetCounter,true)
                                     RadiusBottomLeft: =8
                                     RadiusBottomRight: =8
                                     RadiusTopLeft: =8
                                     RadiusTopRight: =8
-                                    Text: ="Yes, reset"
+                                    Size: =11
+                                    Text: ="No DMP"
                                     Width: =110
-                              - btnConfirmResetCounterCancel:
+                                    Wrap: =false
+                              - btnResetCounterInternalSender:
                                   Control: Classic/Button@2.2.0
                                   Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Fill: =RGBA(0,0,0,0)
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
                                     Font: =Font.'Segoe UI'
                                     Height: =32
-                                    HoverFill: =RGBA(255,255,255,0.08)
-                                    OnSelect: =Set(varConfirmResetCounter,false)
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: |
+                                      =Set(varPendingResetAction,"ResetCounter_InternalSender");
+                                      Set(varPendingResetLabel,"DMP internal Sender");
+                                      Set(varConfirmResetCounter,true)
                                     RadiusBottomLeft: =8
                                     RadiusBottomRight: =8
                                     RadiusTopLeft: =8
                                     RadiusTopRight: =8
-                                    Text: ="Cancel"
-                                    Width: =90
+                                    Size: =11
+                                    Text: ="Internal Sender"
+                                    Width: =160
+                                    Wrap: =false
+                              - btnResetCounterEffected:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: |
+                                      =Set(varPendingResetAction,"ResetCounter_Effected");
+                                      Set(varPendingResetLabel,"DMP effected Member (External)");
+                                      Set(varConfirmResetCounter,true)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =11
+                                    Text: ="External"
+                                    Width: =110
+                                    Wrap: =false
+                              - btnResetCounterNotEffected:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(220,53,69,1)
+                                    Font: =Font.'Segoe UI'
+                                    Height: =32
+                                    HoverFill: =RGBA(189,45,59,1)
+                                    OnSelect: |
+                                      =Set(varPendingResetAction,"ResetCounter_NotEffected");
+                                      Set(varPendingResetLabel,"DMP not effected Sender");
+                                      Set(varConfirmResetCounter,true)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =11
+                                    Text: ="Not Effected"
+                                    Width: =150
+                                    Wrap: =false
+                              - btnResetAllCounters:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Fill: =RGBA(140,20,30,1)
+                                    Font: =Font.'Segoe UI'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =32
+                                    HoverFill: =RGBA(110,15,23,1)
+                                    OnSelect: |
+                                      =Set(varPendingResetAction,"ResetAllCounters");
+                                      Set(varPendingResetLabel,"ALL counters");
+                                      Set(varConfirmResetCounter,true)
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
+                                    Size: =11
+                                    Text: ="Reset ALL"
+                                    Width: =110
+                                    Wrap: =false
+                        - conAdminConfirmResetCounter:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
+                            Properties:
+                              Visible: =varConfirmResetCounter
+                              Fill: =If(varDarkMode,RGBA(60,20,20,1),RGBA(255,225,225,1))
+                              LayoutAlignItems: =LayoutAlignItems.Stretch
+                              LayoutDirection: =LayoutDirection.Vertical
+                              LayoutGap: =8
+                              PaddingBottom: =12
+                              PaddingLeft: =12
+                              PaddingRight: =12
+                              PaddingTop: =12
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                            Children:
+                              - lblConfirmResetCounterText:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Font: =Font.'Segoe UI'
+                                    Height: =48
+                                    Size: =12
+                                    Text: ="Are you sure? This resets the '" & varPendingResetLabel & "' counter(s) to 0. The current value is written to the Audit Trail (as an Operational History record) before the reset, so it is not lost."
+                              - conConfirmResetCounterButtons:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    Fill: =RGBA(0,0,0,0)
+                                    Height: =36
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    LayoutGap: =8
+                                  Children:
+                                    - btnConfirmResetCounterYes:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =RGBA(255,255,255,1)
+                                          Fill: =RGBA(220,53,69,1)
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          HoverFill: =RGBA(189,45,59,1)
+                                          OnSelect: |
+                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction));
+                                            Set(varConfirmResetCounter,false);
+                                            If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Text: ="Yes, reset"
+                                          Width: =110
+                                    - btnConfirmResetCounterCancel:
+                                        Control: Classic/Button@2.2.0
+                                        Properties:
+                                          BorderColor: =If(varDarkMode,RGBA(255,255,255,0.25),RGBA(20,20,24,0.25))
+                                          BorderThickness: =3
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Fill: =RGBA(0,0,0,0)
+                                          Font: =Font.'Segoe UI'
+                                          Height: =32
+                                          HoverFill: =RGBA(255,255,255,0.08)
+                                          OnSelect: =Set(varConfirmResetCounter,false)
+                                          RadiusBottomLeft: =8
+                                          RadiusBottomRight: =8
+                                          RadiusTopLeft: =8
+                                          RadiusTopRight: =8
+                                          Text: ="Cancel"
+                                          Width: =90
                   - lblAdminActionResult:
                       Control: Label@2.5.1
                       Properties:

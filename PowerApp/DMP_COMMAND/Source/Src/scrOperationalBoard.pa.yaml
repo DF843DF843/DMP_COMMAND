@@ -95,9 +95,12 @@ Screens:
                 Properties:
                   Fill: =RGBA(0,0,0,0)
                   FillPortions: =1
+                  Height: =Parent.Height - 120
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =12
+                  LayoutMaxHeight: =Parent.Height - 120
+                  LayoutMinHeight: =Parent.Height - 120
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
                   - conManualIntro:
