@@ -1017,6 +1017,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =20
                                           Width: =288
                                         Children:
@@ -1054,6 +1055,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -1089,6 +1091,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -1124,6 +1127,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -1159,6 +1163,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -1194,6 +1199,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -1229,6 +1235,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =17
                                           Width: =288
                                         Children:
@@ -2376,6 +2383,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =20
                                           Width: =288
                                         Children:
@@ -2413,6 +2421,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =18
                                           Width: =288
                                         Children:
@@ -2448,6 +2457,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =18
                                           Width: =288
                                         Children:
@@ -2483,6 +2493,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =18
                                           Width: =288
                                         Children:
@@ -2518,6 +2529,7 @@ Screens:
                                         Variant: ManualLayout
                                         Properties:
                                           Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
                                           Height: =18
                                           Width: =288
                                         Children:
