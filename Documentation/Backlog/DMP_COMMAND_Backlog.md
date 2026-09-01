@@ -10,24 +10,28 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-01, Ende der Sitzung): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-01, Sitzungsende): Alle offenen Punkte
 
-**Kontext:** Nutzer musste die Sitzung beenden ("Ich muss jetzt zum Ende kommen") – dies ist die gesammelte Übersicht aller zu diesem Zeitpunkt offenen Punkte, damit nichts verloren geht.
+**Kontext:** Nutzer beendet die Sitzung ("dann mache ich jetzt Schluss") – dies ist die finale, gesammelte Übersicht aller zu diesem Zeitpunkt offenen Punkte, damit nichts verloren geht.
 
-**✅ Heute deployed (live) UND vom Nutzer bestätigt (Stand 18:13 Uhr):**
+**✅ Heute deployed (live) UND vom Nutzer final bestätigt (Stand 18:36 Uhr):**
 - Agent 6 (Admin Functions) – Counter-Reset (alle 5 Fälle) auf die SharePoint-Liste `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) umgestellt, per `pac solution import` live importiert und vom Nutzer reaktiviert.
-- App v1.22.1 (Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung) und v1.22.2 (Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben) – kanonische `.msapp`-Datei vom Nutzer in Power Apps Studio geöffnet, gespeichert und veröffentlicht. **Live.**
+- App **v1.22.3** (kumulativ inkl. v1.22.1/v1.22.2) – kanonische `.msapp`-Datei vom Nutzer in Power Apps Studio geöffnet, gespeichert und veröffentlicht. **Live.** Enthält:
+  - v1.22.1: Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung.
+  - v1.22.2: Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben.
+  - v1.22.3: "AGENTS ACTIVE"- und Files-Panel-Namen (Emergency Report/External Domains/Counter File/Audit Trail File) waren durch die Arial-Migration abgeschnitten – Schriftgröße reduziert, behoben. Audit Trail (Detail) zeigte veraltete Recent-Critical/Warning-Zeilen, da der periodische Refresh-Timer nur auf dem Cockpit-Screen läuft – Audit-Trail-Screen holt sich jetzt bei jedem Öffnen selbst frische Daten (`OnVisible`).
 - Nutzer bestätigt zusätzlich: alle Agenten und SharePoint-Listen in der App aktualisiert/verbunden und veröffentlicht.
+- Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` erstellt (Englisch) – beschreibt unsere Zusammenarbeitsmethodik (KI-Arbeitsregeln, Best Practices) INKLUSIVE der konkreten technischen Praktiken (SharePoint-Variablen/Konfiguration, Audit Trail, Warn-Mails, Release Notes, Backlog, GitHub-Nutzung) als eigener Abschnitt – für eine andere KI zur PowerPoint-Erstellung.
 
-**🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge):**
+**🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge, für die nächste Sitzung):**
 1. **Agent 2 SharePoint-Migration** (Counter-Inkrement + External-Domains-Lesen) – noch NICHT begonnen. Höheres Risiko, da Produktions-E-Mail-Pfad betroffen. GUIDs bereits bekannt: `DMP Command Counters` = `277307f0-195a-4e78-afc8-850dbdf956b2`, `DMP Command External Domains` = `dc89aed5-d87a-4e12-875a-db2adbc2cee4`. Bei Umsetzung: Lese-vor-Schreiben-Zyklus für den Counter (kein natives Atomic-Increment in SharePoint).
 2. **Agent 1 SharePoint-Migration** (External-Domains-Schreiben, Full-Sync-Pattern: erst alle Zeilen löschen, dann neu anlegen) – noch NICHT begonnen, folgt nach Agent 2.
 3. **Aufräumen (klein, risikolos):** In Agent 6 werden die alten Excel-Konfigurationswerte `CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter` (in der Liste `DMP Command Configuration`) nicht mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
-4. **Zusammenarbeits-Dokument (Englisch):** Eigenständiges Markdown-Dokument, das NICHT die DMP-COMMAND-Produktfunktionen beschreibt, sondern unsere Zusammenarbeit dokumentiert – KI-Arbeitsregeln und Best Practices, wie sie sich über die Sitzungen entwickelt haben (Validierungsdisziplin vor jedem Deploy, Umgang mit riskanten Änderungen, Doc-Sync-Pflicht, gestaffeltes Ausrollen bei Produktionscode usw.). Zielgruppe: eine andere KI, die daraus eine PowerPoint-Präsentation erstellen soll. Rein deskriptiv, kein Bezug zu Roadmap/Backlog. Noch nicht begonnen.
-5. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
-6. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` für die beiden neuen SharePoint-Listen – nicht angelegt (Listen sind bereits vom Nutzer erstellt, daher niedrige Priorität, ggf. nicht mehr nötig).
-7. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
-8. **Ungeklärt:** Ob es zwei separate "DMP Command Counters"-Listen gibt (Teams-Tab zeigte "(2)" im Namen) – aus den `DataSources.json`-Daten der App gibt es nur EINEN verbundenen Eintrag, daher vermutlich nur ein Tab-Namensartefakt, aber vom Nutzer nie explizit bestätigt. Bei Gelegenheit im Teams-Kanal kurz gegenchecken.
+4. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
+5. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` für die beiden neuen SharePoint-Listen – nicht angelegt (Listen sind bereits vom Nutzer erstellt, daher niedrige Priorität, ggf. nicht mehr nötig).
+6. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
+7. **Ungeklärt:** Ob es zwei separate "DMP Command Counters"-Listen gibt (Teams-Tab zeigte "(2)" im Namen) – aus den `DataSources.json`-Daten der App gibt es nur EINEN verbundenen Eintrag, daher vermutlich nur ein Tab-Namensartefakt, aber vom Nutzer nie explizit bestätigt. Bei Gelegenheit im Teams-Kanal kurz gegenchecken.
+8. **Backlog-Punkt weiter unten:** User-seitiges Zurücksetzen der Critical/Warnings-Zähler – noch offene Architekturfrage (client-lokal vs. serverseitig), siehe Detail-Eintrag direkt im Anschluss an diese Übersicht.
 
 ---
 
