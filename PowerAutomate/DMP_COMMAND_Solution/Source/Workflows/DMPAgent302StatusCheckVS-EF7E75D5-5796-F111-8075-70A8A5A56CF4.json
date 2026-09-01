@@ -2133,117 +2133,77 @@
         },
         "SCOPE_Internal_Domains": {
           "actions": {
-            "GET_InternalDomains_Metadata": {
+            "GET_InternalDomains_List": {
               "metadata": {
-                "operationMetadataId": "baa460bf-aab5-480e-a3a8-cc26d7f79311"
+                "operationMetadataId": "bf99e3ef-d6a8-4b7c-a5cc-a7b8d1f2de89"
               },
               "type": "OpenApiConnection",
               "inputs": {
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                  "path": "@concat(\r\nvariables('InternalDomainsFolder'),\r\n  '/',\r\n variables('InternalDomainsFileName')\r\n)\r\n"
+                  "table": "1ac9e8e2-6c55-435b-a188-44093da5aa8f",
+                  "$filter": "Active eq 'Yes'"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "GetFileMetadataByPath"
+                  "operationId": "GetItems"
                 },
                 "authentication": {
                   "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                   "type": "Raw"
                 }
               },
-              "description": "Checks whether the Internal Domains reference file exists.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status\n- Internal domains file health check"
+              "description": "Loads all active rows from the DMP Command Internal Domains SharePoint list.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status\n- Internal domains list health check"
             },
-            "IF_InternalDomains_File_Exists": {
+            "IF_InternalDomains_List_Loaded": {
               "actions": {
-                "GET_InternalDomains_Content": {
-                  "runAfter": {
-                    "SET_InternalDomainsLastModified": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "fe9ede67-1956-4b8d-8c80-7ce21aa8882e"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                      "path": "@concat(\r\n    variables('InternalDomainsFolder'),\r\n    '/',\r\n    variables('InternalDomainsFileName')\r\n)",
-                      "inferContentType": true
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "GetFileContentByPath"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the Internal Domains reference file.\n\nUsed for:\n- Internal domain validation\n- DMP COMMAND monitoring\n- Control Board statistics\n\nReturns the complete Internal_Domains.txt content."
-                },
-                "CMP_InternalDomainsText": {
-                  "runAfter": {
-                    "GET_InternalDomains_Content": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "bde6cd8e-c23f-4031-81f9-0fa5b479e0c1"
-                  },
-                  "type": "Compose",
-                  "inputs": "@body('GET_InternalDomains_Content')",
-                  "description": "Converts the Internal Domains file content into plain text.\n\nUsed for:\n- Domain counting\n- Operational monitoring\n- Control Board statistics"
-                },
-                "SET_InternalDomainsCount": {
-                  "runAfter": {
-                    "CMP_InternalDomainsText": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "34385a1b-919a-43c4-893e-89675eb3b2e1"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "InternalDomainsCount",
-                    "value": "@if(empty(trim(outputs('CMP_InternalDomainsText'))),0,length(split(trim(outputs('CMP_InternalDomainsText')),decodeUriComponent('%0A'))))"
-                  },
-                  "description": "Counts all Internal Domain entries.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
-                },
-                "SET_InternalDomainsLastModified": {
-                  "runAfter": {
-                    "SET_InternalDomainsExists_True": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "f20da9e0-eb77-4077-9287-5c4f472ca89c"
-                  },
-                  "type": "SetVariable",
-                  "inputs": {
-                    "name": "InternalDomainsLastModified",
-                    "value": "@outputs('GET_InternalDomains_Metadata')?['body/LastModified']"
-                  },
-                  "description": "Stores the SharePoint Last Modified timestamp of the Internal Domains reference file.\n\nUsed for:\n- Control Board display\n- File freshness monitoring\n- Operational validation"
-                },
                 "SET_InternalDomainsExists_True": {
                   "metadata": {
-                    "operationMetadataId": "fdd33ec7-0d5d-43bc-ad37-2785b3d9d0a2"
+                    "operationMetadataId": "edd8d05e-d7f5-47ea-a649-38e33417742c"
                   },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "InternalDomainsExists",
                     "value": true
                   },
-                  "description": "Marks the Internal Domains reference file as available."
+                  "description": "Marks the Internal Domains SharePoint list as available."
+                },
+                "SET_InternalDomainsCount": {
+                  "runAfter": {
+                    "SET_InternalDomainsExists_True": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "90fe688f-134d-48c8-b7c2-923de28ebce3"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "InternalDomainsCount",
+                    "value": "@length(body('GET_InternalDomains_List')?['value'])"
+                  },
+                  "description": "Counts all active Internal Domain entries.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
+                },
+                "SET_InternalDomainsLastModified": {
+                  "runAfter": {
+                    "SET_InternalDomainsCount": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "184e7596-647d-47ee-b522-273ff56f85e4"
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "InternalDomainsLastModified",
+                    "value": "@if(equals(length(body('GET_InternalDomains_List')?['value']),0),null,max(select(body('GET_InternalDomains_List')?['value'],item()?['Modified'])))"
+                  },
+                  "description": "Stores the most recent Modified timestamp across all active Internal Domains list rows.\n\nUsed for:\n- Control Board display\n- List freshness monitoring\n- Operational validation"
                 }
               },
               "runAfter": {
-                "GET_InternalDomains_Metadata": [
+                "GET_InternalDomains_List": [
                   "Succeeded",
                   "TimedOut",
                   "Skipped",
@@ -2254,14 +2214,14 @@
                 "actions": {
                   "SET_InternalDomainsExists_False": {
                     "metadata": {
-                      "operationMetadataId": "eedc0b3f-23bb-409f-958f-59b06c3f9883"
+                      "operationMetadataId": "e346d0d4-b935-4cb9-b7af-ce44319d6222"
                     },
                     "type": "SetVariable",
                     "inputs": {
                       "name": "InternalDomainsExists",
                       "value": false
                     },
-                    "description": "Marks the Internal Domains reference file as missing."
+                    "description": "Marks the Internal Domains SharePoint list as unavailable."
                   },
                   "SET_InternalDomainsCount_Zero": {
                     "runAfter": {
@@ -2270,14 +2230,14 @@
                       ]
                     },
                     "metadata": {
-                      "operationMetadataId": "b5bd1d82-7fcb-4869-95da-cd755658e2e6"
+                      "operationMetadataId": "0834d98b-82ca-49ae-a793-0309ec6223c1"
                     },
                     "type": "SetVariable",
                     "inputs": {
                       "name": "InternalDomainsCount",
                       "value": 0
                     },
-                    "description": "Resets the Internal Domains count when the reference file is missing."
+                    "description": "Resets the Internal Domains count when the list could not be read."
                   }
                 }
               },
@@ -2285,7 +2245,7 @@
                 "and": [
                   {
                     "equals": [
-                      "@actions('GET_InternalDomains_Metadata').status",
+                      "@actions('GET_InternalDomains_List').status",
                       "Succeeded"
                     ]
                   }
@@ -2295,7 +2255,7 @@
                 "operationMetadataId": "63799da6-1d0a-42f2-a937-7982eaeb3d70"
               },
               "type": "If",
-              "description": "Routes processing depending on whether the Internal Domains reference file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
+              "description": "Routes processing depending on whether the Internal Domains SharePoint list was read successfully.\n\nIf the list was read, status and metadata values are updated.\nIf the read failed, the status remains false and the flow continues."
             }
           },
           "runAfter": {
@@ -2307,7 +2267,7 @@
             "operationMetadataId": "69b6b0ed-1209-46ca-8dbe-cfc948d6e9dd"
           },
           "type": "Scope",
-          "description": "Checks Internal Domains reference file and updates status metrics."
+          "description": "Checks the Internal Domains SharePoint list and updates status metrics."
         },
         "VAR_AuditTableName": {
           "runAfter": {

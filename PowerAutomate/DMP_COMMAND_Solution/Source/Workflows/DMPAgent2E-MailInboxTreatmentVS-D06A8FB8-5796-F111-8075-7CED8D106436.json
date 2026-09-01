@@ -7580,38 +7580,13 @@
                         "type": "If",
                         "description": "Routes processing depending on whether the sender domain matched an internal DMP domain: the DMP Internal Sender path runs if matched, otherwise the DMP effected/not effected Member classification continues."
                       },
-                      "Load_Internal_Domains": {
-                        "metadata": {
-                          "operationMetadataId": "5faac797-6c26-48e3-9fc1-819311e7208c"
-                        },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "parameters": {
-                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                            "path": "@concat( trim(string(outputs('CMP_ConfigObject')?['InternalDomainsStorageFolder'])), '/', trim(string(outputs('CMP_ConfigObject')?['InternalDomainsFileName'])) )",
-                            "inferContentType": true
-                          },
-                          "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                            "connectionName": "shared_sharepointonline",
-                            "operationId": "GetFileContentByPath"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        },
-                        "description": "Loads the configured internal domains reference file content from SharePoint for internal sender classification."
-                      },
                       "Parse_internal_domains_file_+_create_array": {
-                        "runAfter": {
-                          "Load_Internal_Domains": [
-                            "Succeeded"
-                          ]
-                        },
                         "metadata": {
                           "operationMetadataId": "bae4b483-66b8-4fa9-83c8-e4b1cbf35817"
                         },
                         "type": "Compose",
-                        "inputs": "@split(\r\n  replace(\r\n    toLower(\r\n      trim(\r\n        string(outputs('Load_Internal_Domains')?['body'])\r\n      )\r\n    ),\r\n    decodeUriComponent('%0D'),\r\n    ''\r\n  ),\r\n  decodeUriComponent('%0A')\r\n)\r\n",
-                        "description": "Normalizes the internal domains reference file content, removes carriage returns, converts it to lower case, and splits it into an array of domains."
+                        "inputs": "@if(\r\n  equals(length(coalesce(body('Check_Existence_of_Internal_Domains_File')?['value'], createArray())), 0),\r\n  createArray(),\r\n  select(body('Check_Existence_of_Internal_Domains_File')?['value'], toLower(trim(string(item()?['Title']))))\r\n)\r\n",
+                        "description": "Builds a lower-case array of active domains from the DMP Command Internal Domains SharePoint list rows already loaded by Check_Existence_of_Internal_Domains_File."
                       },
                       "MatchedInternalDomain": {
                         "runAfter": {
@@ -7737,7 +7712,7 @@
                             "parameters": {
                               "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                               "emailMessage/Subject": "@variables('LastSentSubject')",
-                              "emailMessage/Body": "<p class=\"editor-paragraph\"><br>@{outputs('Mail_Mode_Body_Header')}<br><br>The DMP Inbox surveillance has detected that the required internal domains reference file is missing:<br><br>@{trim(string(outputs('CMP_ConfigObject')?['InternalDomainsStorageFolder']))}<b><strong class=\"editor-text-bold\">/</strong></b>@{trim(string(outputs('CMP_ConfigObject')?['InternalDomainsFileName']))}<br><br>As a consequence, the workflow cannot reliably identify internal senders and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards<br><br>DMP Hotline Team</p>",
+                              "emailMessage/Body": "<p class=\"editor-paragraph\"><br>@{outputs('Mail_Mode_Body_Header')}<br><br>The DMP Inbox surveillance has detected that the required internal domains reference list currently has no active entries:<br><br>DMP Command Internal Domains (SharePoint list)<br><br>As a consequence, the workflow cannot reliably identify internal senders and is therefore not fully operational.<br><br>Please add or reactivate entries in the list and verify incoming messages during this period.<br><br>Kind regards<br><br>DMP Hotline Team</p>",
                               "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                               "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                             },
@@ -8075,7 +8050,7 @@
                       "operationMetadataId": "cb479044-8a4a-4e83-9a1e-f692ac7116da"
                     },
                     "type": "If",
-                    "description": "Routes processing depending on whether the internal domains reference file exists. If it exists, the sender is classified as internal or external DMP domain; if missing, an alert is raised and the run is stopped."
+                    "description": "Routes processing depending on whether the internal domains reference list has active entries. If yes, the sender is classified as internal or external DMP domain; if none, an alert is raised and the run is stopped."
                   },
                   "Check_Existence_of_Internal_Domains_File": {
                     "metadata": {
@@ -8085,19 +8060,17 @@
                     "inputs": {
                       "parameters": {
                         "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                        "table": "cd185a31-aa98-4afe-94f1-cbafc4417cc1",
-                        "$filter": "@concat('FileLeafRef eq ''', trim(string(outputs('CMP_ConfigObject')?['InternalDomainsFileName'])), '''')",
-                        "folderPath": "@trim(string(outputs('CMP_ConfigObject')?['InternalDomainsStorageFolder']))",
-                        "viewScopeOption": "Default"
+                        "table": "1ac9e8e2-6c55-435b-a188-44093da5aa8f",
+                        "$filter": "Active eq 'Yes'"
                       },
                       "host": {
                         "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                         "connectionName": "shared_sharepointonline",
-                        "operationId": "GetFileItems"
+                        "operationId": "GetItems"
                       },
                       "authentication": "@parameters('$authentication')"
                     },
-                    "description": "Checks whether the configured internal domains reference file exists before internal sender classification starts."
+                    "description": "Loads the active rows of the DMP Command Internal Domains SharePoint list before internal sender classification starts."
                   }
                 }
               },
