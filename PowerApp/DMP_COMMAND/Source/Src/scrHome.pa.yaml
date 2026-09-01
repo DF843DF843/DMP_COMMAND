@@ -66,9 +66,15 @@ Screens:
             // Toggle.Default is only an INITIAL value in Power Apps - once a Classic/Toggle has rendered,
             // it does not reliably re-sync its visual position when the variable behind Default changes
             // from OUTSIDE the toggle's own OnCheck/OnUncheck (e.g. here, from a background refresh).
-            // Force an explicit re-sync every time these values are refreshed from live data.
-            Reset(tglOperationalState);
-            Reset(tglApplicationMode);
+            // Force an explicit re-sync every time these values are refreshed from live data - but ONLY
+            // when no user-driven toggle click is currently in flight (varSuppressToggleEvents=true while
+            // OnCheck/OnUncheck is awaiting its own flow call), else this Reset() would yank the toggle
+            // back to the stale pre-click value in the middle of that call, cancelling the user's action.
+            If(
+                !varSuppressToggleEvents,
+                Reset(tglOperationalState);
+                Reset(tglApplicationMode)
+            );
             Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
             Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
             // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles): establish the
@@ -398,8 +404,11 @@ Screens:
                                 Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
                                 Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
                                 Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-                                Reset(tglOperationalState);
-                                Reset(tglApplicationMode);
+                                If(
+                                    !varSuppressToggleEvents,
+                                    Reset(tglOperationalState);
+                                    Reset(tglApplicationMode)
+                                );
                                 Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                               PressedFill: =RGBA(0,180,110,1)
                               Size: =7.5
@@ -547,8 +556,11 @@ Screens:
                                     Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
                                     Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
                                     Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-                                    Reset(tglOperationalState);
-                                    Reset(tglApplicationMode);
+                                    If(
+                                        !varSuppressToggleEvents,
+                                        Reset(tglOperationalState);
+                                        Reset(tglApplicationMode)
+                                    );
                                     Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
                                     Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
                                     Set(varReadyToLiftToggleGuard, true)
@@ -628,8 +640,11 @@ Screens:
                                         Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
                                         Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
                                         Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-                                        Reset(tglOperationalState);
-                                        Reset(tglApplicationMode);
+                                        If(
+                                            !varSuppressToggleEvents,
+                                            Reset(tglOperationalState);
+                                            Reset(tglApplicationMode)
+                                        );
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                                         ,
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)

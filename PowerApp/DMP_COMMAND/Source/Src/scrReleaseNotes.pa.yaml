@@ -188,6 +188,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1161:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1161Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.16.1 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1161Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Hotfix for a v1.16.0 regression - switching the SIMU/DMP or PROD/SIMU toggle no longer called its flow and the LED stayed green" & Char(10) & "- Root cause - the new background Reset() calls (Now button, periodic auto-update) ran unconditionally, even while a real toggle click's own flow call was still in flight - this could yank the toggle back to its old value mid-click and made the click appear to do nothing" & Char(10) & "- Fix - those background Reset() calls now only run when no toggle click is currently being processed" & Char(10) & "- No visual changes in this release"
+                              Wrap: =true
                   - conReleaseV1160:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -219,7 +264,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.16.0 - 2026-09-02 (current)"
+                              Text: ="v1.16.0 - 2026-09-02"
                               Wrap: =false
                         - lblReleaseV1160Notes:
                             Control: Label@2.5.1
