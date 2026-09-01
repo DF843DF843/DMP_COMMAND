@@ -329,7 +329,6 @@ Screens:
                         Size: =12
                         Text: ="Power Automate flows"
                         Width: =260
-                        Wrap: =false
                         X: =16
                         Y: =48
                   - btnMaintenanceLinkSharePoint:
@@ -353,7 +352,6 @@ Screens:
                         Size: =12
                         Text: ="SharePoint site"
                         Width: =260
-                        Wrap: =false
                         X: =296
                         Y: =48
                   - btnMaintenanceLinkMaker:
@@ -377,6 +375,5 @@ Screens:
                         Size: =12
                         Text: ="Power Apps maker portal"
                         Width: =260
-                        Wrap: =false
                         X: =576
                         Y: =48

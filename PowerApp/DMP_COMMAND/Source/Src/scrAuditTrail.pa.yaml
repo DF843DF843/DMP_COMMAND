@@ -89,48 +89,456 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
-            - conAuditTrailComingSoon:
+            - conAuditTrailSummary:
                 Control: GroupContainer@1.5.0
-                Variant: AutoLayout
+                Variant: ManualLayout
                 Properties:
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
-                  BorderColor: =RGBA(120,115,140,0.35)
-                  BorderThickness: =1
-                  FillPortions: =1
-                  LayoutAlignItems: =LayoutAlignItems.Center
-                  LayoutDirection: =LayoutDirection.Vertical
-                  LayoutJustifyContent: =LayoutJustifyContent.Center
-                  PaddingBottom: =16
-                  PaddingLeft: =16
-                  PaddingRight: =16
-                  PaddingTop: =16
-                  RadiusBottomLeft: =12
-                  RadiusBottomRight: =12
-                  RadiusTopLeft: =12
-                  RadiusTopRight: =12
+                  BorderColor: =RGBA(0,206,125,0.7)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =3
+                  Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                  FillPortions: =0
+                  Height: =90
+                  RadiusBottomLeft: =18
+                  RadiusBottomRight: =18
+                  RadiusTopLeft: =18
+                  RadiusTopRight: =18
                 Children:
-                  - lblAuditTrailComingSoon:
+                  - lblAuditTrailSummaryCritical:
                       Control: Label@2.5.1
                       Properties:
-                        Align: =Align.Center
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(209,52,56,1)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =26
+                        Size: =16
+                        Text: ="Critical (total):" & " " & Coalesce(varAuditFailedCount,0)
+                        Width: =260
+                        Wrap: =false
+                        X: =16
+                        Y: =14
+                  - lblAuditTrailSummaryWarnings:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(255,159,10,1)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =26
+                        Size: =16
+                        Text: ="Warnings (total):" & " " & Coalesce(varAuditWarningCount,0)
+                        Width: =260
+                        Wrap: =false
+                        X: =300
+                        Y: =14
+                  - lblAuditTrailSummaryRunSummary:
+                      Control: Label@2.5.1
+                      Properties:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Bold
-                        Height: =32
-                        Size: =18
-                        Text: ="Coming Soon"
-                        Width: =400
-                  - lblAuditTrailComingSoonHint:
+                        Height: =26
+                        Size: =16
+                        Text: ="Total run-summary rows:" & " " & Coalesce(varAuditRunSummaryCount,0)
+                        Width: =320
+                        Wrap: =false
+                        X: =584
+                        Y: =14
+                  - lblAuditTrailSummaryHint:
                       Control: Label@2.5.1
                       Properties:
-                        Align: =Align.Center
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                         Font: =Font.'Segoe UI'
-                        Height: =24
-                        Size: =12
-                        Text: ="This screen will be filled in step by step in a future update."
-                        Width: =500
+                        Height: =18
+                        Size: =10.5
+                        Text: ="The lists below show the 10 most recent rows of each kind, read live from the central Audit Trail on every Cockpit refresh."
+                        Width: =900
+                        Wrap: =false
+                        X: =16
+                        Y: =52
+                  - btnAuditTrailOpenFile:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Color: =RGBA(0,206,125,1)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        HoverFill: =RGBA(0,206,125,0.12)
+                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/AuditTrail.xlsx")
+                        RadiusBottomLeft: =6
+                        RadiusBottomRight: =6
+                        RadiusTopLeft: =6
+                        RadiusTopRight: =6
+                        Text: ="Open full Audit Trail file"
+                        Width: =200
+                        X: =916
+                        Y: =12
+            - conAuditTrailPanels:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =1
+                  Height: =Parent.Height - 210
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  LayoutMaxHeight: =Parent.Height - 210
+                  LayoutMinHeight: =Parent.Height - 210
+                Children:
+                  - conAuditTrailCriticalPanel:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(209,52,56,0.7)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =4
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =12
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        PaddingTop: =12
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAuditTrailCriticalTitle:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(209,52,56,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =24
+                              Size: =14
+                              Text: ="Recent Critical (Failed) rows"
+                        - lblAuditTrailCriticalEmpty:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =24
+                              Size: =11
+                              Text: ="No Critical rows found in the Audit Trail."
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))=0
+                        - lblAuditTrailCritical01:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,1),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=1
+                              Wrap: =true
+                        - lblAuditTrailCritical02:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,2),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=2
+                              Wrap: =true
+                        - lblAuditTrailCritical03:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,3),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=3
+                              Wrap: =true
+                        - lblAuditTrailCritical04:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,4),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=4
+                              Wrap: =true
+                        - lblAuditTrailCritical05:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,5),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=5
+                              Wrap: =true
+                        - lblAuditTrailCritical06:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,6),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=6
+                              Wrap: =true
+                        - lblAuditTrailCritical07:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,7),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=7
+                              Wrap: =true
+                        - lblAuditTrailCritical08:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,8),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=8
+                              Wrap: =true
+                        - lblAuditTrailCritical09:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,9),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=9
+                              Wrap: =true
+                        - lblAuditTrailCritical10:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,10),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=10
+                              Wrap: =true
+                  - conAuditTrailWarningsPanel:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(255,159,10,0.7)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =4
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =12
+                        PaddingLeft: =12
+                        PaddingRight: =12
+                        PaddingTop: =12
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAuditTrailWarningsTitle:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,159,10,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =24
+                              Size: =14
+                              Text: ="Recent Warning rows"
+                        - lblAuditTrailWarningsEmpty:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =24
+                              Size: =11
+                              Text: ="No Warning rows found in the Audit Trail."
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))=0
+                        - lblAuditTrailWarning01:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,1),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=1
+                              Wrap: =true
+                        - lblAuditTrailWarning02:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,2),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=2
+                              Wrap: =true
+                        - lblAuditTrailWarning03:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,3),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=3
+                              Wrap: =true
+                        - lblAuditTrailWarning04:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,4),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=4
+                              Wrap: =true
+                        - lblAuditTrailWarning05:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,5),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=5
+                              Wrap: =true
+                        - lblAuditTrailWarning06:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,6),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=6
+                              Wrap: =true
+                        - lblAuditTrailWarning07:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,7),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=7
+                              Wrap: =true
+                        - lblAuditTrailWarning08:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,8),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=8
+                              Wrap: =true
+                        - lblAuditTrailWarning09:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,9),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=9
+                              Wrap: =true
+                        - lblAuditTrailWarning10:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =32
+                              Size: =11
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,10),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
+                              Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=10
+                              Wrap: =true

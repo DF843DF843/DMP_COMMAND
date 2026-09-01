@@ -225,6 +225,12 @@
               "Failed",
               "Skipped",
               "TimedOut"
+            ],
+            "SCOPE_AuditTrail_Detail_Read": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
             ]
           },
           "metadata": {
@@ -433,6 +439,50 @@
                       }
                     }
                   }
+                },
+                "auditrecentcritical": {
+                  "title": "AuditRecentCritical",
+                  "x-ms-dynamically-added": true,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string"
+                      },
+                      "workflowpath": {
+                        "type": "string"
+                      },
+                      "stepname": {
+                        "type": "string"
+                      },
+                      "keyoutput": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "auditrecentwarnings": {
+                  "title": "AuditRecentWarnings",
+                  "x-ms-dynamically-added": true,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string"
+                      },
+                      "workflowpath": {
+                        "type": "string"
+                      },
+                      "stepname": {
+                        "type": "string"
+                      },
+                      "keyoutput": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               },
               "additionalProperties": {}
@@ -471,7 +521,9 @@
               "currentoperationmode": "@{variables('OperationMode')}",
               "appversion": "@{variables('PowerAppVersionText')}",
               "agent6healthy": "@variables('Agent6Healthy')",
-              "nextmilestones": "@variables('NextMilestonesArray')"
+              "nextmilestones": "@variables('NextMilestonesArray')",
+              "auditrecentcritical": "@variables('AuditRecentCritical')",
+              "auditrecentwarnings": "@variables('AuditRecentWarnings')"
             }
           },
           "description": "Returns Control Board status."
@@ -4281,6 +4333,166 @@
             ]
           },
           "description": "Tracks the current row index for the Until-based milestone scan, so it can stop early instead of always walking all 44 rows like the previous Foreach did."
+        },
+        "VAR_AuditRecentCritical": {
+          "runAfter": {
+            "VAR_MilestoneRowIndex": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditRecentCritical",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "description": "Buffers the most recent Critical (Failed) Audit Trail rows for the Cockpit's Audit Trail (Detail) drill-down."
+        },
+        "VAR_AuditRecentWarnings": {
+          "runAfter": {
+            "VAR_AuditRecentCritical": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AuditRecentWarnings",
+                "type": "array",
+                "value": []
+              }
+            ]
+          },
+          "description": "Buffers the most recent Warning Audit Trail rows for the Cockpit's Audit Trail (Detail) drill-down."
+        },
+        "SCOPE_AuditTrail_Detail_Read": {
+          "runAfter": {
+            "CMP_ConfigObject": [
+              "Succeeded"
+            ],
+            "VAR_AuditRecentWarnings": [
+              "Succeeded"
+            ]
+          },
+          "type": "Scope",
+          "description": "Reads the most recent Critical (Failed) and Warning rows from the central Audit Trail table, for the Cockpit's Audit Trail (Detail) drill-down. Reuses the same workbook/table Agent 6 already writes run-summaries to.",
+          "actions": {
+            "GET_AuditTrail_AllRows": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                  "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                  "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                  "connectionName": "shared_excelonlinebusiness",
+                  "operationId": "GetItems"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to)."
+            },
+            "FILTER_AuditTrail_Critical": {
+              "runAfter": {
+                "GET_AuditTrail_AllRows": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@body('GET_AuditTrail_AllRows')?['value']",
+                "where": "@equals(toLower(coalesce(item()?['StepStatus'], '')), 'failed')"
+              },
+              "description": "Selects only the Failed (Critical) rows."
+            },
+            "SELECT_AuditTrail_Critical": {
+              "runAfter": {
+                "FILTER_AuditTrail_Critical": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Select",
+              "inputs": {
+                "from": "@take(reverse(body('FILTER_AuditTrail_Critical')), 20)",
+                "select": {
+                  "timestamp": "@item()?['TimestampUtc']",
+                  "workflowpath": "@item()?['WorkflowPath']",
+                  "stepname": "@item()?['StepName']",
+                  "keyoutput": "@item()?['KeyOutput']"
+                }
+              },
+              "description": "Projects the 20 most recent Critical rows into a compact shape for the Cockpit."
+            },
+            "SET_AuditRecentCritical": {
+              "runAfter": {
+                "SELECT_AuditTrail_Critical": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditRecentCritical",
+                "value": "@body('SELECT_AuditTrail_Critical')"
+              },
+              "description": "Stores the recent Critical rows for the Response."
+            },
+            "FILTER_AuditTrail_Warning": {
+              "runAfter": {
+                "GET_AuditTrail_AllRows": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Query",
+              "inputs": {
+                "from": "@body('GET_AuditTrail_AllRows')?['value']",
+                "where": "@equals(toLower(coalesce(item()?['StepStatus'], '')), 'warning')"
+              },
+              "description": "Selects only the Warning rows."
+            },
+            "SELECT_AuditTrail_Warning": {
+              "runAfter": {
+                "FILTER_AuditTrail_Warning": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Select",
+              "inputs": {
+                "from": "@take(reverse(body('FILTER_AuditTrail_Warning')), 20)",
+                "select": {
+                  "timestamp": "@item()?['TimestampUtc']",
+                  "workflowpath": "@item()?['WorkflowPath']",
+                  "stepname": "@item()?['StepName']",
+                  "keyoutput": "@item()?['KeyOutput']"
+                }
+              },
+              "description": "Projects the 20 most recent Warning rows into a compact shape for the Cockpit."
+            },
+            "SET_AuditRecentWarnings": {
+              "runAfter": {
+                "SELECT_AuditTrail_Warning": [
+                  "Succeeded"
+                ]
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "AuditRecentWarnings",
+                "value": "@body('SELECT_AuditTrail_Warning')"
+              },
+              "description": "Stores the recent Warning rows for the Response."
+            }
+          }
         }
       }
     },

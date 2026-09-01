@@ -124,16 +124,21 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 ### 2.4 Agent 4 — Status Check
 
-**Purpose:** Provides file-existence and count status for the Power App's Files band and related dashboard elements (Emergency Report, Internal/External Domains, Counter File, Audit Trail File).
+**Purpose:** Provides file-existence and count status for the Power App's Files band and related dashboard elements (Emergency Report, Internal/External Domains, Counter File, Audit Trail File), plus system-wide audit health figures (failed/warning step counts, total run count across all agents).
 
-**Trigger:** Manual/on-demand, intended to be called by the Power App when the Cockpit screen needs a status refresh.
+**Trigger:** Manual/on-demand, called directly by the Power App on `App.OnStart` (`IfError('DMPAgent3(StatusCheck)'.Run(), Blank())` — see note on the connector reference name below) to refresh the Cockpit dashboard.
 
-**Process:** Performs live SharePoint file-metadata and content checks for each monitored file (existence, last-modified timestamp, and for domain files, a count of entries), and returns them via a structured response.
+**Process:**
+1. Loads active configuration via the Select+Join pattern (same as Agents 1, 2, 3, 5) — replaced the original per-row `Foreach` config loop as of 2026-08-13.
+2. Performs live SharePoint file-metadata and content checks for each monitored file (existence, last-modified timestamp, and for domain files, a count of entries).
+3. Reads the shared `Agent Audit Summary` table (see §5.1) for all 5 agent rows and aggregates `AuditFailedCount` (sum of all `FailedStepsCount`), `AuditWarningCount` (sum of all `WarningStepsCount`), and `AuditRunSummaryCount` (sum of all Runs-counter columns across all 5 rows) — added 2026-08-24, replacing the previous always-zero placeholder values.
+4. Returns all of the above via a structured response to the Power App.
 
-**⚠️ Known limitation:** Agent 4's live file-check approach is what previously caused a Power Apps request timeout when it was first used from the app. Because of this, the Power App does **not** currently call Agent 4 directly for its live dashboard data; instead, the Files band, Agent Heartbeat wheel, and KPI values on the Cockpit screen currently use static placeholder/demo values.
-**Planned change (not yet implemented):** Agent 4 should be rebuilt to read the pre-computed `DMP Command Agent Status` list (a fast, simple `Get items` query) instead of performing live file checks, removing the timeout risk while still providing real data to the app.
+**Resolved (2026-08-13):** The Power App now calls Agent 4 directly and binds its Cockpit dashboard (Files band, Agent 2 email-classification ring, Agent Heartbeat) to the live response instead of static placeholder values. The originally planned alternative (reading from the pre-computed `DMP Command Agent Status` list instead of live file checks) was not needed in the end — the direct call approach works without the previously seen timeout.
 
-**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `InternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`. Also still reads `RealDMPIndicatorFileName`/`RealDMPIndicatorFolder` (legacy Yes.txt-era parameters, deleted from the live configuration list) via a safe `coalesce(...)` fallback to hardcoded defaults (`Yes.txt` / `/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP`) — functionally harmless, but a candidate for cleanup whenever Agent 4 is next rebuilt (see planned change above).
+**Note on the connector reference name:** The Power App's underlying data source connector is still internally named `'DMPAgent3(StatusCheck)'` (a legacy name from before the 2026-08-13 agent renumbering). The Power App has no built-in mechanism to rename a connector reference, so this internal name is expected to remain even though the flow itself is correctly named "DMP Agent 4 (Status Check)".
+
+**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `InternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`, `Agent4AlertFolderName`. Also still reads `RealDMPIndicatorFileName`/`RealDMPIndicatorFolder` (legacy Yes.txt-era parameters, deleted from the live configuration list) via a safe `coalesce(...)` fallback to hardcoded defaults (`Yes.txt` / `/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP`) — functionally harmless, a candidate for future cleanup.
 
 ---
 
@@ -192,12 +197,14 @@ Click **Replace** next to the External row in the Maintenance - Domains panel, s
 
 ### 3.5 Dark/Light mode
 
-Use the toggle in the top-right of the header to switch between dark and light color themes. This is a purely visual, per-session preference (not currently persisted or per-user configurable — see backlog item on individual color settings).
+Use the toggle in the top-right of the header to switch between dark and light color themes. This is a purely visual, per-session preference (not currently persisted or per-user configurable — see backlog item on individual color settings). **Resolved (2026-08-24):** an earlier flicker/flip-flop issue when clicking the toggle on this screen has been fixed.
 
-### 3.6 Known current limitations of the Cockpit screen (as of 2026-08-13)
+### 3.6 Known current limitations of the Cockpit screen (as of 2026-08-24)
 
-- The Agent Heartbeat wheel, Files band, and email-classification ring currently show **static/demo data**, not live figures, because the Power App has no direct SharePoint read connector and Agent 4 (the intended data source) is not yet rebuilt to avoid its timeout risk (see §2.4).
+- The Agent Heartbeat wheel, Files band, and email-classification ring are bound to live data returned by Agent 4 (see §2.4) as of 2026-08-13 — this is **no longer** static/demo data.
+- **Resolved (2026-08-24):** A full tile-by-tile review of `scrHome.pa.yaml` was completed. Several remaining hardcoded/fabricated values were found and fixed: the Domain Maintenance counts (Internal/External), the operating-mode and last-changed labels, the Critical/Agents-Active KPI colors, the "Next Steps" checklist detail texts (previously showed fabricated numbers/timestamps, e.g. an invented "78 active parameters" figure), a legend color mismatch in the email-classification ring, and several text-encoding (mojibake) artifacts. All Cockpit tiles now either show genuinely live data or clearly generic, non-data-claiming guidance text.
 - Agent Monitoring, Operational Board, Audit Trail (Detail), Configuration (Lists), and Maintenance sidebar items are navigation placeholders and are not yet built out as separate screens.
+- There is currently no in-app mechanism to acknowledge/clear a Warning or Critical indicator, or to reset counters/audit history — see the backlog for the planned acknowledgment (baseline-diff) and controlled-reset mechanisms.
 
 ---
 
@@ -227,6 +234,10 @@ This SharePoint list is the single source of truth for every operational paramet
 ### 5.1 Audit Trail
 
 Every agent run logs to a shared `AuditTrail.xlsx` table with a fixed 20-column schema: `TimestampUtc, RunId, MessageId, WorkflowPath, StepName, StepStatus, Flow ID, KeyOutput, DurationSec, ActionType, Direction, Recipient, SubjectOut, TargetMessageId, TargetFolderName, TargetFolderId, MatchedDomain, Decision, Sender, SenderDomain`. Every significant step buffers an event; at the end of each run, one additional **Run Summary** row is written (`StepName = "RunSummary"`, `ActionType = "Summary"`) summarizing the overall outcome. `Flow ID` is intentionally left blank across all agents (unused legacy column).
+
+**Agent Audit Summary (added 2026-08-14, completed 2026-08-24):** `AuditTrail.xlsx` also contains a second table, `Agent Audit Summary` (17 columns, one row per agent `Agent 01`–`Agent 05`), that keeps a running, pre-aggregated count of steps and runs by outcome (`SucceededStepsCount`, `FailedStepsCount`, `WarningStepsCount`, `StartedStepsCount`, and the equivalent `...RunsCount` columns), each paired with a `...LastUpdateUtc` timestamp column recording when that specific counter was last incremented. Every agent increments its own row after each run — this is what Agent 4 reads and aggregates for the Cockpit's system-wide Critical/Warning/Total-runs figures (see §2.4), avoiding the need to scan the full detailed log at request time.
+
+**Agent Audit Acknowledgment (backend prepared 2026-08-24, UI not yet built):** A third table, `Audit Acknowledgment` (9 columns, one row per agent), stores a "baseline" count and acknowledgment timestamp for each of the 4 problematic counter categories per agent (`FailedSteps`, `WarningSteps`, `FailedRuns`, `WarningRuns`). The planned Cockpit UI will treat a category as "new/unacknowledged" whenever the live counter in `Agent Audit Summary` exceeds the stored baseline, and will let an operator "acknowledge" a category (updating the baseline to the current count) without ever deleting the underlying counters — full history remains intact. The write side (a button in the Power App) is planned as part of the upcoming GUI work; see the backlog for details.
 
 ### 5.2 E-mail Importance
 
@@ -260,13 +271,15 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 | Symptom | Likely Cause | Action |
 |---|---|---|
 | Operating State toggle shows an error notification | Agent 5 flow failure, or the SharePoint connection used by the flow lacks permission | Check the flow's run history in Power Automate; check `AuditOutcome`/`StatusMessage` in the Agent Status row for Agent 5 |
-| Cockpit dashboard shows static/unchanging numbers | Expected — Agent 4 rebuild to provide live data is not yet complete (see §2.4) | No action; this is a known, tracked limitation |
+| Cockpit dashboard Critical/Warning counts look wrong or unexpectedly zero | An agent's `Agent Audit Summary` row was not updated after a recent run (flow failure before reaching the summary-write step), or Agent 4 has not been re-run since | Check the flow's run history for the affected agent in Power Automate; manually re-run Agent 4 to refresh the aggregated figures |
 | Domain counts look outdated after uploading a new Emergency Report | Agent 1 was not run after the Agent 3 upload | Manually trigger Agent 1 |
 | "Only .xlsx files are allowed" error when using Replace | Wrong file type selected | Re-select a genuine `.xlsx` Emergency Report file |
 | A config value appears to have "no effect" after being changed in SharePoint | `Active` column is not set to `Yes`, or the wrong mode-specific column was edited | Verify `Active = Yes` and that the value was entered in the column matching the *currently active* `CurrentOperationMode` |
 | Agent 5's Operating State write silently fails to pick up its own alert/scope config | Live `Scope` value in SharePoint doesn't match the flow's filter exactly (e.g. missing zero-padding or space) | Verify the flow's `$filter` expression matches the exact live `Scope` string (`Agent 05`, not `Agent5` or `agent 05`) |
 
 **Resolved (2026-08-13):** All manual SharePoint updates required by the agent renumbering (Scope values, `AgentKey` values, `WorkflowPathAgentN` parameter names/values) have been completed by the operations team, confirmed via a fresh configuration export. The Scope pattern was further unified the same day to `Agent 01`–`Agent 05` (see §4 and §9).
+
+**Resolved (2026-08-13):** The Cockpit dashboard no longer shows static/demo numbers — Agent 4 is called directly by the Power App and all dashboard figures reflect live data (see §2.4).
 
 ---
 
@@ -276,6 +289,10 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 |---|---|
 | 2026-08-13 | Initial version. Reflects the 5-agent sequential renumbering, Agent 5 (formerly 3.03) Yes.txt decommissioning, real Operating State toggle wiring, and known Agent 4/Cockpit live-data limitations. |
 | 2026-08-13 | Scope pattern unified to `Agent 01`–`Agent 05` (2-digit, zero-padded, with space) across all agents; retired the shared `Agent3_All` scope in favor of dedicated per-agent `AgentNAlertFolderName` parameters; fixed Agent 5's config filter accordingly; added §9 naming design rule for future agents; cleaned up internal flow action names and the Power App Agent Heartbeat legend to drop the old "Agent 3.01/3.02/3.03" labels; consolidated `Documentation/` by archiving superseded files into `ARCHIVE/`. |
+| 2026-08-13 | Agent 4 rebuilt: Select+Join config loading (replacing the per-row loop), removed dead RealDMP indicator-file scaffolding. Power App Cockpit now calls Agent 4 directly and binds its dashboard (Files band, Agent 2 email-classification ring, Agent Heartbeat) to live data instead of static placeholders. Several Cockpit GUI fixes (heartbeat card layout, header title contrast in light mode, KPI column alignment, sidebar scrollbar, button drop shadows). |
+| 2026-08-14 | Added alert-mail-then-move pattern (mirroring Agents 1–3) to Agent 4 and Agent 5 for error notifications. |
+| 2026-08-24 | Added the `Agent Audit Summary` table to `AuditTrail.xlsx` (per-agent, per-outcome step/run counters with a last-update timestamp per counter) and wired all 5 agents to maintain it; Agent 4 now aggregates real Critical/Warning/Total-runs figures from this table instead of always returning 0 (§2.4, §5.1, §7 updated accordingly). Prepared the backend (`Audit Acknowledgment` table) for a future warning/alert acknowledgment feature (UI not yet built). Fixed a dark/light theme toggle flicker on the Cockpit screen (§3.5). |
+| 2026-08-24 | Completed a full tile-by-tile review of the Cockpit screen (`scrHome.pa.yaml`, all 8 containers): fixed hardcoded KPI colors, a hardcoded operating-mode label, a fabricated "last changed" name/timestamp, two hardcoded domain counts, a legend color mismatch in the email ring, two fabricated "Next Steps" detail texts, and multiple text-encoding (mojibake) artifacts (§3.6). All Cockpit tiles now show genuinely live data or non-data-claiming guidance text. |
 
 ---
 

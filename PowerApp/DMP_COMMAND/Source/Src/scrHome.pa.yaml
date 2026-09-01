@@ -1837,12 +1837,12 @@ Screens:
                                                           Set(varTriggerEmergencyUpload, true)
                                                       )
                                                   )
-                                          PressedColor: =RGBA(255,255,255,0.01)
-                                          PressedFill: =RGBA(255,255,255,0.01)
-                                          Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
-                                          Width: =82
-                                          X: =-6
-                                          Y: =-16
+                                                PressedColor: =RGBA(255,255,255,0.01)
+                                                PressedFill: =RGBA(255,255,255,0.01)
+                                                Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
+                                                Width: =82
+                                                X: =-6
+                                                Y: =-16
                               - conFilesRow:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout

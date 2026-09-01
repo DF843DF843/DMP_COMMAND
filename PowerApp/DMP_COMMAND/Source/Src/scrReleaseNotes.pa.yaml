@@ -186,6 +186,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1131:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1131Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.13.1 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1131Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =260
+                              Size: =12
+                              Text: ="- Hotfix - v1.13.0 could not be opened in Studio (a ""Wrap"" setting was mistakenly added to several buttons, which only Labels support, plus one line had drifted out of its correct indentation) - both fixed, no visible/functional change" & Char(10) & "- Audit Trail (Detail) page filled in - shows the 10 most recent Critical and 10 most recent Warning rows read live from the central Audit Trail, plus a link to open the full file (Agent 4 v1.4.0 now also reads and returns these rows)"
+                              Wrap: =true
                   - conReleaseV1130:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -217,7 +262,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.13.0 - 2026-09-01 (current)"
+                              Text: ="v1.13.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1130Notes:
                             Control: Label@2.5.1
@@ -749,7 +794,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 4 (Status Check) - v1.3.0 (current)"
+                              Text: ="Agent 4 (Status Check) - v1.4.0 (current)"
                               Wrap: =false
                         - lblAgentNote4Notes:
                             Control: Label@2.5.1
@@ -761,7 +806,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =300
                               Size: =12
-                              Text: ="- v1.3.0 (2026-09-01) - Internal Domains status check now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before"
+                              Text: ="- v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page" & Char(10) & "- v1.3.0 (2026-09-01) - Internal Domains status check now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before"
                               Wrap: =true
                   - conAgentNote1:
                       Control: GroupContainer@1.5.0

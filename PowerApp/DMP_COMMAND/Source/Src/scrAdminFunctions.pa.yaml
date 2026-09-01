@@ -377,7 +377,6 @@ Screens:
                                     Size: =11
                                     Text: ="No DMP"
                                     Width: =110
-                                    Wrap: =false
                               - btnResetCounterInternalSender:
                                   Control: Classic/Button@2.2.0
                                   Properties:
@@ -399,7 +398,6 @@ Screens:
                                     Size: =11
                                     Text: ="Internal Sender"
                                     Width: =160
-                                    Wrap: =false
                               - btnResetCounterEffected:
                                   Control: Classic/Button@2.2.0
                                   Properties:
@@ -421,7 +419,6 @@ Screens:
                                     Size: =11
                                     Text: ="External"
                                     Width: =110
-                                    Wrap: =false
                               - btnResetCounterNotEffected:
                                   Control: Classic/Button@2.2.0
                                   Properties:
@@ -443,7 +440,6 @@ Screens:
                                     Size: =11
                                     Text: ="Not Effected"
                                     Width: =150
-                                    Wrap: =false
                               - btnResetAllCounters:
                                   Control: Classic/Button@2.2.0
                                   Properties:
@@ -466,7 +462,6 @@ Screens:
                                     Size: =11
                                     Text: ="Reset ALL"
                                     Width: =110
-                                    Wrap: =false
                         - conAdminConfirmResetCounter:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout

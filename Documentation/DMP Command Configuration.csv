@@ -57,7 +57,7 @@
 "CounterTableColumnNameCounter","Yes","File",,"Column name used for counter values in Counter.xlsx.","Text","Agent 02","Number_Processed_Emails","Number_Processed_Emails","Number_Processed_Emails","Number_Processed_Emails"
 "CounterTableColumnNamePath","Yes","File",,"Column name used for counter path/category values in Counter.xlsx.","Text","Agent 02","Workflow","Workflow","Workflow","Workflow"
 "CounterTableName","Yes","File",,"Excel table name used by Agent 2 in Counter.xlsx.","Text","Agent 02","DMP_Email_Counter","DMP_Email_Counter","DMP_Email_Counter","DMP_Email_Counter"
-"CurrentOperationMode","Yes","Runtime","SIMU_DMP","Stores the currently active operating mode for all DMP COMMAND components and agents.","Text","Global","PROD_NODMP","PROD_DMP","SIMU_NODMP","SIMU_DMP"
+"CurrentOperationMode","Yes","Runtime","SIMU_NODMP","Stores the currently active operating mode for all DMP COMMAND components and agents.","Text","Global","PROD_NODMP","PROD_DMP","SIMU_NODMP","SIMU_DMP"
 "DashboardStatusColor","Yes","GUI",,"Logical dashboard status color used by Power Apps controls.","Text","PowerApps","Green","Red","Blue","Orange"
 "DMPCAMSTeamEmail","Yes","Mail",,"Primary recipient mailbox for DMP affected member forwarding requests. (CAMS)","Email","Global","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com"
 "DMPPortingTeamEmail","Yes","Mail",,"CC recipient mailbox for DMP affected member forwarding requests. (Porting Team)","Email","Global","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com","DMP_Communication_Agent_Team@deutsche-boerse.com"
@@ -85,16 +85,23 @@
 "OperationModeDescription","Yes","Mode",,"Business description of the active operating mode.","Text","Global","Production mode without active DMP event.","Production mode with active DMP event.","Simulation mode without active DMP event.","Fire Drill simulation with active DMP event."
 "OperationModeDisplayName","Yes","Mode",,"Human-readable operating mode label for dashboards, mails and audit entries.","Text","Global","Production - No DMP","Production - DMP","Simulation - No DMP","Fire Drill"
 "OperationModeShortLabel","Yes","Mode",,"Short operating mode label for compact GUI display in DMP COMMAND.","Text","PowerApps","PROD / NO DMP","PROD / DMP","SIMU / NO DMP","FIRE DRILL"
+"PowerAppVersionFileName","Yes","File",,"Text file storing the current Power App version number; edited directly by the AI/maintainer instead of via a Power-Fx formula in Studio.
+","Text","PowerApps","PowerApp_Version.txt
+","PowerApp_Version.txt
+","PowerApp_Version.txt
+","PowerApp_Version.txt
+"
+"PowerAppVersionFolderName","Yes","Path",,"SharePoint folder containing the Power App version text file, read by Agent 4 and displayed in the Cockpit header.","Path","PowerApps","/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage","/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage","/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage","/Shared Documents/Email Hotline/AI_Agent/PowerApp_Storage"
 "ProcessedMailsRootFolderName","Yes","Mail",,"Root folder in the shared mailbox for processed-mail evidence.","Text","Global","PA Processed Mails","PA Processed Mails","PA Processed Mails","PA Processed Mails"
 "RejectedFolderAgent3","Yes","Path",,"Agent 03 rejected folder used to retain invalid workbook submissions for review.","Path","Agent 03","/Shared Documents/Email Hotline/AI_Agent/Agent03_Rejected","/Shared Documents/Email Hotline/AI_Agent/Agent03_Rejected","/Shared Documents/Email Hotline/AI_Agent/Agent03_Rejected","/Shared Documents/Email Hotline/AI_Agent/Agent03_Rejected"
 "RequiredWorksheetName","Yes","File",,"Mandatory worksheet name expected in uploaded Emergency Report workbooks.","Text","Agent 03","Emergency Contacts","Emergency Contacts","Emergency Contacts","Emergency Contacts"
 "RunPrefixAgent1","Yes","Audit",,"Audit StepName prefix used by Agent 1.","Text","Agent 01","DOMPREP","DOMPREP","DOMPREP","DOMPREP"
 "RunPrefixAgent2","Yes","Audit",,"Audit StepName prefix used by Agent 2.","Text","Agent 02","EMAIL","EMAIL","EMAIL","EMAIL"
 "SharedDMPMailbox","Yes","Mail",,"Shared DMP mailbox used by all relevant agents for outgoing mails and evidence handling.","Email","Global","default@eurex.com","default@eurex.com","default@eurex.com","default@eurex.com"
-"StatusCheckAuditCardEnabled","Yes","GUI",,"Controls whether the Audit Trail status card is included in Agent 4 status return logic.","Boolean","Agent 04","true","true","true","true"
-"StatusCheckCounterCardEnabled","Yes","GUI",,"Controls whether the Counter status card is included in Agent 3.02 status return logic.","Boolean","Agent 04","true","true","true","true"
-"StatusCheckDomainsCardEnabled","Yes","GUI",,"Controls whether domain status cards are included in Agent 3.02 status return logic.","Boolean","Agent 04","true","true","true","true"
-"StatusCheckEmergencyReportCardEnabled","Yes","GUI",,"Controls whether the Emergency Report status card is included in Agent 3.02 status return logic.","Boolean","Agent 04","true","true","true","true"
+"StatusCheckAuditCardEnabled","Yes","GUI",,"Controls whether the Audit Trail status card is included in Agent 04 status return logic.","Boolean","Agent 04","true","true","true","true"
+"StatusCheckCounterCardEnabled","Yes","GUI",,"Controls whether the Counter status card is included in Agent 04 status return logic.","Boolean","Agent 04","true","true","true","true"
+"StatusCheckDomainsCardEnabled","Yes","GUI",,"Controls whether domain status cards are included in Agent 04 status return logic.","Boolean","Agent 04","true","true","true","true"
+"StatusCheckEmergencyReportCardEnabled","Yes","GUI",,"Controls whether the Emergency Report status card is included in Agent 04 status return logic.","Boolean","Agent 04","true","true","true","true"
 "SubjectPrefix","Yes","Mail",,"Prefix added to agent-generated mail subjects according to the current operating mode.","Text","Global","[!! NORMAL OPERATIONS !!]","[!! ACTIVE DMP !!]","[!! SIMULATION !! NO DMP / NORMAL OPERATIONS TEST !!] ","[!! SIMULATION !! DMP FIRE DRILL ACTIVE !!]"
 "WaitSecondsBeforeSentMailSearch","Yes","System",,"Waiting time before searching Sent Items for newly created agent alert mails.","Number","Global","10","10","10","10"
 "WorkflowPathAgent1","Yes","Audit",,"WorkflowPath value used by Agent 1 audit entries.","Text","Agent 01","Agent01_DomainPreparation","Agent01_DomainPreparation","Agent01_DomainPreparation","Agent01_DomainPreparation"
@@ -102,4 +109,4 @@
 "WorkflowPathAgent3","Yes","Audit",,"WorkflowPath value used by Agent 3 audit entries.","Text","Agent 03","Agent03_EmergencyReportManagement","Agent03_EmergencyReportManagement","Agent03_EmergencyReportManagement","Agent03_EmergencyReportManagement"
 "WorkflowPathAgent4","Yes","Audit",,"WorkflowPath value used by Agent 4 audit entries.","Text","Agent 04","Agent04_StatusCheck","Agent04_StatusCheck","Agent04_StatusCheck","Agent04_StatusCheck"
 "WorkflowPathAgent5","Yes","Audit",,"WorkflowPath value used by Agent 5 audit entries.","Text","Agent 05","Agent05_OperationalStateManagement","Agent05_OperationalStateManagement","Agent05_OperationalStateManagement","Agent05_OperationalStateManagement"
-"WorkFolderAgent3","Yes","Path",,"Temporary Agent 3 work folder used for workbook validation and controlled processing.","Path","Agent 03","/Shared Documents/Email Hotline/AI_Agent/Agent3_Work","/Shared Documents/Email Hotline/AI_Agent/Agent3_Work","/Shared Documents/Email Hotline/AI_Agent/Agent3_Work","/Shared Documents/Email Hotline/AI_Agent/Agent3_Work"
+"WorkFolderAgent3","Yes","Path",,"Temporary Agent 3 work folder used for workbook validation and controlled processing.","Path","Agent 03","/Shared Documents/Email Hotline/AI_Agent/Agent03_Work","/Shared Documents/Email Hotline/AI_Agent/Agent03_Work","/Shared Documents/Email Hotline/AI_Agent/Agent03_Work","/Shared Documents/Email Hotline/AI_Agent/Agent3_Work"
