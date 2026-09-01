@@ -10,7 +10,26 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🆕 NEU (2026-09-01): Backlog-Punkt – User-seitiges Zurücksetzen der Critical/Warnings-Zähler
+# 🔴 STATUS-ÜBERSICHT (2026-09-01, Ende der Sitzung): Alle offenen Punkte
+
+**Kontext:** Nutzer musste die Sitzung beenden ("Ich muss jetzt zum Ende kommen") – dies ist die gesammelte Übersicht aller zu diesem Zeitpunkt offenen Punkte, damit nichts verloren geht.
+
+**✅ Heute deployed (live):**
+- Agent 6 (Admin Functions) – Counter-Reset (alle 5 Fälle) auf die SharePoint-Liste `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) umgestellt, per `pac solution import` live importiert. **Wichtig: Agent 6 wurde beim Import laut Meldung "deactivated and replaced" – muss vom Nutzer im Power-Automate-Portal manuell REAKTIVIERT werden, sonst läuft der Flow nicht.**
+- App v1.22.1 (Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung) und v1.22.2 (Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben) – frisch gepackt als `DMP_COMMAND_v1.22.2_ReadyToPublish.msapp` unter `C:\PowerAppWork\`. **Wichtig: Die Canvas-App ist KEIN Bestandteil der Dataverse-Solution (bestehende KI-Regel) – `pac solution import` deployt sie NICHT mit. Der Nutzer muss diese `.msapp`-Datei manuell in Power Apps Studio öffnen und explizit Speichern + Veröffentlichen, sonst bleiben v1.22.1/v1.22.2 nur lokal und gehen nicht live.**
+
+**🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge):**
+1. **Agent 2 SharePoint-Migration** (Counter-Inkrement + External-Domains-Lesen) – noch NICHT begonnen. Höheres Risiko, da Produktions-E-Mail-Pfad betroffen. GUIDs bereits bekannt: `DMP Command Counters` = `277307f0-195a-4e78-afc8-850dbdf956b2`, `DMP Command External Domains` = `dc89aed5-d87a-4e12-875a-db2adbc2cee4`. Bei Umsetzung: Lese-vor-Schreiben-Zyklus für den Counter (kein natives Atomic-Increment in SharePoint).
+2. **Agent 1 SharePoint-Migration** (External-Domains-Schreiben, Full-Sync-Pattern: erst alle Zeilen löschen, dann neu anlegen) – noch NICHT begonnen, folgt nach Agent 2.
+3. **Aufräumen (klein, risikolos):** In Agent 6 werden die alten Excel-Konfigurationswerte `CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter` (in der Liste `DMP Command Configuration`) nicht mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
+4. **Zusammenarbeits-Dokument (Englisch):** Eigenständiges Markdown-Dokument, das NICHT die DMP-COMMAND-Produktfunktionen beschreibt, sondern unsere Zusammenarbeit dokumentiert – KI-Arbeitsregeln und Best Practices, wie sie sich über die Sitzungen entwickelt haben (Validierungsdisziplin vor jedem Deploy, Umgang mit riskanten Änderungen, Doc-Sync-Pflicht, gestaffeltes Ausrollen bei Produktionscode usw.). Zielgruppe: eine andere KI, die daraus eine PowerPoint-Präsentation erstellen soll. Rein deskriptiv, kein Bezug zu Roadmap/Backlog. Noch nicht begonnen.
+5. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
+6. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` für die beiden neuen SharePoint-Listen – nicht angelegt (Listen sind bereits vom Nutzer erstellt, daher niedrige Priorität, ggf. nicht mehr nötig).
+7. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
+8. **Ungeklärt:** Ob es zwei separate "DMP Command Counters"-Listen gibt (Teams-Tab zeigte "(2)" im Namen) – aus den `DataSources.json`-Daten der App gibt es nur EINEN verbundenen Eintrag, daher vermutlich nur ein Tab-Namensartefakt, aber vom Nutzer nie explizit bestätigt. Bei Gelegenheit im Teams-Kanal kurz gegenchecken.
+
+---
+
 
 **Nutzerwunsch:** "CRITICAL und WARNINGS counter sollten durch den User 'zurückgesetzt' werden können, damit da nicht die ganze Zeit eine Zahl >0 steht!"
 
