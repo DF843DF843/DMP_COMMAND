@@ -89,48 +89,535 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
-            - conAgentMonitoringComingSoon:
+            - conAgentMonitoringRow1:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
                 Properties:
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
-                  BorderColor: =RGBA(120,115,140,0.35)
-                  BorderThickness: =1
-                  FillPortions: =1
-                  LayoutAlignItems: =LayoutAlignItems.Center
-                  LayoutDirection: =LayoutDirection.Vertical
-                  LayoutJustifyContent: =LayoutJustifyContent.Center
-                  PaddingBottom: =16
-                  PaddingLeft: =16
-                  PaddingRight: =16
-                  PaddingTop: =16
-                  RadiusBottomLeft: =12
-                  RadiusBottomRight: =12
-                  RadiusTopLeft: =12
-                  RadiusTopRight: =12
+                  Fill: =RGBA(0,0,0,0)
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  Height: =150
+                  LayoutMaxHeight: =150
+                  LayoutMinHeight: =150
                 Children:
-                  - lblAgentMonitoringComingSoon:
-                      Control: Label@2.5.1
+                  - conAgentTile01:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
-                        FontWeight: =FontWeight.Bold
-                        Height: =32
-                        Size: =18
-                        Text: ="Coming Soon"
-                        Width: =400
-                  - lblAgentMonitoringComingSoonHint:
-                      Control: Label@2.5.1
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile01:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile01Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 1 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile01Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile01LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_01")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile01Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_01").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
+                  - conAgentTile02:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
-                        Height: =24
-                        Size: =12
-                        Text: ="This screen will be filled in step by step in a future update."
-                        Width: =500
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile02:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile02Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 2 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile02Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile02LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_02")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile02Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_02").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
+                  - conAgentTile03:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile03:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile03Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 3 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile03Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile03LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_03")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile03Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_03").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
+            - conAgentMonitoringRow2:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  Fill: =RGBA(0,0,0,0)
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =8
+                  Height: =150
+                  LayoutMaxHeight: =150
+                  LayoutMinHeight: =150
+                Children:
+                  - conAgentTile04:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile04:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile04Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 4 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile04Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile04LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_04")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile04Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_04").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
+                  - conAgentTile05:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile05:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile05Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 5 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile05Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile05LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_05")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile05Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_05").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
+                  - conAgentTile06:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =1
+                        Height: =150
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - dotAgentTile06:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
+                            Properties:
+                              Fill: =If(LookUp('DMP Command Agent Status', AgentKey="Agent_06").CurrentStatus.Value="Operational",RGBA(0,206,125,1),RGBA(255,69,58,1))
+                              Height: =14
+                              RadiusBottomLeft: =7
+                              RadiusBottomRight: =7
+                              RadiusTopLeft: =7
+                              RadiusTopRight: =7
+                              Width: =14
+                              X: =16
+                              Y: =14
+                        - lblAgentTile06Name:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =13
+                              Text: ="Agent 6 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_06").AgentDisplayName
+                              Width: =380
+                              Wrap: =false
+                              X: =38
+                              Y: =11
+                        - lblAgentTile06Status:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_06").CurrentStatus.Value
+                              Width: =420
+                              Wrap: =false
+                              X: =16
+                              Y: =42
+                        - lblAgentTile06LastRun:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =18
+                              Size: =11
+                              Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_06")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =64
+                        - lblAgentTile06Message:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =56
+                              Size: =10.5
+                              Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_06").StatusMessage,"")
+                              Width: =480
+                              Wrap: =true
+                              X: =16
+                              Y: =88
