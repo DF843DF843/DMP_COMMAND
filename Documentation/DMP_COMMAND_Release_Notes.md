@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.19.0 - 2026-09-01 (current)
+### v1.20.0 - 2026-09-01 (current)
+
+- Help / Operational Manual redesigned with the same version-menu pattern as Release Notes - a small section menu on the left (About this manual, Colour/LED legend, Top bar, Operating State, Maintenance Domains, Files, System Health, Emails Processed, Automation Status, Next Steps, Sidebar navigation), one large readable container on the right
+- The right side is now split in two - a screenshot area on the left (currently a placeholder until real screenshots are provided) and the description text on the right, as requested
+- No content was changed, only the layout - all existing section texts are unchanged
+
+### v1.19.0 - 2026-09-01
 
 - Release Notes redesigned - a small version menu now sits on the left (click any version to view it), with one large, fully readable container on the right showing the selected version's full description, for both the App Changes and Agent (Flow) Changes tabs
 - Fixed the Copy to Clipboard button, which had not been updated since around v1.11.0 and was silently missing nine newer versions - it now always copies the complete history of the currently selected tab
