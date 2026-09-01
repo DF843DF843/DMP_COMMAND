@@ -521,24 +521,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "No DMP"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'No DMP'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'No DMP' counter value before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
+                  "description": "Reads the current 'No DMP' counter row from the DMP Command Counters SharePoint list before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
                 },
                 "PATCH_CounterRow_NoDMP": {
                   "runAfter": {
@@ -549,17 +547,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "No DMP",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_NoDMP')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -567,7 +562,7 @@
                       "type": "Raw"
                     }
                   },
-                  "description": "Resets the 'No DMP' counter to 0 in Counter.xlsx."
+                  "description": "Resets the 'No DMP' counter to 0 in the DMP Command Counters SharePoint list."
                 },
                 "SET_ResultMessage_ResetNoDMP": {
                   "runAfter": {
@@ -578,7 +573,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('Counter ''No DMP'' reset from ', coalesce(string(body('GET_CounterRow_NoDMP')?['Number_Processed_Emails']), '0'), ' to 0.')"
+                    "value": "@concat('Counter ''No DMP'' reset from ', coalesce(string(first(body('GET_CounterRow_NoDMP')?['value'])?['NumberProcessedEmails']), '0'), ' to 0.')"
                   },
                   "description": "Records the before-value in the result message, which the existing run-summary step then writes to the Audit Trail (Operational History)."
                 },
@@ -605,24 +600,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP internal Sender"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP internal Sender'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP internal Sender' counter value before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
+                  "description": "Reads the current 'DMP internal Sender' counter row from the DMP Command Counters SharePoint list before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
                 },
                 "PATCH_CounterRow_InternalSender": {
                   "runAfter": {
@@ -633,17 +626,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP internal Sender",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_InternalSender')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -651,7 +641,7 @@
                       "type": "Raw"
                     }
                   },
-                  "description": "Resets the 'DMP internal Sender' counter to 0 in Counter.xlsx."
+                  "description": "Resets the 'DMP internal Sender' counter to 0 in the DMP Command Counters SharePoint list."
                 },
                 "SET_ResultMessage_ResetInternalSender": {
                   "runAfter": {
@@ -662,7 +652,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('Counter ''DMP internal Sender'' reset from ', coalesce(string(body('GET_CounterRow_InternalSender')?['Number_Processed_Emails']), '0'), ' to 0.')"
+                    "value": "@concat('Counter ''DMP internal Sender'' reset from ', coalesce(string(first(body('GET_CounterRow_InternalSender')?['value'])?['NumberProcessedEmails']), '0'), ' to 0.')"
                   },
                   "description": "Records the before-value in the result message, which the existing run-summary step then writes to the Audit Trail (Operational History)."
                 },
@@ -689,24 +679,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP effected Member"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP effected Member'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP effected Member' counter value before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
+                  "description": "Reads the current 'DMP effected Member' counter row from the DMP Command Counters SharePoint list before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
                 },
                 "PATCH_CounterRow_Effected": {
                   "runAfter": {
@@ -717,17 +705,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP effected Member",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_Effected')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -735,7 +720,7 @@
                       "type": "Raw"
                     }
                   },
-                  "description": "Resets the 'DMP effected Member' counter to 0 in Counter.xlsx."
+                  "description": "Resets the 'DMP effected Member' counter to 0 in the DMP Command Counters SharePoint list."
                 },
                 "SET_ResultMessage_ResetEffected": {
                   "runAfter": {
@@ -746,7 +731,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('Counter ''DMP effected Member'' reset from ', coalesce(string(body('GET_CounterRow_Effected')?['Number_Processed_Emails']), '0'), ' to 0.')"
+                    "value": "@concat('Counter ''DMP effected Member'' reset from ', coalesce(string(first(body('GET_CounterRow_Effected')?['value'])?['NumberProcessedEmails']), '0'), ' to 0.')"
                   },
                   "description": "Records the before-value in the result message, which the existing run-summary step then writes to the Audit Trail (Operational History)."
                 },
@@ -773,24 +758,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP not effected Sender"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP not effected Sender'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP not effected Sender' counter value before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
+                  "description": "Reads the current 'DMP not effected Sender' counter row from the DMP Command Counters SharePoint list before resetting it, so the previous value is captured for the Audit Trail (Operational History)."
                 },
                 "PATCH_CounterRow_NotEffected": {
                   "runAfter": {
@@ -801,17 +784,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP not effected Sender",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_NotEffected')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -819,7 +799,7 @@
                       "type": "Raw"
                     }
                   },
-                  "description": "Resets the 'DMP not effected Sender' counter to 0 in Counter.xlsx."
+                  "description": "Resets the 'DMP not effected Sender' counter to 0 in the DMP Command Counters SharePoint list."
                 },
                 "SET_ResultMessage_ResetNotEffected": {
                   "runAfter": {
@@ -830,7 +810,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('Counter ''DMP not effected Sender'' reset from ', coalesce(string(body('GET_CounterRow_NotEffected')?['Number_Processed_Emails']), '0'), ' to 0.')"
+                    "value": "@concat('Counter ''DMP not effected Sender'' reset from ', coalesce(string(first(body('GET_CounterRow_NotEffected')?['value'])?['NumberProcessedEmails']), '0'), ' to 0.')"
                   },
                   "description": "Records the before-value in the result message, which the existing run-summary step then writes to the Audit Trail (Operational History)."
                 },
@@ -857,24 +837,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "No DMP"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'No DMP'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'No DMP' counter value before resetting all counters."
+                  "description": "Reads the current 'No DMP' counter row before resetting all counters."
                 },
                 "PATCH_CounterRow_All_NoDMP": {
                   "runAfter": {
@@ -885,17 +863,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "No DMP",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_All_NoDMP')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -914,24 +889,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP internal Sender"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP internal Sender'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP internal Sender' counter value before resetting all counters."
+                  "description": "Reads the current 'DMP internal Sender' counter row before resetting all counters."
                 },
                 "PATCH_CounterRow_All_InternalSender": {
                   "runAfter": {
@@ -942,17 +915,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP internal Sender",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_All_InternalSender')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -971,24 +941,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP effected Member"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP effected Member'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP effected Member' counter value before resetting all counters."
+                  "description": "Reads the current 'DMP effected Member' counter row before resetting all counters."
                 },
                 "PATCH_CounterRow_All_Effected": {
                   "runAfter": {
@@ -999,17 +967,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP effected Member",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_All_Effected')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -1028,24 +993,22 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP not effected Sender"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'DMP not effected Sender'",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": {
                       "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                       "type": "Raw"
                     }
                   },
-                  "description": "Reads the current 'DMP not effected Sender' counter value before resetting all counters."
+                  "description": "Reads the current 'DMP not effected Sender' counter row before resetting all counters."
                 },
                 "PATCH_CounterRow_All_NotEffected": {
                   "runAfter": {
@@ -1056,17 +1019,14 @@
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "DMP not effected Sender",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": 0}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('GET_CounterRow_All_NotEffected')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": 0
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": {
@@ -1085,7 +1045,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('All counters reset to 0. Previous values - No DMP: ', coalesce(string(body('GET_CounterRow_All_NoDMP')?['Number_Processed_Emails']), '0'), ', DMP internal Sender: ', coalesce(string(body('GET_CounterRow_All_InternalSender')?['Number_Processed_Emails']), '0'), ', DMP effected Member: ', coalesce(string(body('GET_CounterRow_All_Effected')?['Number_Processed_Emails']), '0'), ', DMP not effected Sender: ', coalesce(string(body('GET_CounterRow_All_NotEffected')?['Number_Processed_Emails']), '0'), '.')"
+                    "value": "@concat('All counters reset to 0. Previous values - No DMP: ', coalesce(string(first(body('GET_CounterRow_All_NoDMP')?['value'])?['NumberProcessedEmails']), '0'), ', DMP internal Sender: ', coalesce(string(first(body('GET_CounterRow_All_InternalSender')?['value'])?['NumberProcessedEmails']), '0'), ', DMP effected Member: ', coalesce(string(first(body('GET_CounterRow_All_Effected')?['value'])?['NumberProcessedEmails']), '0'), ', DMP not effected Sender: ', coalesce(string(first(body('GET_CounterRow_All_NotEffected')?['value'])?['NumberProcessedEmails']), '0'), '.')"
                   },
                   "description": "Records all 4 before-values in the result message, which the existing run-summary step then writes to the Audit Trail (Operational History)."
                 },

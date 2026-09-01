@@ -112,6 +112,20 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
+## ✅ Update (2026-09-01): Beide Listen angelegt, Agent 6 auf SharePoint umgestellt
+
+**Beide Listen wurden vom Nutzer angelegt und mit der App verbunden.** Die App wurde erneut veröffentlicht, wodurch die KI die internen SharePoint-GUIDs per `pac canvas download` (frischer Export der `DataSources.json`) ermitteln konnte:
+- `DMP Command Counters` → GUID `277307f0-195a-4e78-afc8-850dbdf956b2`
+- `DMP Command External Domains` → GUID `dc89aed5-d87a-4e12-875a-db2adbc2cee4`
+
+**Agent 6 (Counter-Reset) fertig umgebaut:** Alle 5 Fälle (`Case_ResetCounter_NoDMP`, `_InternalSender`, `_Effected`, `_NotEffected`, `Case_ResetAllCounters`) nutzen jetzt `GetItems` mit `$filter: "Title eq '...'"` gefolgt von `PatchItem` mit `id: =first(body('GET_...')?['value'])?['ID']` und `item/NumberProcessedEmails: 0`, statt der alten Excel-`GetItem`/`PatchItem`-Aktionen. Die verwaisten Konfigurationswerte (`CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter`) werden nicht mehr referenziert – sie können bei Gelegenheit aus der `DMP Command Configuration`-Liste entfernt werden (rein aufräumend, keine Funktionsauswirkung, da nichts mehr darauf zugreift).
+- Vollständig validiert (JSON-Syntax, Klammerbalance, keine Beschreibung >255 Zeichen, keine doppelten Aktionsnamen) und ins Git-Repository committet – **noch NICHT live importiert** (`pac solution import`), wartet auf Nutzer-Test.
+
+**Noch offen:** Agent 2 (Counter-Inkrement + External-Domains-Lesen) und Agent 1 (External-Domains-Schreiben/Full-Sync) – als Nächstes in dieser Reihenfolge.
+
+---
+
+
 
 
 **Anlass:** Fortsetzung der Anmerkungsrunde ("Ich schicke dir jetzt die Anmerkungen einzeln") plus Nutzerauftrag im Autopilot-Modus ("die App wie besprochen aus[bauen], integriere auch gleich die Verwaltung der internen domains, prüfe auch, dass der reserved space sich in das Layout einpasst").

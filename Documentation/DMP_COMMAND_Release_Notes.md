@@ -4,7 +4,19 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.0 - 2026-09-01 (current)
+### v1.22.2 - 2026-09-01 (current)
+
+- Fixed a text-wrap regression in the Maintenance Domains 'Replace' button, caused by the v1.22.0 Arial font migration (Arial is wider than Segoe UI at the same point size, so 'Replace' no longer fit on one line) - added an explicit no-wrap setting and widened the button slightly
+- Internal/External Domains View, Edit and Replace buttons shifted slightly further left for a bit more breathing room from the card's right edge
+
+### v1.22.1 - 2026-09-01
+
+- Header and Next Steps container width now bound directly to the actual rendered width of the Cockpit's card row, instead of a separate hardcoded number - guarantees their right edges always line up exactly with the cards, regardless of any future width tuning
+- Header KPI numbers (Critical/Warnings/Agents Active), the version badge and the Dark/Light toggle shifted further left for a safer margin from the header's rounded right corner
+- Periodic auto-refresh timer split into its own dedicated timer (same pattern as the earlier Replace fix) - fixes the LED staying solid yellow instead of blinking during a periodic refresh
+- Next Steps status pill widened to actually fill its row instead of stopping halfway
+
+### v1.22.0 - 2026-09-01
 
 - Typography aligned with the official Eurex Brand Manual (page 39/40) - the manual itself specifies Arial as the correct system-compatible substitute for its Replica/Noto Sans brand fonts on platforms without embedded custom fonts, which is exactly our situation (a browser-based Power App)
 - Every text across all 9 screens switched from Segoe UI to Arial (367 formula updates), a purely visual change - no layout, colors, or functionality affected

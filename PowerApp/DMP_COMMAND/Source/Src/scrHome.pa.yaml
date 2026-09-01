@@ -281,7 +281,7 @@ Screens:
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
-                        Width: =1566
+                        Width: =conRow1.Width
                       Children:
                         - lblAppTitle:
                             Control: Label@2.5.1
@@ -601,62 +601,7 @@ Screens:
                                     Set(varAutoRefreshSecondsRemaining, 0),
                                     If(
                                         varAutoRefreshSecondsRemaining<=1,
-                                        Set(varStatusCallError, "");
-                                        Set(varLastAttemptTimestamp, Now());
-                                        Set(varIsRefreshing, true);
-                                        Set(
-                                            varStatusResult,
-                                            IfError(
-                                                'DMPAgent4(StatusCheck)=>VS'.Run(),
-                                                Set(varStatusCallError, FirstError.Message);
-                                                Blank()
-                                            )
-                                        );
-                                        Set(varIsRefreshing, false);
-                                        Refresh('DMP Command Agent Status');
-                                        Refresh('DMP Command Configuration');
-                                        Refresh('DMP Command Internal Domains');
-                                        Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
-                                        Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
-                                        Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
-                                        Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
-                                        Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
-                                        Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
-                                        Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
-                                        Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
-                                        Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
-                                        Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
-                                        Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                        Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                        Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                        Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                        Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
-                                        Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
-                                        Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
-                                        Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
-                                        Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
-                                        Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
-                                        Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
-                                        Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
-                                        Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
-                                        Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
-                                        Set(
-                                            varAgentsHealthyCount,
-                                            If(varEmergencyReportExists,1,0) +
-                                            If(varInternalDomainsExists,1,0) +
-                                            If(varExternalDomainsExists,1,0) +
-                                            If(varCounterExists,1,0) +
-                                            If(varAuditTrailExists,1,0) +
-                                            If(varAgent6Healthy,1,0)
-                                        );
-                                        Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-                                        Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
-                                        Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
-                                        If(
-                                            !varSuppressToggleEvents,
-                                            Reset(tglOperationalState);
-                                            Reset(tglApplicationMode)
-                                        );
+                                        Set(varTriggerPeriodicRefresh, true);
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
                                         ,
                                         Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
@@ -668,6 +613,82 @@ Screens:
                               Visible: =true
                               Width: =1
                               X: =0
+                              Y: =2
+                        - tmrPeriodicDataRefresh:
+                            Control: Timer@2.1.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Duration: =200
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =1
+                              OnTimerEnd: |-
+                                =If(
+                                    varTriggerPeriodicRefresh,
+                                    Set(varTriggerPeriodicRefresh, false);
+                                    Set(varStatusCallError, "");
+                                    Set(varLastAttemptTimestamp, Now());
+                                    Set(varIsRefreshing, true);
+                                    Set(
+                                        varStatusResult,
+                                        IfError(
+                                            'DMPAgent4(StatusCheck)=>VS'.Run(),
+                                            Set(varStatusCallError, FirstError.Message);
+                                            Blank()
+                                        )
+                                    );
+                                    Set(varIsRefreshing, false);
+                                    Refresh('DMP Command Agent Status');
+                                    Refresh('DMP Command Configuration');
+                                    Refresh('DMP Command Internal Domains');
+                                    Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
+                                    Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
+                                    Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
+                                    Set(varEmergencyReportLastModified, Coalesce(varStatusResult.emergencyreportlastmodified, varEmergencyReportLastModified));
+                                    Set(varInternalDomainsExists, Coalesce(varStatusResult.internaldomainsexists, varInternalDomainsExists));
+                                    Set(varInternalDomainsCount, Coalesce(varStatusResult.internaldomainscount, varInternalDomainsCount));
+                                    Set(varInternalDomainsLastModified, Coalesce(varStatusResult.internaldomainslastmodified, varInternalDomainsLastModified));
+                                    Set(varExternalDomainsExists, Coalesce(varStatusResult.externaldomainsexists, varExternalDomainsExists));
+                                    Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
+                                    Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
+                                    Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
+                                    Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
+                                    Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
+                                    Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
+                                    Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                    Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
+                                    Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+                                    Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+                                    Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
+                                    Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                                    Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                                    Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
+                                    Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                    Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
+                                    Set(
+                                        varAgentsHealthyCount,
+                                        If(varEmergencyReportExists,1,0) +
+                                        If(varInternalDomainsExists,1,0) +
+                                        If(varExternalDomainsExists,1,0) +
+                                        If(varCounterExists,1,0) +
+                                        If(varAuditTrailExists,1,0) +
+                                        If(varAgent6Healthy,1,0)
+                                    );
+                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                    Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                    Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
+                                    If(
+                                        !varSuppressToggleEvents,
+                                        Reset(tglOperationalState);
+                                        Reset(tglApplicationMode)
+                                    )
+                                )
+                              Repeat: =true
+                              AutoStart: =true
+                              Start: =true
+                              Visible: =true
+                              Width: =1
+                              X: =8
                               Y: =2
                         - tmrProcessExternalDomainsReplace:
                             Control: Timer@2.1.0
@@ -730,7 +751,7 @@ Screens:
                               Text: =Text(Coalesce(varAuditFailedCount,0))
                               Width: =90
                               Wrap: =false
-                              X: =Parent.Width - 656
+                              X: =Parent.Width - 680
                               Y: =21
                         - lblKpiCriticalLabel:
                             Control: Label@2.5.1
@@ -746,7 +767,7 @@ Screens:
                               Text: ="CRITICAL"
                               Width: =90
                               Wrap: =false
-                              X: =Parent.Width - 656
+                              X: =Parent.Width - 680
                               Y: =62
                         - dotLedCriticalChanged:
                             Control: GroupContainer@1.5.0
@@ -762,7 +783,7 @@ Screens:
                               RadiusTopRight: =6
                               Visible: =Coalesce(varAuditFailedCount,0)<>Coalesce(varLastAckCriticalCount,0)
                               Width: =12
-                              X: =Parent.Width - 572
+                              X: =Parent.Width - 596
                               Y: =15
                         - btnAckCriticalHitArea:
                             Control: Label@2.5.1
@@ -774,7 +795,7 @@ Screens:
                               OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Text: =""
                               Width: =96
-                              X: =Parent.Width - 656
+                              X: =Parent.Width - 680
                               Y: =15
                         - lblKpiWarningsValue:
                             Control: Label@2.5.1
@@ -791,7 +812,7 @@ Screens:
                               Text: =Text(Coalesce(varAuditWarningCount,0))
                               Width: =110
                               Wrap: =false
-                              X: =Parent.Width - 568
+                              X: =Parent.Width - 592
                               Y: =21
                         - lblKpiWarningsLabel:
                             Control: Label@2.5.1
@@ -807,7 +828,7 @@ Screens:
                               Text: ="WARNINGS"
                               Width: =110
                               Wrap: =false
-                              X: =Parent.Width - 568
+                              X: =Parent.Width - 592
                               Y: =62
                         - dotLedWarningsChanged:
                             Control: GroupContainer@1.5.0
@@ -823,7 +844,7 @@ Screens:
                               RadiusTopRight: =6
                               Visible: =Coalesce(varAuditWarningCount,0)<>Coalesce(varLastAckWarningCount,0)
                               Width: =12
-                              X: =Parent.Width - 464
+                              X: =Parent.Width - 488
                               Y: =15
                         - btnAckWarningsHitArea:
                             Control: Label@2.5.1
@@ -835,7 +856,7 @@ Screens:
                               OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Text: =""
                               Width: =116
-                              X: =Parent.Width - 568
+                              X: =Parent.Width - 592
                               Y: =15
                         - lblKpiAgentsValue:
                             Control: Label@2.5.1
@@ -852,7 +873,7 @@ Screens:
                               Text: =If(IsBlank(varStatusLastRefreshed), "?/6", Coalesce(varAgentsHealthyCount,0) & "/6")
                               Width: =140
                               Wrap: =false
-                              X: =Parent.Width - 428
+                              X: =Parent.Width - 452
                               Y: =21
                         - lblKpiAgentsLabel:
                             Control: Label@2.5.1
@@ -868,7 +889,7 @@ Screens:
                               Text: ="AGENTS ACTIVE"
                               Width: =140
                               Wrap: =false
-                              X: =Parent.Width - 428
+                              X: =Parent.Width - 452
                               Y: =62
                         - dotLedAgentsChanged:
                             Control: GroupContainer@1.5.0
@@ -884,7 +905,7 @@ Screens:
                               RadiusTopRight: =6
                               Visible: =Coalesce(varAgentsHealthyCount,0)<>Coalesce(varLastAckAgentsHealthyCount,0)
                               Width: =12
-                              X: =Parent.Width - 294
+                              X: =Parent.Width - 318
                               Y: =15
                         - btnAckAgentsHitArea:
                             Control: Label@2.5.1
@@ -896,7 +917,7 @@ Screens:
                               OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Text: =""
                               Width: =146
-                              X: =Parent.Width - 428
+                              X: =Parent.Width - 452
                               Y: =15
                         - lblVersionTag:
                             Control: Label@2.5.1
@@ -917,7 +938,7 @@ Screens:
                               Text: =varAppVersion
                               Width: =95
                               Wrap: =false
-                              X: =Parent.Width - 273
+                              X: =Parent.Width - 297
                               Y: =23
                         - lblToggleLeftText:
                             Control: Label@2.5.1
@@ -932,7 +953,7 @@ Screens:
                               Text: ="DARK"
                               Width: =48
                               Wrap: =false
-                              X: =Parent.Width - 168
+                              X: =Parent.Width - 192
                               Y: =35
                         - tglTheme:
                             Control: Classic/Toggle@2.1.0
@@ -948,7 +969,7 @@ Screens:
                               TrueFill: =RGBA(0,206,125,1)
                               TrueText: =""
                               Width: =50
-                              X: =Parent.Width - 114
+                              X: =Parent.Width - 138
                               Y: =30
                         - lblToggleRightText:
                             Control: Label@2.5.1
@@ -962,7 +983,7 @@ Screens:
                               Text: ="LIGHT"
                               Width: =58
                               Wrap: =false
-                              X: =Parent.Width - 60
+                              X: =Parent.Width - 84
                               Y: =35
                   - lblDebugStatusCallError:
                       Control: Label@2.5.1
@@ -1716,7 +1737,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =50
-                                          X: =202
+                                          X: =192
                                           Y: =44
                                     - btnInternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1738,7 +1759,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =54
-                                          X: =256
+                                          X: =246
                                           Y: =44
                                     - dotExternalDomainsMD:
                                         Control: GroupContainer@1.5.0
@@ -1804,7 +1825,7 @@ Screens:
                                           Size: =12
                                           Text: ="View"
                                           Width: =50
-                                          X: =202
+                                          X: =192
                                           Y: =96
                                     - btnExternalDomainsMaintain:
                                         Control: Classic/Button@2.2.0
@@ -1826,7 +1847,7 @@ Screens:
                                           Size: =12
                                           Text: ="Edit"
                                           Width: =54
-                                          X: =256
+                                          X: =246
                                           Y: =96
                                     - conReplaceStack:
                                         Control: GroupContainer@1.5.0
@@ -1841,8 +1862,8 @@ Screens:
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
                                           RadiusTopRight: =8
-                                          Width: =70
-                                          X: =314
+                                          Width: =84
+                                          X: =304
                                           Y: =96
                                         Children:
                                           - lblReplaceFake:
@@ -1858,7 +1879,8 @@ Screens:
                                                 Height: =32
                                                 Size: =12
                                                 Text: ="Replace"
-                                                Width: =70
+                                                Width: =84
+                                                Wrap: =false
                                                 Y: =0
                                           - attExternalDomainsReplace:
                                               Control: Attachments@2.3.0
@@ -1899,7 +1921,7 @@ Screens:
                                                 PressedColor: =RGBA(255,255,255,0.01)
                                                 PressedFill: =RGBA(255,255,255,0.01)
                                                 Tooltip: ="Upload a new Emergency Report - triggers Agent 3 to regenerate External Domains"
-                                                Width: =82
+                                                Width: =96
                                                 X: =-6
                                                 Y: =-16
                               - conFilesRow:
@@ -2764,7 +2786,7 @@ Screens:
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
-                        Width: =1566
+                        Width: =conRow1.Width
                       Children:
                         - lblRealNextStepsTitle:
                             Control: Label@2.5.1
@@ -2838,6 +2860,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
+                                    Width: =1178
                                     Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow2:
                             Control: GroupContainer@1.5.0
@@ -2878,6 +2901,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
+                                    Width: =1178
                                     Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow3:
                             Control: GroupContainer@1.5.0
@@ -2918,6 +2942,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
+                                    Width: =1178
                                     Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow4:
                             Control: GroupContainer@1.5.0
@@ -2958,6 +2983,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
+                                    Width: =1178
                                     Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
                         - conMilestoneRow5:
                             Control: GroupContainer@1.5.0
@@ -2998,6 +3024,7 @@ Screens:
                                     PaddingLeft: =10
                                     PaddingRight: =10
                                     Size: =11.5
+                                    Width: =1178
                                     Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
       - conFrameTop:
           Control: GroupContainer@1.5.0
