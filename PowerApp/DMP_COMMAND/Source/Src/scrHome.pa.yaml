@@ -921,7 +921,7 @@ Screens:
                         LayoutMinHeight: =28
                         Size: =11
                         Text: =If(!IsBlank(varStatusCallError), "DEBUG - Agent 4 call error - " & varStatusCallError, "DEBUG - Failed=" & varAuditFailedCount & " | Warning=" & varAuditWarningCount & " | RunSummary=" & varAuditRunSummaryCount & " | HealthyAgents=" & varAgentsHealthyCount & " | HealthPct=" & varSystemHealthPercent & " | AuditTrailExists=" & varAuditTrailExists)
-                        Visible: =true
+                        Visible: =false
                   - conRow1:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -1633,9 +1633,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="INTERNAL"
-                                          Width: =140
+                                          Width: =120
                                           Wrap: =false
-                                          X: =66
+                                          X: =76
                                           Y: =46
                                     - btnInternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -1721,9 +1721,9 @@ Screens:
                                           Height: =32
                                           Size: =13
                                           Text: ="EXTERNAL"
-                                          Width: =140
+                                          Width: =120
                                           Wrap: =false
-                                          X: =66
+                                          X: =76
                                           Y: =98
                                     - btnExternalDomainsRead:
                                         Control: Classic/Button@2.2.0
@@ -2158,6 +2158,36 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =10
+                                    - lblAutomationStatusColHeaderSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =14
+                                          Size: =9
+                                          Text: ="SOURCE"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =180
+                                          Y: =30
+                                    - lblAutomationStatusColHeaderActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          FontWeight: =FontWeight.Semibold
+                                          Height: =14
+                                          Size: =9
+                                          Text: ="ACTIVE"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =280
+                                          Y: =30
                                     - dotAutomationStatusAgent4:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -2169,22 +2199,50 @@ Screens:
                                           RadiusTopLeft: =7
                                           RadiusTopRight: =7
                                           Width: =14
-                                          X: =16
-                                          Y: =38
+                                          X: =17
+                                          Y: =50
                                     - lblAutomationStatusAgent4:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Segoe UI'
-                                          Height: =22
+                                          Height: =18
                                           Size: =11
-                                          Text: ="Agent 4 Live Status - " & If(varIsRefreshing, "Loading...", If(varStatusCallError="", "Operational", "Error"))
-                                          Width: =418
+                                          Text: ="Agent 4 Live Status"
+                                          Width: =130
                                           Wrap: =false
-                                          X: =36
-                                          Y: =34
+                                          X: =40
+                                          Y: =48
+                                    - lblAutomationStatusAgent4Source:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Flow"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =180
+                                          Y: =48
+                                    - lblAutomationStatusAgent4Active:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =If(varIsRefreshing, "Loading...", If(varStatusCallError="", "Operational", "Error"))
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =280
+                                          Y: =48
                                     - dotAutomationStatusInternalDomains:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -2196,22 +2254,50 @@ Screens:
                                           RadiusTopLeft: =7
                                           RadiusTopRight: =7
                                           Width: =14
-                                          X: =16
-                                          Y: =64
+                                          X: =17
+                                          Y: =76
                                     - lblAutomationStatusInternalDomains:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Segoe UI'
-                                          Height: =22
+                                          Height: =18
                                           Size: =11
-                                          Text: ="Internal Domains (SharePoint) - " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes")) & " active"
-                                          Width: =418
+                                          Text: ="Internal Domains"
+                                          Width: =130
                                           Wrap: =false
-                                          X: =36
-                                          Y: =60
+                                          X: =40
+                                          Y: =74
+                                    - lblAutomationStatusInternalDomainsSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="SharePoint"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =180
+                                          Y: =74
+                                    - lblAutomationStatusInternalDomainsActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes")) & " active"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =280
+                                          Y: =74
                                     - dotAutomationStatusConfigParams:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -2223,22 +2309,50 @@ Screens:
                                           RadiusTopLeft: =7
                                           RadiusTopRight: =7
                                           Width: =14
-                                          X: =16
-                                          Y: =90
+                                          X: =17
+                                          Y: =102
                                     - lblAutomationStatusConfigParams:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Segoe UI'
-                                          Height: =22
+                                          Height: =18
                                           Size: =11
-                                          Text: ="Config Parameters active - " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
-                                          Width: =418
+                                          Text: ="Config Parameters"
+                                          Width: =130
                                           Wrap: =false
-                                          X: =36
-                                          Y: =86
+                                          X: =40
+                                          Y: =100
+                                    - lblAutomationStatusConfigParamsSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="SharePoint"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =180
+                                          Y: =100
+                                    - lblAutomationStatusConfigParamsActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =CountRows(Filter('DMP Command Configuration', Active.Value = "Yes")) & " active"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =280
+                                          Y: =100
                                     - dotAutomationStatusAgentStatus:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -2250,22 +2364,50 @@ Screens:
                                           RadiusTopLeft: =7
                                           RadiusTopRight: =7
                                           Width: =14
-                                          X: =16
-                                          Y: =116
+                                          X: =17
+                                          Y: =128
                                     - lblAutomationStatusAgentStatus:
                                         Control: Label@2.5.1
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Segoe UI'
-                                          Height: =22
+                                          Height: =18
                                           Size: =11
-                                          Text: ="Agent Status entries - " & CountRows('DMP Command Agent Status')
-                                          Width: =418
+                                          Text: ="Agent Status"
+                                          Width: =130
                                           Wrap: =false
-                                          X: =36
-                                          Y: =112
+                                          X: =40
+                                          Y: =126
+                                    - lblAutomationStatusAgentStatusSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="SharePoint"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =180
+                                          Y: =126
+                                    - lblAutomationStatusAgentStatusActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Segoe UI'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =CountRows('DMP Command Agent Status') & " entries"
+                                          Width: =150
+                                          Wrap: =false
+                                          X: =280
+                                          Y: =126
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout

@@ -89,48 +89,6 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
-            - conDisplayDiagnostics:
-                Control: GroupContainer@1.5.0
-                Variant: AutoLayout
-                Properties:
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
-                  BorderColor: =RGBA(0,120,215,0.35)
-                  BorderThickness: =1
-                  LayoutAlignItems: =LayoutAlignItems.Center
-                  LayoutDirection: =LayoutDirection.Horizontal
-                  LayoutGap: =10
-                  PaddingBottom: =8
-                  PaddingLeft: =14
-                  PaddingRight: =14
-                  PaddingTop: =8
-                  RadiusBottomLeft: =10
-                  RadiusBottomRight: =10
-                  RadiusTopLeft: =10
-                  RadiusTopRight: =10
-                Children:
-                  - lblDisplayDiagnosticsValues:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =RGBA(0,120,215,1)
-                        Font: =Font.'Segoe UI'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =18
-                        Size: =11
-                        Text: ="Display diagnostics -" & " " & "App.Width = " & Round(App.Width,0) & "px, App.Height = " & Round(App.Height,0) & "px"
-                        Wrap: =false
-                  - lblDisplayDiagnosticsHint:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
-                        Height: =18
-                        Size: =10
-                        Text: ="(send these with your browser zoom level if reporting a layout issue)"
-                        Wrap: =false
             - conAdminFunctions:
                 Control: GroupContainer@1.5.0
                 Variant: AutoLayout
@@ -209,11 +167,13 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    FillPortions: =1
+                                    FillPortions: =0
                                     Font: =Font.'Segoe UI'
                                     Height: =28
                                     Size: =12
                                     Text: ="Delete 'PA Processed Mails' folder tree"
+                                    Width: =280
+                                    Wrap: =false
                               - btnAdminDeleteProcessedMailsFolder:
                                   Control: Classic/Button@2.2.0
                                   Properties:

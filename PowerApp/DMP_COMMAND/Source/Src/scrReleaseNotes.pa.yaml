@@ -148,6 +148,7 @@ Screens:
                         RadiusTopLeft: =8
                         RadiusTopRight: =8
                         Text: ="App Changes"
+                        Size: =13
                         Width: =160
                         X: =0
                         Y: =0
@@ -168,7 +169,8 @@ Screens:
                         RadiusTopLeft: =8
                         RadiusTopRight: =8
                         Text: ="Agent (Flow) Changes"
-                        Width: =200
+                        Size: =13
+                        Width: =230
                         X: =168
                         Y: =0
             - conReleaseNotesList:
@@ -186,6 +188,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1140:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1140Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.14.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1140Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =300
+                              Size: =12
+                              Text: ="- Debug status bar turned back off (served its purpose - confirmed no Agent 4 connection error)" & Char(10) & "- Release Notes - ""Agent (Flow) Changes"" tab header no longer wraps; fuller version history added for Agents 1/3/5" & Char(10) & "- Maintenance Domains - INTERNAL/EXTERNAL labels shifted right so the count numbers display correctly again" & Char(10) & "- Automation Status redesigned to match the Files panel style (SOURCE/ACTIVE columns instead of one long line per item)" & Char(10) & "- Audit Trail (Detail) - fixed the clipped ""Warnings"" label and the wrapping ""Open full Audit Trail file"" button" & Char(10) & "- Admin Functions - removed Display Diagnostics (rarely needed, added clutter); Mailbox cleanup button now left-aligned next to its label instead of pushed to the far right"
+                              Wrap: =true
                   - conReleaseV1131:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -217,7 +264,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.13.1 - 2026-09-01 (current)"
+                              Text: ="v1.13.1 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1131Notes:
                             Control: Label@2.5.1
@@ -851,7 +898,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =300
                               Size: =12
-                              Text: ="- Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting"
+                              Text: ="- Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added (feeds the Cockpit's Critical/Warning/Total-runs figures via Agent 4)" & Char(10) & "- 2026-08-13 - renumbered from ""Agent 1"" (unchanged number, but part of the system-wide sequential renumbering and Select+Join config-loading rebuild applied to all agents)"
                               Wrap: =true
                   - conAgentNote3:
                       Control: GroupContainer@1.5.0
@@ -896,7 +943,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =300
                               Size: =12
-                              Text: ="- Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains"
+                              Text: ="- Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.01"" as part of the system-wide sequential renumbering"
                               Wrap: =true
                   - conAgentNote5:
                       Control: GroupContainer@1.5.0
@@ -941,7 +988,7 @@ Screens:
                               Font: =Font.'Segoe UI'
                               Height: =300
                               Size: =12
-                              Text: ="- Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit"
+                              Text: ="- Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.03 (YES File Management)"" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value"
                               Wrap: =true
                   - conAgentNote6:
                       Control: GroupContainer@1.5.0

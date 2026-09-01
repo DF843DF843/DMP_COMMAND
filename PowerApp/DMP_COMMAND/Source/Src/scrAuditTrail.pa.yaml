@@ -112,13 +112,13 @@ Screens:
                         Color: =RGBA(209,52,56,1)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Bold
-                        Height: =26
+                        Height: =30
                         Size: =16
                         Text: ="Critical (total):" & " " & Coalesce(varAuditFailedCount,0)
                         Width: =260
                         Wrap: =false
                         X: =16
-                        Y: =14
+                        Y: =12
                   - lblAuditTrailSummaryWarnings:
                       Control: Label@2.5.1
                       Properties:
@@ -127,13 +127,13 @@ Screens:
                         Color: =RGBA(255,159,10,1)
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Bold
-                        Height: =26
+                        Height: =30
                         Size: =16
                         Text: ="Warnings (total):" & " " & Coalesce(varAuditWarningCount,0)
                         Width: =260
                         Wrap: =false
                         X: =300
-                        Y: =14
+                        Y: =12
                   - lblAuditTrailSummaryRunSummary:
                       Control: Label@2.5.1
                       Properties:
@@ -142,13 +142,13 @@ Screens:
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                         Font: =Font.'Segoe UI'
                         FontWeight: =FontWeight.Bold
-                        Height: =26
+                        Height: =30
                         Size: =16
                         Text: ="Total run-summary rows:" & " " & Coalesce(varAuditRunSummaryCount,0)
                         Width: =320
                         Wrap: =false
                         X: =584
-                        Y: =14
+                        Y: =12
                   - lblAuditTrailSummaryHint:
                       Control: Label@2.5.1
                       Properties:
@@ -180,9 +180,10 @@ Screens:
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
+                        Size: =11.5
                         Text: ="Open full Audit Trail file"
-                        Width: =200
-                        X: =916
+                        Width: =230
+                        X: =886
                         Y: =12
             - conAuditTrailPanels:
                 Control: GroupContainer@1.5.0
