@@ -4,7 +4,12 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.2 - 2026-09-01 (current)
+### v1.22.3 - 2026-09-01 (current)
+
+- Fixed another Arial-migration text-truncation regression - the 'AGENTS ACTIVE' header KPI label and the Files-panel entry names (Emergency Report, External Domains, Counter File, Audit Trail File) were being clipped with an ellipsis - reduced their font size slightly so the full text always fits
+- Fixed Audit Trail (Detail) screen showing stale Recent Critical/Warning rows - the periodic data-refresh timer only runs while the Cockpit screen is active, so the Audit Trail screen now fetches fresh status data itself every time it is opened
+
+### v1.22.2 - 2026-09-01
 
 - Fixed a text-wrap regression in the Maintenance Domains 'Replace' button, caused by the v1.22.0 Arial font migration (Arial is wider than Segoe UI at the same point size, so 'Replace' no longer fit on one line) - added an explicit no-wrap setting and widened the button slightly
 - Internal/External Domains View, Edit and Replace buttons shifted slightly further left for a bit more breathing room from the card's right edge

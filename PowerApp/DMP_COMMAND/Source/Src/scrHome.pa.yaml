@@ -763,7 +763,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
-                              Size: =13
+                              Size: =11
                               Text: ="CRITICAL"
                               Width: =90
                               Wrap: =false
@@ -824,7 +824,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
-                              Size: =13
+                              Size: =11
                               Text: ="WARNINGS"
                               Width: =110
                               Wrap: =false
@@ -885,7 +885,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
-                              Size: =13
+                              Size: =11
                               Text: ="AGENTS ACTIVE"
                               Width: =140
                               Wrap: =false
@@ -2007,7 +2007,7 @@ Screens:
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Arial'
                                           Height: =18
-                                          Size: =11
+                                          Size: =10
                                           Text: ="Emergency Report"
                                           Width: =130
                                           Wrap: =false
@@ -2062,7 +2062,7 @@ Screens:
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Arial'
                                           Height: =18
-                                          Size: =11
+                                          Size: =10
                                           Text: ="External Domains"
                                           Width: =130
                                           Wrap: =false
@@ -2117,7 +2117,7 @@ Screens:
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Arial'
                                           Height: =18
-                                          Size: =11
+                                          Size: =10
                                           Text: ="Counter File"
                                           Width: =130
                                           Wrap: =false
@@ -2172,7 +2172,7 @@ Screens:
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Font: =Font.'Arial'
                                           Height: =18
-                                          Size: =11
+                                          Size: =10
                                           Text: ="Audit Trail File"
                                           Width: =130
                                           Wrap: =false
