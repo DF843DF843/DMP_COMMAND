@@ -188,6 +188,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1171:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1171Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.17.1 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1171Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Hotfix for a v1.17.0 import error (PA1001, YamlInvalidSyntax) - two lines in scrHome.pa.yaml had drifted one space out of indentation during an earlier automated edit, which pac canvas pack does not catch but Studio's import does" & Char(10) & "- LED refresh indicator refined per feedback - LEDs now show gray only during the very first app load (before any data has ever arrived); on every later refresh they blink yellow instead of turning gray, keeping the last known Green/Red status visible in between blinks" & Char(10) & "- No other visual changes in this release"
+                              Wrap: =true
                   - conReleaseV1170:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -219,7 +264,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.17.0 - 2026-09-01 (current)"
+                              Text: ="v1.17.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1170Notes:
                             Control: Label@2.5.1
