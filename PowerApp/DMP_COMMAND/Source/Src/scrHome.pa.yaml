@@ -2105,10 +2105,10 @@ Screens:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
                                   Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.15),RGBA(32,23,81,0.2))
-                                    BorderStyle: =BorderStyle.Dashed
-                                    BorderThickness: =2
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                                    BorderColor: =RGBA(0,206,125,0.7)
+                                    BorderStyle: =BorderStyle.Solid
+                                    BorderThickness: =3
+                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
                                     Height: =162
                                     RadiusBottomLeft: =18
@@ -2210,7 +2210,7 @@ Screens:
                                           Font: =Font.'Segoe UI'
                                           Height: =22
                                           Size: =11
-                                          Text: ="Config Parameters active - " & CountRows(Filter('DMP Command Configuration', Active = "Yes"))
+                                          Text: ="Config Parameters active - " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
                                           Width: =418
                                           Wrap: =false
                                           X: =36

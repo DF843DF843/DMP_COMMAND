@@ -146,6 +146,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -165,7 +167,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.10.0 - 2026-09-01 (current)"
+                              Text: ="v1.10.1 - 2026-09-01 (current)"
                               Wrap: =false
                         - lblReleaseV1100Notes:
                             Control: Label@2.5.1
@@ -175,9 +177,9 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =260
+                              Height: =700
                               Size: =12
-                              Text: ="- New - direct SharePoint connections added for ""DMP Command Configuration"", ""DMP Command Agent Status"" and the brand-new ""DMP Command Internal Domains"" list (Title/Active columns)" & Char(10) & "- Internal Domains management now reads/links directly to the new SharePoint list (count + View/Edit buttons) instead of the old flat text file - backend agents still write the text file for now, that migration is planned separately" & Char(10) & "- Automation Status redesigned as a compact 4-line panel (Agent 4 Live Status, Internal Domains active count, Config Parameters active count, Agent Status entries count), moved into the former ""Reserved for future use"" tile" & Char(10) & "- Removed the old separate Automation Status checklist section (generic manual next-step items) to make room - see backlog for the removed items" & Char(10) & "- All container gaps unified to a single, minimal 8px spacing (previously a mix of 8/16px)" & Char(10) & "- Maintenance Domains - removed the extra dashes around INTERNAL/EXTERNAL, widened the labels, narrowed the card to match Operating State's width" & Char(10) & "- Files card narrowed further, tighter column spacing" & Char(10) & "- System Health / Emails Processed rings resized so their combined card height lines up exactly with Operating State + Maintenance Domains" & Char(10) & "- System Health ring - the plain-text tooltip was unreliable (sometimes showed nothing at all), replaced with the same click-to-open colour legend popup already used on Emails Processed" & Char(10) & "- Release Notes list scrollbar fix - it needed an explicit calculated height, not just automatic space-sharing, to actually start scrolling" & Char(10) & "- Fixed a recurring backend issue where the Agent 4 connection had to be manually deleted and re-added after almost every deployment - traced to a stale internal reference that is now kept in sync"
+                              Text: ="- New - direct SharePoint connections added for ""DMP Command Configuration"", ""DMP Command Agent Status"" and the brand-new ""DMP Command Internal Domains"" list (Title/Active columns)" & Char(10) & "- Internal Domains management now reads/links directly to the new SharePoint list (count + View/Edit buttons) instead of the old flat text file - backend agents still write the text file for now, that migration is planned separately" & Char(10) & "- Automation Status redesigned as a compact 4-line panel (Agent 4 Live Status, Internal Domains active count, Config Parameters active count, Agent Status entries count), moved into the former ""Reserved for future use"" tile" & Char(10) & "- Removed the old separate Automation Status checklist section (generic manual next-step items) to make room - see backlog for the removed items" & Char(10) & "- All container gaps unified to a single, minimal 8px spacing (previously a mix of 8/16px)" & Char(10) & "- Maintenance Domains - removed the extra dashes around INTERNAL/EXTERNAL, widened the labels, narrowed the card to match Operating State's width" & Char(10) & "- Files card narrowed further, tighter column spacing" & Char(10) & "- System Health / Emails Processed rings resized so their combined card height lines up exactly with Operating State + Maintenance Domains" & Char(10) & "- System Health ring - the plain-text tooltip was unreliable (sometimes showed nothing at all), replaced with the same click-to-open colour legend popup already used on Emails Processed" & Char(10) & "- Release Notes list scrollbar fix - it needed an explicit calculated height, not just automatic space-sharing, to actually start scrolling" & Char(10) & "- Fixed a recurring backend issue where the Agent 4 connection had to be manually deleted and re-added after almost every deployment - traced to a stale internal reference that is now kept in sync" & Char(10) & "- v1.10.1 - Release Notes cards still cut off long text - AutoHeight alone was not reliable, so each card now has its own fixed max height with a scrollbar (in addition to the outer list scrollbar)" & Char(10) & "- v1.10.1 - Automation Status - fixed the third bullet (Config Parameters) showing no text at all - the Active column in DMP Command Configuration is a Choice field, needed .Value" & Char(10) & "- v1.10.1 - Automation Status tile border changed to solid green to match all other Cockpit cards (was still the old dashed placeholder style)" & Char(10) & "- v1.10.1 - Agent 6 (Admin Functions) was stuck in Draft/Inactive state in Dataverse, which made it show up oddly in the Power Automate panel - activated"
                               Wrap: =true
                   - conReleaseV190:
                       Control: GroupContainer@1.5.0
@@ -189,6 +191,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -218,7 +222,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =260
+                              Height: =700
                               Size: =12
                               Text: ="- Files and Maintenance Domains swapped positions (Files now top-right, Maintenance Domains bottom-left)" & Char(10) & "- Files - removed the Internal Domains row (redundant with Maintenance Domains), widened Name/Status/Last Updated columns to stop text truncation" & Char(10) & "- Maintenance Domains - compact new layout - count (green) - LOCATION - actions, e.g. ""19 - INTERNAL - View Edit"" and ""6 - EXTERNAL - View Edit Replace""" & Char(10) & "- Operating State - ""Operational Mode"" caption shortened to ""MODE""" & Char(10) & "- Change-notification LEDs (Critical/Warnings/Agents Active) - added a large invisible click area covering the whole tile including the LED itself - previously only the small number/label caught the click, making the LED very hard to tap" & Char(10) & "- v1.9.1 - added the missing second dash (between location and actions) to the Maintenance Domains format" & Char(10) & "- v1.9.2 - enlarged the invisible click area of the Replace button (Maintenance Domains - External) - was only slightly larger than the visible button, now has a generous margin on all sides without overlapping the neighboring Edit button or LED" & Char(10) & "- v1.9.3 - Release Notes text was getting cut off on longer entries - all entries now auto-size to their real content height" & Char(10) & "- v1.9.3 - Release Notes list is now scrollable, and a new ""Copy to Clipboard"" button copies the full version history as plain text" & Char(10) & "- v1.9.3 - Files card - right edge was poking out past its container on some screens - narrowed the card and tightened the Status/Last Updated column gaps further" & Char(10) & "- v1.9.3 - Heartbeat and Emails Processed ring cards - reduced the inner padding further to save horizontal space" & Char(10) & "- v1.9.3 - Emails Processed ring - the old plain-text tooltip could not show colours, so it was replaced with a click-to-open legend popup with real colour swatches matching each ring segment"
                               Wrap: =true
@@ -232,6 +236,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -261,7 +267,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =240
+                              Height: =700
                               Size: =12
                               Text: ="- Sidebar logo fixed - the source image had ~20-25% built-in padding on every side, so no resize ever actually made it bigger; it is now cropped to the real artwork and fills the sidebar width" & Char(10) & "- Major width reduction across the whole Cockpit header row to fit 100% browser zoom (was previously only fully visible at 75%) - narrower Operating State / Maintenance Domains / Files columns, narrower buttons, smaller ring padding, tighter gaps, narrower sidebar" & Char(10) & "- Operating State - ""Mode"" merged into the title area (color-coded like the screen border, blinks while switching), all labels made smaller/consistent, matching the Files card style" & Char(10) & "- Emails card - legend converted to a tooltip on the ring itself, so the ring can stay full size while the card gets much narrower" & Char(10) & "- Light mode - several too-light grey texts (Files status/time, Maintenance Domains counts) darkened for readability" & Char(10) & "- New diagnostics tile on the Admin page showing App.Width/App.Height for reporting layout issues" & Char(10) & "- v1.8.1 - fixed a sibling-indentation bug in this very file that blocked Studio from opening v1.8.0"
                               Wrap: =true
@@ -275,6 +281,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -304,7 +312,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =160
+                              Height: =700
                               Size: =12
                               Text: ="- Every sidebar menu item now has its own real screen instead of a ""coming next"" popup - Admin Functions moved to its own page, and Agent Monitoring / Operational Board / Audit Trail (Detail) / Configuration (Lists) / Maintenance each got a first ""Coming Soon"" placeholder screen (content to be filled in step by step)" & Char(10) & "- New change-notification LEDs on the Critical / Warnings / Agents Active header tiles - a small blue LED lights up (blinking) whenever one of these values changes since you last acknowledged it - click the tile to acknowledge; a new warning or critical lights the LED again automatically" & Char(10) & "- Version badge (top right) now links to this Release Notes page"
                               Wrap: =true
@@ -318,6 +326,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -347,7 +357,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Segoe UI'
-                              Height: =260
+                              Height: =700
                               Size: =12
                               Text: ="Frontend:" & Char(10) & "- Sidebar logo enlarged (280x188 -> 288x194 px), sidebar padding reduced" & Char(10) & "- Emails card (Agent 2 status) narrowed from 620 to 560px" & Char(10) & "- Next Steps - milestone text line-wrap fixed" & Char(10) & "- Display glitch during loading (garbled characters) fixed" & Char(10) & "- Reverted an over-aggressive container shrink that had truncated labels" & Char(10) & Char(10) & "Backend:" & Char(10) & "- New Error-ID system (e.g. [EC:A2-MBOXFOLDER-ND]) added across all 5 agents for faster troubleshooting" & Char(10) & "- Agent 1 & 2 performance improved (Excel counters now batched instead of updated per email)" & Char(10) & "- False ""folder already exists"" alarm fixed in Agent 3 & 4" & Char(10) & "- Copy-paste bug in Agent 1's error-mail move action fixed"
                               Wrap: =true
@@ -383,6 +393,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
@@ -426,6 +438,8 @@ Screens:
                         LayoutAlignItems: =LayoutAlignItems.Stretch
                         LayoutDirection: =LayoutDirection.Vertical
                         LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
                         PaddingBottom: =16
                         PaddingLeft: =16
                         PaddingRight: =16
