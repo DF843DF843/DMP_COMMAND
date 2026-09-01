@@ -10,7 +10,22 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ZUSAMMENFASSUNG (Stand 2026-09-01) – Autopilot-Sitzung, alle offenen Punkte
+# 🆕 NEU (2026-09-01): Backlog-Punkt – User-seitiges Zurücksetzen der Critical/Warnings-Zähler
+
+**Nutzerwunsch:** "CRITICAL und WARNINGS counter sollten durch den User 'zurückgesetzt' werden können, damit da nicht die ganze Zeit eine Zahl >0 steht!"
+
+**Kontext:** Die Cockpit-KPI-Kacheln "Critical" und "Warnings" zeigen `varAuditFailedCount`/`varAuditWarningCount`, die aus Agent 4s Statusabfrage kommen und die Gesamtzahl aller bisher aufgetretenen Fehler/Warnungen im Audit Trail widerspiegeln (nicht nur "seit letztem Reset"). Es existiert bereits ein separater, ähnlicher Mechanismus für die "Change-Notification"-LEDs (`varLastAckCriticalCount`/`varLastAckWarningCount`, per Klick auf die Kachel bestätigt) – das ist aber nur ein rein clientseitiger "gesehen"-Marker, der die angezeigte ZAHL selbst nicht auf 0 zurücksetzt.
+
+**Zu klären vor Umsetzung (Architekturfrage, braucht Rücksprache):**
+1. Soll der Reset nur die App-seitige Anzeige beeinflussen (client-lokal, verschwindet bei App-Neustart wieder), oder soll er serverseitig im Audit Trail vermerkt werden (ähnlich dem bereits existierenden "Reset e-mail counters"-Muster in Admin Functions, das den alten Wert vor dem Reset im Audit Trail protokolliert)?
+2. Soll das Reset nur die ANZEIGE beeinflussen (Baseline hochsetzen, ähnlich `varLastAckCriticalCount`) oder tatsächlich die zugrunde liegenden Audit-Trail-Fehlerzähler auf Agent-4-Seite zurücksetzen?
+3. Wer darf zurücksetzen (jeder App-Nutzer oder nur Admin-Funktionen-Bereich)?
+
+**Empfehlung:** Vermutlich am saubersten als neue Admin-Functions-Aktion analog zu "Reset e-mail counters" (mit Audit-Trail-Protokollierung des alten Werts vor dem Reset), NICHT als reiner Klick auf die Kachel selbst (das würde das bestehende Muster der Change-Notification-LED verwässern, die ja gerade "neue Warnung nach dem letzten Blick" anzeigen soll).
+
+---
+
+
 
 **Kontext:** Nutzer war für ~3 Tage abwesend und hatte 4 Aufträge im "Autopilot-Modus" erteilt. Diese Zusammenfassung dokumentiert, was erledigt wurde und was noch offen ist.
 

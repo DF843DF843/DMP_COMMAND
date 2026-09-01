@@ -11,6 +11,8 @@ Screens:
     Properties:
       Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
       LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
+      OnVisible: |-
+        =Refresh('DMP Command Agent Status')
     Children:
       - conAgentMonitoringRoot:
           Control: GroupContainer@1.5.0

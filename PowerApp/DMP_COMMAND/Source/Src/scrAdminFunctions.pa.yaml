@@ -143,23 +143,21 @@ Screens:
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =13
-                              Text: ="Mailbox cleanup"
+                              Height: =18
+                              Size: =12
+                              Text: ="MAILBOX CLEANUP"
+                              Wrap: =false
                         - conAdminDeleteRow:
                             Control: GroupContainer@1.5.0
                             Variant: AutoLayout
                             Properties:
                               Fill: =RGBA(0,0,0,0)
-                              Height: =44
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutAlignItems: =LayoutAlignItems.Start
+                              LayoutDirection: =LayoutDirection.Vertical
                               LayoutGap: =8
-                              LayoutMaxHeight: =44
-                              LayoutMinHeight: =44
                             Children:
                               - lblAdminDeleteLabel:
                                   Control: Label@2.5.1
@@ -169,10 +167,10 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     FillPortions: =0
                                     Font: =Font.'Segoe UI'
-                                    Height: =28
+                                    Height: =20
                                     Size: =12
                                     Text: ="Delete 'PA Processed Mails' folder tree"
-                                    Width: =320
+                                    Width: =400
                                     Wrap: =false
                               - btnAdminDeleteProcessedMailsFolder:
                                   Control: Classic/Button@2.2.0
@@ -181,6 +179,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
+                                    FillPortions: =0
                                     Font: =Font.'Segoe UI'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
@@ -189,7 +188,7 @@ Screens:
                                     RadiusBottomRight: =8
                                     RadiusTopLeft: =8
                                     RadiusTopRight: =8
-                                    Text: ="Delete..."
+                                    Text: ="Delete"
                                     Width: =110
                         - conAdminConfirmDelete:
                             Control: GroupContainer@1.5.0
@@ -289,12 +288,13 @@ Screens:
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              Color: =RGBA(0,206,125,1)
                               Font: =Font.'Segoe UI'
                               FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =13
-                              Text: ="Reset e-mail counters"
+                              Height: =18
+                              Size: =12
+                              Text: ="RESET E-MAIL COUNTERS"
+                              Wrap: =false
                         - lblAdminResetCountersHint:
                             Control: Label@2.5.1
                             Properties:

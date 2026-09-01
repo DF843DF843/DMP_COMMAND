@@ -188,6 +188,51 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
+                  - conReleaseV1170:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblReleaseV1170Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Segoe UI'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.17.0 - 2026-09-01 (current)"
+                              Wrap: =false
+                        - lblReleaseV1170Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Segoe UI'
+                              Height: =220
+                              Size: =12
+                              Text: ="- Fixed Timer/LED freeze during Replace - the file-replace flow call ran inside the same 1-second ticking timer as the auto-refresh, blocking its blink-phase and countdown for the whole call. Moved to its own dedicated timer" & Char(10) & "- Automation Status column labels widened further, Agent 4 Live Status name no longer clips" & Char(10) & "- Agent Monitoring now force-refreshes the Agent Status SharePoint list every time the screen is opened, so changes made by a Replace or any agent run show up immediately instead of a stale cached copy" & Char(10) & "- Now button and the periodic auto-refresh timer now also force-refresh the Agent Status, Configuration and Internal Domains SharePoint lists (previously only Agent Monitoring's own screen open did this)" & Char(10) & "- System Health and Emails Processed wheels show REFRESHING... while a refresh is running" & Char(10) & "- All Files-panel and Automation Status LEDs now turn gray while refreshing, for a consistent refreshing indicator" & Char(10) & "- Admin Functions - Delete button moved below the text and left-aligned like No DMP, text shortened to Delete, section headers restyled to match the Cockpit style (green, uppercase)"
+                              Wrap: =true
                   - conReleaseV1161:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -219,7 +264,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.16.1 - 2026-09-01 (current)"
+                              Text: ="v1.16.1 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1161Notes:
                             Control: Label@2.5.1
@@ -354,7 +399,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.14.0 - 2026-09-01 (current)"
+                              Text: ="v1.14.0 - 2026-09-01"
                               Wrap: =false
                         - lblReleaseV1140Notes:
                             Control: Label@2.5.1
