@@ -47,7 +47,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -66,7 +66,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -81,7 +81,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - detailed audit trail view"
@@ -110,7 +110,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(209,52,56,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =30
                         Size: =16
@@ -125,7 +125,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,159,10,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =30
                         Size: =16
@@ -140,7 +140,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =30
                         Size: =16
@@ -155,7 +155,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =10.5
                         Text: ="The lists below show the 10 most recent rows of each kind, read live from the central Audit Trail on every Cockpit refresh."
@@ -171,7 +171,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =26
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -224,7 +224,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(209,52,56,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =24
                               Size: =14
@@ -235,7 +235,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =24
                               Size: =11
                               Text: ="No Critical rows found in the Audit Trail."
@@ -247,7 +247,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,1),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -260,7 +260,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,2),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -273,7 +273,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,3),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -286,7 +286,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,4),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -299,7 +299,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,5),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -312,7 +312,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,6),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -325,7 +325,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,7),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -338,7 +338,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,8),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -351,7 +351,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,9),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -364,7 +364,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,10),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -397,7 +397,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(255,159,10,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =24
                               Size: =14
@@ -408,7 +408,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =24
                               Size: =11
                               Text: ="No Warning rows found in the Audit Trail."
@@ -420,7 +420,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,1),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -433,7 +433,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,2),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -446,7 +446,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,3),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -459,7 +459,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,4),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -472,7 +472,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,5),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -485,7 +485,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,6),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -498,7 +498,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,7),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -511,7 +511,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,8),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -524,7 +524,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,9),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))
@@ -537,7 +537,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =32
                               Size: =11
                               Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,10),Blank())},If(IsBlank(r),"",Coalesce(r.timestamp,"") & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,"")))

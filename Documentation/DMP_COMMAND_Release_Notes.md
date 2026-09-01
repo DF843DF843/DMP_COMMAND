@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.21.0 - 2026-09-01 (current)
+### v1.22.0 - 2026-09-01 (current)
+
+- Typography aligned with the official Eurex Brand Manual (page 39/40) - the manual itself specifies Arial as the correct system-compatible substitute for its Replica/Noto Sans brand fonts on platforms without embedded custom fonts, which is exactly our situation (a browser-based Power App)
+- Every text across all 9 screens switched from Segoe UI to Arial (367 formula updates), a purely visual change - no layout, colors, or functionality affected
+- All future new text formulas should use Font.'Arial' going forward
+
+### v1.21.0 - 2026-09-01
 
 - Refresh indicator (gray on very first load, yellow blinking on every later refresh) extended to all reloading displays across the app - the System Health legend popup dots and all 6 Agent Monitoring status dots now follow the same convention as the Files panel and Automation Status
 - Emails Processed colors reassigned to match the requested convention - Blue=No DMP, Green=Not Effected, Purple=Internal, Red=External

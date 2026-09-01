@@ -47,7 +47,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -66,7 +66,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -81,7 +81,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - connection diagnostics, versions and admin links"
@@ -110,7 +110,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -138,7 +138,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Configuration list - reachable"
@@ -165,7 +165,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Agent Status list - reachable"
@@ -192,7 +192,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11.5
                         Text: ="DMP Command Internal Domains list - reachable"
@@ -206,7 +206,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =40
                         Size: =10.5
                         Text: ="A red dot here means the app itself lost its SharePoint connection - refresh the app or check the connection under Power Apps > Settings."
@@ -235,7 +235,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -252,7 +252,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =20
                         HoverColor: =RGBA(45,230,155,1)
@@ -270,7 +270,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =36
                         Size: =11
                         Text: ="Agent versions - see Release Notes > Agent Changes, or Agent Monitoring for live per-agent status"
@@ -299,7 +299,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -317,7 +317,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -340,7 +340,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -363,7 +363,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =36
                         HoverFill: =RGBA(0,206,125,0.12)

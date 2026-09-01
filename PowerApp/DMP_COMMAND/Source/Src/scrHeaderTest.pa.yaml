@@ -20,7 +20,7 @@ Screens:
             Height: =24
             Text: ="HEADER TEST LAB - not linked to navigation, open via the Screens list in Studio"
             Color: =RGBA(90,88,110,1)
-            Font: =Font.'Segoe UI'
+            Font: =Font.'Arial'
             FontWeight: =FontWeight.Semibold
             Size: =11
             Align: =Align.Left
@@ -36,7 +36,7 @@ Screens:
             Height: =20
             Text: ="Variant A - same design as scrHome, ManualLayout (fixed X/Y instead of AutoLayout)"
             Color: =RGBA(60,60,70,1)
-            Font: =Font.'Segoe UI'
+            Font: =Font.'Arial'
             Size: =10
             Align: =Align.Left
             BorderStyle: =BorderStyle.None
@@ -65,7 +65,7 @@ Screens:
                   Height: =26
                   Text: ="DMP COMMAND"
                   Color: =RGBA(255,255,255,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =20
                   Align: =Align.Left
@@ -82,7 +82,7 @@ Screens:
                   Height: =20
                   Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                   Color: =RGBA(215,210,235,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =10.5
                   Align: =Align.Left
@@ -99,7 +99,7 @@ Screens:
                   Height: =26
                   Text: ="000"
                   Color: =RGBA(0,206,125,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =22
                   Align: =Align.Center
@@ -115,7 +115,7 @@ Screens:
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -130,7 +130,7 @@ Screens:
                   Height: =26
                   Text: ="000"
                   Color: =RGBA(255,159,10,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =22
                   Align: =Align.Center
@@ -146,7 +146,7 @@ Screens:
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -161,7 +161,7 @@ Screens:
                   Height: =26
                   Text: ="99/99"
                   Color: =RGBA(0,206,125,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =22
                   Align: =Align.Center
@@ -177,7 +177,7 @@ Screens:
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -193,7 +193,7 @@ Screens:
                   Text: ="v000.000.000"
                   Color: =RGBA(255,255,255,1)
                   Fill: =RGBA(0,206,125,0.28)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =13
                   Align: =Align.Center
@@ -228,7 +228,7 @@ Screens:
                   Height: =14
                   Text: ="DARK"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Right
                   VerticalAlign: =VerticalAlign.Middle
@@ -243,7 +243,7 @@ Screens:
                   Height: =14
                   Text: ="LIGHT"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Left
                   VerticalAlign: =VerticalAlign.Middle
@@ -259,7 +259,7 @@ Screens:
             Height: =20
             Text: ="Variant B - two-row layout (title on its own row, stats/version/toggle on row below) - more breathing room"
             Color: =RGBA(60,60,70,1)
-            Font: =Font.'Segoe UI'
+            Font: =Font.'Arial'
             Size: =10
             Align: =Align.Left
             BorderStyle: =BorderStyle.None
@@ -288,7 +288,7 @@ Screens:
                   Height: =26
                   Text: ="DMP COMMAND"
                   Color: =RGBA(255,255,255,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =19
                   Align: =Align.Center
@@ -305,7 +305,7 @@ Screens:
                   Height: =18
                   Text: ="Communication Operations Management, Monitoring And Notification Dispatch"
                   Color: =RGBA(215,210,235,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =10.5
                   Align: =Align.Center
@@ -322,7 +322,7 @@ Screens:
                   Height: =26
                   Text: =Text(Coalesce(varAuditFailedCount,0))
                   Color: =RGBA(0,206,125,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =20
                   Align: =Align.Center
@@ -338,7 +338,7 @@ Screens:
                   Height: =14
                   Text: ="CRITICAL"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -353,7 +353,7 @@ Screens:
                   Height: =26
                   Text: =Text(Coalesce(varAuditWarningCount,0))
                   Color: =RGBA(255,159,10,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =20
                   Align: =Align.Center
@@ -369,7 +369,7 @@ Screens:
                   Height: =14
                   Text: ="WARNINGS"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -384,7 +384,7 @@ Screens:
                   Height: =26
                   Text: =Coalesce(varAgentsHealthyCount,0) & "/6"
                   Color: =RGBA(0,206,125,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =20
                   Align: =Align.Center
@@ -400,7 +400,7 @@ Screens:
                   Height: =14
                   Text: ="AGENTS ACTIVE"
                   Color: =RGBA(200,195,225,1)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   Size: =9
                   Align: =Align.Center
                   VerticalAlign: =VerticalAlign.Middle
@@ -416,7 +416,7 @@ Screens:
                   Text: ="v-Test-B"
                   Color: =RGBA(255,255,255,1)
                   Fill: =RGBA(0,206,125,0.28)
-                  Font: =Font.'Segoe UI'
+                  Font: =Font.'Arial'
                   FontWeight: =FontWeight.Bold
                   Size: =13
                   Align: =Align.Center
@@ -450,7 +450,7 @@ Screens:
             Height: =20
             Text: ="Raw Agent 4 response (varStatusResult) as JSON - for diagnosing the blank Critical/Warnings/HealthyAgents values:"
             Color: =RGBA(60,60,70,1)
-            Font: =Font.'Segoe UI'
+            Font: =Font.'Arial'
             FontWeight: =FontWeight.Semibold
             Size: =10
             Align: =Align.Left

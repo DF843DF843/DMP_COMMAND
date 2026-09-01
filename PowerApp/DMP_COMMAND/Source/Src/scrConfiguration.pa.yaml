@@ -47,7 +47,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -66,7 +66,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -81,7 +81,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - configuration and list management"
@@ -110,7 +110,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -125,7 +125,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11
                         Text: ="Runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...)"
@@ -139,7 +139,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =12
                         Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
@@ -155,7 +155,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =32
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -176,7 +176,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =32
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -210,7 +210,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -225,7 +225,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11
                         Text: ="Live status/health rows written by each agent - see the Agent Monitoring page for a friendlier view"
@@ -239,7 +239,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =12
                         Text: ="Total rows:" & " " & CountRows('DMP Command Agent Status')
@@ -255,7 +255,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =32
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -289,7 +289,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =14
@@ -304,7 +304,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =18
                         Size: =11
                         Text: ="Domains treated as internal (Deutsche Boerse) by Agent 1 and Agent 2's classification logic"
@@ -318,7 +318,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =12
                         Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
@@ -334,7 +334,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =32
                         HoverFill: =RGBA(0,206,125,0.12)
@@ -355,7 +355,7 @@ Screens:
                         BorderThickness: =1
                         Color: =RGBA(0,206,125,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =32
                         HoverFill: =RGBA(0,206,125,0.12)

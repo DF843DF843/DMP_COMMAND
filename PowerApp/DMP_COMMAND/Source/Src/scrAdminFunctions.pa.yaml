@@ -47,7 +47,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -66,7 +66,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -81,7 +81,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - administrative reset operations (destructive, use with care)"
@@ -104,7 +104,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =28
                         Size: =16
@@ -115,7 +115,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =24
                         Size: =12
                         Text: ="These actions are destructive and cannot be easily undone. Use with care."
@@ -144,7 +144,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =18
                               Size: =12
@@ -166,7 +166,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                     FillPortions: =0
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =20
                                     Size: =12
                                     Text: ="Delete 'PA Processed Mails' folder tree"
@@ -180,7 +180,7 @@ Screens:
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
                                     FillPortions: =0
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: =Set(varConfirmDeleteMailboxFolders,true)
@@ -214,7 +214,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =48
                                     Size: =12
                                     Text: ="Are you sure? This deletes 'PA Processed Mails' and everything below it (including 'Agent 5 Alerts') in the shared mailbox. This cannot be easily undone."
@@ -234,7 +234,7 @@ Screens:
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(255,255,255,1)
                                           Fill: =RGBA(220,53,69,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =32
                                           HoverFill: =RGBA(189,45,59,1)
                                           OnSelect: |
@@ -254,7 +254,7 @@ Screens:
                                           BorderThickness: =3
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =32
                                           HoverFill: =RGBA(255,255,255,0.08)
                                           OnSelect: =Set(varConfirmDeleteMailboxFolders,false)
@@ -289,7 +289,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =18
                               Size: =12
@@ -301,7 +301,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="The previous value is recorded in the Audit Trail (Operational History) before each reset."
@@ -323,7 +323,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: |
@@ -344,7 +344,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: |
@@ -365,7 +365,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: |
@@ -386,7 +386,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(220,53,69,1)
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     HoverFill: =RGBA(189,45,59,1)
                                     OnSelect: |
@@ -407,7 +407,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =RGBA(255,255,255,1)
                                     Fill: =RGBA(140,20,30,1)
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     FontWeight: =FontWeight.Bold
                                     Height: =32
                                     HoverFill: =RGBA(110,15,23,1)
@@ -446,7 +446,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =48
                                     Size: =12
                                     Text: ="Are you sure? This resets the '" & varPendingResetLabel & "' counter(s) to 0. The current value is written to the Audit Trail (as an Operational History record) before the reset, so it is not lost."
@@ -466,7 +466,7 @@ Screens:
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(255,255,255,1)
                                           Fill: =RGBA(220,53,69,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =32
                                           HoverFill: =RGBA(189,45,59,1)
                                           OnSelect: |
@@ -486,7 +486,7 @@ Screens:
                                           BorderThickness: =3
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =32
                                           HoverFill: =RGBA(255,255,255,0.08)
                                           OnSelect: =Set(varConfirmResetCounter,false)
@@ -502,7 +502,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =40
                         Size: =11
                         Text: =varAdminActionResult.message

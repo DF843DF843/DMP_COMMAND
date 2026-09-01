@@ -52,7 +52,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -71,7 +71,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -86,7 +86,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - detailed per-agent health and metrics"
@@ -139,7 +139,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -154,7 +154,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value
@@ -168,7 +168,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_01")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -182,7 +182,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_01").StatusMessage,"")
@@ -224,7 +224,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -239,7 +239,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value
@@ -253,7 +253,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_02")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -267,7 +267,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_02").StatusMessage,"")
@@ -309,7 +309,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -324,7 +324,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value
@@ -338,7 +338,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_03")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -352,7 +352,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_03").StatusMessage,"")
@@ -405,7 +405,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -420,7 +420,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value
@@ -434,7 +434,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_04")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -448,7 +448,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_04").StatusMessage,"")
@@ -490,7 +490,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -505,7 +505,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value
@@ -519,7 +519,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_05")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -533,7 +533,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_05").StatusMessage,"")
@@ -575,7 +575,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =22
                               Size: =13
@@ -590,7 +590,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: ="Status:" & " " & LookUp('DMP Command Agent Status', AgentKey="Agent_06").CurrentStatus.Value
@@ -604,7 +604,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =18
                               Size: =11
                               Text: =With({r:LookUp('DMP Command Agent Status', AgentKey="Agent_06")},"Last run:" & " " & If(IsBlank(r.LastRunTimestamp),"-",Text(DateTimeValue(r.LastRunTimestamp),"dd.mm.yyyy hh:mm:ss")) & " - " & Coalesce(r.LastRunResult.Value,"-") & " (" & Coalesce(Text(r.LastRunDurationSec,"0.0"),"-") & "s)")
@@ -618,7 +618,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =56
                               Size: =10.5
                               Text: =Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_06").StatusMessage,"")

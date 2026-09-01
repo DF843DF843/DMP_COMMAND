@@ -47,7 +47,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =RGBA(255,255,255,0.12)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =36
                         HoverFill: =RGBA(255,255,255,0.22)
@@ -66,7 +66,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =31
                         Size: =20
@@ -81,7 +81,7 @@ Screens:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(215,210,235,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =20
                         Size: =11.5
                         Text: ="DMP COMMAND - how the Cockpit works, container by container"
@@ -129,7 +129,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -142,7 +142,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =70
                               Size: =12
                               Text: ="This page explains what every container on the DMP COMMAND Cockpit shows, how to read its status colours, and what each button does. Scroll down for a section on each container, in the same order they appear on the Cockpit (top to bottom, left to right). For release history see ""Release Notes""; for per-agent live health see ""Agent Monitoring""."
@@ -172,7 +172,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -185,7 +185,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =140
                               Size: =12
                               Text: ="Every small round dot on the Cockpit follows the same rule everywhere:" & Char(10) & "- Green dot - the item is present / OK / operational" & Char(10) & "- Red dot - the item is missing / not OK / an error was detected" & Char(10) & "- Yellow / blinking dot (Replace button only) - a file upload is currently being processed by the agent, please wait" & Char(10) & "- Rings (System Health, Emails Processed) show the same green/blue/purple colours split proportionally instead of a single dot, so you can see the mix at a glance" & Char(10) & "All dots are the same 14x14 pixel circle across every container for visual consistency."
@@ -215,7 +215,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -228,7 +228,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =120
                               Size: =12
                               Text: ="- ""DMP COMMAND"" title and the DMP / Normal mode indicator show the current operation mode at a glance (see ""Operating State"" below for the full explanation)" & Char(10) & "- The DARK / LIGHT toggle switches the whole app's colour theme; your choice is remembered for the session" & Char(10) & "- The clock/refresh area ticks once per second in the background - it is what keeps every live tile (Operating State, Maintenance Domains, Files, System Health, Emails Processed) up to date without needing a manual refresh"
@@ -258,7 +258,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -271,7 +271,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =180
                               Size: =12
                               Text: ="- OPERATING STATE - the raw value read live from the ""DMP Command Configuration"" SharePoint list, i.e. what the backend agents currently believe the system state is" & Char(10) & "- LAST CHANGED - timestamp of the last write to that same configuration value, so you can tell a stale reading from a fresh one" & Char(10) & "- MODE toggle (Normal / DMP) - shows whether the mailbox is running in normal day-to-day processing or in DMP (Domain Maintenance Process) mode; DMP mode changes how Agent 1 and 2 classify incoming e-mail domains" & Char(10) & "- ENVIRONMENT toggle (SIMU / PROD) - shows whether the connected mailbox is the simulation mailbox or the real production mailbox - always double-check this before assuming a test action is safe"
@@ -301,7 +301,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -314,7 +314,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =180
                               Size: =12
                               Text: ="- INTERNAL - number of domains in the ""DMP Command Internal Domains"" SharePoint list marked Active; these are the domains treated as belonging to Deutsche Boerse itself" & Char(10) & "- EXTERNAL - number of domains in the external domains reference file; these are known outside partner domains" & Char(10) & "- The status dot in front of each count is green when the underlying source is reachable, red when it could not be read" & Char(10) & "- View opens the SharePoint list / file to browse all entries" & Char(10) & "- Edit opens a quick ""add new domain"" form (Internal) or the file directly (External) - both open in a new browser tab"
@@ -344,7 +344,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -357,7 +357,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =220
                               Size: =12
                               Text: ="Lists the 4 key working files the agents depend on, each with a status dot (green = found, red = missing) and a ""last updated"" timestamp:" & Char(10) & "- Emergency Report - produced by Agent 3 when a mailbox emergency is detected" & Char(10) & "- External Domains - the reference file of known external partner domains" & Char(10) & "- Counter File - running totals used for the Emails Processed statistics" & Char(10) & "- Audit Trail File - the full log of every automated action taken (see ""Audit Trail"")" & Char(10) & "- Replace button - lets you manually upload a new Emergency Report file; the dot turns yellow and blinks while the upload is being processed by the agent, then returns to green once done"
@@ -387,7 +387,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -400,7 +400,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =180
                               Size: =12
                               Text: ="A single ring that is fully green when all 5 underlying files/lists are OK, and shows a red slice for every one that is missing:" & Char(10) & "Emergency Report, Internal Domains, External Domains, Counter File, Audit Trail File." & Char(10) & "Click the ring (or the info icon) to open the detailed legend popup, which lists each of the 5 items with its own OK/Missing status - this is the fastest way to see exactly what is wrong when the ring is not fully green."
@@ -430,7 +430,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -443,7 +443,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =180
                               Size: =12
                               Text: ="Shows the running split of every e-mail Agent 2 has classified since the counters were last reset, as a proportional ring with 4 categories:" & " " & "No DMP, External, Internal Sender and Not Effected." & Char(10) & "Click the ring to open the legend popup, which lists the exact count and percentage for each of the 4 categories - useful for spotting an unusual spike (e.g. a sudden jump in ""No DMP"" e-mails)."
@@ -473,7 +473,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -486,7 +486,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =160
                               Size: =12
                               Text: ="A compact 4-line summary read live from SharePoint / Dataverse:" & Char(10) & "- Agent 4 Live Status - the current status word reported by Agent 4's last status check run" & Char(10) & "- Internal Domains active count - how many domains in the SharePoint list are marked Active" & Char(10) & "- Config Parameters active count - how many rows in ""DMP Command Configuration"" are marked Active" & Char(10) & "- Agent Status entries count - how many agent rows exist in ""DMP Command Agent Status"""
@@ -516,7 +516,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -529,7 +529,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =80
                               Size: =12
                               Text: ="A short, manually curated list of upcoming or in-progress project milestones - purely informational, no live data."
@@ -559,7 +559,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -572,7 +572,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =220
                               Size: =12
                               Text: ="- Cockpit - the main overview screen described above" & Char(10) & "- Agent Monitoring - live per-agent tiles (status, last run result and duration, message) straight from the DMP Command Agent Status list" & Char(10) & "- Help / Operational Manual - this page" & Char(10) & "- Audit Trail (Detail) - the full audit log with the Critical/Warnings drill-down" & Char(10) & "- Configuration (Lists) - direct access to the underlying SharePoint configuration lists" & Char(10) & "- Maintenance - system/connection diagnostics and useful admin links" & Char(10) & "- Admin Functions - counter resets and other administrative actions (use with care)"
@@ -617,7 +617,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="Intro",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="Intro",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="Intro",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="Intro",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -635,7 +635,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="GeneralColours",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="GeneralColours",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="GeneralColours",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="GeneralColours",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -653,7 +653,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="TopBar",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="TopBar",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="TopBar",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="TopBar",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -671,7 +671,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="OperatingState",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="OperatingState",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="OperatingState",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="OperatingState",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -689,7 +689,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="MaintenanceDomains",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="MaintenanceDomains",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="MaintenanceDomains",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="MaintenanceDomains",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -707,7 +707,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="Files",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="Files",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="Files",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="Files",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -725,7 +725,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="SystemHealth",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="SystemHealth",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="SystemHealth",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="SystemHealth",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -743,7 +743,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="EmailsProcessed",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="EmailsProcessed",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="EmailsProcessed",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="EmailsProcessed",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -761,7 +761,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="AutomationStatus",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="AutomationStatus",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="AutomationStatus",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="AutomationStatus",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -779,7 +779,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="NextSteps",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="NextSteps",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="NextSteps",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="NextSteps",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -797,7 +797,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varSelectedManualSection="Sidebar",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
                               Fill: =If(varSelectedManualSection="Sidebar",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =If(varSelectedManualSection="Sidebar",FontWeight.Bold,FontWeight.Normal)
                               Height: =36
                               HoverFill: =If(varSelectedManualSection="Sidebar",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
@@ -835,7 +835,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
@@ -874,7 +874,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =220
                                           Size: =11
                                           Text: ="Screenshot coming soon"
@@ -889,7 +889,7 @@ Screens:
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Size: =12
                                     Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroNotes.Text, "GeneralColours", lblManualGeneralColoursNotes.Text, "TopBar", lblManualTopBarNotes.Text, "OperatingState", lblManualOperatingStateNotes.Text, "MaintenanceDomains", lblManualMaintenanceDomainsNotes.Text, "Files", lblManualFilesNotes.Text, "SystemHealth", lblManualSystemHealthNotes.Text, "EmailsProcessed", lblManualEmailsProcessedNotes.Text, "AutomationStatus", lblManualAutomationStatusNotes.Text, "NextSteps", lblManualNextStepsNotes.Text, "Sidebar", lblManualSidebarNotes.Text, lblManualIntroNotes.Text)
                                     Wrap: =true

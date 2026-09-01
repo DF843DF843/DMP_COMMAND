@@ -152,7 +152,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(8,33,15,1)
                         Fill: =RGBA(0,206,125,1)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(8,33,15,1)
                         HoverFill: =RGBA(0,206,125,1)
@@ -169,7 +169,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -185,7 +185,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -201,7 +201,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -217,7 +217,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -233,7 +233,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -249,7 +249,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(154,154,160,1)
                         Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         Height: =38
                         HoverColor: =RGBA(255,255,255,1)
                         HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
@@ -289,7 +289,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(255,255,255,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =31
                               Size: =22
@@ -304,7 +304,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(215,210,235,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =21
                               Size: =11.5
@@ -319,7 +319,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varIsRefreshing, RGBA(0,206,125,1), RGBA(160,155,190,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =12
                               Size: =8.5
                               Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
@@ -335,7 +335,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varAutoRefreshMinutes=0, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(varAutoRefreshMinutes=0, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -355,7 +355,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,1), RGBA(200,195,225,1))
                               Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,0.25), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(IsBlank(varStatusLastRefreshed), RGBA(0,206,125,0.35), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -430,7 +430,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varAutoRefreshMinutes=2, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(varAutoRefreshMinutes=2, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -450,7 +450,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varAutoRefreshMinutes=5, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(varAutoRefreshMinutes=5, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -470,7 +470,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varAutoRefreshMinutes=10, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(varAutoRefreshMinutes=10, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -490,7 +490,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varAutoRefreshMinutes=15, RGBA(8,33,15,1), RGBA(200,195,225,1))
                               Fill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.06))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =13
                               HoverFill: =If(varAutoRefreshMinutes=15, RGBA(0,206,125,1), RGBA(255,255,255,0.12))
                               OnSelect: |-
@@ -722,7 +722,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(Coalesce(varAuditFailedCount,0)>0, RGBA(209,52,56,1), RGBA(0,206,125,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =40
                               OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
@@ -739,7 +739,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =13
@@ -783,7 +783,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(Coalesce(varAuditWarningCount,0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =40
                               OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
@@ -800,7 +800,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckWarningCount, Coalesce(varAuditWarningCount,0)); Navigate(scrAuditTrail, ScreenTransition.None)
                               Size: =13
@@ -844,7 +844,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(IsBlank(varStatusLastRefreshed), RGBA(160,155,190,1), If(Coalesce(varAgentsHealthyCount,0)>=6, RGBA(0,206,125,1), RGBA(255,159,10,1)))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =40
                               OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
@@ -861,7 +861,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =19
                               OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Size: =13
@@ -906,7 +906,7 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(255,255,255,1)
                               Fill: =RGBA(0,206,125,0.28)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =38
                               HoverFill: =RGBA(0,206,125,0.45)
@@ -926,7 +926,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =14
                               Size: =9
                               Text: ="DARK"
@@ -956,7 +956,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =RGBA(200,195,225,1)
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               Height: =14
                               Size: =9
                               Text: ="LIGHT"
@@ -972,7 +972,7 @@ Screens:
                         BorderStyle: =BorderStyle.None
                         Color: =RGBA(255,255,255,1)
                         Fill: =If(!IsBlank(varStatusCallError), RGBA(196,43,28,1), RGBA(0,90,160,1))
-                        Font: =Font.'Segoe UI'
+                        Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =28
                         LayoutMaxHeight: =28
@@ -1086,7 +1086,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =18
                                                 Size: =11
@@ -1137,7 +1137,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Emergency Report - " & If(varEmergencyReportExists,"OK","Missing")
@@ -1173,7 +1173,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Internal Domains - " & If(varInternalDomainsExists,"OK","Missing")
@@ -1209,7 +1209,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="External Domains - " & If(varExternalDomainsExists,"OK","Missing")
@@ -1245,7 +1245,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Counter File - " & If(varCounterExists,"OK","Missing")
@@ -1281,7 +1281,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Audit Trail - " & If(varAuditTrailExists,"OK","Missing")
@@ -1317,7 +1317,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
@@ -1361,7 +1361,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =18
                                           Size: =12
@@ -1378,7 +1378,7 @@ Screens:
                                           BorderStyle: =BorderStyle.None
                                           Color: |-
                                             =With({vModeColor: Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))}, If(varLedOperationalState="Yellow" Or varLedApplicationMode="Yellow", If(varBlinkPhase, vModeColor, RGBA(150,150,158,0.35)), vModeColor))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =18
                                           Size: =11
@@ -1393,7 +1393,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -1409,7 +1409,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =22
                                           Size: =11.5
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
@@ -1423,7 +1423,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -1442,7 +1442,7 @@ Screens:
                                           Default: =varOperationalModeIsDMP
                                           FalseFill: =RGBA(0,206,125,1)
                                           FalseText: ="Normal"
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =26
                                           LabelPaddingLeft: =0
@@ -1523,7 +1523,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -1542,7 +1542,7 @@ Screens:
                                           Default: =varEnvironmentIsPROD
                                           FalseFill: =RGBA(60,125,190,1)
                                           FalseText: ="SIMU"
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =26
                                           LabelPaddingLeft: =0
@@ -1643,7 +1643,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =18
                                           Size: =12
@@ -1672,7 +1672,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =32
                                           Size: =14
@@ -1687,7 +1687,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
@@ -1704,7 +1704,7 @@ Screens:
                                           BorderThickness: =2
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
@@ -1726,7 +1726,7 @@ Screens:
                                           BorderThickness: =2
                                           Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =RGBA(0,206,125,0.12)
@@ -1760,7 +1760,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =32
                                           Size: =14
@@ -1775,7 +1775,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           Size: =13
@@ -1792,7 +1792,7 @@ Screens:
                                           BorderThickness: =2
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
@@ -1814,7 +1814,7 @@ Screens:
                                           BorderThickness: =2
                                           Color: =RGBA(0,206,125,1)
                                           Fill: =RGBA(0,0,0,0)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =RGBA(0,206,125,0.12)
@@ -1853,7 +1853,7 @@ Screens:
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =RGBA(60,125,190,1)
                                                 Fill: =RGBA(0,0,0,0)
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 FontWeight: =FontWeight.Semibold
                                                 Height: =32
                                                 Size: =12
@@ -1868,7 +1868,7 @@ Screens:
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =RGBA(255,255,255,0.01)
                                                 Fill: =RGBA(255,255,255,0.01)
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =64
                                                 HoverColor: =RGBA(255,255,255,0.01)
                                                 HoverFill: =RGBA(255,255,255,0.01)
@@ -1925,7 +1925,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =16
                                           Size: =12
@@ -1940,7 +1940,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -1955,7 +1955,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -1983,7 +1983,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Emergency Report"
@@ -1997,7 +1997,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varEmergencyReportExists, "Operational", "Missing"))
@@ -2011,7 +2011,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
@@ -2038,7 +2038,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="External Domains"
@@ -2052,7 +2052,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varExternalDomainsExists, "Operational", "Missing"))
@@ -2066,7 +2066,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
@@ -2093,7 +2093,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Counter File"
@@ -2107,7 +2107,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varCounterExists, "Operational", "Missing"))
@@ -2121,7 +2121,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
@@ -2148,7 +2148,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Audit Trail File"
@@ -2162,7 +2162,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varAuditTrailExists, "Operational", "Missing"))
@@ -2176,7 +2176,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
@@ -2208,7 +2208,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =RGBA(0,206,125,1)
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Bold
                                           Height: =18
                                           Size: =12
@@ -2223,7 +2223,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -2238,7 +2238,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =14
                                           Size: =9
@@ -2266,7 +2266,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Agent 4 Live Status"
@@ -2280,7 +2280,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Flow"
@@ -2294,7 +2294,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =If(varIsRefreshing, "Loading...", If(varStatusCallError="", "Operational", "Error"))
@@ -2321,7 +2321,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Internal Domains"
@@ -2335,7 +2335,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="SharePoint"
@@ -2349,7 +2349,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes")) & " active"
@@ -2376,7 +2376,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Config Parameters"
@@ -2390,7 +2390,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="SharePoint"
@@ -2404,7 +2404,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =CountRows(Filter('DMP Command Configuration', Active.Value = "Yes")) & " active"
@@ -2431,7 +2431,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="Agent Status"
@@ -2445,7 +2445,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: ="SharePoint"
@@ -2459,7 +2459,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Segoe UI'
+                                          Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
                                           Text: =CountRows('DMP Command Agent Status') & " entries"
@@ -2579,7 +2579,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 FontWeight: =FontWeight.Bold
                                                 Height: =18
                                                 Size: =11
@@ -2630,7 +2630,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
                                                 Text: ="No DMP (" & Coalesce(varCounterNoDMP,0) & ", " & Round(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
@@ -2666,7 +2666,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
                                                 Text: ="External (" & Coalesce(varCounterEffected,0) & ", " & Round(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
@@ -2702,7 +2702,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
                                                 Text: ="Internal (" & Coalesce(varCounterInternalSender,0) & ", " & Round(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
@@ -2738,7 +2738,7 @@ Screens:
                                                 BorderColor: =RGBA(0,0,0,0)
                                                 BorderStyle: =BorderStyle.None
                                                 Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                                                Font: =Font.'Segoe UI'
+                                                Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
                                                 Text: ="Not Effected (" & Coalesce(varCounterNotEffected,0) & ", " & Round(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1)*100,0) & "%)"
@@ -2772,7 +2772,7 @@ Screens:
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(45,43,53,1))
-                              Font: =Font.'Segoe UI'
+                              Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
                               Height: =18
                               Size: =11
@@ -2795,7 +2795,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: ="No pending milestones - Default Management Process is currently idle."
@@ -2819,7 +2819,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},"→ " & m.milestone)
@@ -2833,7 +2833,7 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     PaddingLeft: =10
                                     PaddingRight: =10
@@ -2859,7 +2859,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},"→ " & m.milestone)
@@ -2873,7 +2873,7 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     PaddingLeft: =10
                                     PaddingRight: =10
@@ -2899,7 +2899,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},"→ " & m.milestone)
@@ -2913,7 +2913,7 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     PaddingLeft: =10
                                     PaddingRight: =10
@@ -2939,7 +2939,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},"→ " & m.milestone)
@@ -2953,7 +2953,7 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     PaddingLeft: =10
                                     PaddingRight: =10
@@ -2979,7 +2979,7 @@ Screens:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
                                     Color: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     Size: =12
                                     Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},"→ " & m.milestone)
@@ -2993,7 +2993,7 @@ Screens:
                                     Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
                                     FillPortions: =1
-                                    Font: =Font.'Segoe UI'
+                                    Font: =Font.'Arial'
                                     Height: =32
                                     PaddingLeft: =10
                                     PaddingRight: =10
