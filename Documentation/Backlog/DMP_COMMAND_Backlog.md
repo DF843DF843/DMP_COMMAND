@@ -86,6 +86,32 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
+## 🔴 BLOCKER gefunden (2026-09-01): Fortsetzung der SharePoint-Migration braucht zuerst zwei neue, vom Nutzer angelegte Listen
+
+**Kontext:** Nutzerauftrag "mache mit dem Einbau der SharePoint-Listen weiter" (während er in der Mittagspause war). Vor Beginn der eigentlichen Umsetzung wurde geprüft, welche SharePoint-Listen aktuell an die App angebunden sind (`DataSources.json` im `.msapr`) – **nur drei** sind verbunden: `DMP Command Agent Status`, `DMP Command Configuration`, `DMP Command Internal Domains`. Weder `DMP Command Counters` noch `DMP Command External Domains` existieren bislang.
+
+**Warum die KI hier nicht einfach selbst weitermachen kann:** Eine neue SharePoint-Liste anzulegen UND sie als Datenquelle mit der Canvas-App zu verbinden, erfordert entweder direkten SharePoint/Graph-API-Zugriff (bereits früher als nicht funktionierend dokumentiert – 401, kein Login möglich) oder eine manuelle Aktion in Power Apps Studio (wie bereits bei "Internal Domains" geschehen: "vom Nutzer in Studio verbunden, von der KI verifiziert"). Ohne die real angelegte Liste fehlt außerdem die interne SharePoint-GUID der Liste/Tabelle, die die Flow-Aktionen (`GetItems`/`CreateItem`/`UpdateItem`) zwingend referenzieren müssen – diese lässt sich nicht im Voraus erraten oder manuell einsetzen, sie wird erst beim tatsächlichen Verbinden generiert.
+
+**Exakte Ziel-Schemata (aus den bestehenden Excel-/Textdatei-Strukturen abgeleitet, bereit zum 1:1-Nachbau in SharePoint):**
+
+**1) `DMP Command Counters`** (Ersatz für `Counter.xlsx`, Tabelle `DMP_Email_Counter`, 4 Zeilen):
+- Spalte `Title` (Standard-SharePoint-Spalte, dient als Schlüssel) – exakte Werte: `No DMP`, `DMP internal Sender`, `DMP effected Member`, `DMP not effected Sender` (vier Zeilen anlegen, Groß-/Kleinschreibung und Leerzeichen exakt wie hier, da Agent 6 diese Strings unverändert für `idColumn`-Lookups verwendet).
+- Spalte `NumberProcessedEmails` (Zahl, Startwert `0` für alle vier Zeilen).
+- **Betroffene Agenten:** Agent 2 (inkrementiert den passenden Zähler bei jeder klassifizierten E-Mail – GEnauer Lese-Erhöhen-Schreiben-Zyklus, nicht nur ein einfacher manueller CRUD wie bei Internal Domains!), Agent 6 (liest+setzt auf 0 zurück, protokolliert den alten Wert vorher im Audit Trail).
+- **Wichtiger Unterschied zu Internal Domains:** Bei SharePoint gibt es kein direktes "GetItem by beliebige Spalte" wie Excels `idColumn` – die Flow-Umstellung braucht statt `GetItem`/`UpdateItem` (Excel) ein `GetItems`+`Filter` (`Title eq 'No DMP'`) gefolgt von `UpdateItem` mit der von SharePoint intern vergebenen numerischen `ID` der gefundenen Zeile. Für Agent 2 (Inkrementieren) zusätzlich eine Lese-vor-Schreiben-Sequenz nötig (kein natives "+1"-Atomic-Update in SharePoint) – bei parallelen E-Mail-Verarbeitungen ließe sich das ggf. durch sehr kurze Verarbeitungszeiten pro Nachricht in der Praxis vernachlässigen, sollte aber im Test beobachtet werden.
+
+**2) `DMP Command External Domains`** (Ersatz für `External_Domains.txt`):
+- Spalte `Title` (Domain-Name, ein Eintrag pro Zeile, z. B. `example.com`).
+- **Wichtiger Unterschied zur Ursprungsannahme "spiegelt Internal Domains 1:1":** Anders als Internal Domains (von Menschen manuell in SharePoint gepflegte Allow-Liste mit `Active`-Spalte) wird External_Domains.txt von **Agent 1 bei jedem Lauf komplett neu geschrieben** (alle extrahierten Domains als eine neue Datei, keine "Active"-Markierung, kein inkrementelles Update). Die SharePoint-Entsprechung braucht daher KEINE `Active`-Spalte, sondern eine **"Full Sync"-Logik in Agent 1**: bei jedem Lauf zuerst alle bestehenden Zeilen der Liste löschen (`GetItems` alle Zeilen → `DeleteItem` je Zeile, oder als Batch), dann für jede frisch extrahierte Domain eine neue Zeile per `CreateItem` anlegen. Das ist ein größerer Eingriff in Agent 1 als der reine Feld-Umzug bei Internal Domains.
+- **Betroffene Agenten:** Agent 1 (schreibt komplett neu bei jedem Lauf), Agent 2 (liest die Liste für den Domain-Abgleich, analog zum bereits fertigen aber noch nicht deployten Internal-Domains-Umbau).
+
+**Nächste Schritte (sobald der Nutzer zurück ist):**
+1. Nutzer legt beide Listen in SharePoint an (exakte Spalten siehe oben) und verbindet sie in Power Apps Studio als Datenquelle (wie bei Internal Domains).
+2. KI baut danach analog zum bereits fertigen (aber noch nicht deployten) Internal-Domains-Umbau: zuerst Agent 6 (Counter-Reset, geringstes Risiko, kein Produktions-E-Mail-Pfad), dann Agent 2 (Counter-Inkrement UND External-Domains-Lesen – höheres Risiko, da Produktions-E-Mail-Verarbeitung), dann Agent 1 (External-Domains-Schreiben/Full-Sync).
+3. Wie beim Internal-Domains-Vorbild: Änderungen zunächst NUR im Git-Repository committen, NICHT live deployen (`pac solution import`), bis der Nutzer verfügbar ist und die Umstellung begleitet testen kann (Agent 2 verarbeitet produktive E-Mails).
+
+---
+
 
 
 **Anlass:** Fortsetzung der Anmerkungsrunde ("Ich schicke dir jetzt die Anmerkungen einzeln") plus Nutzerauftrag im Autopilot-Modus ("die App wie besprochen aus[bauen], integriere auch gleich die Verwaltung der internen domains, prüfe auch, dass der reserved space sich in das Layout einpasst").
