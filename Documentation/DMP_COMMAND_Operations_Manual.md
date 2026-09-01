@@ -1,6 +1,6 @@
 # DMP COMMAND — Operations Manual
 
-**Scope:** This manual covers the complete DMP COMMAND system: all 5 backend agents (Power Automate flows), the DMP COMMAND Power App (Cockpit GUI), the central configuration list, and standard operating procedures including the Fire Drill / Emergency procedure.
+**Scope:** This manual covers the complete DMP COMMAND system: all 6 backend agents (Power Automate flows), the DMP COMMAND Power App (Cockpit GUI, now with 7 screens - Cockpit, Agent Monitoring, Help / Operational Manual, Audit Trail (Detail), Configuration (Lists), Maintenance, Admin Functions), the central configuration list, and standard operating procedures including the Fire Drill / Emergency procedure.
 
 **Audience:** Operations team members responsible for running, monitoring, and troubleshooting DMP COMMAND day-to-day.
 
@@ -16,11 +16,10 @@
 
 DMP COMMAND automates the handling of DMP (Disaster/Major Peril) communication events for Eurex. The system consists of:
 
-- **5 Power Automate flows ("Agents")** that extract domain data, classify inbound e-mails, manage emergency report ingestion, check system status, and control the operational mode.
-- **A central configuration list** (`DMP Command Configuration`, SharePoint) that is the single source of truth for all operational parameters. No agent uses hardcoded values for anything that varies by environment or mode.
-- **A status list** (`DMP Command Agent Status`, SharePoint) that every agent writes to after each run, providing a fast, pre-computed snapshot for the Power App dashboard (avoids slow live file/data checks in the UI layer).
-- **An audit trail** (`AuditTrail.xlsx`, SharePoint) that every agent appends structured, per-step audit events plus one run-summary row to, for compliance and troubleshooting.
-- **The DMP COMMAND Power App**, a single-screen Cockpit dashboard used by operators to monitor agent health, view/edit domain lists, switch the operational mode, and see file/audit status at a glance.
+- **6 Power Automate flows ("Agents")** that extract domain data, classify inbound e-mails, manage emergency report ingestion, check system status, control the operational mode, and (as of Agent 6) perform administrative test/reset actions.
+- **Three central SharePoint lists** that are the single source of truth for all shared data: `DMP Command Configuration` (all operational parameters - no agent uses hardcoded values for anything that varies by environment or mode), `DMP Command Agent Status` (fast, pre-computed per-agent snapshot for the Power App dashboard), and `DMP Command Internal Domains` (migrated from a flat text file to a SharePoint list in 2026-09; Agent 2 and Agent 4 both read it directly, `Active` is a Choice column).
+- **An audit trail** (`AuditTrail.xlsx`, SharePoint) that every agent appends structured, per-step audit events plus one run-summary row to, for compliance and troubleshooting. Agent 4 also reads this table directly to surface the most recent Critical/Warning rows in the Cockpit's Audit Trail (Detail) screen.
+- **The DMP COMMAND Power App**, a multi-screen Cockpit used by operators to monitor agent health, view/edit domain lists, switch the operational mode, drill into audit history, and perform administrative resets - see §3 for the full screen-by-screen guide.
 
 ### 1.1 The Operating State model
 
@@ -42,15 +41,16 @@ Switching either toggle in the Power App's "Operating State" panel calls Agent 5
 
 ### 1.2 Agent naming convention
 
-As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Agent 2, Agent 3.01, Agent 3.02, Agent 3.03):
+As of 2026-08-13, agents use sequential numbering (previously Agent 1, Agent 2, Agent 3.01, Agent 3.02, Agent 3.03). Agent 6 (Admin Functions) was added later in 2026-08/09 as the system's 6th agent:
 
 | Current Name | Previous Name | Purpose |
 |---|---|---|
 | Agent 1 (Domains Extraction) | Agent 1 | Extracts internal/external domain lists from the Emergency Report |
 | Agent 2 (E-Mail Inbox Treatment) | Agent 2 | Classifies and routes inbound DMP mailbox e-mails |
 | Agent 3 (Emergency Report Management) | Agent 3.01 | Ingests and validates new Emergency Report uploads |
-| Agent 4 (Status Check) | Agent 3.02 | Reports system/file status to the Power App |
+| Agent 4 (Status Check) | Agent 3.02 | Reports system/file status and audit detail to the Power App |
 | Agent 5 (Operational State Management) | Agent 3.03 (formerly "YES File Management") | Writes the Operating State toggle changes to central configuration |
+| Agent 6 (Admin Functions) | *(new)* | Performs administrative test/reset actions triggered from the Cockpit's Admin Functions screen (mailbox cleanup, e-mail counter resets) |
 
 ---
 
@@ -91,7 +91,7 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 **Process:**
 1. Loads active configuration (Select+Join pattern, ~3 actions instead of the historical 212-action per-row loop).
-2. Reads the e-mail's sender domain and matches it against the Internal/External domain lists.
+2. Reads the e-mail's sender domain and matches it against the Internal Domains list (SharePoint list `DMP Command Internal Domains`, `Active` Choice column - migrated from a flat text file in 2026-09) and the External Domains list (still a flat text file, `External_Domains.txt`).
 3. Moves the e-mail to the corresponding processed-mail subfolder (`No DMP`, `DEE`, `DIS`, `DNES`).
 4. Increments the corresponding counter in the central counter file/table (`CounterPathNoDMP`, `CounterPathInternalSender`, `CounterPathNotEffected`, `CounterPathEffectedMember`).
 5. Sends category-appropriate notification e-mails where configured (e.g. DIS info mail).
@@ -99,7 +99,7 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 **Error handling:** Handles Graph API failures (mailbox folder resolution), audit write failures, and missing-counter-file conditions as distinct error categories, each with its own alert e-mail and audit/status entry. E-mail importance is set from the central 3-tier scheme (see §5.2).
 
-**Key configuration parameters:** `Agent2TriggerMailbox`, `Agent2AlertFolderName`, `CounterFileName`, `CounterFolder`, `CounterTableName`, `CounterPathNoDMP`/`CounterPathInternalSender`/`CounterPathNotEffected`/`CounterPathEffectedMember`, `InternalDomainsFileName`/`InternalDomainsStorageFolder`, `ExternalDomainsFileName`/`ExternalDomainsStorageFolder`, `WorkflowPathAgent2`.
+**Key configuration parameters:** `Agent2TriggerMailbox`, `Agent2AlertFolderName`, `CounterFileName`, `CounterFolder`, `CounterTableName`, `CounterPathNoDMP`/`CounterPathInternalSender`/`CounterPathNotEffected`/`CounterPathEffectedMember`, `ExternalDomainsFileName`/`ExternalDomainsStorageFolder`, `WorkflowPathAgent2`. (`InternalDomainsFileName`/`InternalDomainsStorageFolder` are no longer used by Agent 2 since the SharePoint list migration - the list itself is referenced directly, not via these path parameters.)
 
 ---
 
@@ -124,21 +124,20 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 ### 2.4 Agent 4 — Status Check
 
-**Purpose:** Provides file-existence and count status for the Power App's Files band and related dashboard elements (Emergency Report, Internal/External Domains, Counter File, Audit Trail File), plus system-wide audit health figures (failed/warning step counts, total run count across all agents).
+**Purpose:** Provides file-existence and count status for the Power App's Files band and related dashboard elements (Emergency Report, Internal/External Domains, Counter File, Audit Trail File), system-wide audit health figures (failed/warning step counts, total run count across all agents), and (as of v1.4.0) the actual most-recent Critical/Warning audit rows for the Cockpit's Audit Trail (Detail) screen.
 
-**Trigger:** Manual/on-demand, called directly by the Power App on `App.OnStart` (`IfError('DMPAgent3(StatusCheck)'.Run(), Blank())` — see note on the connector reference name below) to refresh the Cockpit dashboard.
+**Trigger:** Manual/on-demand, called directly by the Power App's `scrHome.OnVisible` (first load) and periodically by `tmrAutoRefreshTick` (`'DMPAgent4(StatusCheck)=>VS'.Run()`) to refresh the Cockpit dashboard.
 
 **Process:**
-1. Loads active configuration via the Select+Join pattern (same as Agents 1, 2, 3, 5) — replaced the original per-row `Foreach` config loop as of 2026-08-13.
-2. Performs live SharePoint file-metadata and content checks for each monitored file (existence, last-modified timestamp, and for domain files, a count of entries).
-3. Reads the shared `Agent Audit Summary` table (see §5.1) for all 5 agent rows and aggregates `AuditFailedCount` (sum of all `FailedStepsCount`), `AuditWarningCount` (sum of all `WarningStepsCount`), and `AuditRunSummaryCount` (sum of all Runs-counter columns across all 5 rows) — added 2026-08-24, replacing the previous always-zero placeholder values.
-4. Returns all of the above via a structured response to the Power App.
+1. Loads active configuration via the Select+Join pattern (same as Agents 1, 2, 3, 5).
+2. Performs live SharePoint file/list-metadata and content checks for each monitored item (existence, last-modified timestamp, and for domain data, a count of entries). Internal Domains count/existence is read from the `DMP Command Internal Domains` SharePoint list (`Active` Choice column) rather than a text file.
+3. Reads the shared `Agent Audit Summary` table (see §5.1) for all 6 agent rows and aggregates `AuditFailedCount` (sum of all `FailedStepsCount`), `AuditWarningCount` (sum of all `WarningStepsCount`), and `AuditRunSummaryCount` (sum of all Runs-counter columns across all 6 rows).
+4. **(v1.4.0, 2026-09)** Reads the central Audit Trail table directly (same workbook/table Agent 6 writes run-summaries to) and returns the 20 most recent rows where `StepStatus = Failed` (Critical) and the 20 most recent rows where `StepStatus = Warning`, each projected to a compact `{timestamp, workflowpath, stepname, keyoutput}` shape.
+5. Returns all of the above via a structured response to the Power App.
 
-**Resolved (2026-08-13):** The Power App now calls Agent 4 directly and binds its Cockpit dashboard (Files band, Agent 2 email-classification ring, Agent Heartbeat) to the live response instead of static placeholder values. The originally planned alternative (reading from the pre-computed `DMP Command Agent Status` list instead of live file checks) was not needed in the end — the direct call approach works without the previously seen timeout.
+**Connector reference name (permanent, does not change on flow rename):** The Power App's underlying data source connector for this flow is named `'DMPAgent4(StatusCheck)=>VS'`. This internal Power Fx connector name is bound permanently to the flow's GUID at the time the connection was first added to the app - it does **not** change if the flow's display name or version is later edited, nor if the SharePoint connection is removed and re-added, nor by clearing browser cache (confirmed by direct testing in 2026-08). Do not attempt to "clean up" this name; it is cosmetic only and has no effect on functionality.
 
-**Note on the connector reference name:** The Power App's underlying data source connector is still internally named `'DMPAgent3(StatusCheck)'` (a legacy name from before the 2026-08-13 agent renumbering). The Power App has no built-in mechanism to rename a connector reference, so this internal name is expected to remain even though the flow itself is correctly named "DMP Agent 4 (Status Check)".
-
-**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `InternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`, `Agent4AlertFolderName`. Also still reads `RealDMPIndicatorFileName`/`RealDMPIndicatorFolder` (legacy Yes.txt-era parameters, deleted from the live configuration list) via a safe `coalesce(...)` fallback to hardcoded defaults (`Yes.txt` / `/Shared Documents/Email Hotline/AI_Agent/Is_a_real_DMP`) — functionally harmless, a candidate for future cleanup.
+**Key configuration parameters:** File name/folder parameters shared with Agent 1/Agent 2/Agent 3 (`ExternalDomainsFileName`, `CounterFileName`, `AuditFileName`, `EmergencyReportFileName`, etc.), `WorkflowPathAgent4`, `Agent4AlertFolderName`.
 
 ---
 
@@ -165,65 +164,113 @@ As of 2026-08-13, all 5 agents use sequential numbering (previously Agent 1, Age
 
 ---
 
+### 2.6 Agent 6 — Admin Functions
+
+**Purpose:** Performs administrative test/reset actions that are too risky or destructive to expose as ordinary automated steps - triggered exclusively from the Power App's **Admin Functions** screen, never automatically. Currently supports two categories of action:
+1. **Mailbox cleanup** - deletes the `PA Processed Mails` folder tree (and any stray duplicates) from the shared mailbox, for resetting test data.
+2. **E-mail counter reset** - resets any one (or all) of the 4 e-mail-classification counters (`No DMP`, `DMP internal Sender`, `DMP effected Member`, `DMP not effected Sender`) in the central Counter workbook back to 0.
+
+**Trigger:** Called directly by the Power App (`'DMPAgent6(AdminFunctions)'.Run(User().Email, "<RequestedAction>")`) after the operator confirms a Yes/Cancel dialog in the Admin Functions screen. `RequestedAction` is one of: `DeleteProcessedMailsFolderTree`, `ResetCounter_NoDMP`, `ResetCounter_InternalSender`, `ResetCounter_Effected`, `ResetCounter_NotEffected`, `ResetAllCounters`.
+
+**Process (counter reset, added 2026-09):**
+1. Reads the current value of the targeted counter row(s) from the Counter workbook.
+2. Resets the value(s) to 0.
+3. The result message (including the previous value) is written to the central Audit Trail as a normal run-summary row (`StepName = AdminAction`) - this run-summary row **is** the historization/audit record of the reset; no separate archive file exists for this today (see backlog for a possible future dedicated "Operational History" archive).
+
+**Error handling:** Any unrecognized `RequestedAction` value returns a clear "Unknown or unsupported admin action requested" message instead of silently doing nothing. All actions (successful or not) write a run-summary row to the Audit Trail and increment Agent 6's own row in `Agent Audit Summary`.
+
+**Key configuration parameters:** Shares `SharedDMPMailbox`, `ProcessedMailsRootFolderName`, and the Counter-related parameters (`CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter`) with Agents 2/4.
+
+---
+
 ## 3. Power App (Cockpit) — User Guide
 
-### 3.1 Layout
+The app has 7 screens, reachable from the left sidebar: **Cockpit** (home/dashboard), **Agent Monitoring**, **Help / Operational Manual**, **Audit Trail (Detail)**, **Configuration (Lists)**, **Maintenance**, and **Admin Functions**.
 
-The Cockpit screen is organized as follows:
-- **Sidebar** (left): navigation (Cockpit, Agent Monitoring, Operational Board, Audit Trail (Detail), Configuration (Lists), Maintenance).
-- **Header**: application title, KPI strip (Critical / Warnings / Agents Active counts), version tag, Dark/Light mode toggle.
-- **Agent Heartbeat** panel: a segmented ring showing aggregate agent health, with a colored-dot legend for all 5 agents.
+### 3.1 Cockpit (home screen) layout
+
+- **Header**: application title, version tag, KPI strip (Critical / Warnings / Agents Active counts - each is clickable: Critical and Warnings jump to Audit Trail (Detail), Agents Active jumps to Agent Monitoring), auto-refresh interval selector (Off/Now/2m/5m/10m/15m) with a live countdown, Dark/Light mode toggle.
+- **System Health** ring (left): a segmented ring showing the proportion of the 5 monitored files/lists that are OK vs. missing; click to open a legend popup with the exact per-item status.
 - **Operating State** panel: current mode, last-changed timestamp/user, and the two Operating State toggles (Operational Mode: Normal/DMP; Environment: SIMU/PROD).
-- **Maintenance - Domains** panel: View/Edit links for the Internal and External domain lists, plus a "Replace" control to upload a new Emergency Report (routes to Agent 3).
-- **Agent 2 - Emails Processed** panel: a segmented ring showing the proportional breakdown of No DMP / DEE / DIS / DNES email classifications.
-- **Files** band: a compact status strip showing existence/last-modified information for the 5 key files (Emergency Report, Internal Domains, External Domains, Counter File, Audit Trail File).
-- **Next Steps** panel: a checklist-style list of suggested operator actions.
+- **Maintenance - Domains** panel: live counts + View/Edit links for the Internal (SharePoint list) and External (text file) domain lists, plus a "Replace" control on the External row to upload a new Emergency Report (routes to Agent 3) - the status dot on that row blinks while the upload is being processed.
+- **Files** band: a compact status strip showing existence/last-modified information for the 5 key files/lists (Emergency Report, Internal Domains, External Domains, Counter File, Audit Trail File).
+- **Automation Status** panel: a compact 4-line live summary (Agent 4 status, Internal Domains active count, Config Parameters active count, Agent Status entries count).
+- **Emails Processed** ring (right): a segmented ring showing the proportional breakdown of No DMP / External / Internal Sender / Not Effected e-mail classifications; click to open a legend popup with exact counts/percentages.
+- **Next Steps** panel: a checklist-style list of suggested operator actions, sourced from the real-world DMP process tracker.
 
-### 3.2 Switching the Operating State
+### 3.2 Agent Monitoring screen
 
-1. Locate the **Operating State** panel.
+Six tiles (one per agent), each showing live status, last-run result and duration, and status message straight from `DMP Command Agent Status` - a friendlier, per-agent alternative to reading the raw SharePoint list directly.
+
+### 3.3 Help / Operational Manual screen
+
+An in-app, English-language, container-by-container explanation of everything on the Cockpit: what each panel shows, what every button does, and what the status colours/LEDs mean. Reachable from the sidebar at any time; there is currently no F1 keyboard shortcut (not reliably supported by the canvas app platform - browsers intercept/ignore F1 before the app can react to it).
+
+### 3.4 Audit Trail (Detail) screen
+
+Shows live summary counts (Critical/Warnings/total run-summary rows) plus the 10 most recent Critical (Failed) and 10 most recent Warning rows, each read directly from the central Audit Trail table by Agent 4 (v1.4.0+). A button opens the full `AuditTrail.xlsx` file in SharePoint for anything beyond the most recent 10 of each kind.
+
+### 3.5 Configuration (Lists) screen
+
+Direct access to the 3 central SharePoint lists: live active-row counts plus View/New-entry links for `DMP Command Configuration`, `DMP Command Agent Status`, and `DMP Command Internal Domains`.
+
+### 3.6 Maintenance screen
+
+Connection diagnostics (reachability check for all 3 SharePoint lists), an app/agent version overview, and quick links to the Power Automate, SharePoint, and Power Apps maker portals.
+
+### 3.7 Admin Functions screen
+
+Destructive, operator-confirmed actions only, each in its own bordered sub-section, calling Agent 6:
+- **Mailbox cleanup**: deletes the `PA Processed Mails` folder tree, with a Yes/Cancel confirmation.
+- **Reset e-mail counters**: five buttons (No DMP / Internal Sender / External / Not Effected / Reset ALL), each with its own confirmation; the previous value is recorded in the Audit Trail before the reset.
+- A small "Display diagnostics" strip (App.Width/App.Height) for reporting layout issues, kept deliberately unobtrusive.
+
+### 3.8 Switching the Operating State
+
+1. Locate the **Operating State** panel on the Cockpit.
 2. To simulate or declare a real DMP event, toggle **Operational Mode** to **DMP**. To end one, toggle back to **Normal**.
 3. To switch between the test/simulation environment and production, toggle **Environment** between **SIMU** and **PROD**.
 4. Each toggle immediately calls Agent 5 and writes the combined mode to `CurrentOperationMode`. A success or error notification appears at the top of the screen.
 5. There is currently **no four-eyes/dual-approval confirmation** before a switch takes effect (this has been raised as a backlog item — see §6).
 
-### 3.3 Viewing/editing domain lists
+### 3.9 Viewing/editing domain lists
 
-Use the **View** buttons to open the current Internal/External domain files read-only, or **Edit** to open them for editing directly in SharePoint/Excel Online.
+Use the **View** buttons to open the current Internal (SharePoint list) / External (text file) domain data read-only, or **Edit** to add a new entry (Internal, via a quick-add form) or open the file for editing directly (External).
 
-### 3.4 Replacing the Emergency Report
+### 3.10 Replacing the Emergency Report
 
-Click **Replace** next to the External row in the Maintenance - Domains panel, select a `.xlsx` file. Only `.xlsx` files are accepted — other file types are rejected with an error message. On success, Agent 3 stores the file and the operator should subsequently run Agent 1 to regenerate the domain lists from the new report.
+Click **Replace** next to the External row in the Maintenance - Domains panel, select a `.xlsx` file. Only `.xlsx` files are accepted — other file types are rejected with an error message. The status dot on that row blinks orange while Agent 3 processes the upload, then returns to green (or red on failure). On success, Agent 3 stores the file and the operator should subsequently run Agent 1 to regenerate the domain lists from the new report.
 
-### 3.5 Dark/Light mode
+### 3.11 Dark/Light mode
 
-Use the toggle in the top-right of the header to switch between dark and light color themes. This is a purely visual, per-session preference (not currently persisted or per-user configurable — see backlog item on individual color settings). **Resolved (2026-08-24):** an earlier flicker/flip-flop issue when clicking the toggle on this screen has been fixed.
+Use the toggle in the top-right of the header to switch between dark and light color themes. This is a purely visual, per-session preference (not currently persisted or per-user configurable — see backlog item on individual color settings).
 
-### 3.6 Known current limitations of the Cockpit screen (as of 2026-08-24)
+### 3.12 Known current limitations of the Cockpit (as of 2026-09-01)
 
-- The Agent Heartbeat wheel, Files band, and email-classification ring are bound to live data returned by Agent 4 (see §2.4) as of 2026-08-13 — this is **no longer** static/demo data.
-- **Resolved (2026-08-24):** A full tile-by-tile review of `scrHome.pa.yaml` was completed. Several remaining hardcoded/fabricated values were found and fixed: the Domain Maintenance counts (Internal/External), the operating-mode and last-changed labels, the Critical/Agents-Active KPI colors, the "Next Steps" checklist detail texts (previously showed fabricated numbers/timestamps, e.g. an invented "78 active parameters" figure), a legend color mismatch in the email-classification ring, and several text-encoding (mojibake) artifacts. All Cockpit tiles now either show genuinely live data or clearly generic, non-data-claiming guidance text.
-- Agent Monitoring, Operational Board, Audit Trail (Detail), Configuration (Lists), and Maintenance sidebar items are navigation placeholders and are not yet built out as separate screens.
-- There is currently no in-app mechanism to acknowledge/clear a Warning or Critical indicator, or to reset counters/audit history — see the backlog for the planned acknowledgment (baseline-diff) and controlled-reset mechanisms.
+- There is currently no in-app mechanism to reset the Audit Trail itself (archive + start fresh) - only the 4 e-mail counters can be reset today (§3.7); a dedicated "Operational History" archive-and-reset for the Audit Trail file is planned but not yet built (see backlog).
+- There is currently no four-eyes/dual-approval confirmation before an Operating State switch takes effect.
+- Auto-refresh relies on a 1-second canvas app Timer; browser tab throttling of background/inactive tabs can make the countdown appear frozen even though the underlying mechanism is correctly configured - keep the app tab in the foreground for reliable live updates.
 
 ---
 
 ## 4. Central Configuration List (`DMP Command Configuration`)
 
-This SharePoint list is the single source of truth for every operational parameter used by all 5 agents. Columns:
+This SharePoint list is the single source of truth for every operational parameter used by all 6 agents. Columns:
 
 | Column | Purpose |
 |---|---|
 | `ParameterName` | Unique key, referenced by agents as `outputs('CMP_ConfigObject')?['ParameterName']` |
-| `Active` | `Yes`/`No` — only `Active = Yes` rows are loaded by any agent |
+| `Active` | `Yes`/`No` Choice column — only `Active = Yes` rows are loaded by any agent (formulas must use `Active.Value`, not `Active`, when read from Power Apps) |
 | `Category` | Grouping for readability (Mail, File, Path, Audit, Flow, Runtime, ...) |
 | `CurrentValue` | Used only by mode-independent runtime parameters (notably `CurrentOperationMode` itself) |
 | `Description` | Human-readable explanation |
 | `ParameterType` | Text / Email / Path / Number |
-| `Scope` | Which agent(s) the parameter applies to: `Agent 01`, `Agent 02`, `Agent 03`, `Agent 04`, `Agent 05` (unified 2-digit, zero-padded, with a space — as of 2026-08-13), `Global` (cross-agent), or `PowerApps` (GUI-only values) |
+| `Scope` | Which agent(s) the parameter applies to: `Agent 01`–`Agent 06` (unified 2-digit, zero-padded, with a space — as of 2026-08-13), `Global` (cross-agent), or `PowerApps` (GUI-only values) |
 | `Value - PROD (NODMP)`, `Value - PROD (DMP)`, `Value - SIMU (NODMP)`, `Value - SIMU (DMP)` | The 4 mode-specific values; agents pick the correct column at runtime based on the current `CurrentOperationMode` |
 
-**Editing rule:** Only the operations team edits this list directly in SharePoint. Do not hardcode values in any flow — if a new parameter is needed, add it here first (with all 4 mode columns populated) before referencing it in a flow.
+**Editing rule:** Only the operations team edits this list directly in SharePoint (or via the Power App's **Configuration (Lists)** screen, which links directly to it). Do not hardcode values in any flow — if a new parameter is needed, add it here first (with all 4 mode columns populated) before referencing it in a flow.
+
+**Related list — `DMP Command Internal Domains` (added 2026-09):** A separate SharePoint list, not part of `DMP Command Configuration`, holding one row per internal domain (`Title` = domain name, `Active` Choice column = `Yes`/`No`). Replaces the former flat `Internal_Domains.txt` file. Agent 2 (classification) and Agent 4 (status/count) both read it directly; the Power App's Maintenance - Domains panel and Configuration (Lists) screen both link to it.
 
 **Resolved (2026-08-13):** The former shared `Agent3_All` scope value (used by parameters shared across the pre-renumbering Agent 3.01/3.02/3.03 family) has been retired. Agent 3, 4, and 5 now each have their own dedicated `Agent3AlertFolderName` / `Agent4AlertFolderName` / `Agent5AlertFolderName` parameter with its own `Agent 03` / `Agent 04` / `Agent 05` scope — no agent shares an alert folder with another. See §9 for the naming design rule that formalizes this pattern for future agents.
 
@@ -262,7 +309,7 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 3. **If a new Emergency Report is available**: Upload it via **Maintenance - Domains → Replace** (Agent 3), then manually run **Agent 1** to regenerate the domain lists.
 4. **Monitor**: Agent 2 will now classify inbound mail using the DMP-specific subject/wording rules and the refreshed domain lists.
 5. **Ending the event**: Once the drill/event is over, switch **Operational Mode** back to **Normal**. This is explicitly listed as a "Next Steps" reminder item on the Cockpit screen.
-6. **Review**: Check the Audit Trail for warnings or failures during the event window (see §5.1). A dedicated "Audit Trail (Detail)" screen is planned but not yet built — for now, review `AuditTrail.xlsx` directly in SharePoint.
+6. **Review**: Check the **Audit Trail (Detail)** screen in the Power App for the most recent Critical/Warning rows during the event window (see §5.1, §3.4), or review `AuditTrail.xlsx` directly in SharePoint for the full history.
 
 ---
 
@@ -293,6 +340,9 @@ Every agent updates its own row in `DMP Command Agent Status` after each run (`C
 | 2026-08-14 | Added alert-mail-then-move pattern (mirroring Agents 1–3) to Agent 4 and Agent 5 for error notifications. |
 | 2026-08-24 | Added the `Agent Audit Summary` table to `AuditTrail.xlsx` (per-agent, per-outcome step/run counters with a last-update timestamp per counter) and wired all 5 agents to maintain it; Agent 4 now aggregates real Critical/Warning/Total-runs figures from this table instead of always returning 0 (§2.4, §5.1, §7 updated accordingly). Prepared the backend (`Audit Acknowledgment` table) for a future warning/alert acknowledgment feature (UI not yet built). Fixed a dark/light theme toggle flicker on the Cockpit screen (§3.5). |
 | 2026-08-24 | Completed a full tile-by-tile review of the Cockpit screen (`scrHome.pa.yaml`, all 8 containers): fixed hardcoded KPI colors, a hardcoded operating-mode label, a fabricated "last changed" name/timestamp, two hardcoded domain counts, a legend color mismatch in the email ring, two fabricated "Next Steps" detail texts, and multiple text-encoding (mojibake) artifacts (§3.6). All Cockpit tiles now show genuinely live data or non-data-claiming guidance text. |
+| 2026-08-25 – 2026-08-28 | Agent 6 (Admin Functions) introduced (mailbox cleanup action). Warning/Critical acknowledgment (baseline-diff, click-to-acknowledge) shipped on the Critical/Warnings/Agents Active KPI tiles. Several Timer/refresh reliability fixes (auto-refresh interval selector, countdown, toggle-guard flicker). |
+| 2026-09-01 (v1.10.0–v1.10.2) | Internal Domains migrated from `Internal_Domains.txt` to the new `DMP Command Internal Domains` SharePoint list (Agent 2 + Agent 4 updated to match). Automation Status redesigned as a compact live panel. Release Notes screen added (App Changes + Agent Changes tabs, per-card scrolling). Replace-button processing LED fixed (now reliably blinks). All status dots across the Cockpit unified to the same 14px-circle size. |
+| 2026-09-01 (v1.11.0–v1.13.1) | **Agent Monitoring**, **Help / Operational Manual**, **Configuration (Lists)**, and **Maintenance** screens built out (previously navigation placeholders — see §3 for the current, accurate description of each). **Admin Functions** extended with e-mail counter reset actions (Agent 6 v1.2.0), each its own bordered sub-section, "Test"/"Test Only" wording removed. **Audit Trail (Detail)** screen built out: live summary counts plus the 10 most recent Critical/Warning rows, read directly by Agent 4 (v1.4.0) from the central Audit Trail table. Clicking the Critical/Warnings/Agents Active KPIs now also navigates to the relevant detail screen. Maintenance Domains layout reflowed to fix truncated INTERNAL/EXTERNAL labels; Replace LED simplified (single blinking status dot instead of a separate LED). Documentation folder in the git repository resynced with this working copy (had drifted since 2026-08-14) and a documentation-sync AI rule added to prevent recurrence. |
 
 ---
 
