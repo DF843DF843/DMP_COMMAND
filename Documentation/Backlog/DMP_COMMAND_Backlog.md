@@ -14,9 +14,10 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 **Kontext:** Nutzer musste die Sitzung beenden ("Ich muss jetzt zum Ende kommen") – dies ist die gesammelte Übersicht aller zu diesem Zeitpunkt offenen Punkte, damit nichts verloren geht.
 
-**✅ Heute deployed (live):**
-- Agent 6 (Admin Functions) – Counter-Reset (alle 5 Fälle) auf die SharePoint-Liste `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) umgestellt, per `pac solution import` live importiert. **Wichtig: Agent 6 wurde beim Import laut Meldung "deactivated and replaced" – muss vom Nutzer im Power-Automate-Portal manuell REAKTIVIERT werden, sonst läuft der Flow nicht.**
-- App v1.22.1 (Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung) und v1.22.2 (Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben) – frisch gepackt als `DMP_COMMAND_v1.22.2_ReadyToPublish.msapp` unter `C:\PowerAppWork\`. **Wichtig: Die Canvas-App ist KEIN Bestandteil der Dataverse-Solution (bestehende KI-Regel) – `pac solution import` deployt sie NICHT mit. Der Nutzer muss diese `.msapp`-Datei manuell in Power Apps Studio öffnen und explizit Speichern + Veröffentlichen, sonst bleiben v1.22.1/v1.22.2 nur lokal und gehen nicht live.**
+**✅ Heute deployed (live) UND vom Nutzer bestätigt (Stand 18:13 Uhr):**
+- Agent 6 (Admin Functions) – Counter-Reset (alle 5 Fälle) auf die SharePoint-Liste `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) umgestellt, per `pac solution import` live importiert und vom Nutzer reaktiviert.
+- App v1.22.1 (Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung) und v1.22.2 (Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben) – kanonische `.msapp`-Datei vom Nutzer in Power Apps Studio geöffnet, gespeichert und veröffentlicht. **Live.**
+- Nutzer bestätigt zusätzlich: alle Agenten und SharePoint-Listen in der App aktualisiert/verbunden und veröffentlicht.
 
 **🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge):**
 1. **Agent 2 SharePoint-Migration** (Counter-Inkrement + External-Domains-Lesen) – noch NICHT begonnen. Höheres Risiko, da Produktions-E-Mail-Pfad betroffen. GUIDs bereits bekannt: `DMP Command Counters` = `277307f0-195a-4e78-afc8-850dbdf956b2`, `DMP Command External Domains` = `dc89aed5-d87a-4e12-875a-db2adbc2cee4`. Bei Umsetzung: Lese-vor-Schreiben-Zyklus für den Counter (kein natives Atomic-Increment in SharePoint).
