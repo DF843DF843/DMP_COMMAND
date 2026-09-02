@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.7 - 2026-09-02 (current)
+### v1.22.8 - 2026-09-02 (current)
+
+- Audit Trail (Detail) now auto-refreshes on its own every auto-update interval while the screen is open, instead of only when the tab is first opened
+- Fixed garbled timestamps in the Recent Critical/Warning lists (raw Excel serial numbers like '46225.50...') - now converted to a readable date/time, falling back to the original text if it is already a normal timestamp
+- Fixed the Recent Critical/Warning lists sometimes showing older rows instead of the true last 10 - the underlying Audit Trail read now pages through the full table instead of only its first page
+- Added Critical/Warning/All reset buttons on the Audit Trail screen - the Cockpit's Critical and Warnings header KPIs now show only new events since the last reset instead of the all-time total, and increase again from 0 as new Critical/Warning events occur
+
+### v1.22.7 - 2026-09-02
 
 - Fixed the Automation Status External Domains (and Counter) row count not updating - the periodic/manual refresh logic was still only refreshing the 3 original SharePoint data sources (Agent Status, Configuration, Internal Domains) and never refreshed the two newly added 'DMP Command Counters'/'DMP Command External Domains' lists, so the client-side row counts stayed stuck at whatever was cached on first load
 
@@ -237,8 +244,9 @@ Backend:
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
-### Agent 4 (Status Check) - v1.4.1 (current)
+### Agent 4 (Status Check) - v1.4.2 (current)
 
+- v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature
 - v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating after Agent 1/2 were migrated to the new lists
 - v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page
 - v1.3.0 (2026-09-01) - Internal Domains status check now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before
@@ -264,7 +272,10 @@ Backend:
 - 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)
 - 2026-08-13 - renamed from "Agent 3.03 (YES File Management)" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value
 
-### Agent 6 (Admin Functions) - v1.2.0 (current)
+### Agent 6 (Admin Functions) - v1.3.0 (current)
+
+- v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset
+- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0
 
 v1.5.x & older
 

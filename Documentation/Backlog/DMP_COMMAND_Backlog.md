@@ -10,17 +10,50 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:54 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~13:40 Uhr): Alle offenen Punkte
 
-**✅ Heute live UND vom Nutzer final bestätigt/deployed:**
-- Agent 6 (Admin Functions) – Counter-Reset auf SharePoint umgestellt, live.
+**✅ Heute live UND selbstständig deployed (Nutzer 2h im Meeting, gemäß Auftrag "arbeite Backlog-Items ab, wo kein Input nötig ist, dann alles deployen"):**
+- Agent 6 (Admin Functions) v1.3.0 – LIVE: 3 neue Reset-Aktionen (Critical/Warning/All) für den neuen Audit-Trail-Reset-Mechanismus.
+- Agent 4 (Status Check) v1.4.2 – LIVE: Pagination für den Audit-Trail-Read (echte letzte 10 Zeilen statt nur erste Tabellenseite), 2 neue Response-Felder (CriticalCounterBaseline/WarningCounterBaseline).
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE: Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt: External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt, Operation-ID-Fehler (`CreateItem`→`PostItem`) behoben.
-- **Agent 4 (Status Check) v1.4.1 – LIVE:** Counter- und External-Domains-Statusprüfung ebenfalls auf SharePoint umgestellt (siehe Update unten – dies war die eigentliche Ursache für "Counter der E-Mail-Anzeige aktualisiert nicht").
-- **App v1.22.7** – gepackt, bereit zum Veröffentlichen durch den Nutzer: v1.22.5 (SharePoint-Migrationsfolgen) + v1.22.6 (Emails-Processed-Legende) + v1.22.7 (fehlende Refresh()-Aufrufe für die 2 neuen Listen). **Zusätzlich muss der Nutzer beim nächsten Öffnen in Studio die beiden neuen SharePoint-Listen über den Connector neu verbinden (siehe Update unten) – das ist ein separater, Studio-seitiger Schritt.**
+- **App v1.22.8** – gepackt (v1.22.5 bis v1.22.8 kumulativ): SharePoint-Migrationsfolgen, Emails-Processed-Legende, fehlende Refresh()-Aufrufe, Audit-Trail-Auto-Refresh, Zeitanzeige-Fix, echte letzte 10 Warnungen/Criticals, neue Reset-Buttons. **Wartet auf Veröffentlichung durch den Nutzer in Studio.**
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
-**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) live, aktiviert und funktionsfähig.**
+**⚠️ Zu prüfen, sobald der Nutzer zurück ist:**
+1. **Verbinder-Neuverbindung** für `DMP Command Counters`/`DMP Command External Domains` in Studio (siehe Update weiter unten) – weiterhin offen.
+2. **Flow-Aktivierungsstatus prüfen:** `pac solution import` meldete bei diesem Import (wie schon bei früheren Imports) "The original workflow definition has been deactivated and replaced." Das ist eine Standard-Meldung von Dataverse bei jedem Workflow-Update und bedeutet nicht zwangsläufig, dass der Flow abgeschaltet bleibt – aber bitte in Power Automate kurz prüfen, ob Agent 4 und Agent 6 nach diesem Import noch "Ein" (aktiv) sind, und falls nicht, einmal manuell aktivieren (bekanntes, bereits früher dokumentiertes Verhalten dieses Deployment-Wegs).
+3. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert (JSON-Syntax, Round-Trip-Diff=0).
+
+**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) weiterhin live, aktiviert und funktionsfähig.**
+
+---
+
+## ✅ Update (2026-09-02, ~13:40 Uhr): 4 gemeldete Audit-Trail-Probleme behoben (selbstständig, Nutzer im Meeting)
+
+**Nutzer-Meldung (4 Punkte):**
+1. Refresh im Audit-Trail-Tab wurde nur beim Öffnen des Tabs ausgelöst, nicht automatisch bei Änderung des Warning/Critical-Zählers.
+2. Einträge mit fehlerhafter Zeitanzeige (z. B. `46225.503030463` statt Datum).
+3. Es wurden nicht die tatsächlich letzten 10 Warnungen angezeigt.
+4. Wunsch nach 3 Reset-Buttons (Critical/Warning/All), die den "neue Warnungen"-Zähler auf 0 zurücksetzen, bis zum nächsten Ereignis.
+
+**1) Auto-Refresh:** `scrAuditTrail` erhält einen eigenen Timer (`tmrAuditTrailAutoRefresh`), der dieselbe Aktualisierungslogik wie das Cockpit (gleiche `varAutoRefreshMinutes`-Einstellung) selbstständig ausführt, solange der Audit-Trail-Screen aktiv ist – vorher gab es nur den einmaligen `OnVisible`-Aufruf.
+
+**2) Fehlerhafte Zeitanzeige:** Root Cause: Die zugrunde liegende Excel-Spalte `TimestampUtc` enthält historisch gemischte Zelltypen (Text vs. echtes Datum), je nachdem, welcher Agent/welche Codeversion die Zeile geschrieben hat – manche Zeilen liefern daher einen rohen Excel-Seriendatumswert statt Text. Fix (rein App-seitig, Power Fx `IfError` mit echtem Kurzschluss-Verhalten, anders als Power Automates `if()`): Es wird zuerst versucht, den Rohwert als Excel-Seriendatum zu interpretieren (`DateAdd(Date(1899,12,30), Value(rawTs)*86400, TimeUnit.Seconds)`); schlägt das fehl (weil der Wert bereits ein ISO-Text ist), wird der Originaltext unverändert angezeigt.
+
+**3) Echte letzte 10 Zeilen:** Root Cause gefunden: `GET_AuditTrail_AllRows` (Excel-Connector, Agent 4) hatte keine Pagination aktiviert. Die Audit-Trail-Tabelle ist inzwischen größer als eine Connector-Seite, wodurch nur die ÄLTESTEN Zeilen geladen wurden – "letzte 10" bezog sich dadurch nur auf die neuesten Zeilen INNERHALB dieser unvollständigen, alten Teilmenge. Fix: `runtimeConfiguration.paginationPolicy.minimumItemCount: 50000` ergänzt, damit die komplette Tabelle gelesen wird.
+
+**4) Reset-Buttons:** Neues Konzept, bewusst SharePoint-Listen-basiert (etabliertes Projektprinzip):
+- **Speicherort:** 2 neue Zeilen in der bereits verbundenen Liste `DMP Command Counters` (Title=`CriticalCounterBaseline`/`WarningCounterBaseline`, NumberProcessedEmails=Basiswert) – bewusst KEINE neue SharePoint-Liste angelegt, da der Nutzer diese im Meeting nicht in Studio verbinden könnte.
+- **Agent 6 (v1.3.0):** 3 neue Switch-Cases (`ResetCriticalCounterBaseline`/`ResetWarningCounterBaseline`/`ResetAllAuditCounterBaselines`) – lesen die 6 Zeilen von `AgentAuditSummary` (Excel), summieren `FailedStepsCount`/`WarningStepsCount` (identische Rechnung wie Agent 4s Cockpit-Summe), schreiben den aktuellen Wert als neue Baseline (Create-if-missing-else-Patch). Keine Trigger-Schema-Änderung nötig (nutzt die bereits bestehenden generischen Parameter `InitiatedBy`/`RequestedAction`).
+- **Agent 4 (v1.4.2):** liest die 2 Baseline-Werte aus derselben bereits geladenen `GET_Counters_List`-Antwort (kein zusätzlicher API-Call).
+- **App:** Cockpit-Header zeigt jetzt `Max(Gesamtzahl - Baseline, 0)` statt der reinen Lifetime-Summe; 3 neue Buttons im Audit-Trail-Screen rufen Agent 6 auf und aktualisieren die Baseline-Variable sofort optimistisch (kein Warten auf den nächsten Refresh-Zyklus nötig). Die bestehenden "Critical (total)"/"Warnings (total)"-Labels zeigen weiterhin die echte Lifetime-Summe (bewusst unverändert, als historische Referenz).
+
+**Bewusste Sicherheitsentscheidung:** Auf eine Trigger-Schema-Änderung bei Agent 4 ODER Agent 6 wurde verzichtet (z. B. ein zusätzlicher Eingabeparameter), da eine neue/geänderte Verbindungssignatur laut heutiger Erfahrung (siehe Update weiter unten zu den roten Verbindungswarnungen) in Studio erneut eine manuelle Nutzerbestätigung auslösen könnte – das wäre während der Abwesenheit des Nutzers nicht handhabbar gewesen.
+
+**Validiert:** JSON-Syntax gültig (beide Flows), Round-Trip-Pack/Unpack-Diff=0 für alle 4 geänderten YAML-Dateien (`App.pa.yaml`, `scrHome.pa.yaml`, `scrAuditTrail.pa.yaml`, `scrReleaseNotes.pa.yaml`), `pac solution pack`/`import` erfolgreich, `pac canvas pack` erfolgreich.
+
+**Status:** Agent 4 v1.4.2 und Agent 6 v1.3.0 live importiert und veröffentlicht. App v1.22.8 gepackt, wartet auf Veröffentlichung durch den Nutzer in Studio (zusammen mit dem noch offenen Connector-Reconnect für Counter/External Domains).
 
 ---
 

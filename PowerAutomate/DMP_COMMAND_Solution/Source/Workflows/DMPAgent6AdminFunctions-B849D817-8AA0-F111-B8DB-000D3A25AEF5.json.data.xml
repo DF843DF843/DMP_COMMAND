@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{b849d817-8aa0-f111-b8db-000d3a25aef5}" Name="DMP Agent 6 (Admin Functions) [1.2.0]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow WorkflowId="{b849d817-8aa0-f111-b8db-000d3a25aef5}" Name="DMP Agent 6 (Admin Functions) [1.3.0]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <JsonFileName>/Workflows/DMPAgent6AdminFunctions-B849D817-8AA0-F111-B8DB-000D3A25AEF5.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
@@ -22,6 +22,6 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 6 (Admin Functions) [1.2.0]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 6 (Admin Functions) [1.3.0]" />
   </LocalizedNames>
 </Workflow>

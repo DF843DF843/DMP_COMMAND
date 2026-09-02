@@ -302,6 +302,16 @@
                   "x-ms-dynamically-added": true,
                   "type": "number"
                 },
+                "criticalcounterbaseline": {
+                  "title": "CriticalCounterBaseline",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
+                "warningcounterbaseline": {
+                  "title": "WarningCounterBaseline",
+                  "x-ms-dynamically-added": true,
+                  "type": "number"
+                },
                 "auditrunsummarycount": {
                   "title": "AuditRunSummaryCount",
                   "x-ms-dynamically-added": true,
@@ -501,6 +511,8 @@
               "counterinternalsender": "@variables('CounterInternalSender')",
               "counternoteffected": "@variables('CounterNotEffected')",
               "countereffected": "@variables('CounterEffected')",
+              "criticalcounterbaseline": "@variables('CriticalCounterBaseline')",
+              "warningcounterbaseline": "@variables('WarningCounterBaseline')",
               "auditrunsummarycount": "@variables('AuditRunSummaryCount')",
               "auditwarningcount": "@variables('AuditWarningCount')",
               "auditfailedcount": "@variables('AuditFailedCount')",
@@ -889,6 +901,38 @@
             ]
           },
           "description": "Number of Effected Member Flow Emails processed."
+        },
+        "VAR_CriticalCounterBaseline": {
+          "runAfter": {},
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CriticalCounterBaseline",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Lifetime Critical (Failed) total captured at the last Cockpit counter reset, used to compute the 'new since reset' KPI shown on the Cockpit header."
+        },
+        "VAR_WarningCounterBaseline": {
+          "runAfter": {
+            "VAR_CriticalCounterBaseline": [
+              "Succeeded"
+            ]
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "WarningCounterBaseline",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "description": "Lifetime Warning total captured at the last Cockpit counter reset, used to compute the 'new since reset' KPI shown on the Cockpit header."
         },
         "VAR_AuditRunSummaryCount": {
           "runAfter": {
@@ -1432,6 +1476,32 @@
                     "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP effected Member')))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Stores the current DMP effected Member workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
+                },
+                "SET_CriticalCounterBaseline": {
+                  "runAfter": {
+                    "SET_Counter_Effected": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "CriticalCounterBaseline",
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'CriticalCounterBaseline')))?['NumberProcessedEmails'], 0))"
+                  },
+                  "description": "Reads the Critical (Failed) counter baseline captured at the last Cockpit reset (row created on first use by Agent 6's reset action) - reuses the same GET_Counters_List read, no extra API call needed."
+                },
+                "SET_WarningCounterBaseline": {
+                  "runAfter": {
+                    "SET_CriticalCounterBaseline": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "WarningCounterBaseline",
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'WarningCounterBaseline')))?['NumberProcessedEmails'], 0))"
+                  },
+                  "description": "Reads the Warning counter baseline captured at the last Cockpit reset (row created on first use by Agent 6's reset action) - reuses the same GET_Counters_List read, no extra API call needed."
                 },
                 "SET_CounterLastModified": {
                   "runAfter": {
@@ -4235,7 +4305,12 @@
                   "type": "Raw"
                 }
               },
-              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to)."
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 50000
+                }
+              },
+              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to). Pagination enabled (up to 50000 rows) because the table has grown past the connector's default single-page size, which previously caused the 'most recent' Critical/Warning rows shown on the Cockpit to actually be recent-within-the-first-page only, silently missing newer rows once the table outgrew one page."
             },
             "FILTER_AuditTrail_Critical": {
               "runAfter": {

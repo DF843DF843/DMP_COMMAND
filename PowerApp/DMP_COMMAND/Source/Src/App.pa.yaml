@@ -27,6 +27,7 @@ App:
       Set(varShowAdminPanel,false);
       Set(varConfirmDeleteMailboxFolders,false);
       Set(varAdminActionResult,{success:false,message:"",requestedaction:"",deletedcount:0});
+      Set(varAuditResetResult,{success:false,message:"",requestedaction:"",deletedcount:0});
       Set(varConfirmResetCounter,false);
       Set(varPendingResetAction,"");
       Set(varPendingResetLabel,"");
@@ -67,6 +68,8 @@ App:
       Set(varAuditRunSummaryCount,0);
       Set(varAuditWarningCount,0);
       Set(varAuditFailedCount,0);
+      Set(varCriticalCounterBaseline,0);
+      Set(varWarningCounterBaseline,0);
       Set(varAuditLastRunTimestamp,"");
       Set(varAuditLastSuccessTimestamp,"");
       Set(varAuditLastFailedTimestamp,"");

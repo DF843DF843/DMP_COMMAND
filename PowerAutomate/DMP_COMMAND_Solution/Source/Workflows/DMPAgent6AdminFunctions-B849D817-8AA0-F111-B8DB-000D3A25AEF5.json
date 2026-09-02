@@ -1063,6 +1063,963 @@
                   "description": "Marks the reset-all-counters action as successful."
                 }
               }
+            },
+            "Case_ResetCriticalCounterBaseline": {
+              "case": "ResetCriticalCounterBaseline",
+              "actions": {
+                "GET_AuditSummary_ForCriticalBaseline_Agent01": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 01"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 1's row from Agent Audit Summary to compute the current lifetime Critical (Failed) total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForCriticalBaseline_Agent02": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 02"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 2's row from Agent Audit Summary to compute the current lifetime Critical (Failed) total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForCriticalBaseline_Agent03": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 03"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 3's row from Agent Audit Summary to compute the current lifetime Critical (Failed) total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForCriticalBaseline_Agent04": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 04"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 4's row from Agent Audit Summary to compute the current lifetime Critical (Failed) total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForCriticalBaseline_Agent05": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 05"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 5's row from Agent Audit Summary to compute the current lifetime Critical (Failed) total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForCriticalBaseline_Agent06": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 06"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 6's own row from Agent Audit Summary. Tolerated as Failed downstream so a not-yet-seeded row never blocks the reset."
+                },
+                "CMP_CurrentCriticalTotal_ForReset": {
+                  "runAfter": {
+                    "GET_AuditSummary_ForCriticalBaseline_Agent01": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForCriticalBaseline_Agent02": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForCriticalBaseline_Agent03": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForCriticalBaseline_Agent04": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForCriticalBaseline_Agent05": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForCriticalBaseline_Agent06": [
+                      "Succeeded",
+                      "Failed",
+                      "Skipped",
+                      "TimedOut"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent01')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent02')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent03')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent04')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent05')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForCriticalBaseline_Agent06')?['FailedStepsCount'],0)))",
+                  "description": "Sums the FailedStepsCount column across all 6 agent rows - this is the same lifetime Critical total shown by the Cockpit, used here as the new baseline."
+                },
+                "GET_CriticalBaselineRow": {
+                  "runAfter": {
+                    "CMP_CurrentCriticalTotal_ForReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'CriticalCounterBaseline'",
+                      "$top": 1
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Checks whether the CriticalCounterBaseline row already exists in the DMP Command Counters SharePoint list (it does not exist until the first reset is ever performed)."
+                },
+                "IF_CriticalBaselineRow_Exists": {
+                  "runAfter": {
+                    "GET_CriticalBaselineRow": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greater": [
+                      "@length(body('GET_CriticalBaselineRow')?['value'])",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "PATCH_CriticalBaselineRow": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                          "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                          "id": "@first(body('GET_CriticalBaselineRow')?['value'])?['ID']",
+                          "item/NumberProcessedEmails": "@outputs('CMP_CurrentCriticalTotal_ForReset')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem"
+                        },
+                        "authentication": {
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                          "type": "Raw"
+                        }
+                      },
+                      "description": "Updates the existing CriticalCounterBaseline row to the current total, so the Cockpit's Critical KPI shows 0 new until the next Critical event."
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "CREATE_CriticalBaselineRow": {
+                        "runAfter": {},
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                            "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                            "item/Title": "CriticalCounterBaseline",
+                            "item/NumberProcessedEmails": "@outputs('CMP_CurrentCriticalTotal_ForReset')"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PostItem"
+                          },
+                          "authentication": {
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                            "type": "Raw"
+                          }
+                        },
+                        "description": "Creates the CriticalCounterBaseline row on first use (this is the first time a Critical reset has ever been performed)."
+                      }
+                    }
+                  },
+                  "type": "If",
+                  "description": "Creates the baseline row on first use, otherwise updates the existing one."
+                },
+                "SET_ResultMessage_ResetCriticalBaseline": {
+                  "runAfter": {
+                    "IF_CriticalBaselineRow_Exists": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultMessage",
+                    "value": "@concat('Critical counter reset - current lifetime total is ', string(outputs('CMP_CurrentCriticalTotal_ForReset')), '. The Cockpit''s Critical KPI now shows 0 and will only increase again for new Critical events from this point on.')"
+                  },
+                  "description": "Records the reset outcome, which the existing run-summary step then writes to the Audit Trail (Operational History)."
+                },
+                "SET_ResultSuccess_ResetCriticalBaseline": {
+                  "runAfter": {
+                    "SET_ResultMessage_ResetCriticalBaseline": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultSuccess",
+                    "value": true
+                  },
+                  "description": "Marks the Critical counter baseline reset as successful."
+                }
+              }
+            },
+            "Case_ResetWarningCounterBaseline": {
+              "case": "ResetWarningCounterBaseline",
+              "actions": {
+                "GET_AuditSummary_ForWarningBaseline_Agent01": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 01"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 1's row from Agent Audit Summary to compute the current lifetime Warning total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForWarningBaseline_Agent02": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 02"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 2's row from Agent Audit Summary to compute the current lifetime Warning total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForWarningBaseline_Agent03": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 03"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 3's row from Agent Audit Summary to compute the current lifetime Warning total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForWarningBaseline_Agent04": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 04"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 4's row from Agent Audit Summary to compute the current lifetime Warning total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForWarningBaseline_Agent05": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 05"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 5's row from Agent Audit Summary to compute the current lifetime Warning total before resetting the Cockpit's 'new since reset' baseline."
+                },
+                "GET_AuditSummary_ForWarningBaseline_Agent06": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 06"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 6's own row from Agent Audit Summary. Tolerated as Failed downstream so a not-yet-seeded row never blocks the reset."
+                },
+                "CMP_CurrentWarningTotal_ForReset": {
+                  "runAfter": {
+                    "GET_AuditSummary_ForWarningBaseline_Agent01": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForWarningBaseline_Agent02": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForWarningBaseline_Agent03": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForWarningBaseline_Agent04": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForWarningBaseline_Agent05": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForWarningBaseline_Agent06": [
+                      "Succeeded",
+                      "Failed",
+                      "Skipped",
+                      "TimedOut"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent01')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent02')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent03')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent04')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent05')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForWarningBaseline_Agent06')?['WarningStepsCount'],0)))",
+                  "description": "Sums the WarningStepsCount column across all 6 agent rows - this is the same lifetime Warning total shown by the Cockpit, used here as the new baseline."
+                },
+                "GET_WarningBaselineRow": {
+                  "runAfter": {
+                    "CMP_CurrentWarningTotal_ForReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'WarningCounterBaseline'",
+                      "$top": 1
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Checks whether the WarningCounterBaseline row already exists in the DMP Command Counters SharePoint list (it does not exist until the first reset is ever performed)."
+                },
+                "IF_WarningBaselineRow_Exists": {
+                  "runAfter": {
+                    "GET_WarningBaselineRow": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greater": [
+                      "@length(body('GET_WarningBaselineRow')?['value'])",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "PATCH_WarningBaselineRow": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                          "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                          "id": "@first(body('GET_WarningBaselineRow')?['value'])?['ID']",
+                          "item/NumberProcessedEmails": "@outputs('CMP_CurrentWarningTotal_ForReset')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem"
+                        },
+                        "authentication": {
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                          "type": "Raw"
+                        }
+                      },
+                      "description": "Updates the existing WarningCounterBaseline row to the current total, so the Cockpit's Warning KPI shows 0 new until the next Warning event."
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "CREATE_WarningBaselineRow": {
+                        "runAfter": {},
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                            "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                            "item/Title": "WarningCounterBaseline",
+                            "item/NumberProcessedEmails": "@outputs('CMP_CurrentWarningTotal_ForReset')"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PostItem"
+                          },
+                          "authentication": {
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                            "type": "Raw"
+                          }
+                        },
+                        "description": "Creates the WarningCounterBaseline row on first use (this is the first time a Warning reset has ever been performed)."
+                      }
+                    }
+                  },
+                  "type": "If",
+                  "description": "Creates the baseline row on first use, otherwise updates the existing one."
+                },
+                "SET_ResultMessage_ResetWarningBaseline": {
+                  "runAfter": {
+                    "IF_WarningBaselineRow_Exists": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultMessage",
+                    "value": "@concat('Warning counter reset - current lifetime total is ', string(outputs('CMP_CurrentWarningTotal_ForReset')), '. The Cockpit''s Warning KPI now shows 0 and will only increase again for new Warning events from this point on.')"
+                  },
+                  "description": "Records the reset outcome, which the existing run-summary step then writes to the Audit Trail (Operational History)."
+                },
+                "SET_ResultSuccess_ResetWarningBaseline": {
+                  "runAfter": {
+                    "SET_ResultMessage_ResetWarningBaseline": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultSuccess",
+                    "value": true
+                  },
+                  "description": "Marks the Warning counter baseline reset as successful."
+                }
+              }
+            },
+            "Case_ResetAllAuditCounterBaselines": {
+              "case": "ResetAllAuditCounterBaselines",
+              "actions": {
+                "GET_AuditSummary_ForAllBaseline_Agent01": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 01"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 1's row from Agent Audit Summary to compute the current lifetime Critical and Warning totals before resetting both Cockpit baselines."
+                },
+                "GET_AuditSummary_ForAllBaseline_Agent02": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 02"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 2's row from Agent Audit Summary to compute the current lifetime Critical and Warning totals before resetting both Cockpit baselines."
+                },
+                "GET_AuditSummary_ForAllBaseline_Agent03": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 03"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 3's row from Agent Audit Summary to compute the current lifetime Critical and Warning totals before resetting both Cockpit baselines."
+                },
+                "GET_AuditSummary_ForAllBaseline_Agent04": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 04"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 4's row from Agent Audit Summary to compute the current lifetime Critical and Warning totals before resetting both Cockpit baselines."
+                },
+                "GET_AuditSummary_ForAllBaseline_Agent05": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 05"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 5's row from Agent Audit Summary to compute the current lifetime Critical and Warning totals before resetting both Cockpit baselines."
+                },
+                "GET_AuditSummary_ForAllBaseline_Agent06": {
+                  "runAfter": {},
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
+                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
+                      "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
+                      "table": "AgentAuditSummary",
+                      "idColumn": "AgentKey",
+                      "id": "Agent 06"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
+                      "connectionName": "shared_excelonlinebusiness",
+                      "operationId": "GetItem"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Reads Agent 6's own row from Agent Audit Summary. Tolerated as Failed downstream so a not-yet-seeded row never blocks the reset."
+                },
+                "CMP_CurrentCriticalTotal_ForAllReset": {
+                  "runAfter": {
+                    "GET_AuditSummary_ForAllBaseline_Agent01": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForAllBaseline_Agent02": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForAllBaseline_Agent03": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForAllBaseline_Agent04": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForAllBaseline_Agent05": [
+                      "Succeeded"
+                    ],
+                    "GET_AuditSummary_ForAllBaseline_Agent06": [
+                      "Succeeded",
+                      "Failed",
+                      "Skipped",
+                      "TimedOut"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent01')?['FailedStepsCount'],0)), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent02')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent03')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent04')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent05')?['FailedStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent06')?['FailedStepsCount'],0)))",
+                  "description": "Sums the FailedStepsCount column across all 6 agent rows - the current lifetime Critical total, used as the new Critical baseline."
+                },
+                "CMP_CurrentWarningTotal_ForAllReset": {
+                  "runAfter": {
+                    "CMP_CurrentCriticalTotal_ForAllReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Compose",
+                  "inputs": "@add(add(add(add(add(int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent01')?['WarningStepsCount'],0)), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent02')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent03')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent04')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent05')?['WarningStepsCount'],0))), int(coalesce(body('GET_AuditSummary_ForAllBaseline_Agent06')?['WarningStepsCount'],0)))",
+                  "description": "Sums the WarningStepsCount column across all 6 agent rows - the current lifetime Warning total, used as the new Warning baseline."
+                },
+                "GET_AllBaselineRows": {
+                  "runAfter": {
+                    "CMP_CurrentWarningTotal_ForAllReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "Title eq 'CriticalCounterBaseline' or Title eq 'WarningCounterBaseline'",
+                      "$top": 2
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "description": "Checks whether the CriticalCounterBaseline and/or WarningCounterBaseline rows already exist in the DMP Command Counters SharePoint list."
+                },
+                "IF_CriticalBaselineRow_Exists_ForAllReset": {
+                  "runAfter": {
+                    "GET_AllBaselineRows": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greater": [
+                      "@length(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'CriticalCounterBaseline')))",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "PATCH_CriticalBaselineRow_ForAllReset": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                          "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                          "id": "@first(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'CriticalCounterBaseline')))?['ID']",
+                          "item/NumberProcessedEmails": "@outputs('CMP_CurrentCriticalTotal_ForAllReset')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem"
+                        },
+                        "authentication": {
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                          "type": "Raw"
+                        }
+                      },
+                      "description": "Updates the existing CriticalCounterBaseline row to the current total."
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "CREATE_CriticalBaselineRow_ForAllReset": {
+                        "runAfter": {},
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                            "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                            "item/Title": "CriticalCounterBaseline",
+                            "item/NumberProcessedEmails": "@outputs('CMP_CurrentCriticalTotal_ForAllReset')"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PostItem"
+                          },
+                          "authentication": {
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                            "type": "Raw"
+                          }
+                        },
+                        "description": "Creates the CriticalCounterBaseline row on first use."
+                      }
+                    }
+                  },
+                  "type": "If",
+                  "description": "Creates the Critical baseline row on first use, otherwise updates the existing one."
+                },
+                "IF_WarningBaselineRow_Exists_ForAllReset": {
+                  "runAfter": {
+                    "IF_CriticalBaselineRow_Exists_ForAllReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "expression": {
+                    "greater": [
+                      "@length(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'WarningCounterBaseline')))",
+                      0
+                    ]
+                  },
+                  "actions": {
+                    "PATCH_WarningBaselineRow_ForAllReset": {
+                      "runAfter": {},
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                          "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                          "id": "@first(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'WarningCounterBaseline')))?['ID']",
+                          "item/NumberProcessedEmails": "@outputs('CMP_CurrentWarningTotal_ForAllReset')"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline",
+                          "operationId": "PatchItem"
+                        },
+                        "authentication": {
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                          "type": "Raw"
+                        }
+                      },
+                      "description": "Updates the existing WarningCounterBaseline row to the current total."
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "CREATE_WarningBaselineRow_ForAllReset": {
+                        "runAfter": {},
+                        "type": "OpenApiConnection",
+                        "inputs": {
+                          "parameters": {
+                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                            "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                            "item/Title": "WarningCounterBaseline",
+                            "item/NumberProcessedEmails": "@outputs('CMP_CurrentWarningTotal_ForAllReset')"
+                          },
+                          "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "PostItem"
+                          },
+                          "authentication": {
+                            "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                            "type": "Raw"
+                          }
+                        },
+                        "description": "Creates the WarningCounterBaseline row on first use."
+                      }
+                    }
+                  },
+                  "type": "If",
+                  "description": "Creates the Warning baseline row on first use, otherwise updates the existing one."
+                },
+                "SET_ResultMessage_ResetAllAuditBaselines": {
+                  "runAfter": {
+                    "IF_WarningBaselineRow_Exists_ForAllReset": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultMessage",
+                    "value": "@concat('Critical and Warning counters reset - current lifetime totals were Critical: ', string(outputs('CMP_CurrentCriticalTotal_ForAllReset')), ', Warning: ', string(outputs('CMP_CurrentWarningTotal_ForAllReset')), '. Both Cockpit KPIs now show 0 and will only increase again for new events from this point on.')"
+                  },
+                  "description": "Records the reset outcome, which the existing run-summary step then writes to the Audit Trail (Operational History)."
+                },
+                "SET_ResultSuccess_ResetAllAuditBaselines": {
+                  "runAfter": {
+                    "SET_ResultMessage_ResetAllAuditBaselines": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultSuccess",
+                    "value": true
+                  },
+                  "description": "Marks the combined Critical+Warning counter baseline reset as successful."
+                }
+              }
             }
           },
           "description": "Dispatches to the requested admin/test-only action. Extensible: future admin actions (e.g. renaming a folder for archiving) can be added as additional cases without touching the delete logic."
