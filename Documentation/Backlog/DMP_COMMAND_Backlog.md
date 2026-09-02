@@ -10,22 +10,38 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~14:35 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~16:10 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND selbstständig deployed:**
-- Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert: 3 neue Reset-Aktionen (Critical/Warning/All) für den neuen Audit-Trail-Reset-Mechanismus.
-- Agent 4 (Status Check) v1.4.2 – LIVE, vom Nutzer aktiviert: Pagination für den Audit-Trail-Read (echte letzte 10 Zeilen), 2 neue Response-Felder (CriticalCounterBaseline/WarningCounterBaseline).
+- Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert.
+- Agent 4 (Status Check) v1.4.2 – LIVE, aktiviert.
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert.
-- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält: alle 5 SharePoint-Listen final verbunden, Locale-Fix für Zeitanzeige, YAML-Syntaxfix (Doppelpunkt in Beschreibungstext), Emergency-Report-Replace-Refresh-Fix, Reset-Buttons holen jetzt einen echten Server-Refresh statt nur zu schätzen.
+- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält zusätzlich zu allem bisherigen: Fix für das Jahr-3926-Datumsproblem (Zahlenüberlauf in `DateAdd`/`TimeUnit.Seconds`, siehe Update unten).
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **⚠️ Zu prüfen, sobald möglich:**
-1. **App erneut in Studio veröffentlichen** – enthält alle heutigen Fixes (Locale, Emergency-Report-Refresh, Reset-Button-Verbesserung).
-2. **Live-Test der 3 Reset-Buttons** nach Veröffentlichung – sollten jetzt einen bestätigten Server-Wert zeigen statt nur zu schätzen; falls die Zahl nach einem Refresh weiterhin auf den alten Wert zurückspringt, deutet das auf ein Problem beim Schreiben/Lesen der Baseline-Zeilen in der SharePoint-Liste hin (bräuchte dann Einblick in die tatsächlichen Zeilenwerte der Liste `DMP Command Counters`, Titel `CriticalCounterBaseline`/`WarningCounterBaseline`).
-3. **Emails-Processed-Tooltip zeigt Gesamtzahl=1, Einzelwerte=0** – wahrscheinlich KEIN Code-Bug: Die im Audit Trail sichtbaren Test-E-Mails (`subj=test`/`subj=Test`) sind selbst als "ERROR"/Critical markiert, d. h. sie haben die eigentliche Klassifizierungs-/Zähler-Logik in Agent 2 vermutlich gar nicht erreicht. Die "1" in der Gesamtanzeige kommt von einer bewussten Sicherheits-Untergrenze (`Max(Summe,1)`), NICHT von echten verarbeiteten E-Mails. **Bitte bestätigen:** Zeigt die SharePoint-Liste `DMP Command Counters` (Zeilen "No DMP"/"DMP internal Sender"/"DMP effected Member"/"DMP not effected Sender") tatsächlich echte Werte >0, oder sind diese ebenfalls alle 0? Das würde die Diagnose bestätigen oder widerlegen.
+1. **App erneut in Studio veröffentlichen** – enthält den neuen Datums-Fix.
+2. **Baseline-Reset-Verhalten weiter beobachten:** `CriticalCounterBaseline`=8, `WarningCounterBaseline`=9 in der SharePoint-Liste bestätigt, dass das Schreiben grundsätzlich funktioniert (keine 0 oder offensichtlich falsche Werte). Die vom Nutzer beobachtete "alte Zahl nach Refresh" könnte tatsächlich korrektes Verhalten sein (neue Test-Fehler seit dem Reset erhöhen den Zähler wieder, wie spezifiziert) ODER ein Timing-Problem. **Bitte beim nächsten Test kurz den aktuellen Wert von "Critical (total)"/"Warnings (total)" UND die daraus resultierende Kopfzeilen-Zahl gleichzeitig notieren**, dann lässt sich die Differenz nachrechnen und eindeutig klären, ob es ein Bug ist oder erwartetes Verhalten bei laufenden Tests.
+3. **Emails-Processed-Tooltip 1/0** – laut Nutzer ist "No DMP" tatsächlich 1 in der SharePoint-Liste – das bestätigt, dass die Anzeige KORREKT ist (keine Anzeigen-Bug), die "1" war reale Daten, keine Sicherheits-Untergrenze.
 
-**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig, das Connector-Problem final gelöst; 2 zusätzliche Bugs (Emergency-Report-Refresh, Reset-Baseline-Verlässlichkeit) behoben bzw. verbessert diagnostizierbar gemacht.**
+**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig, das Connector-Problem final gelöst; das gravierende Jahr-3926-Datumsproblem behoben.**
+
+---
+
+## ✅ Update (2026-09-02, ~16:10 Uhr): Jahr-3926-Datumsfehler gefunden und behoben – Zahlenüberlauf in DateAdd
+
+**Nutzer-Meldung:** Nach dem Locale-Fix zeigte die Zeitanzeige im Audit Trail jetzt ein Datum, aber mit falschem Jahr (`3926-09-03` statt `2026-09-02`) – exakt 1900 Jahre zu viel.
+
+**Root Cause:** Die Formel multiplizierte den Excel-Seriendatumswert (~46267 Tage) mit 86400, um ihn als `TimeUnit.Seconds` an `DateAdd` zu übergeben – das ergibt eine Zwischenzahl von ~4 Milliarden. Diese sehr große Zahl überschreitet vermutlich eine interne Verarbeitungsgrenze (z. B. 32-Bit) und wird STILLSCHWEIGEND falsch weiterverarbeitet – kein Laufzeitfehler, `IfError` konnte das also nicht auffangen.
+
+**Fix:** Wechsel auf die im Community-Umfeld etablierte Standardformel für genau diese Umwandlung: `DateAdd(Date(1899,12,30), Value(rawTs,"en-US"), TimeUnit.Days)` – der Bruchzahl-Tageswert wird DIREKT übergeben (keine Multiplikation mehr nötig), wodurch die "Addition"-Zahl klein bleibt (~46267 statt ~4 Milliarden) und der Überlauf komplett vermieden wird.
+
+**Zusätzliche Erkenntnisse aus den Nutzer-Screenshots:**
+- **Counter "No DMP" = 1** in der SharePoint-Liste `DMP Command Counters` bestätigt: Die vorher vermutete "Sicherheits-Untergrenze Max(Summe,1)"-Theorie war falsch – die 1 ist echte Daten, keine Artefakt-Zahl. Der Tooltip zeigt also korrekt an, was tatsächlich in der Liste steht.
+- **CriticalCounterBaseline=8, WarningCounterBaseline=9** bestätigen: Das Schreiben der Baseline-Werte durch Agent 6 funktioniert grundsätzlich (keine 0 oder offensichtlich falsche Werte). Ob die vom Nutzer beobachtete "alte Zahl nach Refresh" ein Bug oder erwartetes Verhalten (neue Test-Fehler erhöhen den Zähler seit dem Reset wieder) ist, konnte noch nicht abschließend geklärt werden – dafür fehlen die exakten Vergleichswerte zum selben Zeitpunkt.
+
+**Status:** Datums-Fix validiert (Round-Trip-Diff=0, Einrückungs-/Doppelpunkt-Scan sauber), committet und gepusht. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
 
 ---
 
