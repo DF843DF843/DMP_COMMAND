@@ -10,22 +10,46 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~13:40 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~14:15 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND selbstständig deployed (Nutzer 2h im Meeting, gemäß Auftrag "arbeite Backlog-Items ab, wo kein Input nötig ist, dann alles deployen"):**
-- Agent 6 (Admin Functions) v1.3.0 – LIVE: 3 neue Reset-Aktionen (Critical/Warning/All) für den neuen Audit-Trail-Reset-Mechanismus.
-- Agent 4 (Status Check) v1.4.2 – LIVE: Pagination für den Audit-Trail-Read (echte letzte 10 Zeilen statt nur erste Tabellenseite), 2 neue Response-Felder (CriticalCounterBaseline/WarningCounterBaseline).
-- Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE: Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben.
-- Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt: External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt, Operation-ID-Fehler (`CreateItem`→`PostItem`) behoben.
-- **App v1.22.8** – gepackt (v1.22.5 bis v1.22.8 kumulativ): SharePoint-Migrationsfolgen, Emails-Processed-Legende, fehlende Refresh()-Aufrufe, Audit-Trail-Auto-Refresh, Zeitanzeige-Fix, echte letzte 10 Warnungen/Criticals, neue Reset-Buttons. **Wartet auf Veröffentlichung durch den Nutzer in Studio.**
+- Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert: 3 neue Reset-Aktionen (Critical/Warning/All) für den neuen Audit-Trail-Reset-Mechanismus.
+- Agent 4 (Status Check) v1.4.2 – LIVE, vom Nutzer aktiviert: Pagination für den Audit-Trail-Read (echte letzte 10 Zeilen), 2 neue Response-Felder (CriticalCounterBaseline/WarningCounterBaseline).
+- Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE.
+- Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert.
+- **App v1.22.8 – vom Nutzer in Studio geöffnet, alle 5 SharePoint-Listen neu verbunden, gespeichert und veröffentlicht.** Anschließend die frische `.msapp` heruntergeladen und die `.msapr`-Datei (mit vollständiger Datenquellen-Registrierung aller 5 Listen) ins Git-Repo übernommen – **das Connector-Problem ist damit final gelöst.**
+- Zusätzlicher Fix nach Live-Test: Zeitanzeige im Audit Trail funktionierte trotz Fix immer noch nicht – Root Cause war ein Locale-Problem (`Value()` interpretiert Zahlen in der Sprache des angemeldeten Nutzers; unter deutschem Locale wurde der Dezimalpunkt als Tausendertrennzeichen fehlinterpretiert). Behoben durch explizite `"en-US"`-Sprachangabe – gleiches Muster vorsorglich auch bei der Emails-Processed-Legende nachgezogen.
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
-**⚠️ Zu prüfen, sobald der Nutzer zurück ist:**
-1. **Verbinder-Neuverbindung** für `DMP Command Counters`/`DMP Command External Domains` in Studio (siehe Update weiter unten) – weiterhin offen. Kann nur manuell in Studio erfolgen (Schema-Abruf von SharePoint), nicht per Code/CLI.
-2. **Flow-Aktivierungsstatus prüfen:** `pac solution import` meldete bei diesem Import (wie schon bei früheren Imports) "The original workflow definition has been deactivated and replaced." Das ist eine Standard-Meldung von Dataverse bei jedem Workflow-Update und bedeutet nicht zwangsläufig, dass der Flow abgeschaltet bleibt – aber bitte in Power Automate kurz prüfen, ob Agent 4 und Agent 6 nach diesem Import noch "Ein" (aktiv) sind, und falls nicht, einmal manuell aktivieren (bekanntes, bereits früher dokumentiertes Verhalten dieses Deployment-Wegs).
-3. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert.
+**⚠️ Zu prüfen, sobald möglich:**
+1. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert.
+2. **Zeitanzeige im Audit Trail final bestätigen** – der Locale-Fix ist gepackt und gepusht, aber noch nicht erneut in Studio veröffentlicht (nächster Publish-Zyklus nötig).
 
-**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) weiterhin live, aktiviert und funktionsfähig.**
+**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) weiterhin live, aktiviert und funktionsfähig, UND das Connector-Problem der 5 SharePoint-Listen ist final gelöst.**
+
+---
+
+## ✅ Update (2026-09-02, ~14:15 Uhr): Locale-Bug bei der Zeitanzeige gefunden und behoben
+
+**Nutzer-Meldung:** Trotz des vorherigen Zeitanzeige-Fixes zeigten weiterhin ALLE Zeilen im Audit Trail den unkonvertierten Rohwert (z. B. `46267.2767505787`).
+
+**Root Cause:** `Value(rawTs)` (zur Umwandlung des rohen Excel-Seriendatumswerts) interpretiert den übergebenen Text standardmäßig in der Sprache des angemeldeten Nutzers. Unter deutscher Lokalisierung wird der Dezimalpunkt als Tausendertrennzeichen gelesen, wodurch `Value()` bei JEDER Zeile mit einem Laufzeitfehler abbrach – `IfError` fing das ab und zeigte stets den unveränderten Rohtext, optisch identisch zum ursprünglichen Bug, obwohl die Formel "syntaktisch" korrekt war.
+
+**Fix:** `Value(rawTs, "en-US")` an allen 20 Stellen (10 Critical + 10 Warning). Zusätzlich vorsorglich denselben Fix bei der Emails-Processed-Legende (aus einer früheren Update-Runde) nachgezogen, da dort dasselbe Muster (`Text(Zahl,"#,##0")`/`Text(Zahl,"0.00%")` ohne Sprachangabe) ebenfalls betroffen war – dort hätte es unter deutschem Locale zu vertauschten Tausender-/Dezimaltrennzeichen geführt, entgegen dem vom Nutzer explizit gewünschten Format (`1,000` / `0.00%`).
+
+**Gefundene, bereits im Projekt etablierte Konvention:** An einer Stelle (Emails-Processed-Donut-SVG) wurde `Text(Wert,"0.00","en-US")` bereits korrekt mit Sprachangabe verwendet – diese Konvention wurde beim neuen Code nicht übernommen, jetzt als KI-Arbeitsregel verankert.
+
+**Status:** Gepackt (Round-Trip-Diff=0, Einrückungs- und Duplikat-Scan sauber), committet und gepusht. **Muss noch einmal in Studio veröffentlicht werden.**
+
+---
+
+## ✅ Update (2026-09-02, ~14:05 Uhr): SharePoint-Connector-Problem final gelöst
+
+**Nutzer:** Hat die App in Studio geöffnet, alle 5 SharePoint-Listen neu verbunden, gespeichert und veröffentlicht.
+
+**Durchgeführt:** Die frisch veröffentlichte App wurde per `pac canvas download` heruntergeladen und entpackt. Die darin enthaltene `DataSources.json` bestätigt: Alle 5 Listen (`DMP Command Agent Status`, `Configuration`, `Internal Domains`, `Counters`, `External Domains`) sind jetzt mit vollständigem Schema registriert. Die aktualisierte `.msapr`-Datei wurde ins Git-Repo übernommen, sodass zukünftige `pac canvas pack`-Läufe die vollständige Datenquellen-Registrierung enthalten und dieses Problem nicht wieder auftritt.
+
+**Status:** Abgeschlossen, committet und gepusht.
 
 ---
 
