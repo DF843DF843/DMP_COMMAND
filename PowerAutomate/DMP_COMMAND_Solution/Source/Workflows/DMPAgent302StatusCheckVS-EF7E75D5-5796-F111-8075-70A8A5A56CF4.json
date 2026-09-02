@@ -1203,7 +1203,7 @@
         },
         "SCOPE_External_Domains": {
           "actions": {
-            "GET_ExternalDomains_Metadata": {
+            "GET_ExternalDomains_List": {
               "metadata": {
                 "operationMetadataId": "e93fa524-716a-4562-a5d7-48c618475fd8"
               },
@@ -1211,66 +1211,26 @@
               "inputs": {
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                  "path": "@concat(\r\nvariables('ExternalDomainsFolder'),\r\n  '/',\r\n variables('ExternalDomainsFileName')\r\n)\r\n"
+                  "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
+                  "$top": 5000
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "GetFileMetadataByPath"
+                  "operationId": "GetItems"
                 },
                 "authentication": {
                   "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                   "type": "Raw"
                 }
               },
-              "description": "Checks whether the External Domains reference file exists.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status\n- External domains file health check"
+              "description": "Loads all rows of the DMP Command External Domains SharePoint list.\n\nUsed for:\n- Agent 2 sender classification monitoring\n- DMP COMMAND Control Board status"
             },
             "IF_ExternalDomains_File_Exists": {
               "actions": {
-                "GET_ExternalDomains_Content": {
-                  "runAfter": {
-                    "SET_ExternalDomainsLastModified": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "17cac4ac-7ebf-43a3-9ea6-1295f0132d96"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                      "path": "@concat(\r\n    variables('ExternalDomainsFolder'),\r\n    '/',\r\n    variables('ExternalDomainsFileName')\r\n)",
-                      "inferContentType": true
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                      "connectionName": "shared_sharepointonline",
-                      "operationId": "GetFileContentByPath"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the External Domains reference file.\n\nUsed for:\n- External domain validation\n- DMP COMMAND monitoring\n- Control Board statistics\n\nReturns the complete External_Domains.txt content."
-                },
-                "CMP_ExternalDomainsText": {
-                  "runAfter": {
-                    "GET_ExternalDomains_Content": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "9d03f56c-5990-4f29-a769-ae2b5e8b281e"
-                  },
-                  "type": "Compose",
-                  "inputs": "@body('GET_ExternalDomains_Content')",
-                  "description": "Converts the External Domains file content into plain text.\n\nUsed for:\n- Domain counting\n- Operational monitoring\n- Control Board statistics"
-                },
                 "SET_ExternalDomainsCount": {
                   "runAfter": {
-                    "CMP_ExternalDomainsText": [
+                    "SET_ExternalDomainsExists_True": [
                       "Succeeded"
                     ]
                   },
@@ -1280,13 +1240,13 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ExternalDomainsCount",
-                    "value": "@if(empty(trim(outputs('CMP_ExternalDomainsText'))),0,length(split(trim(outputs('CMP_ExternalDomainsText')),decodeUriComponent('%0A'))))"
+                    "value": "@length(coalesce(body('GET_ExternalDomains_List')?['value'], createArray()))"
                   },
-                  "description": "Counts all External Domain entries.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
+                  "description": "Counts all rows of the DMP Command External Domains SharePoint list.\n\nUsed for:\n- DMP COMMAND dashboard\n- Operational reporting\n- Monitoring statistics"
                 },
                 "SET_ExternalDomainsLastModified": {
                   "runAfter": {
-                    "SET_ExternalDomainsExists_True": [
+                    "SET_ExternalDomainsCount": [
                       "Succeeded"
                     ]
                   },
@@ -1296,9 +1256,9 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ExternalDomainsLastModified",
-                    "value": "@outputs('GET_ExternalDomains_Metadata')?['body/LastModified']"
+                    "value": "@if(equals(length(coalesce(body('GET_ExternalDomains_List')?['value'], createArray())),0),null,max(select(coalesce(body('GET_ExternalDomains_List')?['value'], createArray()),item()?['Modified'])))"
                   },
-                  "description": "Stores the SharePoint Last Modified timestamp of the External Domains reference file.\n\nUsed for:\n- Control Board display\n- File freshness monitoring\n- Operational validation"
+                  "description": "Stores the most recent Modified timestamp across all DMP Command External Domains list rows.\n\nUsed for:\n- Control Board display\n- List freshness monitoring\n- Operational validation"
                 },
                 "SET_ExternalDomainsExists_True": {
                   "metadata": {
@@ -1309,11 +1269,11 @@
                     "name": "ExternalDomainsExists",
                     "value": true
                   },
-                  "description": "Marks the External Domains reference file as available."
+                  "description": "Marks the External Domains list as reachable."
                 }
               },
               "runAfter": {
-                "GET_ExternalDomains_Metadata": [
+                "GET_ExternalDomains_List": [
                   "Succeeded",
                   "TimedOut",
                   "Skipped",
@@ -1331,7 +1291,7 @@
                       "name": "ExternalDomainsExists",
                       "value": false
                     },
-                    "description": "Marks the External Domains reference file as missing."
+                    "description": "Marks the External Domains list as not reachable."
                   },
                   "SET_ExternalDomainsCount_Zero": {
                     "runAfter": {
@@ -1347,7 +1307,7 @@
                       "name": "ExternalDomainsCount",
                       "value": 0
                     },
-                    "description": "Resets the External Domains count when the reference file is missing."
+                    "description": "Resets the External Domains count when the list is not reachable."
                   }
                 }
               },
@@ -1355,7 +1315,7 @@
                 "and": [
                   {
                     "equals": [
-                      "@actions('GET_ExternalDomains_Metadata').status",
+                      "@actions('GET_ExternalDomains_List').status",
                       "Succeeded"
                     ]
                   }
@@ -1365,7 +1325,7 @@
                 "operationMetadataId": "54256080-63bd-4b88-8bff-fd784e85c862"
               },
               "type": "If",
-              "description": "Routes processing depending on whether the External Domains reference file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
+              "description": "Routes processing depending on whether the DMP Command External Domains SharePoint list was reachable.\n\nIf reachable, status and metadata values are updated.\nIf not, the status remains false and the flow continues."
             }
           },
           "runAfter": {
@@ -1384,7 +1344,7 @@
         },
         "SCOPE_Counter": {
           "actions": {
-            "GET_Counter_Metadata": {
+            "GET_Counters_List": {
               "metadata": {
                 "operationMetadataId": "cd521db9-7865-48e1-bb54-36b637495bbf"
               },
@@ -1392,57 +1352,26 @@
               "inputs": {
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                  "path": "@concat(\r\n variables('CounterFolder'),\r\n  '/',\r\n  variables('CounterFileName')\r\n)\r\n"
+                  "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                  "$top": 5000
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                   "connectionName": "shared_sharepointonline",
-                  "operationId": "GetFileMetadataByPath"
+                  "operationId": "GetItems"
                 },
                 "authentication": {
                   "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
                   "type": "Raw"
                 }
               },
-              "description": "Checks if Counter File exists."
+              "description": "Loads all rows of the DMP Command Counters SharePoint list."
             },
             "Counter_File_does_exist": {
               "actions": {
-                "GET_Counter_NoDMP": {
-                  "runAfter": {
-                    "SET_CounterLastModified": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "937ba70f-89c1-49ef-a54f-5f3ea08652b8",
-                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
-                      "table": "@variables('DMP E-Mail Counter Table Name')",
-                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
-                      "id": "@variables('CounterPathNoDMP')"
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the No DMP workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Workflow volume overview"
-                },
                 "SET_Counter_NoDMP": {
                   "runAfter": {
-                    "GET_Counter_NoDMP": [
+                    "SET_CounterLastModified": [
                       "Succeeded"
                     ]
                   },
@@ -1452,45 +1381,13 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterNoDMP",
-                    "value": "@int(float(coalesce(body('GET_Counter_NoDMP')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'No DMP')))?['NumberProcessedEmails'], 0))"
                   },
-                  "description": "Stores the No DMP workflow counter value read from Counter.xlsx for the Cockpit Counter card."
-                },
-                "GET_Counter_InternalSender": {
-                  "runAfter": {
-                    "SET_Counter_NoDMP": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "0aae5aee-eec7-4291-b5b0-8c707a4b8b61",
-                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
-                      "table": "@variables('DMP E-Mail Counter Table Name')",
-                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
-                      "id": "@variables('CounterPathInternalSender')"
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the DMP internal Sender workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Internal sender workflow statistics"
+                  "description": "Stores the No DMP workflow counter value read from the DMP Command Counters SharePoint list for the Cockpit Counter card."
                 },
                 "SET_Counter_InternalSender": {
                   "runAfter": {
-                    "GET_Counter_InternalSender": [
+                    "SET_Counter_NoDMP": [
                       "Succeeded"
                     ]
                   },
@@ -1500,45 +1397,13 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterInternalSender",
-                    "value": "@int(float(coalesce(body('GET_Counter_InternalSender')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP internal Sender')))?['NumberProcessedEmails'], 0))"
                   },
-                  "description": "Stores the current DMP internal Sender workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
-                },
-                "GET_Counter_NotEffected": {
-                  "runAfter": {
-                    "SET_Counter_InternalSender": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "ca64c43b-89e8-4c1b-9c16-9ca5db4ec5ba",
-                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
-                      "table": "@variables('DMP E-Mail Counter Table Name')",
-                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
-                      "id": "@variables('CounterPathNotEffected')"
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the DMP not effected Sender workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Not effected sender workflow statistics"
+                  "description": "Stores the current DMP internal Sender workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
                 "SET_Counter_NotEffected": {
                   "runAfter": {
-                    "GET_Counter_NotEffected": [
+                    "SET_Counter_InternalSender": [
                       "Succeeded"
                     ]
                   },
@@ -1548,45 +1413,13 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterNotEffected",
-                    "value": "@int(float(coalesce(body('GET_Counter_NotEffected')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP not effected Sender')))?['NumberProcessedEmails'], 0))"
                   },
-                  "description": "Stores the current DMP not effected Sender workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
-                },
-                "GET_Counter_EffectedMember": {
-                  "runAfter": {
-                    "SET_Counter_NotEffected": [
-                      "Succeeded"
-                    ]
-                  },
-                  "metadata": {
-                    "operationMetadataId": "3a72bb35-a8f8-43d3-9bf6-de69d439fca4",
-                    "tableId": "@variables('DMP E-Mail Counter Table Name')"
-                  },
-                  "type": "OpenApiConnection",
-                  "inputs": {
-                    "parameters": {
-                      "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\r\n    variables('CounterFolder'),\r\n    '/',\r\n    variables('CounterFileName')\r\n)",
-                      "table": "@variables('DMP E-Mail Counter Table Name')",
-                      "idColumn": "@variables('DMP E-Mail Counter Table Column Name Path')",
-                      "id": "@variables('CounterPathEffectedMember')"
-                    },
-                    "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
-                    },
-                    "authentication": {
-                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                      "type": "Raw"
-                    }
-                  },
-                  "description": "Reads the DMP effected Member workflow counter from Counter.xlsx.\n\nUsed for:\n- DMP COMMAND Counter card\n- Operational monitoring\n- Effected member workflow statistics"
+                  "description": "Stores the current DMP not effected Sender workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
                 "SET_Counter_Effected": {
                   "runAfter": {
-                    "GET_Counter_EffectedMember": [
+                    "SET_Counter_NotEffected": [
                       "Succeeded"
                     ]
                   },
@@ -1596,9 +1429,9 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterEffected",
-                    "value": "@int(float(coalesce(body('GET_Counter_EffectedMember')?[variables('DMP E-Mail Counter Table Column Name Counter')],'0')))"
+                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP effected Member')))?['NumberProcessedEmails'], 0))"
                   },
-                  "description": "Stores the current DMP effected Member workflow counter value.\n\nIf the Excel value is blank or unavailable, the value defaults to 0."
+                  "description": "Stores the current DMP effected Member workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
                 "SET_CounterLastModified": {
                   "runAfter": {
@@ -1612,9 +1445,9 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterLastModified",
-                    "value": "@outputs('GET_Counter_Metadata')?['body/LastModified']"
+                    "value": "@if(equals(length(coalesce(body('GET_Counters_List')?['value'], createArray())),0),null,max(select(coalesce(body('GET_Counters_List')?['value'], createArray()),item()?['Modified'])))"
                   },
-                  "description": "Stores the last-modified timestamp of the Counter file for the Cockpit Counter card."
+                  "description": "Stores the most recent Modified timestamp across all DMP Command Counters list rows for the Cockpit Counter card."
                 },
                 "SET_Counter_File_True": {
                   "metadata": {
@@ -1625,11 +1458,11 @@
                     "name": "CounterExists",
                     "value": true
                   },
-                  "description": "Counter File exists."
+                  "description": "Counter list is reachable."
                 }
               },
               "runAfter": {
-                "GET_Counter_Metadata": [
+                "GET_Counters_List": [
                   "Succeeded",
                   "TimedOut",
                   "Skipped",
@@ -1647,7 +1480,7 @@
                       "name": "CounterExists",
                       "value": false
                     },
-                    "description": "Counter File doesn't exists."
+                    "description": "Counter list is not reachable."
                   }
                 }
               },
@@ -1655,7 +1488,7 @@
                 "and": [
                   {
                     "equals": [
-                      "@actions('GET_Counter_Metadata').status",
+                      "@actions('GET_Counters_List').status",
                       "Succeeded"
                     ]
                   }
@@ -1665,7 +1498,7 @@
                 "operationMetadataId": "68eac766-bdaf-4e88-8c73-2e1264f48ddd"
               },
               "type": "If",
-              "description": "Routes processing depending on whether the Counter file was found.\n\nIf the file exists, status and metadata values are updated.\nIf the file is missing, the status remains false and the flow continues."
+              "description": "Routes processing depending on whether the DMP Command Counters SharePoint list was reachable.\n\nIf reachable, status and metadata values are updated.\nIf not, the status remains false and the flow continues."
             }
           },
           "runAfter": {

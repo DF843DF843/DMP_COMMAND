@@ -10,16 +10,39 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:14 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:54 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND vom Nutzer final bestätigt/deployed:**
 - Agent 6 (Admin Functions) – Counter-Reset auf SharePoint umgestellt, live.
-- **Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE:** Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben (siehe unten). Per `pac solution import` importiert und veröffentlicht.
-- **Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt:** External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt. Ein Aktivierungsfehler (`WorkflowOperationInputsApiOperationNotFound` – ungültige Operation-ID `CreateItem` beim SharePoint-Connector) wurde gefunden und behoben (korrekte ID: `PostItem`), erneut importiert und erfolgreich aktiviert.
-- **App v1.22.4** – gepackt, bereit zum Veröffentlichen durch den Nutzer (siehe unten, letzter Schritt).
+- Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE: Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben.
+- Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt: External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt, Operation-ID-Fehler (`CreateItem`→`PostItem`) behoben.
+- **Agent 4 (Status Check) v1.4.1 – LIVE:** Counter- und External-Domains-Statusprüfung ebenfalls auf SharePoint umgestellt (siehe Update unten – dies war die eigentliche Ursache für "Counter der E-Mail-Anzeige aktualisiert nicht").
+- **App v1.22.5** – gepackt, bereit zum Veröffentlichen durch den Nutzer (siehe unten, letzter Schritt).
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
-**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1) live, aktiviert und funktionsfähig.**
+**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) live, aktiviert und funktionsfähig.**
+
+---
+
+## ✅ Update (2026-09-02, 09:54 Uhr): Vollständige Nachprüfung auf vergessene Migrationsstellen ("Unterlassungen")
+
+**Anlass:** Nutzer meldete, der Counter der E-Mail-Anzeige aktualisiere sich nicht. Auf explizite Bitte ("Gibt es noch andere solcher Unterlassungen? Bitte alles prüfen") wurde eine systematische Prüfung aller 6 Agenten-Flows und aller App-Screens durchgeführt. **Ergebnis: 3 zusammenhängende, jetzt behobene Lücken:**
+
+**1) Agent 4 (Status Check) las Counter/External Domains noch aus den alten Dateien:**
+- `SCOPE_Counter`: Kompletter Umbau von 8 einzelnen Excel-`GetItem`-Aufrufen (4× Counter-Zeile lesen aus `Counter.xlsx`) auf einen einzigen `GetItems`-Aufruf gegen `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) plus 4× `filter()`-Ausdruck zur Extraktion der einzelnen Zähler. Gleiches Muster wie bei Internal Domains.
+- `SCOPE_External_Domains`: Umbau von Datei-Existenzprüfung + Datei-Inhalt-Lesen (`External_Domains.txt`) auf `GetItems` gegen `DMP Command External Domains` (GUID `dc89aed5-d87a-4e12-875a-db2adbc2cee4`), Zeilenanzahl direkt als `ExternalDomainsCount`.
+- Bei beiden neuen `SET_..LastModified`-Formeln wurde die gestern gelernte Lektion angewendet: `coalesce()` direkt in `select()`, nicht nur in der Längenprüfung (vermeidet den eager-`if()`-Fehler).
+- Workflow-Version `[1.4.0]` → `[1.4.1]`.
+
+**2) Maintenance-Domains-Buttons für External Domains verlinkten noch auf die alte, nicht mehr aktualisierte Textdatei** (`btnExternalDomainsRead`/`btnExternalDomainsMaintain`) – jetzt auf die SharePoint-Liste umgestellt (`AllItems.aspx`/`NewForm.aspx`, analog zu Internal Domains).
+
+**3) UI-Konsequenz (explizit vom Nutzer gefordert):** Da Counter und External Domains jetzt SharePoint-Listen statt Dateien sind, wurden ihre Kacheln aus dem **FILES**-Container in den **AUTOMATION STATUS**-Container verschoben (dort bereits vorhandenes Muster für SharePoint-Listen: Quelle="SharePoint", Wert=Zeilenanzahl). FILES-Container zeigt jetzt nur noch die 2 echten Dateien (Emergency Report, Audit Trail File), Container-Höhen entsprechend angepasst (FILES 158→106px, AUTOMATION STATUS 162→214px, Gesamtspaltenhöhe 328px bleibt unverändert). System-Health-Legende und Operational-Manual-Hilfetexte ebenfalls konsistent aktualisiert ("Counter File" → "Counter").
+
+**Bewusst NICHT verändert (kein Bug, nur Aufräum-Kandidat):** Tote Config-Variablen in Agent 4 (`VAR_CounterFolder`, `VAR_CounterFileName`, `DMP E-Mail Counter Table Name` usw.) werden nicht mehr referenziert, aber weiterhin initialisiert – harmlos, aber Aufräumkandidat (siehe Punkt unten).
+
+**Validiert:** JSON-Syntax gültig, Klammerbalance geprüft, `runAfter`-Referenzen identisch zur Baseline (nur bekannte Regex-Fehlalarme), keine Beschreibung >255 Zeichen, `pac solution pack`/`import` erfolgreich, App-Round-Trip-Diff = 0 für alle geänderten Dateien.
+
+**Status:** Agent 4 live deployt. App v1.22.5 gepackt, wartet auf Veröffentlichung durch den Nutzer.
 
 ---
 
@@ -40,7 +63,7 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 ---
 
 **🟡 Noch offen / nächste Schritte:**
-1. **Aufräumen (klein, risikolos):** Alte Excel-Konfigurationswerte (`CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter`, `ExternalDomainsStorageFolder`, `ExternalDomainsFileName`) in der Liste `DMP Command Configuration` werden von keinem Agenten mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
+1. **Aufräumen (klein, risikolos):** Alte Excel-Konfigurationswerte (`CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter`, `ExternalDomainsStorageFolder`, `ExternalDomainsFileName`) in der Liste `DMP Command Configuration` werden von keinem Agenten mehr referenziert (auch nicht mehr von Agent 4, seit dessen Migration am 2026-09-02). Zugehörige tote `VAR_...`/`SET_..._From_Config`-Aktionen in Agent 4 (und die entsprechenden Config-Keys in der SharePoint-Liste selbst) können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
 2. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
 3. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` – niedrige Priorität, Listen bereits erstellt.
 4. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).

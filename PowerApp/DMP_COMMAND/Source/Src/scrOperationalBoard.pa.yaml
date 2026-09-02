@@ -360,7 +360,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =220
                               Size: =12
-                              Text: ="Lists the 4 key working files the agents depend on, each with a status dot (green = found, red = missing) and a ""last updated"" timestamp:" & Char(10) & "- Emergency Report - produced by Agent 3 when a mailbox emergency is detected" & Char(10) & "- External Domains - the reference file of known external partner domains" & Char(10) & "- Counter File - running totals used for the Emails Processed statistics" & Char(10) & "- Audit Trail File - the full log of every automated action taken (see ""Audit Trail"")" & Char(10) & "- Replace button - lets you manually upload a new Emergency Report file; the dot turns yellow and blinks while the upload is being processed by the agent, then returns to green once done"
+                              Text: ="Lists the 2 real working files the agents still depend on, each with a status dot (green = found, red = missing) and a ""last updated"" timestamp:" & Char(10) & "- Emergency Report - produced by Agent 3 when a mailbox emergency is detected" & Char(10) & "- Audit Trail File - the full log of every automated action taken (see ""Audit Trail"")" & Char(10) & "- Replace button - lets you manually upload a new Emergency Report file; the dot turns yellow and blinks while the upload is being processed by the agent, then returns to green once done" & Char(10) & Char(10) & "Counter and External Domains moved to the Automation Status container below - both are now SharePoint lists, not files."
                               Wrap: =true
                   - conManualSystemHealth:
                       Control: GroupContainer@1.5.0
@@ -403,7 +403,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =180
                               Size: =12
-                              Text: ="A single ring that is fully green when all 5 underlying files/lists are OK, and shows a red slice for every one that is missing:" & Char(10) & "Emergency Report, Internal Domains, External Domains, Counter File, Audit Trail File." & Char(10) & "Click the ring (or the info icon) to open the detailed legend popup, which lists each of the 5 items with its own OK/Missing status - this is the fastest way to see exactly what is wrong when the ring is not fully green."
+                              Text: ="A single ring that is fully green when all 5 underlying items are OK, and shows a red slice for every one that is missing:" & Char(10) & "Emergency Report, Internal Domains, External Domains, Counter, Audit Trail File." & Char(10) & "Click the ring (or the info icon) to open the detailed legend popup, which lists each of the 5 items with its own OK/Missing status - this is the fastest way to see exactly what is wrong when the ring is not fully green."
                               Wrap: =true
                   - conManualEmailsProcessed:
                       Control: GroupContainer@1.5.0
@@ -487,9 +487,9 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Arial'
-                              Height: =160
+                              Height: =220
                               Size: =12
-                              Text: ="A compact 4-line summary read live from SharePoint / Dataverse:" & Char(10) & "- Agent 4 Live Status - the current status word reported by Agent 4's last status check run" & Char(10) & "- Internal Domains active count - how many domains in the SharePoint list are marked Active" & Char(10) & "- Config Parameters active count - how many rows in ""DMP Command Configuration"" are marked Active" & Char(10) & "- Agent Status entries count - how many agent rows exist in ""DMP Command Agent Status"""
+                              Text: ="A compact 6-line summary read live from SharePoint / Dataverse:" & Char(10) & "- Agent 4 Live Status - the current status word reported by Agent 4's last status check run" & Char(10) & "- Internal Domains active count - how many domains in the SharePoint list are marked Active" & Char(10) & "- Config Parameters active count - how many rows in ""DMP Command Configuration"" are marked Active" & Char(10) & "- Agent Status entries count - how many agent rows exist in ""DMP Command Agent Status""" & Char(10) & "- Counter rows count - how many rows exist in ""DMP Command Counters"" (normally 4)" & Char(10) & "- External Domains rows count - how many domains are currently listed in ""DMP Command External Domains"""
                               Wrap: =true
                   - conManualNextSteps:
                       Control: GroupContainer@1.5.0

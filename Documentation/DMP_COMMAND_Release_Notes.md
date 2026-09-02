@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.4 - 2026-09-02 (current)
+### v1.22.5 - 2026-09-02 (current)
+
+- Fixed the Emails Processed counter not updating - Agent 4 was still reading Counter.xlsx and External_Domains.txt instead of the new SharePoint lists after yesterday's migration, so the Cockpit kept showing frozen values
+- Counter and External Domains moved out of the FILES container into AUTOMATION STATUS, since both are now SharePoint lists rather than files
+- Maintenance Domains View/Edit buttons for External Domains now open the SharePoint list instead of the old, no-longer-updated text file
+
+### v1.22.4 - 2026-09-02
 
 - Fixed the Operating State card - the 'LAST CHANGED' label was clipped because it had too little width before the value column started right next to it - widened the label and shifted the value, both toggle switches and their status LEDs further right to make room
 
@@ -223,8 +229,9 @@ Backend:
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
-### Agent 4 (Status Check) - v1.4.0 (current)
+### Agent 4 (Status Check) - v1.4.1 (current)
 
+- v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating after Agent 1/2 were migrated to the new lists
 - v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page
 - v1.3.0 (2026-09-01) - Internal Domains status check now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before
 

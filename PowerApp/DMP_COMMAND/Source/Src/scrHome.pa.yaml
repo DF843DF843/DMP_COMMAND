@@ -1269,7 +1269,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
-                                                Text: ="Counter File - " & If(varCounterExists,"OK","Missing")
+                                                Text: ="Counter - " & If(varCounterExists,"OK","Missing")
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -1817,7 +1817,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =If(varDarkMode,RGBA(255,255,255,0.08),RGBA(20,20,24,0.06))
-                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt")
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command External Domains/AllItems.aspx")
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
@@ -1839,7 +1839,7 @@ Screens:
                                           FontWeight: =FontWeight.Semibold
                                           Height: =32
                                           HoverFill: =RGBA(0,206,125,0.12)
-                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/:t:/r/teams/GO365_DMPCommunication/Shared%20Documents/Email%20Hotline/AI_Agent/External_Domains_Storage/External_Domains.txt?csf=1&web=1&e=0RnJFW")
+                                          OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command External Domains/NewForm.aspx")
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
                                           RadiusTopLeft: =8
@@ -1932,7 +1932,7 @@ Screens:
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
-                                    Height: =158
+                                    Height: =106
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
@@ -2041,116 +2041,6 @@ Screens:
                                           Wrap: =false
                                           X: =280
                                           Y: =48
-                                    - dotExternalDomains:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: ManualLayout
-                                        Properties:
-                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                                          Height: =14
-                                          RadiusBottomLeft: =7
-                                          RadiusBottomRight: =7
-                                          RadiusTopLeft: =7
-                                          RadiusTopRight: =7
-                                          Width: =14
-                                          X: =17
-                                          Y: =76
-                                    - lblNameExternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="External Domains"
-                                          Width: =130
-                                          Wrap: =false
-                                          X: =40
-                                          Y: =74
-                                    - lblInfoExternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varExternalDomainsExists, "Operational", "Missing"))
-                                          Width: =90
-                                          Wrap: =false
-                                          X: =180
-                                          Y: =74
-                                    - lblTimeExternalDomains:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varExternalDomainsLastModified) Or varExternalDomainsLastModified="", "–", Text(DateTimeValue(varExternalDomainsLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varExternalDomainsLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =190
-                                          Wrap: =false
-                                          X: =280
-                                          Y: =74
-                                    - dotCounter:
-                                        Control: GroupContainer@1.5.0
-                                        Variant: ManualLayout
-                                        Properties:
-                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                                          Height: =14
-                                          RadiusBottomLeft: =7
-                                          RadiusBottomRight: =7
-                                          RadiusTopLeft: =7
-                                          RadiusTopRight: =7
-                                          Width: =14
-                                          X: =17
-                                          Y: =102
-                                    - lblNameCounter:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =10
-                                          Text: ="Counter File"
-                                          Width: =130
-                                          Wrap: =false
-                                          X: =40
-                                          Y: =100
-                                    - lblInfoCounter:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed), "Loading…", If(varCounterExists, "Operational", "Missing"))
-                                          Width: =90
-                                          Wrap: =false
-                                          X: =180
-                                          Y: =100
-                                    - lblTimeCounter:
-                                        Control: Label@2.5.1
-                                        Properties:
-                                          BorderColor: =RGBA(0,0,0,0)
-                                          BorderStyle: =BorderStyle.None
-                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
-                                          Font: =Font.'Arial'
-                                          Height: =18
-                                          Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varCounterLastModified) Or varCounterLastModified="", "–", Text(DateTimeValue(varCounterLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varCounterLastModified)) <= -90, "CEST", "CET"))
-                                          Width: =190
-                                          Wrap: =false
-                                          X: =280
-                                          Y: =100
                                     - dotAuditTrail:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -2163,7 +2053,7 @@ Screens:
                                           RadiusTopRight: =7
                                           Width: =14
                                           X: =17
-                                          Y: =128
+                                          Y: =76
                                     - lblNameAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -2177,7 +2067,7 @@ Screens:
                                           Width: =130
                                           Wrap: =false
                                           X: =40
-                                          Y: =126
+                                          Y: =74
                                     - lblInfoAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -2191,7 +2081,7 @@ Screens:
                                           Width: =90
                                           Wrap: =false
                                           X: =180
-                                          Y: =126
+                                          Y: =74
                                     - lblTimeAuditTrail:
                                         Control: Label@2.5.1
                                         Properties:
@@ -2205,7 +2095,7 @@ Screens:
                                           Width: =190
                                           Wrap: =false
                                           X: =280
-                                          Y: =126
+                                          Y: =74
                               - conFilesPlaceholder:
                                   Control: GroupContainer@1.5.0
                                   Variant: ManualLayout
@@ -2215,14 +2105,14 @@ Screens:
                                     BorderThickness: =3
                                     Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
                                     FillPortions: =0
-                                    Height: =162
+                                    Height: =214
                                     RadiusBottomLeft: =18
                                     RadiusBottomRight: =18
                                     RadiusTopLeft: =18
                                     RadiusTopRight: =18
                                     Width: =470
                                     X: =408
-                                    Y: =166
+                                    Y: =114
                                   Children:
                                     - lblFilesPlaceholderTitle:
                                         Control: Label@2.5.1
@@ -2489,6 +2379,116 @@ Screens:
                                           Wrap: =false
                                           X: =330
                                           Y: =126
+                                    - dotAutomationStatusCounter:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), RGBA(0,206,125,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =154
+                                    - lblAutomationStatusCounter:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="Counter"
+                                          Width: =170
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =152
+                                    - lblAutomationStatusCounterSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="SharePoint"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =220
+                                          Y: =152
+                                    - lblAutomationStatusCounterActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =CountRows('DMP Command Counters') & " rows"
+                                          Width: =140
+                                          Wrap: =false
+                                          X: =330
+                                          Y: =152
+                                    - dotAutomationStatusExternalDomains:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), RGBA(0,206,125,1)))
+                                          Height: =14
+                                          RadiusBottomLeft: =7
+                                          RadiusBottomRight: =7
+                                          RadiusTopLeft: =7
+                                          RadiusTopRight: =7
+                                          Width: =14
+                                          X: =17
+                                          Y: =180
+                                    - lblAutomationStatusExternalDomains:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="External Domains"
+                                          Width: =170
+                                          Wrap: =false
+                                          X: =40
+                                          Y: =178
+                                    - lblAutomationStatusExternalDomainsSource:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: ="SharePoint"
+                                          Width: =90
+                                          Wrap: =false
+                                          X: =220
+                                          Y: =178
+                                    - lblAutomationStatusExternalDomainsActive:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          BorderColor: =RGBA(0,0,0,0)
+                                          BorderStyle: =BorderStyle.None
+                                          Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(45,43,53,1))
+                                          Font: =Font.'Arial'
+                                          Height: =18
+                                          Size: =11
+                                          Text: =CountRows('DMP Command External Domains') & " domains"
+                                          Width: =140
+                                          Wrap: =false
+                                          X: =330
+                                          Y: =178
                         - conEmailsCard:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
