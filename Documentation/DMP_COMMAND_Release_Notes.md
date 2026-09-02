@@ -4,7 +4,12 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.8 - 2026-09-02 (current)
+### v1.22.9 - 2026-09-02 (current)
+
+- Fixed the Emergency Report Replace action not refreshing the Cockpit's numbers afterwards (e.g. Internal/External Domains counts) - it now re-runs the full status refresh on success, same as the Now button
+- The Critical/Warning/All reset buttons now immediately re-check with Agent 4 after a reset instead of only guessing the new baseline locally, so the displayed 'new since reset' count reflects confirmed data right away
+
+### v1.22.8 - 2026-09-02
 
 - Audit Trail (Detail) now auto-refreshes on its own every auto-update interval while the screen is open, instead of only when the tab is first opened
 - Fixed garbled timestamps in the Recent Critical/Warning lists (raw Excel serial numbers like '46225.50...') - now converted to a readable date/time, falling back to the original text if it is already a normal timestamp

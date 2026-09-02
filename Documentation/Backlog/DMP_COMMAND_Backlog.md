@@ -10,26 +10,52 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~14:15 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~14:35 Uhr): Alle offenen Punkte
 
-**✅ Heute live UND selbstständig deployed (Nutzer 2h im Meeting, gemäß Auftrag "arbeite Backlog-Items ab, wo kein Input nötig ist, dann alles deployen"):**
+**✅ Heute live UND selbstständig deployed:**
 - Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert: 3 neue Reset-Aktionen (Critical/Warning/All) für den neuen Audit-Trail-Reset-Mechanismus.
 - Agent 4 (Status Check) v1.4.2 – LIVE, vom Nutzer aktiviert: Pagination für den Audit-Trail-Read (echte letzte 10 Zeilen), 2 neue Response-Felder (CriticalCounterBaseline/WarningCounterBaseline).
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert.
-- **App v1.22.8 – vom Nutzer in Studio geöffnet, alle 5 SharePoint-Listen neu verbunden, gespeichert und veröffentlicht.** Anschließend die frische `.msapp` heruntergeladen und die `.msapr`-Datei (mit vollständiger Datenquellen-Registrierung aller 5 Listen) ins Git-Repo übernommen – **das Connector-Problem ist damit final gelöst.**
-- Zusätzlicher Fix nach Live-Test: Zeitanzeige im Audit Trail funktionierte trotz Fix immer noch nicht – Root Cause war ein Locale-Problem (`Value()` interpretiert Zahlen in der Sprache des angemeldeten Nutzers; unter deutschem Locale wurde der Dezimalpunkt als Tausendertrennzeichen fehlinterpretiert). Behoben durch explizite `"en-US"`-Sprachangabe – gleiches Muster vorsorglich auch bei der Emails-Processed-Legende nachgezogen.
+- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält: alle 5 SharePoint-Listen final verbunden, Locale-Fix für Zeitanzeige, YAML-Syntaxfix (Doppelpunkt in Beschreibungstext), Emergency-Report-Replace-Refresh-Fix, Reset-Buttons holen jetzt einen echten Server-Refresh statt nur zu schätzen.
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **⚠️ Zu prüfen, sobald möglich:**
-1. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert.
-2. **Zeitanzeige im Audit Trail final bestätigen** – der Locale-Fix ist gepackt und gepusht, aber noch nicht erneut in Studio veröffentlicht (nächster Publish-Zyklus nötig).
+1. **App erneut in Studio veröffentlichen** – enthält alle heutigen Fixes (Locale, Emergency-Report-Refresh, Reset-Button-Verbesserung).
+2. **Live-Test der 3 Reset-Buttons** nach Veröffentlichung – sollten jetzt einen bestätigten Server-Wert zeigen statt nur zu schätzen; falls die Zahl nach einem Refresh weiterhin auf den alten Wert zurückspringt, deutet das auf ein Problem beim Schreiben/Lesen der Baseline-Zeilen in der SharePoint-Liste hin (bräuchte dann Einblick in die tatsächlichen Zeilenwerte der Liste `DMP Command Counters`, Titel `CriticalCounterBaseline`/`WarningCounterBaseline`).
+3. **Emails-Processed-Tooltip zeigt Gesamtzahl=1, Einzelwerte=0** – wahrscheinlich KEIN Code-Bug: Die im Audit Trail sichtbaren Test-E-Mails (`subj=test`/`subj=Test`) sind selbst als "ERROR"/Critical markiert, d. h. sie haben die eigentliche Klassifizierungs-/Zähler-Logik in Agent 2 vermutlich gar nicht erreicht. Die "1" in der Gesamtanzeige kommt von einer bewussten Sicherheits-Untergrenze (`Max(Summe,1)`), NICHT von echten verarbeiteten E-Mails. **Bitte bestätigen:** Zeigt die SharePoint-Liste `DMP Command Counters` (Zeilen "No DMP"/"DMP internal Sender"/"DMP effected Member"/"DMP not effected Sender") tatsächlich echte Werte >0, oder sind diese ebenfalls alle 0? Das würde die Diagnose bestätigen oder widerlegen.
 
-**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) weiterhin live, aktiviert und funktionsfähig, UND das Connector-Problem der 5 SharePoint-Listen ist final gelöst.**
+**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig, das Connector-Problem final gelöst; 2 zusätzliche Bugs (Emergency-Report-Refresh, Reset-Baseline-Verlässlichkeit) behoben bzw. verbessert diagnostizierbar gemacht.**
+
+---
+
+## ✅ Update (2026-09-02, ~14:35 Uhr): 3 weitere Nutzer-Meldungen nach dem ersten erfolgreichen App-Laden
+
+**Nutzer-Meldungen:**
+1. Nach einem Critical/Warning-Reset zeigt ein Refresh wieder die alte (hohe) Zahl statt der erwarteten 0/kleinen Delta-Zahl.
+2. Nach einem Emergency-Report-Replace werden die Zahlen im Cockpit nicht aktualisiert.
+3. Emails-Processed-Tooltip zeigt Gesamtzahl=1, alle Einzelkategorien=0.
+4. (Zusätzlich, sofort blockierend) `PA1001 YamlInvalidSyntax` beim Laden – ein Doppelpunkt in einem von mir verfassten Beschreibungstext ("...needed here: the underlying...") wurde als YAML-Mapping-Schlüssel fehlinterpretiert. Sofort behoben (Doppelpunkt durch Gedankenstrich ersetzt), zusätzlich alle heute geänderten Dateien auf dasselbe Muster gescannt (0 weitere Treffer).
+
+**Punkt 2 (Emergency Report Replace) – Root Cause gefunden und behoben:** Der Timer, der nach einem erfolgreichen Replace läuft, hat bisher NUR Agent 3 aufgerufen und die LED gesetzt – aber nie einen Status-Refresh (Agent 4 + SharePoint-Listen-Refresh) ausgelöst. Dadurch blieben alle abgeleiteten Zahlen (Internal/External Domains Count usw.) auf dem Stand vor dem Replace. Fix: derselbe vollständige Refresh-Block wie beim "Jetzt"-Button wurde in den Erfolgsfall des Replace-Timers ergänzt.
+
+**Punkt 1 (Reset revertiert) – Verbessert, aber nicht abschließend bewiesen behoben:** Die 3 Reset-Buttons setzten den neuen Basiswert bisher nur *optimistisch* client-seitig (aus dem letzten bekannten `varAuditFailedCount`), OHNE zu bestätigen, was Agent 6 tatsächlich in SharePoint geschrieben hat. Fix: Die Buttons rufen nach einem erfolgreichen Reset jetzt SOFORT Agent 4 erneut auf und übernehmen dessen bestätigte Werte (`auditfailedcount`/`criticalcounterbaseline` usw.) statt zu raten. Das macht das Verhalten korrekter UND leichter zu diagnostizieren, falls das zugrunde liegende Schreiben/Lesen der Baseline-Zeile in der SharePoint-Liste noch ein eigenes Problem hat (dafür bräuchte es Einblick in die tatsächlichen Zeilenwerte).
+
+**Punkt 3 (Tooltip 1/0) – Wahrscheinlich keine App-Bug, sondern reale Daten:** Die im Audit Trail sichtbaren Test-E-Mails sind selbst als Critical/ERROR markiert – sie haben also vermutlich die eigentliche Zähler-Inkrement-Logik in Agent 2 nie erreicht. Die angezeigte Gesamtzahl "1" stammt von einer bewussten Sicherheits-Untergrenze in der Donut-Grafik-Formel (`Max(Summe der 4 Kategorien, 1)`), nicht von echten verarbeiteten E-Mails. Noch nicht abschließend bestätigt – dafür wäre ein Blick auf die tatsächlichen Werte in der SharePoint-Liste `DMP Command Counters` hilfreich.
+
+**Status:** Alle 4 Punkte code-seitig bearbeitet (YAML-Fix, Emergency-Report-Refresh-Fix, Reset-Button-Verbesserung), validiert (Round-Trip-Diff=0, Einrückungs-/Doppelpunkt-/Duplikat-Scan sauber), als App v1.22.9 gepackt, committet und gepusht. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
 
 ---
 
 ## ✅ Update (2026-09-02, ~14:15 Uhr): Locale-Bug bei der Zeitanzeige gefunden und behoben
+
+**Nutzer-Meldung:** Trotz des vorherigen Zeitanzeige-Fixes zeigten weiterhin ALLE Zeilen im Audit Trail den unkonvertierten Rohwert (z. B. `46267.2767505787`).
+
+**Root Cause:** `Value(rawTs)` (zur Umwandlung des rohen Excel-Seriendatumswerts) interpretiert den übergebenen Text standardmäßig in der Sprache des angemeldeten Nutzers. Unter deutscher Lokalisierung wird der Dezimalpunkt als Tausendertrennzeichen gelesen, wodurch `Value()` bei JEDER Zeile mit einem Laufzeitfehler abbrach – `IfError` fing das ab und zeigte stets den unveränderten Rohtext, optisch identisch zum ursprünglichen Bug, obwohl die Formel "syntaktisch" korrekt war.
+
+**Fix:** `Value(rawTs, "en-US")` an allen 20 Stellen (10 Critical + 10 Warning). Zusätzlich vorsorglich denselben Fix bei der Emails-Processed-Legende (aus einer früheren Update-Runde) nachgezogen, da dort dasselbe Muster (`Text(Zahl,"#,##0")`/`Text(Zahl,"0.00%")` ohne Sprachangabe) ebenfalls betroffen war – dort hätte es unter deutschem Locale zu vertauschten Tausender-/Dezimaltrennzeichen geführt, entgegen dem vom Nutzer explizit gewünschten Format (`1,000` / `0.00%`).
+
+**Gefundene, bereits im Projekt etablierte Konvention:** An einer Stelle (Emails-Processed-Donut-SVG) wurde `Text(Wert,"0.00","en-US")` bereits korrekt mit Sprachangabe verwendet – diese Konvention wurde beim neuen Code nicht übernommen, jetzt als KI-Arbeitsregel verankert.
 
 **Nutzer-Meldung:** Trotz des vorherigen Zeitanzeige-Fixes zeigten weiterhin ALLE Zeilen im Audit Trail den unkonvertierten Rohwert (z. B. `46267.2767505787`).
 
