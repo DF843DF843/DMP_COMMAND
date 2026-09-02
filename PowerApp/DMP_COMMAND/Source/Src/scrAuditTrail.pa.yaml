@@ -299,7 +299,7 @@ Screens:
                         Width: =120
                         X: =548
                         Y: =50
-                  - btnResetAllCounters:
+                  - btnResetAllAuditCounters:
                       Control: Classic/Button@2.2.0
                       Properties:
                         BorderColor: =If(varDarkMode,RGBA(255,255,255,0.4),RGBA(20,20,24,0.4))
