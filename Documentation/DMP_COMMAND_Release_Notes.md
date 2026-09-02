@@ -4,7 +4,11 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.3 - 2026-09-01 (current)
+### v1.22.4 - 2026-09-02 (current)
+
+- Fixed the Operating State card - the 'LAST CHANGED' label was clipped because it had too little width before the value column started right next to it - widened the label and shifted the value, both toggle switches and their status LEDs further right to make room
+
+### v1.22.3 - 2026-09-01
 
 - Fixed another Arial-migration text-truncation regression - the 'AGENTS ACTIVE' header KPI label and the Files-panel entry names (Emergency Report, External Domains, Counter File, Audit Trail File) were being clipped with an ellipsis - reduced their font size slightly so the full text always fits
 - Fixed Audit Trail (Detail) screen showing stale Recent Critical/Warning rows - the periodic data-refresh timer only runs while the Cockpit screen is active, so the Audit Trail screen now fetches fresh status data itself every time it is opened
@@ -213,8 +217,9 @@ Backend:
 
 ## Agent (Flow) Changes
 
-### Agent 2 (E-Mail Inbox Treatment) - v1.0.7 (current)
+### Agent 2 (E-Mail Inbox Treatment) - v1.0.8 (current)
 
+- v1.0.8 (2026-09-02) - Counter increment (all 4 workflow paths) and external domains read now use the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt. Also fixes a runtime crash ("Parse internal domains file + create array" InvalidTemplate error) caused by Power Automate evaluating both branches of an if() eagerly - select() is now guarded directly with coalesce() instead of relying on an outer length check
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
@@ -223,8 +228,9 @@ Backend:
 - v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page
 - v1.3.0 (2026-09-01) - Internal Domains status check now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before
 
-### Agent 1 (Domains Extraction) - v1.0.7 (current)
+### Agent 1 (Domains Extraction) - v1.0.8 (current)
 
+- v1.0.8 (2026-09-02) - External domains write now uses a full-sync rewrite (delete all rows, then create one row per extracted domain) against the "DMP Command External Domains" SharePoint list instead of writing External_Domains.txt
 - Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting
 - 2026-08-24 - Agent Audit Summary per-outcome step/run counters added (feeds the Cockpit's Critical/Warning/Total-runs figures via Agent 4)
 - 2026-08-13 - renumbered from "Agent 1" (unchanged number, but part of the system-wide sequential renumbering and Select+Join config-loading rebuild applied to all agents)

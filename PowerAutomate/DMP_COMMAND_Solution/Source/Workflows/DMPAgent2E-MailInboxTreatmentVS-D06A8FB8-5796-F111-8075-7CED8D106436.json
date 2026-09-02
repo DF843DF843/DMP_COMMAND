@@ -7464,8 +7464,8 @@
                                 "operationMetadataId": "24b9d8a6-6e5d-450f-a19c-341906c21a5c"
                               },
                               "type": "Compose",
-                              "inputs": "@if(\r\n  equals(length(coalesce(body('Check_Existence_of_External_Domains_File')?['value'], createArray())), 0),\r\n  createArray(),\r\n  select(body('Check_Existence_of_External_Domains_File')?['value'], toLower(trim(string(item()?['Title']))))\r\n)\r\n",
-                              "description": "Builds a lower-case array of domains from the DMP Command External Domains SharePoint list rows already loaded by Check_Existence_of_External_Domains_File."
+                              "inputs": "@select(\r\n  coalesce(body('Check_Existence_of_External_Domains_File')?['value'], createArray()),\r\n  toLower(trim(string(item()?['Title'])))\r\n)\r\n",
+                              "description": "Builds a lower-case array of the External Domains list rows. coalesce() guards select() itself (not just a wrapping if()) since Power Automate evaluates both if() branches eagerly - a null value would otherwise crash select() regardless of branch."
                             },
                             "DomainClassificationFinal": {
                               "runAfter": {
@@ -7531,8 +7531,8 @@
                           "operationMetadataId": "bae4b483-66b8-4fa9-83c8-e4b1cbf35817"
                         },
                         "type": "Compose",
-                        "inputs": "@if(\r\n  equals(length(coalesce(body('Check_Existence_of_Internal_Domains_File')?['value'], createArray())), 0),\r\n  createArray(),\r\n  select(body('Check_Existence_of_Internal_Domains_File')?['value'], toLower(trim(string(item()?['Title']))))\r\n)\r\n",
-                        "description": "Builds a lower-case array of active domains from the DMP Command Internal Domains SharePoint list rows already loaded by Check_Existence_of_Internal_Domains_File."
+                        "inputs": "@select(\r\n  coalesce(body('Check_Existence_of_Internal_Domains_File')?['value'], createArray()),\r\n  toLower(trim(string(item()?['Title'])))\r\n)\r\n",
+                        "description": "Builds a lower-case array of active Internal Domains list rows. coalesce() guards select() itself (not just a wrapping if()) since Power Automate evaluates both if() branches eagerly - a null value would otherwise crash select() regardless of branch."
                       },
                       "MatchedInternalDomain": {
                         "runAfter": {

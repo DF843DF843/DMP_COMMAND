@@ -1419,7 +1419,7 @@ Screens:
                                           Height: =14
                                           Size: =9
                                           Text: ="LAST CHANGED"
-                                          Width: =100
+                                          Width: =150
                                           Wrap: =false
                                           X: =16
                                           Y: =58
@@ -1436,7 +1436,7 @@ Screens:
                                           Text: =Coalesce(varLastChangedText, "Not changed this session")
                                           Width: =300
                                           Wrap: =false
-                                          X: =120
+                                          X: =170
                                           Y: =54
                                     - lblOperationalStateLabel:
                                         Control: Label@2.5.1
@@ -1521,7 +1521,7 @@ Screens:
                                           TrueFill: =RGBA(102,52,142,1)
                                           TrueText: ="DMP"
                                           Width: =110
-                                          X: =120
+                                          X: =170
                                           Y: =82
                                     - dotLedOperationalState:
                                         Control: GroupContainer@1.5.0
@@ -1536,7 +1536,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =240
+                                          X: =290
                                           Y: =86
                                     - lblApplicationModeLabel:
                                         Control: Label@2.5.1
@@ -1624,7 +1624,7 @@ Screens:
                                           TrueFill: =RGBA(196,43,28,1)
                                           TrueText: ="PROD"
                                           Width: =110
-                                          X: =120
+                                          X: =170
                                           Y: =114
                                     - dotLedApplicationMode:
                                         Control: GroupContainer@1.5.0
@@ -1639,7 +1639,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =240
+                                          X: =290
                                           Y: =118
                               - conMaintenanceDomains:
                                   Control: GroupContainer@1.5.0

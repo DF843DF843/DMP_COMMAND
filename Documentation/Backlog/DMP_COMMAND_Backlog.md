@@ -10,25 +10,40 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-01, Sitzungsende): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:00 Uhr): Alle offenen Punkte
 
-**Kontext:** Nutzer beendet die Sitzung ("dann mache ich jetzt Schluss") – dies ist die finale, gesammelte Übersicht aller zu diesem Zeitpunkt offenen Punkte, damit nichts verloren geht.
+**✅ Heute live UND vom Nutzer final bestätigt/deployed:**
+- Agent 6 (Admin Functions) – Counter-Reset auf SharePoint umgestellt, live.
+- **Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE:** Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben (siehe unten). Per `pac solution import` importiert und veröffentlicht.
+- **Agent 1 (Domains Extraction) v1.0.8 – LIVE:** External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt. Per `pac solution import` importiert und veröffentlicht.
+- **App v1.22.4** – gepackt, bereit zum Veröffentlichen durch den Nutzer (siehe unten, letzter Schritt).
+- Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
-**✅ Heute deployed (live) UND vom Nutzer final bestätigt (Stand 18:36 Uhr):**
-- Agent 6 (Admin Functions) – Counter-Reset (alle 5 Fälle) auf die SharePoint-Liste `DMP Command Counters` (GUID `277307f0-195a-4e78-afc8-850dbdf956b2`) umgestellt, per `pac solution import` live importiert und vom Nutzer reaktiviert.
-- App **v1.22.3** (kumulativ inkl. v1.22.1/v1.22.2) – kanonische `.msapp`-Datei vom Nutzer in Power Apps Studio geöffnet, gespeichert und veröffentlicht. **Live.** Enthält:
-  - v1.22.1: Header/Next-Steps-Randausrichtung, Timer-Split-Fix, KPI-Verschiebung.
-  - v1.22.2: Replace-Button-Zeilenumbruch-Fix, Domains-Buttons nach links verschoben.
-  - v1.22.3: "AGENTS ACTIVE"- und Files-Panel-Namen (Emergency Report/External Domains/Counter File/Audit Trail File) waren durch die Arial-Migration abgeschnitten – Schriftgröße reduziert, behoben. Audit Trail (Detail) zeigte veraltete Recent-Critical/Warning-Zeilen, da der periodische Refresh-Timer nur auf dem Cockpit-Screen läuft – Audit-Trail-Screen holt sich jetzt bei jedem Öffnen selbst frische Daten (`OnVisible`).
-- Nutzer bestätigt zusätzlich: alle Agenten und SharePoint-Listen in der App aktualisiert/verbunden und veröffentlicht.
-- Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` erstellt (Englisch) – beschreibt unsere Zusammenarbeitsmethodik (KI-Arbeitsregeln, Best Practices) INKLUSIVE der konkreten technischen Praktiken (SharePoint-Variablen/Konfiguration, Audit Trail, Warn-Mails, Release Notes, Backlog, GitHub-Nutzung) als eigener Abschnitt – für eine andere KI zur PowerPoint-Erstellung.
+**⚠️ WICHTIG – Agent 6 muss nach diesem Import erneut reaktiviert werden** (Solution-Import deaktiviert bestehende Flow-Definitionen als Nebeneffekt, wie bereits beim letzten Import beobachtet) – bitte im Power-Automate-Portal prüfen, ob Agent 6 (und ggf. auch Agent 1/Agent 2) nach diesem Import noch aktiv sind.
 
-**🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge, für die nächste Sitzung):**
-1. **Nutzer-Test der gesamten SharePoint-Migration** (Agent 6 bereits live, Agent 2 + Agent 1 gebaut und committet, aber noch nicht deployt) – **kompletter Umbau von Counter.xlsx/External_Domains.txt auf SharePoint-Listen ist damit inhaltlich fertig**, es fehlt nur noch der begleitete Live-Test + `pac solution import` für Agent 2/Agent 1.
-2. **Aufräumen (klein, risikolos):** In Agent 6 werden die alten Excel-Konfigurationswerte `CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter` (in der Liste `DMP Command Configuration`) nicht mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung. Gleiches gilt jetzt auch für `ExternalDomainsStorageFolder`/`ExternalDomainsFileName`, seit auch Agent 1 migriert ist.
-3. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
-4. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` für die beiden neuen SharePoint-Listen – nicht angelegt (Listen sind bereits vom Nutzer erstellt, daher niedrige Priorität, ggf. nicht mehr nötig).
-5. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
+---
+
+## ✅ Update (2026-09-02, 08:53 Uhr): Produktiver Laufzeitfehler in Agent 2 gefunden und behoben
+
+**Nutzer-Meldung:** Agent Monitoring zeigte Agent 2 als "Failed" an, obwohl weder System Health noch Critical-Zähler noch Audit Trail (Details) einen Fehler zeigten. Nutzer lieferte den genauen Fehlertext nach: `InvalidTemplate: Unable to process template language expressions in action 'Parse_internal_domains_file_+_create_array'`.
+
+**Root Cause:** Klassischer Power-Automate-Fallstrick – `if(bedingung, wert_true, wert_false)` wertet **beide** Zweige eager aus, nicht lazy. Die Formel `if(equals(length(coalesce(body(...)?['value'], createArray())),0), createArray(), select(body(...)?['value'], ...))` schützt zwar die Längenprüfung mit `coalesce()`, aber `select()` im "false"-Zweig griff weiterhin auf den **ungeschützten rohen** `body(...)?['value']` zu – und wurde trotzdem ausgewertet, selbst wenn der "true"-Zweig (leere Liste) eigentlich hätte greifen sollen. War der Wert aus irgendeinem Grund `null` statt eines leeren Arrays, crashte `select(null, ...)` mit exakt der gemeldeten Fehlermeldung.
+
+**Fix:** `coalesce(...)` jetzt direkt innerhalb von `select()` platziert, nicht nur in der Längenprüfung – der äußere `if()`-Wrapper wird dadurch überflüssig und wurde entfernt. Behoben an **zwei** Stellen in Agent 2:
+1. `Parse_internal_domains_file_+_create_array` (die akut gecrashte, bereits produktiv laufende Stelle).
+2. `Parse_external_domains_file_+_create_array` (meine eigene, noch nicht deployte External-Domains-Migration von heute Morgen – hätte denselben Fehler erst beim späteren Deployment ausgelöst, jetzt vorab korrigiert).
+
+**Geprüft, aber kein Bug:** Der Agent-4-Fall mit demselben `select()`-Muster (`InternalDomainsLastModified`) ist bereits durch eine echte `actions(...).status`-Prüfung sauber abgesichert, kein Handlungsbedarf dort.
+
+**Status:** Zusammen mit der Agent-2-SharePoint-Migration UND der Agent-1-SharePoint-Migration per `pac solution import` live deployt (Nutzerentscheidung: "Ja, alle fixes auch Power Apps deployen").
+
+---
+
+**🟡 Noch offen / nächste Schritte:**
+1. **Aufräumen (klein, risikolos):** Alte Excel-Konfigurationswerte (`CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter`, `ExternalDomainsStorageFolder`, `ExternalDomainsFileName`) in der Liste `DMP Command Configuration` werden von keinem Agenten mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
+2. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
+3. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` – niedrige Priorität, Listen bereits erstellt.
+4. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
 
 ---
 
