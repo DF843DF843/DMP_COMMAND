@@ -92,19 +92,17 @@
           "inputs": {
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-              "table": "cd185a31-aa98-4afe-94f1-cbafc4417cc1",
-              "$filter": "@concat('FileLeafRef eq ''', trim(string(outputs('CMP_ConfigObject')?['ExternalDomainsFileName'])), '''')",
-              "folderPath": "@trim(string(outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']))",
-              "viewScopeOption": "Default"
+              "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
+              "$top": 5000
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
               "connectionName": "shared_sharepointonline",
-              "operationId": "GetFileItems"
+              "operationId": "GetItems"
             },
             "authentication": "@parameters('$authentication')"
           },
-          "description": "Checks whether the configured external domains reference file exists before the workflow continues with sender classification."
+          "description": "Loads all rows of the DMP Command External Domains SharePoint list before the workflow continues with sender classification."
         },
         "Check_Workflow_Counter_File": {
           "runAfter": {
@@ -119,16 +117,17 @@
           "inputs": {
             "parameters": {
               "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-              "path": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)"
+              "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+              "$top": 1
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
               "connectionName": "shared_sharepointonline",
-              "operationId": "GetFileMetadataByPath"
+              "operationId": "GetItems"
             },
             "authentication": "@parameters('$authentication')"
           },
-          "description": "Checks whether the configured Agent 2 workflow counter file is available and accessible."
+          "description": "Checks whether the DMP Command Counters SharePoint list is available and accessible."
         },
         "Create_Mailbox_Subfolder_(PA_Processed_Mails)": {
           "runAfter": {
@@ -352,27 +351,24 @@
                     ]
                   },
                   "metadata": {
-                    "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4",
-                    "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                    "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "@variables('Detected Workflow Path')"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "$filter": "@concat('Title eq ''', variables('Detected Workflow Path'), '''')",
+                      "$top": 1
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
-                      "operationId": "GetItem"
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
                     },
                     "authentication": "@parameters('$authentication')"
                   },
-                  "description": "Reads the current No DMP workflow counter entry from the configured Agent 2 counter file."
+                  "description": "Reads the current No DMP workflow counter row from the DMP Command Counters SharePoint list."
                 },
                 "Updated_Counter_-_No_DMP": {
                   "runAfter": {
@@ -386,7 +382,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "Current Workflow Counter",
-                    "value": "@\r\nadd(\r\n  int(\r\n    float(\r\n      coalesce(\r\n        body('Get_Last_No_DMP_ID')?['Number_Processed_Emails'],\r\n        '0'\r\n      )\r\n    )\r\n  ),\r\n  1\r\n)"
+                    "value": "@\r\nadd(\r\n  int(\r\n    float(\r\n      coalesce(\r\n        first(body('Get_Last_No_DMP_ID')?['value'])?['NumberProcessedEmails'],\r\n        '0'\r\n      )\r\n    )\r\n  ),\r\n  1\r\n)"
                   },
                   "description": "Increments the current No DMP workflow counter by one in preparation for the new No DMP reference ID."
                 },
@@ -1566,12 +1562,12 @@
                           "StepName": "Alert_CounterUpdateFailed_ND",
                           "StepStatus": "Failed",
                           "Flow ID": "@{variables('RunPrefix')}",
-                          "KeyOutput": "Update of @{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} failed",
+                          "KeyOutput": "Update of the DMP Command Counters SharePoint list failed",
                           "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Flow_Detection'))), 10000000), '0.00')}",
                           "ActionType": "Alert",
                           "Direction": "Outbound",
                           "Recipient": "@{trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))}",
-                          "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of ', trim(string(outputs('CMP_ConfigObject')?['CounterFileName'])), ' failed!')}",
+                          "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of DMP Command Counters SharePoint list failed!')}",
                           "TargetMessageId": "",
                           "TargetFolderName": "",
                           "TargetFolderId": "",
@@ -1610,7 +1606,7 @@
                         "parameters": {
                           "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                           "emailMessage/Subject": "@variables('LastSentSubject')",
-                          "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that the workflow counter file could not be updated successfully. The underlying reason may be missing file access, a locked workbook, or an Excel write failure.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Expected path:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
+                          "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that a workflow counter row could not be updated successfully in the DMP Command Counters SharePoint list. The underlying reason may be a temporary SharePoint connectivity issue or insufficient list permissions.</p><br><p class=\"editor-paragraph\">As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please verify the DMP Command Counters SharePoint list and its permissions, and check incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
                           "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                           "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                         },
@@ -1916,28 +1912,24 @@
                     ]
                   },
                   "metadata": {
-                    "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86",
-                    "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                    "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86"
                   },
                   "type": "OpenApiConnection",
                   "inputs": {
                     "parameters": {
-                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                      "id": "@variables('Detected Workflow Path')",
-                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": ',\n    string(variables('Current Workflow Counter')),\n    '}'\n  )\n)"
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                      "id": "@first(body('Get_Last_No_DMP_ID')?['value'])?['ID']",
+                      "item/NumberProcessedEmails": "@variables('Current Workflow Counter')"
                     },
                     "host": {
-                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                      "connectionName": "shared_excelonlinebusiness",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
                       "operationId": "PatchItem"
                     },
                     "authentication": "@parameters('$authentication')"
                   },
-                  "description": "Persists the updated No DMP workflow counter to the configured Agent 2 counter file."
+                  "description": "Persists the updated No DMP workflow counter to the DMP Command Counters SharePoint list."
                 }
               },
               "runAfter": {
@@ -1969,27 +1961,24 @@
                               ]
                             },
                             "metadata": {
-                              "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4",
-                              "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                              "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4"
                             },
                             "type": "OpenApiConnection",
                             "inputs": {
                               "parameters": {
-                                "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                "id": "@variables('Detected Workflow Path')"
+                                "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                "$filter": "@concat('Title eq ''', variables('Detected Workflow Path'), '''')",
+                                "$top": 1
                               },
                               "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                "connectionName": "shared_excelonlinebusiness",
-                                "operationId": "GetItem"
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
+                                "operationId": "GetItems"
                               },
                               "authentication": "@parameters('$authentication')"
                             },
-                            "description": "Reads the current DIS workflow counter entry from the configured Agent 2 counter file."
+                            "description": "Reads the current DIS workflow counter row from the DMP Command Counters SharePoint list."
                           },
                           "Updated_Counter_-_DMP_Internal_Sender": {
                             "runAfter": {
@@ -2003,9 +1992,9 @@
                             "type": "SetVariable",
                             "inputs": {
                               "name": "Current Workflow Counter",
-                              "value": "@add(int(float(coalesce(body('Get_Last_DMP_Internal_Sender_ID')?['Number_Processed_Emails'],'0'))),1)"
+                              "value": "@add(int(float(coalesce(first(body('Get_Last_DMP_Internal_Sender_ID')?['value'])?['NumberProcessedEmails'],'0'))),1)"
                             },
-                            "description": "add(int(float(coalesce(body('Get_Last_DMP_Internal_Sender_ID')?['Number_Processed_Emails'],'0'))),1)"
+                            "description": "add(int(float(coalesce(first(body('Get_Last_DMP_Internal_Sender_ID')?['value'])?['NumberProcessedEmails'],'0'))),1)"
                           },
                           "Create_DMP_Mailbox_Subfolder_\"DMP_internal_Sender\"_": {
                             "runAfter": {
@@ -3098,28 +3087,24 @@
                               ]
                             },
                             "metadata": {
-                              "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86",
-                              "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                              "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86"
                             },
                             "type": "OpenApiConnection",
                             "inputs": {
                               "parameters": {
-                                "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                "id": "@variables('Detected Workflow Path')",
-                                "item": "@json(concat('{\"', trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])), '\": ', string(variables('Current Workflow Counter')), '}'))"
+                                "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                "id": "@first(body('Get_Last_DMP_Internal_Sender_ID')?['value'])?['ID']",
+                                "item/NumberProcessedEmails": "@variables('Current Workflow Counter')"
                               },
                               "host": {
-                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                "connectionName": "shared_excelonlinebusiness",
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline",
                                 "operationId": "PatchItem"
                               },
                               "authentication": "@parameters('$authentication')"
                             },
-                            "description": "Persists the updated DIS workflow counter to the configured Agent 2 counter file."
+                            "description": "Persists the updated DIS workflow counter to the DMP Command Counters SharePoint list."
                           },
                           "Handle_Counter_file_update_error_(DIS)": {
                             "description": "Handles a failed counter-file update for the DMP Internal Sender workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
@@ -3144,12 +3129,12 @@
                                     "StepName": "Alert_CounterUpdateFailed_DIS",
                                     "StepStatus": "Failed",
                                     "Flow ID": "@{variables('RunPrefix')}",
-                                    "KeyOutput": "Update of @{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} failed",
+                                    "KeyOutput": "Update of the DMP Command Counters SharePoint list failed",
                                     "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Flow_Detection'))), 10000000), '0.00')}",
                                     "ActionType": "Alert",
                                     "Direction": "Outbound",
                                     "Recipient": "@{trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))}",
-                                    "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of ', trim(string(outputs('CMP_ConfigObject')?['CounterFileName'])), ' failed!')}",
+                                    "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of DMP Command Counters SharePoint list failed!')}",
                                     "TargetMessageId": "",
                                     "TargetFolderName": "",
                                     "TargetFolderId": "",
@@ -3188,7 +3173,7 @@
                                   "parameters": {
                                     "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                                     "emailMessage/Subject": "@variables('LastSentSubject')",
-                                    "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that the workflow counter file could not be updated successfully. The underlying reason may be missing file access, a locked workbook, or an Excel write failure.<br><br><b><strong class=\"editor-text-bold\">Expected path:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
+                                    "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that a workflow counter row could not be updated successfully in the DMP Command Counters SharePoint list. The underlying reason may be a temporary SharePoint connectivity issue or insufficient list permissions.<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please verify the DMP Command Counters SharePoint list and its permissions, and check incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
                                     "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                                     "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                                   },
@@ -3532,27 +3517,24 @@
                                     ]
                                   },
                                   "metadata": {
-                                    "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4",
-                                    "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                                    "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4"
                                   },
                                   "type": "OpenApiConnection",
                                   "inputs": {
                                     "parameters": {
-                                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                      "id": "@variables('Detected Workflow Path')"
+                                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                      "$filter": "@concat('Title eq ''', variables('Detected Workflow Path'), '''')",
+                                      "$top": 1
                                     },
                                     "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                      "connectionName": "shared_excelonlinebusiness",
-                                      "operationId": "GetItem"
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
+                                      "operationId": "GetItems"
                                     },
                                     "authentication": "@parameters('$authentication')"
                                   },
-                                  "description": "Reads the current DEE workflow counter entry from the central counter file so that the next DEE ID can be assigned."
+                                  "description": "Reads the current DEE workflow counter row from the DMP Command Counters SharePoint list so that the next DEE ID can be assigned."
                                 },
                                 "Updated_Counter_-_DMP_effected_Member": {
                                   "runAfter": {
@@ -3566,7 +3548,7 @@
                                   "type": "SetVariable",
                                   "inputs": {
                                     "name": "Current Workflow Counter",
-                                    "value": "@add(int(float(coalesce(body('Get_Last_DMP_effected_Member_ID')?['Number_Processed_Emails'],'0'))),1)"
+                                    "value": "@add(int(float(coalesce(first(body('Get_Last_DMP_effected_Member_ID')?['value'])?['NumberProcessedEmails'],'0'))),1)"
                                   },
                                   "description": "Increments the DEE workflow counter read from the counter file to compute the next sequential business reference number."
                                 },
@@ -5343,28 +5325,24 @@
                                     ]
                                   },
                                   "metadata": {
-                                    "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86",
-                                    "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                                    "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86"
                                   },
                                   "type": "OpenApiConnection",
                                   "inputs": {
                                     "parameters": {
-                                      "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                      "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                      "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                      "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                      "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                      "id": "@variables('Detected Workflow Path')",
-                                      "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": ',\n    string(variables('Current Workflow Counter')),\n    '}'\n  )\n)"
+                                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                      "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                      "id": "@first(body('Get_Last_DMP_effected_Member_ID')?['value'])?['ID']",
+                                      "item/NumberProcessedEmails": "@variables('Current Workflow Counter')"
                                     },
                                     "host": {
-                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                      "connectionName": "shared_excelonlinebusiness",
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                      "connectionName": "shared_sharepointonline",
                                       "operationId": "PatchItem"
                                     },
                                     "authentication": "@parameters('$authentication')"
                                   },
-                                  "description": "Persists the updated DEE workflow counter to the configured Agent 2 counter file."
+                                  "description": "Persists the updated DEE workflow counter to the DMP Command Counters SharePoint list."
                                 },
                                 "Handle_Counter_file_update_error_(DEE)": {
                                   "description": "Handles a failed counter-file update for the DMP effected Member workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
@@ -5389,12 +5367,12 @@
                                           "StepName": "Alert_CounterUpdateFailed_DEE",
                                           "StepStatus": "Failed",
                                           "Flow ID": "@{variables('RunPrefix')}",
-                                          "KeyOutput": "Update of @{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} failed",
+                                          "KeyOutput": "Update of the DMP Command Counters SharePoint list failed",
                                           "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Flow_Detection'))), 10000000), '0.00')}",
                                           "ActionType": "Alert",
                                           "Direction": "Outbound",
                                           "Recipient": "@{trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))}",
-                                          "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of ', trim(string(outputs('CMP_ConfigObject')?['CounterFileName'])), ' failed!')}",
+                                          "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of DMP Command Counters SharePoint list failed!')}",
                                           "TargetMessageId": "",
                                           "TargetFolderName": "",
                                           "TargetFolderId": "",
@@ -5433,7 +5411,7 @@
                                         "parameters": {
                                           "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                                           "emailMessage/Subject": "@variables('LastSentSubject')",
-                                          "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that the workflow counter file could not be updated successfully. The underlying reason may be missing file access, a locked workbook, or an Excel write failure.<br><br><b><strong class=\"editor-text-bold\">Expected path:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
+                                          "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that a workflow counter row could not be updated successfully in the DMP Command Counters SharePoint list. The underlying reason may be a temporary SharePoint connectivity issue or insufficient list permissions.<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please verify the DMP Command Counters SharePoint list and its permissions, and check incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
                                           "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                                           "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                                         },
@@ -5775,27 +5753,24 @@
                                       ]
                                     },
                                     "metadata": {
-                                      "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4",
-                                      "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                                      "operationMetadataId": "7bb9c430-941d-4eeb-be23-ab93c312adb4"
                                     },
                                     "type": "OpenApiConnection",
                                     "inputs": {
                                       "parameters": {
-                                        "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                        "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                        "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                        "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                        "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                        "id": "@variables('Detected Workflow Path')"
+                                        "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                        "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                        "$filter": "@concat('Title eq ''', variables('Detected Workflow Path'), '''')",
+                                        "$top": 1
                                       },
                                       "host": {
-                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                        "connectionName": "shared_excelonlinebusiness",
-                                        "operationId": "GetItem"
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                        "connectionName": "shared_sharepointonline",
+                                        "operationId": "GetItems"
                                       },
                                       "authentication": "@parameters('$authentication')"
                                     },
-                                    "description": "Reads the current DNES workflow counter entry from the configured Agent 2 counter file."
+                                    "description": "Reads the current DNES workflow counter row from the DMP Command Counters SharePoint list."
                                   },
                                   "Updated_Counter_-_DMP_not_effected_Sender_": {
                                     "runAfter": {
@@ -5809,9 +5784,9 @@
                                     "type": "SetVariable",
                                     "inputs": {
                                       "name": "Current Workflow Counter",
-                                      "value": "@add(int(float(coalesce(body('Get_Last_DMP_not_effected_Sender_ID')?['Number_Processed_Emails'],'0'))),1)"
+                                      "value": "@add(int(float(coalesce(first(body('Get_Last_DMP_not_effected_Sender_ID')?['value'])?['NumberProcessedEmails'],'0'))),1)"
                                     },
-                                    "description": "add(int(float(coalesce(body('Get_Last_DMP_not_effected_Sender_ID')?['Number_Processed_Emails'],'0'))),1)"
+                                    "description": "add(int(float(coalesce(first(body('Get_Last_DMP_not_effected_Sender_ID')?['value'])?['NumberProcessedEmails'],'0'))),1)"
                                   },
                                   "Create_DMP_Mailbox_Subfolder_\"DMP_not_effected_Sender\"": {
                                     "runAfter": {
@@ -7062,28 +7037,24 @@
                                       ]
                                     },
                                     "metadata": {
-                                      "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86",
-                                      "tableId": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))"
+                                      "operationMetadataId": "a54bf0b0-c538-4d38-a422-42b405cf1e86"
                                     },
                                     "type": "OpenApiConnection",
                                     "inputs": {
                                       "parameters": {
-                                        "source": "sites/deutscheboerse.sharepoint.com,29de2651-a6d7-4ef1-898a-9f375641be60,9b0625cd-fc09-4dd8-a02a-1c244114c1b6",
-                                        "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
-                                        "file": "@concat(\n  trim(string(outputs('CMP_ConfigObject')?['CounterFolder'])),\n  '/',\n  trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))\n)",
-                                        "table": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableName']))",
-                                        "idColumn": "@trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNamePath']))",
-                                        "id": "@variables('Detected Workflow Path')",
-                                        "item": "@json(\n  concat(\n    '{\"',\n    trim(string(outputs('CMP_ConfigObject')?['CounterTableColumnNameCounter'])),\n    '\": ',\n    string(variables('Current Workflow Counter')),\n    '}'\n  )\n)"
+                                        "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                        "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
+                                        "id": "@first(body('Get_Last_DMP_not_effected_Sender_ID')?['value'])?['ID']",
+                                        "item/NumberProcessedEmails": "@variables('Current Workflow Counter')"
                                       },
                                       "host": {
-                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
-                                        "connectionName": "shared_excelonlinebusiness",
+                                        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                        "connectionName": "shared_sharepointonline",
                                         "operationId": "PatchItem"
                                       },
                                       "authentication": "@parameters('$authentication')"
                                     },
-                                    "description": "Persists the updated DNES workflow counter to the configured Agent 2 counter file."
+                                    "description": "Persists the updated DNES workflow counter to the DMP Command Counters SharePoint list."
                                   },
                                   "Handle_Counter_file_update_error_(DNES)": {
                                     "description": "Handles a failed counter-file update for the DMP not effected Sender workflow path: sets the audit outcome to Failed, alerts the Hotline team by e-mail, and records the alert mail's Sent Items move result.",
@@ -7108,12 +7079,12 @@
                                             "StepName": "Alert_CounterUpdateFailed_DNES",
                                             "StepStatus": "Failed",
                                             "Flow ID": "@{variables('RunPrefix')}",
-                                            "KeyOutput": "Update of @{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} failed",
+                                            "KeyOutput": "Update of the DMP Command Counters SharePoint list failed",
                                             "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Flow_Detection'))), 10000000), '0.00')}",
                                             "ActionType": "Alert",
                                             "Direction": "Outbound",
                                             "Recipient": "@{trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))}",
-                                            "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of ', trim(string(outputs('CMP_ConfigObject')?['CounterFileName'])), ' failed!')}",
+                                            "SubjectOut": "@{concat(outputs('Mail_Mode_Subject_Prefix'), ' - Update of DMP Command Counters SharePoint list failed!')}",
                                             "TargetMessageId": "",
                                             "TargetFolderName": "",
                                             "TargetFolderId": "",
@@ -7152,7 +7123,7 @@
                                           "parameters": {
                                             "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                                             "emailMessage/Subject": "@variables('LastSentSubject')",
-                                            "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that the workflow counter file could not be updated successfully. The underlying reason may be missing file access, a locked workbook, or an Excel write failure.<br><br><b><strong class=\"editor-text-bold\">Expected path: </strong></b>@{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}<b><strong class=\"editor-text-bold\">/</strong></b>@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}<b><strong class=\"editor-text-bold\"><br></strong></b><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
+                                            "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>The DMP Inbox surveillance has detected that a workflow counter row could not be updated successfully in the DMP Command Counters SharePoint list. The underlying reason may be a temporary SharePoint connectivity issue or insufficient list permissions.<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please verify the DMP Command Counters SharePoint list and its permissions, and check incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
                                             "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                                             "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                                           },
@@ -7488,38 +7459,13 @@
                               "type": "If",
                               "description": "Routes processing depending on whether the sender domain matched an external DMP domain: the DMP effected Member path runs if matched, otherwise the sender is classified as DMP not effected Sender."
                             },
-                            "Load_External_Domains": {
-                              "metadata": {
-                                "operationMetadataId": "c3aff6ad-a451-455e-ac38-e99d5bae340b"
-                              },
-                              "type": "OpenApiConnection",
-                              "inputs": {
-                                "parameters": {
-                                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                                  "path": "@concat( trim(string(outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder'])), '/', trim(string(outputs('CMP_ConfigObject')?['ExternalDomainsFileName'])) )",
-                                  "inferContentType": true
-                                },
-                                "host": {
-                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                                  "connectionName": "shared_sharepointonline",
-                                  "operationId": "GetFileContentByPath"
-                                },
-                                "authentication": "@parameters('$authentication')"
-                              },
-                              "description": "Loads the configured external domains reference file content from SharePoint for affected-member classification."
-                            },
                             "Parse_external_domains_file_+_create_array": {
-                              "runAfter": {
-                                "Load_External_Domains": [
-                                  "Succeeded"
-                                ]
-                              },
                               "metadata": {
                                 "operationMetadataId": "24b9d8a6-6e5d-450f-a19c-341906c21a5c"
                               },
                               "type": "Compose",
-                              "inputs": "@\r\nsplit(\r\n  replace(\r\n    toLower(\r\n      trim(\r\n        string(outputs('Load_External_Domains')?['body'])\r\n      )\r\n    ),\r\n    decodeUriComponent('%0D'),\r\n    ''\r\n  ),\r\n  decodeUriComponent('%0A')\r\n)\r\n",
-                              "description": "Normalizes the external domains reference file content, removes carriage returns, converts it to lower case, and splits it into an array of domains."
+                              "inputs": "@if(\r\n  equals(length(coalesce(body('Check_Existence_of_External_Domains_File')?['value'], createArray())), 0),\r\n  createArray(),\r\n  select(body('Check_Existence_of_External_Domains_File')?['value'], toLower(trim(string(item()?['Title']))))\r\n)\r\n",
+                              "description": "Builds a lower-case array of domains from the DMP Command External Domains SharePoint list rows already loaded by Check_Existence_of_External_Domains_File."
                             },
                             "DomainClassificationFinal": {
                               "runAfter": {
@@ -8710,7 +8656,7 @@
                   "StepName": "Alert_CounterFileMissing",
                   "StepStatus": "Failed",
                   "Flow ID": "",
-                  "KeyOutput": "missingFile=@{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}",
+                  "KeyOutput": "DMP Command Counters SharePoint list not accessible",
                   "DurationSec": "@{formatNumber(div(sub(ticks(utcNow()), variables('RunStartTicks')), 10000000), '0.00')}",
                   "ActionType": "Alert",
                   "Direction": "Outbound",
@@ -8753,7 +8699,7 @@
               "inputs": {
                 "runStatus": "Failed",
                 "runError": {
-                  "message": "File: @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} missing!"
+                  "message": "DMP Command Counters SharePoint list is missing or not accessible!"
                 }
               },
               "description": "Terminates the flow run as Failed because the workflow counter file could not be found, preventing further processing without a working counter."
@@ -8772,7 +8718,7 @@
                 "parameters": {
                   "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
                   "emailMessage/Subject": "@variables('LastSentSubject')",
-                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,</p><br><p class=\"editor-paragraph\">The DMP Inbox surveillance has detected that the required @{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))} file is missing or not accessible.</p><p class=\"editor-paragraph\"><br><b><strong class=\"editor-text-bold\">Expected path:</strong></b> @{trim(string(outputs('CMP_ConfigObject')?['CounterFolder']))}/@{trim(string(outputs('CMP_ConfigObject')?['CounterFileName']))}<br><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please restore the file at the specified location and verify incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,</p><br><p class=\"editor-paragraph\">The DMP Inbox surveillance has detected that the DMP Command Counters SharePoint list is missing or not accessible.</p><p class=\"editor-paragraph\"><br>As a consequence, the workflow cannot reliably continue and is therefore not fully operational.<br><br>Please verify the DMP Command Counters SharePoint list and its permissions, and check incoming messages during this period.<br><br>Kind regards,<br>DMP Hotline Team<br><br>&lt;EOM&gt;</p>",
                   "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
                   "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
                 },
