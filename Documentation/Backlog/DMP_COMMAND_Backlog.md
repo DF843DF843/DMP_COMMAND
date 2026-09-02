@@ -10,16 +10,16 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:00 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand 09:14 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND vom Nutzer final bestätigt/deployed:**
 - Agent 6 (Admin Functions) – Counter-Reset auf SharePoint umgestellt, live.
 - **Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE:** Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben (siehe unten). Per `pac solution import` importiert und veröffentlicht.
-- **Agent 1 (Domains Extraction) v1.0.8 – LIVE:** External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt. Per `pac solution import` importiert und veröffentlicht.
+- **Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt:** External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt. Ein Aktivierungsfehler (`WorkflowOperationInputsApiOperationNotFound` – ungültige Operation-ID `CreateItem` beim SharePoint-Connector) wurde gefunden und behoben (korrekte ID: `PostItem`), erneut importiert und erfolgreich aktiviert.
 - **App v1.22.4** – gepackt, bereit zum Veröffentlichen durch den Nutzer (siehe unten, letzter Schritt).
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
-**⚠️ WICHTIG – Agent 6 muss nach diesem Import erneut reaktiviert werden** (Solution-Import deaktiviert bestehende Flow-Definitionen als Nebeneffekt, wie bereits beim letzten Import beobachtet) – bitte im Power-Automate-Portal prüfen, ob Agent 6 (und ggf. auch Agent 1/Agent 2) nach diesem Import noch aktiv sind.
+**Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1) live, aktiviert und funktionsfähig.**
 
 ---
 

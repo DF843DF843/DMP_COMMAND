@@ -1521,7 +1521,7 @@
                               "host": {
                                 "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                                 "connectionName": "shared_sharepointonline-1",
-                                "operationId": "CreateItem"
+                                "operationId": "PostItem"
                               },
                               "authentication": "@parameters('$authentication')"
                             },
