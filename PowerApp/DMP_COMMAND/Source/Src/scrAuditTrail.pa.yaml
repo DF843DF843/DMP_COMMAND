@@ -257,7 +257,9 @@ Screens:
                           =Set(varAuditResetResult, 'DMPAgent6(AdminFunctions)'.Run(User().Email,"ResetCriticalCounterBaseline"));
                           If(
                               varAuditResetResult.success,
-                              Set(varCriticalCounterBaseline, Coalesce(varAuditFailedCount,0));
+                              Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult));
+                              Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                              Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline));
                               Notify(varAuditResetResult.message, NotificationType.Success),
                               Notify(varAuditResetResult.message, NotificationType.Error)
                           )
@@ -286,7 +288,9 @@ Screens:
                           =Set(varAuditResetResult, 'DMPAgent6(AdminFunctions)'.Run(User().Email,"ResetWarningCounterBaseline"));
                           If(
                               varAuditResetResult.success,
-                              Set(varWarningCounterBaseline, Coalesce(varAuditWarningCount,0));
+                              Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult));
+                              Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                              Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
                               Notify(varAuditResetResult.message, NotificationType.Success),
                               Notify(varAuditResetResult.message, NotificationType.Error)
                           )
@@ -315,8 +319,11 @@ Screens:
                           =Set(varAuditResetResult, 'DMPAgent6(AdminFunctions)'.Run(User().Email,"ResetAllAuditCounterBaselines"));
                           If(
                               varAuditResetResult.success,
-                              Set(varCriticalCounterBaseline, Coalesce(varAuditFailedCount,0));
-                              Set(varWarningCounterBaseline, Coalesce(varAuditWarningCount,0));
+                              Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult));
+                              Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount));
+                              Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                              Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline));
+                              Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
                               Notify(varAuditResetResult.message, NotificationType.Success),
                               Notify(varAuditResetResult.message, NotificationType.Error)
                           )
