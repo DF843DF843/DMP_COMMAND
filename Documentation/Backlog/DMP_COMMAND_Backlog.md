@@ -10,22 +10,35 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~16:10 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~16:35 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND selbstständig deployed:**
 - Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert.
 - Agent 4 (Status Check) v1.4.2 – LIVE, aktiviert.
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert.
-- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält zusätzlich zu allem bisherigen: Fix für das Jahr-3926-Datumsproblem (Zahlenüberlauf in `DateAdd`/`TimeUnit.Seconds`, siehe Update unten).
+- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält zusätzlich zu allem bisherigen: Fix für das Jahr-3926-Datumsproblem, sowie ein neues Diagnose-Panel auf dem Admin-Functions-Screen (siehe Update unten).
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **⚠️ Zu prüfen, sobald möglich:**
-1. **App erneut in Studio veröffentlichen** – enthält den neuen Datums-Fix.
-2. **Baseline-Reset-Verhalten weiter beobachten:** `CriticalCounterBaseline`=8, `WarningCounterBaseline`=9 in der SharePoint-Liste bestätigt, dass das Schreiben grundsätzlich funktioniert (keine 0 oder offensichtlich falsche Werte). Die vom Nutzer beobachtete "alte Zahl nach Refresh" könnte tatsächlich korrektes Verhalten sein (neue Test-Fehler seit dem Reset erhöhen den Zähler wieder, wie spezifiziert) ODER ein Timing-Problem. **Bitte beim nächsten Test kurz den aktuellen Wert von "Critical (total)"/"Warnings (total)" UND die daraus resultierende Kopfzeilen-Zahl gleichzeitig notieren**, dann lässt sich die Differenz nachrechnen und eindeutig klären, ob es ein Bug ist oder erwartetes Verhalten bei laufenden Tests.
-3. **Emails-Processed-Tooltip 1/0** – laut Nutzer ist "No DMP" tatsächlich 1 in der SharePoint-Liste – das bestätigt, dass die Anzeige KORREKT ist (keine Anzeigen-Bug), die "1" war reale Daten, keine Sicherheits-Untergrenze.
+1. **App erneut in Studio veröffentlichen** – enthält den Datums-Fix und das neue Diagnose-Panel.
+2. **Nutzer bestätigt: Reset-Button funktioniert NICHT wie erwartet UND Tooltip zeigt "No DMP: 0" trotz realem Wert 1 in SharePoint – beides sind laut Nutzer bestätigte Bugs, keine Fehlinterpretation.** Root Cause bisher nicht gefunden (Code-Review aller beteiligten Formeln in Agent 4/6 und der App zeigt keinen offensichtlichen Fehler; das gecachte Flow-Antwortschema in der App wurde geprüft und ist aktuell). **Neu:** Ein Diagnose-Panel wurde auf dem Admin-Functions-Screen ergänzt (live-Werte für Counter, Critical/Warning total+baseline+Delta, mit eigenem "Refresh now"-Button) – das soll beim nächsten Test die exakten Werte direkt sichtbar machen, um die Ursache endlich einzugrenzen.
 
-**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig, das Connector-Problem final gelöst; das gravierende Jahr-3926-Datumsproblem behoben.**
+**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig; das Jahr-3926-Datumsproblem behoben; 2 Bugs (Counter-Tooltip, Reset-Verhalten) weiterhin ungeklärt, aber jetzt mit Diagnose-Werkzeug ausgestattet.**
+
+---
+
+## ✅ Update (2026-09-02, ~16:35 Uhr): Diagnose-Panel im Admin-Functions-Screen ergänzt
+
+**Kontext:** Nutzer bestätigte explizit, dass sowohl "Reset-Button setzt Zähler nicht zurück" als auch "Tooltip zeigt 0 trotz realem Wert 1" echte Bugs sind, keine Fehlinterpretation der Daten. Eine ausführliche Code-Analyse (Agent 4 Counter-Lesepfad, Agent 6 Baseline-Schreibpfad, gecachtes Flow-Antwortschema in der App – letzteres wurde konkret als möglicher Verdächtiger geprüft und als aktuell/korrekt bestätigt) konnte die Ursache nicht eindeutig lokalisieren.
+
+**Maßnahme:** Auf Wunsch des Nutzers wurde statt einer Debug-Leiste im Cockpit ein dediziertes, dauerhaft sichtbares Diagnose-Panel auf dem Admin-Functions-Screen ergänzt (`conFuncDiagnostics`): zeigt die 4 Email-Counter-Werte, Critical/Warning-Gesamtsumme, die jeweilige Baseline und die daraus berechnete "neu seit Reset"-Zahl – inklusive eigenem "Refresh now"-Button, der unabhängig vom übrigen Cockpit sofort einen frischen Agent-4-Aufruf auslöst.
+
+**Ziel:** Beim nächsten Testdurchlauf (nach Reset-Klick bzw. bei Betrachtung des Tooltips) soll dieses Panel die tatsächlichen, aktuellen Werte direkt zeigen – das ermöglicht einen zielgerichteten Vergleich mit den SharePoint-Rohdaten statt weiterer Vermutungen.
+
+**Validiert:** Bei der Erstellung wurde erneut das bekannte Doppelpunkt-Problem (3 Treffer: "No DMP: ", "total: ", "baseline: " jeweils mit Leerzeichen danach) gefunden und korrigiert (Doppelpunkt durch `=` ersetzt) – zeigt, dass der Colon-Scan bei jeder neuen Textformel weiterhin diszipliniert nötig ist. Round-Trip-Diff=0, App-weiter Duplikat-Namen-Scan=0 Treffer.
+
+**Status:** Gepackt, committet, gepusht. Wartet auf Veröffentlichung durch den Nutzer.
 
 ---
 

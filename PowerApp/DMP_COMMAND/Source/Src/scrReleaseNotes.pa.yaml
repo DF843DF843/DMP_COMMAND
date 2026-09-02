@@ -262,9 +262,9 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Arial'
-                              Height: =180
+                              Height: =210
                               Size: =12
-                              Text: ="- Fixed the Emergency Report Replace action not refreshing the Cockpit's numbers afterwards (e.g. Internal/External Domains counts) - it now re-runs the full status refresh on success, same as the Now button" & Char(10) & "- The Critical/Warning/All reset buttons now immediately re-check with Agent 4 after a reset instead of only guessing the new baseline locally, so the displayed 'new since reset' count reflects confirmed data right away" & Char(10) & "- Fixed a bad follow-up bug in the Audit Trail timestamp fix - dates were showing a wildly wrong year (e.g. 3926 instead of 2026) because the conversion multiplied the value into billions before converting, which silently overflowed - switched to the simpler, standard conversion approach that avoids large intermediate numbers"
+                              Text: ="- Fixed the Emergency Report Replace action not refreshing the Cockpit's numbers afterwards (e.g. Internal/External Domains counts) - it now re-runs the full status refresh on success, same as the Now button" & Char(10) & "- The Critical/Warning/All reset buttons now immediately re-check with Agent 4 after a reset instead of only guessing the new baseline locally, so the displayed 'new since reset' count reflects confirmed data right away" & Char(10) & "- Fixed a bad follow-up bug in the Audit Trail timestamp fix - dates were showing a wildly wrong year (e.g. 3926 instead of 2026) because the conversion multiplied the value into billions before converting, which silently overflowed - switched to the simpler, standard conversion approach that avoids large intermediate numbers" & Char(10) & "- Added a read-only Diagnostics panel to Admin Functions showing the live email counter, Critical/Warning total and baseline values, to help pin down the reported counter/reset display issues"
                               Wrap: =true
                         - lblReleaseV1228Header:
                             Control: Label@2.5.1

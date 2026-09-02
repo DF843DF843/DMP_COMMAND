@@ -8,6 +8,8 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 - Fixed the Emergency Report Replace action not refreshing the Cockpit's numbers afterwards (e.g. Internal/External Domains counts) - it now re-runs the full status refresh on success, same as the Now button
 - The Critical/Warning/All reset buttons now immediately re-check with Agent 4 after a reset instead of only guessing the new baseline locally, so the displayed 'new since reset' count reflects confirmed data right away
+- Fixed a bad follow-up bug in the Audit Trail timestamp fix - dates were showing a wildly wrong year (e.g. 3926 instead of 2026) because the conversion multiplied the value into billions before converting, which silently overflowed - switched to the simpler, standard conversion approach that avoids large intermediate numbers
+- Added a read-only Diagnostics panel to Admin Functions showing the live email counter, Critical/Warning total and baseline values, to help pin down the reported counter/reset display issues
 
 ### v1.22.8 - 2026-09-02
 

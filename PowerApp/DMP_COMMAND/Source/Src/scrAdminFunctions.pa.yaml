@@ -496,6 +496,90 @@ Screens:
                                           RadiusTopRight: =8
                                           Text: ="Cancel"
                                           Width: =90
+                  - conFuncDiagnostics:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        Fill: =If(varDarkMode,RGBA(20,30,40,1),RGBA(240,247,255,1))
+                        BorderColor: =RGBA(0,120,215,1)
+                        BorderThickness: =2
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =6
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                      Children:
+                        - lblFuncDiagnosticsTitle:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,120,215,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =18
+                              Size: =12
+                              Text: ="DIAGNOSTICS (live values, read-only)"
+                              Wrap: =false
+                        - btnFuncDiagnosticsRefresh:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,120,215,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,120,215,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =28
+                              HoverFill: =RGBA(0,120,215,0.12)
+                              OnSelect: =Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult)); Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount)); Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount)); Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline)); Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline)); Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP)); Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender)); Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected)); Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected))
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Refresh now"
+                              Width: =130
+                        - lblFuncDiagnosticsCounters:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Size: =12
+                              Text: ="Email counters - No DMP=" & Coalesce(varCounterNoDMP,0) & "   Internal=" & Coalesce(varCounterInternalSender,0) & "   Effected=" & Coalesce(varCounterEffected,0) & "   Not Effected=" & Coalesce(varCounterNotEffected,0)
+                              Wrap: =true
+                        - lblFuncDiagnosticsAudit:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Size: =12
+                              Text: ="Critical - total=" & Coalesce(varAuditFailedCount,0) & "   baseline=" & Coalesce(varCriticalCounterBaseline,0) & "   new since reset=" & Max(Coalesce(varAuditFailedCount,0)-Coalesce(varCriticalCounterBaseline,0),0)
+                              Wrap: =true
+                        - lblFuncDiagnosticsAudit2:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Size: =12
+                              Text: ="Warning - total=" & Coalesce(varAuditWarningCount,0) & "   baseline=" & Coalesce(varWarningCounterBaseline,0) & "   new since reset=" & Max(Coalesce(varAuditWarningCount,0)-Coalesce(varWarningCounterBaseline,0),0)
+                              Wrap: =true
                   - lblAdminActionResult:
                       Control: Label@2.5.1
                       Properties:
