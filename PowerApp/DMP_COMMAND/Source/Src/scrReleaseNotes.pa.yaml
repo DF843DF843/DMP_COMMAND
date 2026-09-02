@@ -105,6 +105,7 @@ Screens:
                               Copy(
                                   If(
                                       varReleaseNotesTab="App",
+                                      lblReleaseV1226Header.Text & Char(10) & lblReleaseV1226Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1225Header.Text & Char(10) & lblReleaseV1225Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1224Header.Text & Char(10) & lblReleaseV1224Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1223Header.Text & Char(10) & lblReleaseV1223Notes.Text & Char(10) & Char(10) &
@@ -238,6 +239,30 @@ Screens:
                         RadiusTopLeft: =12
                         RadiusTopRight: =12
                       Children:
+                        - lblReleaseV1226Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.6 - 2026-09-02 (current)"
+                              Wrap: =false
+                        - lblReleaseV1226Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =120
+                              Size: =12
+                              Text: ="- Fixed the Emails Processed legend popup formatting - counts now show with a thousands separator (e.g. 1,000) and percentages with two decimals (e.g. 12.34%), as '<Label> (<Count> / <Percentage>)', instead of the previous unformatted raw count and rounded whole-percent display"
+                              Wrap: =true
                         - lblReleaseV1225Header:
                             Control: Label@2.5.1
                             Properties:
@@ -248,7 +273,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.5 - 2026-09-02 (current)"
+                              Text: ="v1.22.5 - 2026-09-02"
                               Wrap: =false
                         - lblReleaseV1225Notes:
                             Control: Label@2.5.1
@@ -1689,6 +1714,24 @@ Screens:
                         RadiusTopRight: =12
                         Width: =170
                       Children:
+                        - btnAppReleaseV1226:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V1226",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V1226",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedAppRelease="V1226",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V1226",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V1226")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.22.6"
                         - btnAppReleaseV1225:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -2206,7 +2249,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedAppRelease, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV1225Header.Text)
+                              Text: =Switch(varSelectedAppRelease, "V1226", lblReleaseV1226Header.Text, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV1226Header.Text)
                               Wrap: =false
                         - lblReleaseDetailAppNotes:
                             Control: Label@2.5.1
@@ -2217,7 +2260,7 @@ Screens:
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Arial'
                               Size: =12
-                              Text: =Switch(varSelectedAppRelease, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV1225Notes.Text)
+                              Text: =Switch(varSelectedAppRelease, "V1226", lblReleaseV1226Notes.Text, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV1226Notes.Text)
                               Wrap: =true
             - conReleaseNotesSplitAgents:
                 Control: GroupContainer@1.5.0

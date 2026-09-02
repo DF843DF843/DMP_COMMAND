@@ -17,10 +17,24 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE: Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt: External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt, Operation-ID-Fehler (`CreateItem`→`PostItem`) behoben.
 - **Agent 4 (Status Check) v1.4.1 – LIVE:** Counter- und External-Domains-Statusprüfung ebenfalls auf SharePoint umgestellt (siehe Update unten – dies war die eigentliche Ursache für "Counter der E-Mail-Anzeige aktualisiert nicht").
-- **App v1.22.5** – gepackt, bereit zum Veröffentlichen durch den Nutzer (siehe unten, letzter Schritt).
+- **App v1.22.6** – gepackt, bereit zum Veröffentlichen durch den Nutzer: v1.22.5 (SharePoint-Migrationsfolgen) + v1.22.6 (Emails-Processed-Legende: Tausendertrennzeichen + 2-Dezimalstellen-Prozent).
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) live, aktiviert und funktionsfähig.**
+
+---
+
+## ✅ Update (2026-09-02, 11:11 Uhr): Emails-Processed-Legende sauber formatiert
+
+**Nutzer-Meldung:** Die Legende bei "Emails Processed" sollte pro Kategorie Anzahl und Anteil zeigen, wurde aber "nicht sauber angezeigt". Gewünschtes Format: `<Farbe> <Bezeichnung> (<Anzahl> / <Anteil>)`, Anzahl mit Tausendertrennzeichen (z. B. `1,000`), Anteil mit 2 Nachkommastellen (z. B. `0.00 %`).
+
+**Befund:** Die Klick-Legende (`conEmailsLegendPopup`, kein natives Tooltip) zeigte Anzahl/Anteil bereits an, aber unformatiert: Komma statt Schrägstrich als Trenner, keine Tausendertrennzeichen, Prozent ohne Nachkommastellen (`Round(...,0)`).
+
+**Fix:** Alle 4 Legendenzeilen (`lblEmailsLegend1`–`4`: No DMP, External, Internal, Not Effected) auf `Text(wert,"#,##0")` für die Anzahl und `Text(anteil,"0.00%")` für den Prozentwert umgestellt, Trenner auf " / " geändert.
+
+**Validiert:** Mojibake=0, Round-Trip-Pack/Unpack-Diff=0 für `scrHome.pa.yaml` und `scrReleaseNotes.pa.yaml`.
+
+**Status:** App v1.22.6 gepackt, Release-Notes-Eintrag ergänzt. Wartet auf Veröffentlichung durch den Nutzer (zusammen mit v1.22.5).
 
 ---
 

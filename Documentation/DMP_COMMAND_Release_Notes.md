@@ -4,7 +4,11 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.5 - 2026-09-02 (current)
+### v1.22.6 - 2026-09-02 (current)
+
+- Fixed the Emails Processed legend popup formatting - counts now show with a thousands separator (e.g. 1,000) and percentages with two decimals (e.g. 12.34%), as '<Label> (<Count> / <Percentage>)', instead of the previous unformatted raw count and rounded whole-percent display
+
+### v1.22.5 - 2026-09-02
 
 - Fixed the Emails Processed counter not updating - Agent 4 was still reading Counter.xlsx and External_Domains.txt instead of the new SharePoint lists after yesterday's migration, so the Cockpit kept showing frozen values
 - Counter and External Domains moved out of the FILES container into AUTOMATION STATUS, since both are now SharePoint lists rather than files
