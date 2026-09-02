@@ -24,11 +24,28 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` erstellt (Englisch) – beschreibt unsere Zusammenarbeitsmethodik (KI-Arbeitsregeln, Best Practices) INKLUSIVE der konkreten technischen Praktiken (SharePoint-Variablen/Konfiguration, Audit Trail, Warn-Mails, Release Notes, Backlog, GitHub-Nutzung) als eigener Abschnitt – für eine andere KI zur PowerPoint-Erstellung.
 
 **🟡 Noch offen / nächste Schritte (in Prioritätsreihenfolge, für die nächste Sitzung):**
-1. **Agent 1 SharePoint-Migration** (External-Domains-Schreiben, Full-Sync-Pattern: erst alle Zeilen löschen, dann neu anlegen) – noch NICHT begonnen, ist jetzt der nächste Schritt.
-2. **Aufräumen (klein, risikolos):** In Agent 6 werden die alten Excel-Konfigurationswerte `CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter` (in der Liste `DMP Command Configuration`) nicht mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung.
+1. **Nutzer-Test der gesamten SharePoint-Migration** (Agent 6 bereits live, Agent 2 + Agent 1 gebaut und committet, aber noch nicht deployt) – **kompletter Umbau von Counter.xlsx/External_Domains.txt auf SharePoint-Listen ist damit inhaltlich fertig**, es fehlt nur noch der begleitete Live-Test + `pac solution import` für Agent 2/Agent 1.
+2. **Aufräumen (klein, risikolos):** In Agent 6 werden die alten Excel-Konfigurationswerte `CounterFolder`, `CounterFileName`, `CounterTableName`, `CounterTableColumnNamePath`, `CounterTableColumnNameCounter` (in der Liste `DMP Command Configuration`) nicht mehr referenziert. Können bei Gelegenheit entfernt werden, keine Funktionsauswirkung. Gleiches gilt jetzt auch für `ExternalDomainsStorageFolder`/`ExternalDomainsFileName`, seit auch Agent 1 migriert ist.
 3. **Unbeantwortete Agent-3-Frage:** Ob eine Verlängerung der Wartezeit vor dem `HTTP_Recycle_WorkFile_CurrentRun`-Retry (z. B. auf 5 Minuten) das wiederkehrende `EMREPORT-002 WorkFileCleanupStillLocked`-Warning beheben würde – der relevante Code (`SCOPE_WorkFileCleanup_CurrentRun` in Agent 3) wurde lokalisiert, aber die konkrete Wartezeit-Analyse steht noch aus.
 4. **Standalone-Anleitungsdatei** `ANLEITUNG_Neue_SharePoint_Listen.md` für die beiden neuen SharePoint-Listen – nicht angelegt (Listen sind bereits vom Nutzer erstellt, daher niedrige Priorität, ggf. nicht mehr nötig).
 5. **Audit Trail SharePoint-Migration** – weiterhin bewusst zurückgestellt, separates Projekt (siehe Eintrag weiter oben in diesem Dokument).
+
+---
+
+## ✅ Update (2026-09-02): Agent 1 SharePoint-Migration fertig gebaut (git-only, noch nicht deployt) — Umbau damit komplett
+
+**Agent 1 (Domains Extraction) komplett auf SharePoint umgestellt (Full-Sync-Pattern, wie im Backlog vorgesehen):**
+- Der alte 3-Schritt-Ablauf `Get_External_Domains_File_Metadata` (Datei-Existenzprüfung) → `Update_External_Domains_File`/`Create_External_Domains_File` (Text-Datei schreiben) wurde durch drei neue Schritte ersetzt:
+  - `Get_External_Domains_List_Rows` – `GetItems` auf die Liste `DMP Command External Domains` (GUID `dc89aed5-d87a-4e12-875a-db2adbc2cee4`), lädt alle bestehenden Zeilen.
+  - `Delete_Existing_External_Domain_Rows` – `Foreach` über die geladenen Zeilen, `DeleteItem` je Zeile (räumt die Liste komplett leer).
+  - `Create_External_Domain_Rows` – `Foreach` über die frisch extrahierten Domains (`variables('DomainArray')`), `CreateItem` je Domain mit `item/Title`.
+- Die Erfolg/Fehler-Erkennung (`Domains_File_Write_FAILED`-If) wurde von `actions('Update_External_Domains_File')?['status']`/`actions('Create_External_Domains_File')?['status']` auf die beiden neuen Foreach-Aktionen (`Delete_Existing_External_Domain_Rows`, `Create_External_Domain_Rows`) umgestellt – Alarm-Mail bei Fehlschlag, Info-Mail bei Erfolg funktionieren unverändert.
+- Alle Audit-/Alarm-/Info-Texte (KeyOutput, TargetFolderName, beide E-Mail-Bodies, 3 Status-Message-Texte für die Agent-Status-Kachel) wurden inhaltlich aktualisiert, um "DMP Command External Domains SharePoint list" statt des alten Dateipfads (`External_Domains.txt`) zu nennen.
+- Workflow-Version in `DMPAgent1DomainsExtractionVS-....json.data.xml` von `[1.0.7]` auf `[1.0.8]` erhöht.
+- **Validiert:** JSON-Syntax gültig, keine verwaisten `runAfter`-Referenzen (identischer Fehlalarm-Fingerabdruck wie im Originalstand), keine Beschreibung >255 Zeichen, `pac solution pack` erfolgreich.
+- **Status:** Nur ins Git-Repository committet, **NICHT live importiert** – wartet auf Nutzer-Freigabe zum begleiteten Test (Agent 1 schreibt die Liste, die Agent 2 direkt danach zur Klassifizierung liest).
+
+**Damit ist der gesamte, ursprünglich geplante SharePoint-Migrationsumfang (Counter.xlsx + External_Domains.txt, alle 3 betroffenen Agenten 6/2/1) inhaltlich fertiggestellt.** Es fehlt nur noch der begleitete Live-Test durch den Nutzer und der abschließende `pac solution import` für Agent 2 und Agent 1.
 
 ---
 

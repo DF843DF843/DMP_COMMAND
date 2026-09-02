@@ -279,7 +279,7 @@
                   "Recipient": "",
                   "SubjectOut": "",
                   "TargetMessageId": "",
-                  "TargetFolderName": "@{outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']}",
+                  "TargetFolderName": "DMP Command External Domains (SharePoint list)",
                   "TargetFolderId": "",
                   "MatchedDomain": "",
                   "Decision": "global_error",
@@ -936,7 +936,7 @@
                   "item/LastStatusUpdateSource": "Agent_01",
                   "item/StatusSeverity/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Information',\r\n  if(\r\n    equals(variables('AuditOutcome'), 'Warning'),\r\n    'Warning',\r\n    'Critical'\r\n  )\r\n)",
                   "item/LastHeartbeatTimestamp": "@utcNow()",
-                  "item/StatusMessage": "@concat(\n  'Agent 1 domain extraction completed. AuditOutcome=',\n  variables('AuditOutcome'),\n  ' | DomainsExtracted=',\n  string(length(variables('DomainArray'))),\n  ' | OutputFile=',\n  outputs('CMP_ConfigObject')?['ExternalDomainsFileName']\n)"
+                  "item/StatusMessage": "@concat(\n  'Agent 1 domain extraction completed. AuditOutcome=',\n  variables('AuditOutcome'),\n  ' | DomainsExtracted=',\n  string(length(variables('DomainArray'))),\n  ' | OutputList=DMP Command External Domains'\n)"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -986,7 +986,7 @@
                   "item/LastStatusUpdateSource": "Agent_01",
                   "item/StatusSeverity/Value": "@if(\r\n  equals(variables('AuditOutcome'), 'Succeeded'),\r\n  'Information',\r\n  if(\r\n    equals(variables('AuditOutcome'), 'Warning'),\r\n    'Warning',\r\n    'Critical'\r\n  )\r\n)",
                   "item/LastHeartbeatTimestamp": "@utcNow()",
-                  "item/StatusMessage": "@if(\n  equals(variables('AuditOutcome'), 'Succeeded'),\n  concat(\n    'External domains file is available. File=',\n    outputs('CMP_ConfigObject')?['ExternalDomainsFileName'],\n    ' | DomainsExtracted=',\n    string(length(variables('DomainArray')))\n  ),\n  concat(\n    'External domains file update failed or ended with warnings. AuditOutcome=',\n    variables('AuditOutcome'),\n    ' | DomainsExtracted=',\n    string(length(variables('DomainArray')))\n  )\n)"
+                  "item/StatusMessage": "@if(\n  equals(variables('AuditOutcome'), 'Succeeded'),\n  concat(\n    'DMP Command External Domains list is available. DomainsExtracted=',\n    string(length(variables('DomainArray')))\n  ),\n  concat(\n    'DMP Command External Domains list update failed or ended with warnings. AuditOutcome=',\n    variables('AuditOutcome'),\n    ' | DomainsExtracted=',\n    string(length(variables('DomainArray')))\n  )\n)"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -1450,7 +1450,7 @@
                         "inputs": "@join(variables('DomainArray'), decodeUriComponent('%0A'))",
                         "description": "Builds the newline-separated plain-text content of the external domains reference file from the normalized DomainArray."
                       },
-                      "Get_External_Domains_File_Metadata": {
+                      "Get_External_Domains_List_Rows": {
                         "runAfter": {
                           "Create_Domain_List_Text": [
                             "Succeeded"
@@ -1460,66 +1460,75 @@
                         "inputs": {
                           "parameters": {
                             "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                            "path": "@concat(\n  outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder'],\n  '/',\n  outputs('CMP_ConfigObject')?['ExternalDomainsFileName']\n)"
+                            "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
+                            "$top": 5000
                           },
                           "host": {
                             "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                             "connectionName": "shared_sharepointonline-1",
-                            "operationId": "GetFileMetadataByPath"
+                            "operationId": "GetItems"
                           },
                           "authentication": "@parameters('$authentication')"
                         },
-                        "description": "Checks whether the external domains reference file already exists before Agent 1 decides whether it must update or create the file."
+                        "description": "Loads all existing rows of the DMP Command External Domains SharePoint list before the full-sync rewrite."
                       },
-                      "Update_External_Domains_File": {
+                      "Delete_Existing_External_Domain_Rows": {
                         "runAfter": {
-                          "Get_External_Domains_File_Metadata": [
+                          "Get_External_Domains_List_Rows": [
                             "Succeeded"
                           ]
                         },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "parameters": {
-                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                            "id": "@outputs('Get_External_Domains_File_Metadata')?['body/Id']",
-                            "body": "@outputs('Create_Domain_List_Text')"
-                          },
-                          "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                            "connectionName": "shared_sharepointonline-1",
-                            "operationId": "UpdateFile"
-                          },
-                          "authentication": "@parameters('$authentication')"
+                        "type": "Foreach",
+                        "foreach": "@body('Get_External_Domains_List_Rows')?['value']",
+                        "actions": {
+                          "Delete_External_Domain_Row": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
+                                "id": "@item()?['ID']"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline-1",
+                                "operationId": "DeleteItem"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "description": "Deletes one existing row from the DMP Command External Domains SharePoint list as part of the full-sync rewrite."
+                          }
                         },
-                        "description": "Updates the existing external domains reference file with the newly prepared domain list."
+                        "description": "Deletes all existing rows of the DMP Command External Domains SharePoint list before writing the freshly extracted domain list."
                       },
-                      "Create_External_Domains_File": {
+                      "Create_External_Domain_Rows": {
                         "runAfter": {
-                          "Get_External_Domains_File_Metadata": [
-                            "Failed"
+                          "Delete_Existing_External_Domain_Rows": [
+                            "Succeeded"
                           ]
                         },
-                        "type": "OpenApiConnection",
-                        "inputs": {
-                          "parameters": {
-                            "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
-                            "folderPath": "@outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']",
-                            "name": "@outputs('CMP_ConfigObject')?['ExternalDomainsFileName']",
-                            "body": "@outputs('Create_Domain_List_Text')"
-                          },
-                          "host": {
-                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                            "connectionName": "shared_sharepointonline-1",
-                            "operationId": "CreateFile"
-                          },
-                          "authentication": "@parameters('$authentication')"
-                        },
-                        "description": "Creates the external domains reference file if it does not yet exist and writes the prepared domain list into it.",
-                        "runtimeConfiguration": {
-                          "contentTransfer": {
-                            "transferMode": "Chunked"
+                        "type": "Foreach",
+                        "foreach": "@variables('DomainArray')",
+                        "actions": {
+                          "Create_External_Domain_Row": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                              "parameters": {
+                                "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
+                                "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
+                                "item/Title": "@item()"
+                              },
+                              "host": {
+                                "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                "connectionName": "shared_sharepointonline-1",
+                                "operationId": "CreateItem"
+                              },
+                              "authentication": "@parameters('$authentication')"
+                            },
+                            "description": "Creates one row in the DMP Command External Domains SharePoint list for one freshly extracted domain."
                           }
-                        }
+                        },
+                        "description": "Creates a fresh row in the DMP Command External Domains SharePoint list for every domain extracted in this run (full-sync rewrite)."
                       },
                       "TICKS_Write_Domains_File": {
                         "runAfter": {
@@ -1550,14 +1559,14 @@
                                 "StepName": "@{concat(outputs('CMP_ConfigObject')?['RunPrefixAgent1'], '-', formatNumber(variables('StepCounter'),'000'), ' WriteDomainsFile_Failed')}",
                                 "StepStatus": "Failed",
                                 "Flow ID": "",
-                                "KeyOutput": "@{concat('file=', outputs('CMP_ConfigObject')?['ExternalDomainsFileName'], ' | domainCount=', string(length(variables('DomainArray'))))}",
+                                "KeyOutput": "@{concat('DMP Command External Domains list | domainCount=', string(length(variables('DomainArray'))))}",
                                 "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Write_Domains_File'))), 10000000), '0.00')}",
                                 "ActionType": "Write",
                                 "Direction": "Internal",
                                 "Recipient": "",
                                 "SubjectOut": "",
                                 "TargetMessageId": "",
-                                "TargetFolderName": "@{outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']}",
+                                "TargetFolderName": "DMP Command External Domains (SharePoint list)",
                                 "TargetFolderId": "",
                                 "MatchedDomain": "",
                                 "Decision": "domains_file_write_failed",
@@ -1826,7 +1835,7 @@
                               "parameters": {
                                 "emailMessage/To": "@outputs('CMP_ConfigObject')?['AlertEmailRecipient']",
                                 "emailMessage/Subject": "@variables('LastSentSubject')",
-                                "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('CMP_ConfigObject')?['MailModeText']}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 1 – writing External_Domains.txt failed.</strong></b><br><b><strong class=\"editor-text-bold\">RunId</strong></b>: @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Workflow</strong></b>: @{outputs('CMP_ConfigObject')?['WorkflowPathAgent1']}<br><br><b><strong class=\"editor-text-bold\">File</strong></b>:@{outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']}/@{outputs('CMP_ConfigObject')?['ExternalDomainsFileName']}<br><br>Please check SharePoint access and file locks.</p>",
+                                "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('CMP_ConfigObject')?['MailModeText']}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Agent 1 – updating the DMP Command External Domains SharePoint list failed.</strong></b><br><b><strong class=\"editor-text-bold\">RunId</strong></b>: @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Workflow</strong></b>: @{outputs('CMP_ConfigObject')?['WorkflowPathAgent1']}<br><br>Please check SharePoint access and list permissions.</p>",
                                 "emailMessage/From": "@outputs('CMP_ConfigObject')?['SharedDMPMailbox']",
                                 "emailMessage/Importance": "Normal"
                               },
@@ -1870,12 +1879,7 @@
                           }
                         },
                         "runAfter": {
-                          "Create_External_Domains_File": [
-                            "Succeeded",
-                            "Skipped",
-                            "Failed"
-                          ],
-                          "Update_External_Domains_File": [
+                          "Create_External_Domain_Rows": [
                             "Succeeded",
                             "Skipped",
                             "Failed"
@@ -1908,14 +1912,14 @@
                                   "StepName": "@{concat(outputs('CMP_ConfigObject')?['RunPrefixAgent1'], '-', formatNumber(variables('StepCounter'),'000'), ' WriteDomainsFile')}",
                                   "StepStatus": "Succeeded",
                                   "Flow ID": "",
-                                  "KeyOutput": "@{concat('file=', outputs('CMP_ConfigObject')?['ExternalDomainsFileName'], ' | domainCount=', string(length(variables('DomainArray'))))}",
+                                  "KeyOutput": "@{concat('DMP Command External Domains list | domainCount=', string(length(variables('DomainArray'))))}",
                                   "DurationSec": "@{formatNumber(div(float(sub(ticks(utcNow()), outputs('TICKS_Write_Domains_File'))), 10000000), '0.00')}",
                                   "ActionType": "Write",
                                   "Direction": "Internal",
                                   "Recipient": "",
                                   "SubjectOut": "",
                                   "TargetMessageId": "",
-                                  "TargetFolderName": "@{outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']}",
+                                  "TargetFolderName": "DMP Command External Domains (SharePoint list)",
                                   "TargetFolderId": "",
                                   "MatchedDomain": "",
                                   "Decision": "domains_file_written",
@@ -2150,7 +2154,7 @@
                                 "parameters": {
                                   "emailMessage/To": "@outputs('CMP_ConfigObject')?['AlertEmailRecipient']",
                                   "emailMessage/Subject": "@variables('LastSentSubject')",
-                                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('CMP_ConfigObject')?['MailModeText']}<br><br><b><strong class=\"editor-text-bold\">Agent 1 – writing External_Domains.txt succeeded.</strong></b><br><br><b><strong class=\"editor-text-bold\">RunId</strong></b>: @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Workflow</strong></b>: @{outputs('CMP_ConfigObject')?['WorkflowPathAgent1']}<br><br><b><strong class=\"editor-text-bold\">File: </strong></b>@{outputs('CMP_ConfigObject')?['ExternalDomainsStorageFolder']}/@{outputs('CMP_ConfigObject')?['ExternalDomainsFileName']}<br><br>The file has been successfully created containing the following domains:</p><p class=\"editor-paragraph\"><br>@{join(variables('DomainArray'), '<br>')}</p>",
+                                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('CMP_ConfigObject')?['MailModeText']}<br><br><b><strong class=\"editor-text-bold\">Agent 1 – updating the DMP Command External Domains SharePoint list succeeded.</strong></b><br><br><b><strong class=\"editor-text-bold\">RunId</strong></b>: @{workflow()?['run']?['name']}<br><b><strong class=\"editor-text-bold\">Workflow</strong></b>: @{outputs('CMP_ConfigObject')?['WorkflowPathAgent1']}<br><br>The DMP Command External Domains SharePoint list has been successfully refreshed with the following domains:</p><p class=\"editor-paragraph\"><br>@{join(variables('DomainArray'), '<br>')}</p>",
                                   "emailMessage/From": "@outputs('CMP_ConfigObject')?['SharedDMPMailbox']",
                                   "emailMessage/Importance": "Normal"
                                 },
@@ -2211,20 +2215,20 @@
                           "or": [
                             {
                               "equals": [
-                                "@actions('Update_External_Domains_File')?['status']",
+                                "@actions('Delete_Existing_External_Domain_Rows')?['status']",
                                 "Failed"
                               ]
                             },
                             {
                               "equals": [
-                                "@actions('Create_External_Domains_File')?['status']",
+                                "@actions('Create_External_Domain_Rows')?['status']",
                                 "Failed"
                               ]
                             }
                           ]
                         },
                                         "type": "If",
-                                        "description": "Checks whether writing the external domains reference file failed. If it failed, sends the write-failed alert mail (this branch); otherwise sends the domains-file-written information mail (else branch)."
+                                        "description": "Checks whether the full-sync rewrite of the DMP Command External Domains SharePoint list failed. If it failed, sends the write-failed alert mail (this branch); otherwise sends the domains-list-updated information mail (else branch)."
                                       }
                                     },
                                     "runAfter": {
@@ -2669,7 +2673,7 @@
                                   "item/LastStatusUpdateSource": "Agent_01",
                                   "item/StatusSeverity/Value": "Critical",
                                   "item/LastHeartbeatTimestamp": "@utcNow()",
-                                  "item/StatusMessage": "@concat(\n  'Agent 1 domain extraction failed. AuditOutcome=',\n  variables('AuditOutcome'),\n  ' | DomainsExtracted=',\n  string(length(variables('DomainArray'))),\n  ' | OutputFile=',\n  outputs('CMP_ConfigObject')?['ExternalDomainsFileName']\n)"
+                                  "item/StatusMessage": "@concat(\n  'Agent 1 domain extraction failed. AuditOutcome=',\n  variables('AuditOutcome'),\n  ' | DomainsExtracted=',\n  string(length(variables('DomainArray'))),\n  ' | OutputList=DMP Command External Domains'\n)"
                                 },
                                 "host": {
                                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",

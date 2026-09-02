@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{e42c92b2-5796-f111-8075-7ced8d106436}" Name="DMP Agent 1 (Domains Extraction) [1.0.7]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow WorkflowId="{e42c92b2-5796-f111-8075-7ced8d106436}" Name="DMP Agent 1 (Domains Extraction) [1.0.8]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <JsonFileName>/Workflows/DMPAgent1DomainsExtractionVS-E42C92B2-5796-F111-8075-7CED8D106436.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
@@ -22,6 +22,6 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 1 (Domains Extraction) [1.0.7]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 1 (Domains Extraction) [1.0.8]" />
   </LocalizedNames>
 </Workflow>
