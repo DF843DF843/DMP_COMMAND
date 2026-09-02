@@ -21,11 +21,25 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **⚠️ Zu prüfen, sobald der Nutzer zurück ist:**
-1. **Verbinder-Neuverbindung** für `DMP Command Counters`/`DMP Command External Domains` in Studio (siehe Update weiter unten) – weiterhin offen.
+1. **Verbinder-Neuverbindung** für `DMP Command Counters`/`DMP Command External Domains` in Studio (siehe Update weiter unten) – weiterhin offen. Kann nur manuell in Studio erfolgen (Schema-Abruf von SharePoint), nicht per Code/CLI.
 2. **Flow-Aktivierungsstatus prüfen:** `pac solution import` meldete bei diesem Import (wie schon bei früheren Imports) "The original workflow definition has been deactivated and replaced." Das ist eine Standard-Meldung von Dataverse bei jedem Workflow-Update und bedeutet nicht zwangsläufig, dass der Flow abgeschaltet bleibt – aber bitte in Power Automate kurz prüfen, ob Agent 4 und Agent 6 nach diesem Import noch "Ein" (aktiv) sind, und falls nicht, einmal manuell aktivieren (bekanntes, bereits früher dokumentiertes Verhalten dieses Deployment-Wegs).
-3. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert (JSON-Syntax, Round-Trip-Diff=0).
+3. **Live-Test der 3 neuen Reset-Buttons** im Audit-Trail-Screen (Critical/Warning/All) – noch nicht durch echten Klick getestet, nur code-seitig validiert.
 
 **Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) weiterhin live, aktiviert und funktionsfähig.**
+
+---
+
+## ✅ Update (2026-09-02, ~14:00 Uhr): 2 Nachmeldungen nach dem ersten Deployment-Versuch behoben
+
+**Nutzer-Meldung:** Beim Versuch, Agent 4 zu aktivieren: `ActionDescriptionTooLong` (eine Beschreibung war 407 statt max. 256 Zeichen lang). Beim Versuch, die App in Studio zu öffnen: `PA1001 YamlInvalidSyntax` in `scrAuditTrail.pa.yaml(111,18)`.
+
+**Root Cause 1 (Beschreibung zu lang):** Die neu verfasste Beschreibung für `GET_AuditTrail_AllRows` (Pagination-Hinweis) war zu ausführlich – trotz der bereits bestehenden Regel zur 256-Zeichen-Grenze wurde das vor dem letzten Deployment nicht erneut geprüft. Gekürzt.
+
+**Root Cause 2 (YAML-Syntaxfehler), wichtiger Fund:** Der neu eingefügte Timer `tmrAuditTrailAutoRefresh` (für den Audit-Trail-Auto-Refresh) war beim Einfügen um genau 1 Leerzeichen zu wenig eingerückt – ein Tippfehler beim Verfassen des Ersetzungstexts. **`pac canvas pack`, `pac canvas unpack` UND der Round-Trip-Diff (=0) haben diesen Fehler nicht erkannt** – nur Studios eigener, strengerer PA-YAML-Parser meldete ihn beim tatsächlichen Laden. Das ist ein wichtiger, neu dokumentierter Fund: `pac`-Validierung allein reicht nicht aus.
+
+**Fix:** Beschreibung gekürzt; alle 44 betroffenen Zeilen auf korrekte Einrückung zurückgesetzt; zusätzlich einen neuen Validierungsschritt eingeführt (Scan der gesamten Datei auf ungerade Einrückungstiefen – dieses Projekt verwendet durchgehend gerade Zahlen, jede ungerade Zahl ist ein zuverlässiges Korruptionssignal). Alle 4 geänderten Dateien und beide Flow-JSONs erneut geprüft: 0 ungerade Einrückungen, 0 Beschreibungen über 256 Zeichen.
+
+**Status:** Agent 4 v1.4.2 (korrigiert) und App (korrigiert) erneut gepackt/importiert. Neue KI-Arbeitsregel ergänzt: Einrückungs- und Beschreibungslängen-Check gehören ab jetzt fest in JEDE Validierung vor Pack/Import, nicht nur einmalig zu Sitzungsbeginn.
 
 ---
 
