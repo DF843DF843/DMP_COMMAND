@@ -30,6 +30,8 @@ Screens:
             Refresh('DMP Command Agent Status');
             Refresh('DMP Command Configuration');
             Refresh('DMP Command Internal Domains');
+            Refresh('DMP Command Counters');
+            Refresh('DMP Command External Domains');
             Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
             Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
             Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
@@ -374,6 +376,8 @@ Screens:
                                 Refresh('DMP Command Agent Status');
                                 Refresh('DMP Command Configuration');
                                 Refresh('DMP Command Internal Domains');
+                                Refresh('DMP Command Counters');
+                                Refresh('DMP Command External Domains');
                                 Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
                                 Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
                                 Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
@@ -529,6 +533,8 @@ Screens:
                                     Refresh('DMP Command Agent Status');
                                     Refresh('DMP Command Configuration');
                                     Refresh('DMP Command Internal Domains');
+                                    Refresh('DMP Command Counters');
+                                    Refresh('DMP Command External Domains');
                                     Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
                                     Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
                                     Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));
@@ -641,6 +647,8 @@ Screens:
                                     Refresh('DMP Command Agent Status');
                                     Refresh('DMP Command Configuration');
                                     Refresh('DMP Command Internal Domains');
+                                    Refresh('DMP Command Counters');
+                                    Refresh('DMP Command External Domains');
                                     Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
                                     Set(varIsRealDMP, Coalesce(varStatusResult.isrealdmp, varIsRealDMP));
                                     Set(varEmergencyReportExists, Coalesce(varStatusResult.emergencyreportexists, varEmergencyReportExists));

@@ -4,7 +4,11 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.6 - 2026-09-02 (current)
+### v1.22.7 - 2026-09-02 (current)
+
+- Fixed the Automation Status External Domains (and Counter) row count not updating - the periodic/manual refresh logic was still only refreshing the 3 original SharePoint data sources (Agent Status, Configuration, Internal Domains) and never refreshed the two newly added 'DMP Command Counters'/'DMP Command External Domains' lists, so the client-side row counts stayed stuck at whatever was cached on first load
+
+### v1.22.6 - 2026-09-02
 
 - Fixed the Emails Processed legend popup formatting - counts now show with a thousands separator (e.g. 1,000) and percentages with two decimals (e.g. 12.34%), as '<Label> (<Count> / <Percentage>)', instead of the previous unformatted raw count and rounded whole-percent display
 

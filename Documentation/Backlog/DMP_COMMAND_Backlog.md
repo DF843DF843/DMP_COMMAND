@@ -17,10 +17,42 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 - Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE: Counter-Inkrement + External-Domains-Lesen auf SharePoint umgestellt UND ein produktiver Laufzeitfehler behoben.
 - Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert und vom Nutzer bestätigt: External-Domains-Schreiben (Full-Sync-Pattern) auf SharePoint umgestellt, Operation-ID-Fehler (`CreateItem`→`PostItem`) behoben.
 - **Agent 4 (Status Check) v1.4.1 – LIVE:** Counter- und External-Domains-Statusprüfung ebenfalls auf SharePoint umgestellt (siehe Update unten – dies war die eigentliche Ursache für "Counter der E-Mail-Anzeige aktualisiert nicht").
-- **App v1.22.6** – gepackt, bereit zum Veröffentlichen durch den Nutzer: v1.22.5 (SharePoint-Migrationsfolgen) + v1.22.6 (Emails-Processed-Legende: Tausendertrennzeichen + 2-Dezimalstellen-Prozent).
+- **App v1.22.7** – gepackt, bereit zum Veröffentlichen durch den Nutzer: v1.22.5 (SharePoint-Migrationsfolgen) + v1.22.6 (Emails-Processed-Legende) + v1.22.7 (fehlende Refresh()-Aufrufe für die 2 neuen Listen). **Zusätzlich muss der Nutzer beim nächsten Öffnen in Studio die beiden neuen SharePoint-Listen über den Connector neu verbinden (siehe Update unten) – das ist ein separater, Studio-seitiger Schritt.**
 - Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
 
 **Damit ist die komplette SharePoint-Migration (Counter.xlsx + External_Domains.txt, Agenten 6/2/1/4) live, aktiviert und funktionsfähig.**
+
+---
+
+## 🔴 Update (2026-09-02, 11:23 Uhr): Rote Verbindungs-Warnungen beim App-Laden – Datenquellen müssen in Studio neu verbunden werden
+
+**Nutzer-Meldung:** Beim Laden der App erscheinen rote Warnungen ("Der Name ist ungültig, `<Liste>` wird nicht erkannt") bei "Counter" und "External Domains" im Automation-Status-Panel (rotes X-Symbol statt Haken). Nutzer identifizierte selbst richtig: Die beiden SharePoint-Listen müssen über den Connector neu eingebunden werden.
+
+**Root Cause (technisch):** Die beiden Listen `DMP Command Counters` und `DMP Command External Domains` wurden bei der gestrigen Umstellung des Automation-Status-Panels nur als **Text in Formeln** (`CountRows('DMP Command Counters')` usw.) in die YAML-Quelldateien eingetragen, aber **nie über den Studio-Dialog "Daten hinzufügen" formal als Datenquelle verbunden**. Geprüft: In `References/DataSources.json` (Teil der `.msapr`-Datei) sind nur 3 der 5 SharePoint-Listen als `ConnectedDataSourceInfo` mit vollständigem Schema (`DataEntityMetadataJson`, live von SharePoint abgerufen) registriert: `DMP Command Agent Status`, `DMP Command Configuration`, `DMP Command Internal Domains`. Die beiden neuen Listen fehlen komplett. `pac canvas pack` prüft das nicht (kompiliert Formeln unabhängig davon, ob die referenzierte Datenquelle formal registriert ist) – die Lücke wird erst sichtbar, wenn Studio die App öffnet und versucht, die Datenquellen aufzulösen. Das Schema (Spalten, Filterfähigkeiten, Berechtigungen) kann nur von Studio selbst live aus SharePoint abgerufen werden – ein manuelles Nachbauen dieser Metadaten in der JSON-Datei wäre zu riskant und nicht unterstützt.
+
+**Fix (durch Nutzer in Studio, nicht per Code lösbar):**
+1. App in Power Apps Studio zum Bearbeiten öffnen.
+2. Im Automation-Status-Panel auf das rote X-Symbol bei "Counter" oder direkt im Daten-Bereich (linke Seitenleiste, "Datenquellen"/"Data") klicken → Verbindung reparieren / "Daten hinzufügen" wählen.
+3. Connector "SharePoint" auswählen, Site `https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication`, dann **beide** Listen auswählen: `DMP Command Counters` UND `DMP Command External Domains`.
+4. Speichern und veröffentlichen.
+
+**Nach Fix durch Nutzer:** Bitte kurz Bescheid geben – dann wird die frisch gespeicherte App erneut über `pac canvas unpack` eingelesen, damit `DataSources.json`/die `.msapr`-Datei im Git-Repo die jetzt vollständige Datenquellen-Registrierung enthält und dieses Problem bei zukünftigen `pac canvas pack`-Läufen nicht wieder auftaucht.
+
+**Neue Regel für zukünftige Arbeit (in KI-Arbeitsregeln ergänzt):** Sobald eine Formel eine SharePoint-Liste referenziert, die noch nie zuvor in der App verwendet wurde, MUSS der Nutzer vorab (oder unmittelbar danach) einmalig in Studio über "Daten hinzufügen" verbunden haben – reines Editieren der YAML-Quelle reicht dafür nicht aus, auch wenn `pac canvas pack`/`unpack` fehlerfrei durchläuft.
+
+---
+
+## ✅ Update (2026-09-02, 11:23 Uhr): Automation-Status-Zähler für External Domains/Counter aktualisierten sich nicht
+
+**Nutzer-Meldung:** "Die Anzahl der External Domains wird im Automation Status auch nicht korrekt angezeigt."
+
+**Root Cause:** Die periodische/manuelle Refresh-Logik (`btnRefreshNow.OnSelect`, `tmrInitialKickstart.OnTimerEnd`, `tmrPeriodicDataRefresh.OnTimerEnd`, `scrHome.OnVisible`) rief bisher nur `Refresh()` für die 3 ursprünglichen SharePoint-Listen auf (`DMP Command Agent Status`, `DMP Command Configuration`, `DMP Command Internal Domains`). Die beiden gestern neu ins Automation-Status-Panel aufgenommenen Listen (`DMP Command Counters`, `DMP Command External Domains`) wurden nie in diese Refresh-Aufrufe aufgenommen – ihr clientseitiger Datencache blieb dadurch dauerhaft auf dem Stand des allerersten Ladens hängen, unabhängig davon, wie oft Agent 1/Agent 6 die Listen tatsächlich änderten.
+
+**Fix:** An allen 4 Stellen `Refresh('DMP Command Counters')` und `Refresh('DMP Command External Domains')` ergänzt (App-Version `[1.22.7]`).
+
+**Validiert:** Mojibake=0, Round-Trip-Pack/Unpack-Diff=0 für `scrHome.pa.yaml` und `scrReleaseNotes.pa.yaml`.
+
+**Status:** App v1.22.7 gepackt. **Hängt vom obigen Connector-Fix ab** – erst nach dem Neuverbinden der beiden Listen in Studio wird dieser Fix überhaupt wirksam sichtbar (vorher zeigt Studio ja die rote Fehlermeldung).
 
 ---
 
