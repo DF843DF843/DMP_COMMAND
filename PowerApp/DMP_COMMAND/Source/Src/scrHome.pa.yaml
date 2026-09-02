@@ -2671,7 +2671,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
-                                                Text: ="No DMP (" & Text(Coalesce(varCounterNoDMP,0),"#,##0") & " / " & Text(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%") & ")"
+                                                Text: ="No DMP (" & Text(Coalesce(varCounterNoDMP,0),"#,##0","en-US") & " / " & Text(Coalesce(varCounterNoDMP,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%","en-US") & ")"
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -2707,7 +2707,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
-                                                Text: ="External (" & Text(Coalesce(varCounterEffected,0),"#,##0") & " / " & Text(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%") & ")"
+                                                Text: ="External (" & Text(Coalesce(varCounterEffected,0),"#,##0","en-US") & " / " & Text(Coalesce(varCounterEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%","en-US") & ")"
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -2743,7 +2743,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
-                                                Text: ="Internal (" & Text(Coalesce(varCounterInternalSender,0),"#,##0") & " / " & Text(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%") & ")"
+                                                Text: ="Internal (" & Text(Coalesce(varCounterInternalSender,0),"#,##0","en-US") & " / " & Text(Coalesce(varCounterInternalSender,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%","en-US") & ")"
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -2779,7 +2779,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =18
                                                 Size: =10.5
-                                                Text: ="Not Effected (" & Text(Coalesce(varCounterNotEffected,0),"#,##0") & " / " & Text(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%") & ")"
+                                                Text: ="Not Effected (" & Text(Coalesce(varCounterNotEffected,0),"#,##0","en-US") & " / " & Text(Coalesce(varCounterNotEffected,0)/Max(Coalesce(varCounterNoDMP,0)+Coalesce(varCounterEffected,0)+Coalesce(varCounterInternalSender,0)+Coalesce(varCounterNotEffected,0),1),"0.00%","en-US") & ")"
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
