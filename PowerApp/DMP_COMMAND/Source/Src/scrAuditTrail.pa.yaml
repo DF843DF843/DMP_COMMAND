@@ -108,50 +108,50 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
-                 - tmrAuditTrailAutoRefresh:
-                     Control: Timer@2.1.0
-                     Properties:
-                       BorderColor: =RGBA(0,0,0,0)
-                       BorderStyle: =BorderStyle.None
-                       Duration: =1000
-                       Fill: =RGBA(0,0,0,0)
-                       Height: =1
-                       OnTimerEnd: |-
-                         =If(
-                             varAutoRefreshMinutes<=0,
-                             Set(varAutoRefreshSecondsRemaining, 0),
-                             If(
-                                 varAutoRefreshSecondsRemaining<=1,
-                                 Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60);
-                                 Set(varStatusCallError, "");
-                                 Set(varLastAttemptTimestamp, Now());
-                                 Set(varIsRefreshing, true);
-                                 Set(
-                                     varStatusResult,
-                                     IfError(
-                                         'DMPAgent4(StatusCheck)=>VS'.Run(),
-                                         Set(varStatusCallError, FirstError.Message);
-                                         Blank()
-                                     )
-                                 );
-                                 Set(varIsRefreshing, false);
-                                 Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
-                                 Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
-                                 Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
-                                 Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
-                                 Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
-                                 Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount))
-                                 ,
-                                 Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
-                             )
-                         )
-                       Repeat: =true
-                       AutoStart: =true
-                       Start: =true
-                       Visible: =true
-                       Width: =1
-                       X: =0
-                       Y: =0
+                  - tmrAuditTrailAutoRefresh:
+                      Control: Timer@2.1.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Duration: =1000
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =1
+                        OnTimerEnd: |-
+                          =If(
+                              varAutoRefreshMinutes<=0,
+                              Set(varAutoRefreshSecondsRemaining, 0),
+                              If(
+                                  varAutoRefreshSecondsRemaining<=1,
+                                  Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60);
+                                  Set(varStatusCallError, "");
+                                  Set(varLastAttemptTimestamp, Now());
+                                  Set(varIsRefreshing, true);
+                                  Set(
+                                      varStatusResult,
+                                      IfError(
+                                          'DMPAgent4(StatusCheck)=>VS'.Run(),
+                                          Set(varStatusCallError, FirstError.Message);
+                                          Blank()
+                                      )
+                                  );
+                                  Set(varIsRefreshing, false);
+                                  Set(varStatusLastRefreshed, If(varStatusCallError="", Now(), varStatusLastRefreshed));
+                                  Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
+                                  Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
+                                  Set(varAuditRunSummaryCount, IfError(Coalesce(varStatusResult.auditrunsummarycount, varAuditRunSummaryCount), varAuditRunSummaryCount));
+                                  Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount));
+                                  Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount))
+                                  ,
+                                  Set(varAutoRefreshSecondsRemaining, varAutoRefreshSecondsRemaining-1)
+                              )
+                          )
+                        Repeat: =true
+                        AutoStart: =true
+                        Start: =true
+                        Visible: =true
+                        Width: =1
+                        X: =0
+                        Y: =0
             - conAuditTrailSummary:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout

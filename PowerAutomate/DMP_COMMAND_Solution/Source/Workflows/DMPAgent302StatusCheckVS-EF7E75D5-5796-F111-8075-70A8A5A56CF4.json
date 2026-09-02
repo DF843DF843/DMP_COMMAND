@@ -4310,7 +4310,7 @@
                   "minimumItemCount": 50000
                 }
               },
-              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to). Pagination enabled (up to 50000 rows) because the table has grown past the connector's default single-page size, which previously caused the 'most recent' Critical/Warning rows shown on the Cockpit to actually be recent-within-the-first-page only, silently missing newer rows once the table outgrew one page."
+              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to). Pagination enabled so tables larger than one connector page are still read completely."
             },
             "FILTER_AuditTrail_Critical": {
               "runAfter": {
