@@ -14,7 +14,6 @@ Screens:
       OnVisible: |-
         =If(
             !varInitialRefreshDone,
-            Set(varInitialRefreshDone, true);
             Set(varLastAttemptTimestamp, Now());
             Set(varStatusCallError, "");
             Set(varIsRefreshing, true);
@@ -101,7 +100,19 @@ Screens:
             // reaction to the values just set above can fire a moment later (next render pass), which was
             // still catching the guard as already-lifted and showing a spurious "switched" notification.
             // tmrAutoRefreshTick lifts the guard one full second later instead, safely after that.
-            Set(varReadyToLiftToggleGuard, true)
+            Set(varReadyToLiftToggleGuard, true);
+            // The guard is only lifted (varInitialRefreshDone=true) once the call actually SUCCEEDED,
+            // or after a bounded number of failed attempts (15, ~12s via the 800ms retry timer below).
+            // Previously the guard was set unconditionally as the very FIRST statement in this handler,
+            // so a single early failure (e.g. data connections not yet ready at true app start) locked
+            // out ALL further attempts forever - including the tmrInitialKickstart backup - leaving the
+            // Cockpit permanently stuck on its App.OnStart literal defaults (0/false/blank).
+            If(
+                varStatusCallError="",
+                Set(varInitialRefreshDone, true),
+                Set(varInitialRefreshAttempts, varInitialRefreshAttempts+1);
+                If(varInitialRefreshAttempts>=15, Set(varInitialRefreshDone, true))
+            )
         )
     Children:
       - ScreenContainer1:
@@ -521,7 +532,6 @@ Screens:
                               OnTimerEnd: |-
                                 =If(
                                     !varInitialRefreshDone,
-                                    Set(varInitialRefreshDone, true);
                                     Set(varLastAttemptTimestamp, Now());
                                     Set(varStatusCallError, "");
                                     Set(varIsRefreshing, true);
@@ -584,9 +594,19 @@ Screens:
                                     );
                                     Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
                                     Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
-                                    Set(varReadyToLiftToggleGuard, true)
+                                    Set(varReadyToLiftToggleGuard, true);
+                                    // Same success/attempt-cap logic as scrHome.OnVisible - see comment there.
+                                    // Repeat=true (below) turns this into a genuine ~800ms retry loop, capped
+                                    // at 15 attempts (~12s), instead of a single one-shot backup that gave up
+                                    // permanently after its first failure.
+                                    If(
+                                        varStatusCallError="",
+                                        Set(varInitialRefreshDone, true),
+                                        Set(varInitialRefreshAttempts, varInitialRefreshAttempts+1);
+                                        If(varInitialRefreshAttempts>=15, Set(varInitialRefreshDone, true))
+                                    )
                                 )
-                              Repeat: =false
+                              Repeat: =true
                               AutoStart: =true
                               Start: =true
                               Visible: =true

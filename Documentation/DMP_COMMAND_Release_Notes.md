@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.9 - 2026-09-02 (current)
+### v1.22.10 - 2026-09-03 (current)
+
+- Found and fixed the likely root cause of several reported bugs (version number not updating, timestamps not updating, counters/baselines staying at 0) - the very first automatic status refresh at app start set its own 'done' guard immediately, before actually checking if the call succeeded, so a single early failure (e.g. connections not yet ready) permanently blocked ALL further automatic refresh attempts for the rest of the session - the guard is now only set once a refresh actually succeeds, or after 15 retries (~12s)
+- Added a "Copy to Clipboard" button next to the Admin Functions Diagnostics panel's Refresh button, copying the 3 counter/audit lines in plain text
+- Synced the PowerApp_Version.txt source file to the actual current version - it had been stuck at an old value for several releases, which was a second, independent reason the version badge looked frozen
+
+### v1.22.9 - 2026-09-02
 
 - Fixed the Emergency Report Replace action not refreshing the Cockpit's numbers afterwards (e.g. Internal/External Domains counts) - it now re-runs the full status refresh on success, same as the Now button
 - The Critical/Warning/All reset buttons now immediately re-check with Agent 4 after a reset instead of only guessing the new baseline locally, so the displayed 'new since reset' count reflects confirmed data right away
@@ -251,8 +257,9 @@ Backend:
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
-### Agent 4 (Status Check) - v1.4.2 (current)
+### Agent 4 (Status Check) - v1.4.3 (current)
 
+- v1.4.3 (2026-09-03) - Fixed the Internal/External Domains and Counter "Last Updated" fields silently failing every run ("The template function 'select' is not defined or not valid") - replaced the select()/max() expression with a simple $orderby=Modified desc on the existing list read, no extra API call needed
 - v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature
 - v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating after Agent 1/2 were migrated to the new lists
 - v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page

@@ -1256,7 +1256,8 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "dc89aed5-d87a-4e12-875a-db2adbc2cee4",
-                  "$top": 5000
+                  "$top": 5000,
+                  "$orderby": "Modified desc"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -1300,7 +1301,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ExternalDomainsLastModified",
-                    "value": "@if(equals(length(coalesce(body('GET_ExternalDomains_List')?['value'], createArray())),0),null,max(select(coalesce(body('GET_ExternalDomains_List')?['value'], createArray()),item()?['Modified'])))"
+                    "value": "@if(equals(length(coalesce(body('GET_ExternalDomains_List')?['value'], createArray())),0),null,first(coalesce(body('GET_ExternalDomains_List')?['value'], createArray()))?['Modified'])"
                   },
                   "description": "Stores the most recent Modified timestamp across all DMP Command External Domains list rows.\n\nUsed for:\n- Control Board display\n- List freshness monitoring\n- Operational validation"
                 },
@@ -1397,7 +1398,8 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
-                  "$top": 5000
+                  "$top": 5000,
+                  "$orderby": "Modified desc"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -1515,7 +1517,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterLastModified",
-                    "value": "@if(equals(length(coalesce(body('GET_Counters_List')?['value'], createArray())),0),null,max(select(coalesce(body('GET_Counters_List')?['value'], createArray()),item()?['Modified'])))"
+                    "value": "@if(equals(length(coalesce(body('GET_Counters_List')?['value'], createArray())),0),null,first(coalesce(body('GET_Counters_List')?['value'], createArray()))?['Modified'])"
                   },
                   "description": "Stores the most recent Modified timestamp across all DMP Command Counters list rows for the Cockpit Counter card."
                 },
@@ -2097,7 +2099,8 @@
                 "parameters": {
                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                   "table": "1ac9e8e2-6c55-435b-a188-44093da5aa8f",
-                  "$filter": "Active eq 'Yes'"
+                  "$filter": "Active eq 'Yes'",
+                  "$orderby": "Modified desc"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
@@ -2152,7 +2155,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "InternalDomainsLastModified",
-                    "value": "@if(equals(length(body('GET_InternalDomains_List')?['value']),0),null,max(select(body('GET_InternalDomains_List')?['value'],item()?['Modified'])))"
+                    "value": "@if(equals(length(body('GET_InternalDomains_List')?['value']),0),null,first(body('GET_InternalDomains_List')?['value'])?['Modified'])"
                   },
                   "description": "Stores the most recent Modified timestamp across all active Internal Domains list rows.\n\nUsed for:\n- Control Board display\n- List freshness monitoring\n- Operational validation"
                 }

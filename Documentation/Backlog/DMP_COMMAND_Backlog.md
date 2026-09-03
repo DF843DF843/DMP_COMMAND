@@ -10,23 +10,54 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-02, Stand ~16:35 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-03, Stand ~14:00 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND selbstständig deployed:**
-- Agent 6 (Admin Functions) v1.3.0 – LIVE, aktiviert.
-- Agent 4 (Status Check) v1.4.2 – LIVE, aktiviert.
-- Agent 2 (E-Mail Inbox Treatment) v1.0.8 – LIVE.
-- Agent 1 (Domains Extraction) v1.0.8 – LIVE, aktiviert.
-- **App v1.22.9 – gepackt, wartet auf erneute Veröffentlichung durch den Nutzer.** Enthält zusätzlich zu allem bisherigen: Fix für das Jahr-3926-Datumsproblem, sowie ein neues Diagnose-Panel auf dem Admin-Functions-Screen (siehe Update unten).
-- Neues Dokument `DMP_COMMAND_AI_Collaboration_Best_Practices.md` (Englisch) fertiggestellt.
+- Agent 4 (Status Check) v1.4.3 – Solution importiert (Dataverse), **muss vom Nutzer noch reaktiviert werden** (Standard-Verhalten nach `pac solution import`: der importierte Flow wird deaktiviert und ersetzt).
+- App v1.22.10 – gepackt, Round-Trip-Diff=0, committet. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
+- `PowerApp_Version.txt` (SharePoint-Quelle für die Versionsanzeige) von v1.22.1 auf v1.22.10 synchronisiert – war seit mehreren Releases nicht mehr aktualisiert worden.
+- Solution-Version 7.11.32 → 7.11.33.
 
-**⚠️ Zu prüfen, sobald möglich:**
-1. **App erneut in Studio veröffentlichen** – enthält den Datums-Fix und das neue Diagnose-Panel.
-2. **Nutzer bestätigt: Reset-Button funktioniert NICHT wie erwartet UND Tooltip zeigt "No DMP: 0" trotz realem Wert 1 in SharePoint – beides sind laut Nutzer bestätigte Bugs, keine Fehlinterpretation.** Root Cause bisher nicht gefunden (Code-Review aller beteiligten Formeln in Agent 4/6 und der App zeigt keinen offensichtlichen Fehler; das gecachte Flow-Antwortschema in der App wurde geprüft und ist aktuell). **Neu:** Ein Diagnose-Panel wurde auf dem Admin-Functions-Screen ergänzt (live-Werte für Counter, Critical/Warning total+baseline+Delta, mit eigenem "Refresh now"-Button) – das soll beim nächsten Test die exakten Werte direkt sichtbar machen, um die Ursache endlich einzugrenzen.
+**🎯 Root Cause für mehrere gemeldete Bugs gefunden (Version bleibt unverändert, Zeitstempel "nicht gefixt", Refresh beim Start läuft nicht, Tooltip=0, Baseline=0):**
+Der initiale Status-Refresh (`scrHome.OnVisible` + Backup-Timer `tmrInitialKickstart`) setzte seine eigene "fertig"-Sperre (`varInitialRefreshDone`) **sofort als ersten Schritt**, BEVOR der eigentliche Agent-4-Aufruf überhaupt versucht wurde. Schlug dieser erste Versuch fehl (z. B. weil Datenverbindungen beim App-Start noch nicht bereit waren – ein im Code bereits dokumentiertes bekanntes Risiko), blieb die Sperre für den Rest der Sitzung gesetzt – **kein weiterer Versuch war je möglich**, auch nicht durch den eigens dafür vorgesehenen 800ms-Backup-Timer (der zusätzlich nur EINMAL feuerte, `Repeat=false`). Alle abgeleiteten Werte (Version, Timestamps, Counter, Baselines) blieben dadurch für die gesamte Sitzung auf ihren `App.OnStart`-Standardwerten (0/false/leer) eingefroren – unabhängig davon, was tatsächlich in SharePoint stand.
+**Fix:** Die Sperre wird jetzt erst gesetzt, wenn der Aufruf tatsächlich erfolgreich war (`varStatusCallError=""`), oder nach 15 gescheiterten Versuchen (Abbruch-Sicherung). Der Backup-Timer läuft jetzt wiederholt (`Repeat=true`, alle 800ms), bis Erfolg oder Abbruch – vorher lief er nur einmal.
 
-**Damit ist die komplette SharePoint-Migration weiterhin live, aktiviert und funktionsfähig; das Jahr-3926-Datumsproblem behoben; 2 Bugs (Counter-Tooltip, Reset-Verhalten) weiterhin ungeklärt, aber jetzt mit Diagnose-Werkzeug ausgestattet.**
+**🐛 Zusätzlicher, unabhängiger Bug in Agent 4 gefunden (Power Automate Ausführungsverlauf geprüft):**
+Die letzten 3 Läufe zeigten (bei insgesamt "erfolgreichem" Gesamtstatus) 3 interne Fehler: `SET_InternalDomainsLastModified`/`SET_ExternalDomainsLastModified`/`SET_CounterLastModified` – *"The template function 'select' is not defined or not valid."* Die verwendete `max(select(...))`-Formel zur Ermittlung des jüngsten "Modified"-Zeitstempels wird von diesem Flow-Laufzeit-Kontext nicht unterstützt. **Fix:** Ersetzt durch `$orderby=Modified desc` direkt in der bestehenden SharePoint-Abfrage (keine zusätzliche API-Anfrage nötig) + `first(...)?['Modified']` – deutlich einfacher und robuster als der ursprüngliche Ansatz.
+
+**⚠️ Weiterhin ungeklärt – benötigt Retest nach Deployment:**
+Nutzer meldete, dass die Reset-Buttons (sowohl "No DMP" in Admin Functions als auch Critical/Warning-Baseline im Audit Trail) den Wert in der SharePoint-Liste "DMP Command Counters" **nicht** zurücksetzen – direkt in SharePoint geprüft, nicht nur über die App. Code-Review von Agent 6 (GET+PATCH/CREATE-Logik für alle 5 Reset-Aktionen) zeigt keinen offensichtlichen Fehler. **Entscheidender Fund:** Der Ausführungsverlauf von Agent 6 zeigte den letzten Lauf vor über 24 Stunden – d. h. **keiner der heutigen Reset-Klicks hat Agent 6 überhaupt erreicht.** Nutzer beschrieb zudem eine dauerhafte Lade-Animation ("sich bewegende Punkte") beim Öffnen von Admin Functions, nach der Knopf-Klicks wirkungslos blieben, selbst nach 60+ Sekunden Wartezeit. Dies passt inhaltlich sehr gut zum oben gefundenen Refresh-Sperre-Bug (die App blieb vermutlich die ganze Sitzung über in einem "versuche noch zu laden"-Zustand hängen). **Muss nach Deployment der obigen Fixes neu getestet werden**, bevor an Agent 6 selbst weitergesucht wird.
+
+**Damit sind heute 2 konkrete Root-Causes gefunden und behoben (Refresh-Sperre in der App, `select()`-Fehler in Agent 4); die Reset-Button-Meldung bleibt bis zum Retest offen.**
 
 ---
+
+## ✅ Update (2026-09-03, ~14:00 Uhr): Refresh-Sperre-Bug + Agent-4-`select()`-Fehler gefunden und behoben
+
+**Auslöser:** Nutzer meldete 4 neue/wiederkehrende Punkte: Versionsnummer bleibt unverändert, Audit-Trail-Zeitstempel "nicht gefixt", Refresh beim App-Start läuft nicht, sowie Wunsch nach einem Copy-to-Clipboard-Knopf im Diagnose-Panel (mit exaktem Zielformat).
+
+**Root-Cause-Analyse:** Siehe STATUS-ÜBERSICHT oben für die vollständige Erklärung des Refresh-Sperre-Bugs (`scrHome.OnVisible`/`tmrInitialKickstart`) und des Agent-4-`select()`-Fehlers (bestätigt über den Power-Automate-Ausführungsverlauf).
+
+**Umgesetzt:**
+1. `scrHome.pa.yaml` – `varInitialRefreshDone` wird nur noch bei Erfolg (oder nach 15 Versuchen) gesetzt, sowohl in `OnVisible` als auch in `tmrInitialKickstart` (jetzt `Repeat=true`). Neue Variable `varInitialRefreshAttempts` (in `App.OnStart` auf 0 initialisiert).
+2. `scrAdminFunctions.pa.yaml` – Diagnose-Panel um einen "Copy to Clipboard"-Knopf (`btnFuncDiagnosticsCopy`) erweitert, kopiert die 3 Zeilen exakt im vom Nutzer vorgegebenen Format (`Label=Wert   Label2=Wert2`, kein Doppelpunkt).
+3. `DMPAgent302StatusCheckVS-....json` (Agent 4) – `select()`-Formeln in 3 Aktionen durch `$orderby=Modified desc` + `first(...)` ersetzt. Version v1.4.2 → v1.4.3.
+4. `PowerApp_Version.txt` – von v1.22.1 auf v1.22.10 synchronisiert (war die zweite, unabhängige Ursache für die "Version bleibt unverändert"-Meldung).
+5. Release Notes (App v1.22.10, Agent 4 v1.4.3) und Solution-Version (7.11.32 → 7.11.33) aktualisiert.
+
+**Validiert:** Odd-Indentation-Scan, Doppelpunkt-in-Plain-Scalar-Scan und App-weiter Duplikat-Namen-Scan jeweils 0 Treffer; Round-Trip-Diff (App) = 0; Agent-4-JSON nach der PowerShell-Edit-Panne (siehe unten) erneut als valides JSON bestätigt.
+
+**Zwischenfall (behoben):** Beim ersten Versuch, `$orderby` in die Counters-Liste-Abfrage einzufügen, wurde durch einen zu unpräzisen `old_str`/`new_str`-Ersatz versehentlich die schließenden Klammern von `host`/`authentication`/`description` mitentfernt, was die JSON-Struktur brach. Sofort per erneutem `edit` mit vollständigerem Kontext korrigiert und mit `ConvertFrom-Json` als valide bestätigt, BEVOR gepackt/importiert wurde.
+
+**Deployment:**
+- Power-Automate-Solution gepackt (`pac solution pack`) und importiert (`pac solution import --publish-changes`) – Agent 4 wurde dabei automatisch deaktiviert (Standardverhalten) und muss vom Nutzer reaktiviert werden.
+- App gepackt (`pac canvas pack`), Round-Trip-Diff=0 – wartet auf manuelles Öffnen/Speichern/Veröffentlichen durch den Nutzer in Studio.
+
+**Status:** Code-seitig vollständig, committet, gepusht. **Wartet auf: (1) Reaktivierung von Agent 4 durch den Nutzer, (2) erneute Veröffentlichung der App durch den Nutzer in Studio, (3) anschließenden Retest aller gemeldeten Punkte inkl. der Reset-Buttons.**
+
+---
+
+
 
 ## ✅ Update (2026-09-02, ~16:35 Uhr): Diagnose-Panel im Admin-Functions-Screen ergänzt
 

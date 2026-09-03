@@ -90,6 +90,7 @@ App:
       Set(varIsRefreshing,false);
       Set(varLastAttemptTimestamp,Blank());
       Set(varInitialRefreshDone,false);
+      Set(varInitialRefreshAttempts,0);
       Set(varStatusCallError, "")
 
       // NOTE: The actual Agent 4 status refresh call is deliberately NOT made here in App.OnStart.
@@ -97,5 +98,8 @@ App:
       // which caused the initial automatic refresh to silently fail while a later manual call worked fine.
       // See scrHome.OnVisible for the real first refresh call (runs once the screen is actually loaded) -
       // that is also where varSuppressToggleEvents is finally lifted, once real Agent 4 values are in.
+      // varInitialRefreshDone is now only set to true on a SUCCESSFUL call (or after 15 failed retries,
+      // ~12s via tmrInitialKickstart) - previously it was set unconditionally on the very first attempt,
+      // so one early failure permanently blocked all further retries (see scrHome.OnVisible comment).
     StartScreen: =scrHome
     Theme: =PowerAppsTheme

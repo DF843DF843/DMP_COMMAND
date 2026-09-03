@@ -527,26 +527,63 @@ Screens:
                               Size: =12
                               Text: ="DIAGNOSTICS (live values, read-only)"
                               Wrap: =false
-                        - btnFuncDiagnosticsRefresh:
-                            Control: Classic/Button@2.2.0
+                        - conFuncDiagnosticsButtons:
+                            Control: GroupContainer@1.5.0
+                            Variant: AutoLayout
                             Properties:
-                              BorderColor: =RGBA(0,120,215,0.6)
-                              BorderStyle: =BorderStyle.Solid
-                              BorderThickness: =1
-                              Color: =RGBA(0,120,215,1)
                               Fill: =RGBA(0,0,0,0)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Semibold
-                              Height: =28
-                              HoverFill: =RGBA(0,120,215,0.12)
-                              OnSelect: =Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult)); Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount)); Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount)); Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline)); Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline)); Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP)); Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender)); Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected)); Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected))
-                              RadiusBottomLeft: =6
-                              RadiusBottomRight: =6
-                              RadiusTopLeft: =6
-                              RadiusTopRight: =6
-                              Size: =11
-                              Text: ="Refresh now"
-                              Width: =130
+                              Height: =32
+                              LayoutDirection: =LayoutDirection.Horizontal
+                              LayoutGap: =8
+                            Children:
+                              - btnFuncDiagnosticsRefresh:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,120,215,0.6)
+                                    BorderStyle: =BorderStyle.Solid
+                                    BorderThickness: =1
+                                    Color: =RGBA(0,120,215,1)
+                                    Fill: =RGBA(0,0,0,0)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    HoverFill: =RGBA(0,120,215,0.12)
+                                    OnSelect: =Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult)); Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount)); Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount)); Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline)); Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline)); Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP)); Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender)); Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected)); Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected))
+                                    RadiusBottomLeft: =6
+                                    RadiusBottomRight: =6
+                                    RadiusTopLeft: =6
+                                    RadiusTopRight: =6
+                                    Size: =11
+                                    Text: ="Refresh now"
+                                    Width: =130
+                              - btnFuncDiagnosticsCopy:
+                                  Control: Classic/Button@2.2.0
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(11,11,13,1)
+                                    Fill: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =28
+                                    HoverFill: =RGBA(45,230,155,1)
+                                    OnSelect: |-
+                                      =IfError(
+                                          Copy(
+                                              lblFuncDiagnosticsCounters.Text & Char(10) &
+                                              lblFuncDiagnosticsAudit.Text & Char(10) &
+                                              lblFuncDiagnosticsAudit2.Text
+                                          ),
+                                          Notify("Diagnostics wurden in die Zwischenablage kopiert.", NotificationType.Success),
+                                          Notify("Kopieren in die Zwischenablage ist in diesem Kontext nicht verfuegbar.", NotificationType.Warning)
+                                      )
+                                    RadiusBottomLeft: =6
+                                    RadiusBottomRight: =6
+                                    RadiusTopLeft: =6
+                                    RadiusTopRight: =6
+                                    Size: =11
+                                    Text: ="Copy to Clipboard"
+                                    Width: =150
                         - lblFuncDiagnosticsCounters:
                             Control: Label@2.5.1
                             Properties:
