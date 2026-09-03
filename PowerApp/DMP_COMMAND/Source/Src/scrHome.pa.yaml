@@ -337,7 +337,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =12
                               Size: =8.5
-                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated", "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
+                              Text: =If(varIsRefreshing, "⟳ Refresh ongoing…", If(IsBlank(varStatusLastRefreshed), "Not yet updated" & If(!varInitialRefreshDone, " (startup attempt " & Coalesce(varInitialRefreshAttempts,0) & "/15)", ""), "Updated:" & " " & Text(varStatusLastRefreshed, "hh:mm:ss")) & "   ·   " & If(varAutoRefreshMinutes<=0, "Auto-update off", "Next update in " & Text(RoundDown(Max(varAutoRefreshSecondsRemaining,0)/60,0),"00") & ":" & Text(Mod(Max(varAutoRefreshSecondsRemaining,0),60),"00")))
                               Width: =430
                               Wrap: =false
                               X: =20

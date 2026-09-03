@@ -470,8 +470,8 @@ Screens:
                                           Height: =32
                                           HoverFill: =RGBA(189,45,59,1)
                                           OnSelect: |
-                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction));
-                                            Set(varConfirmResetCounter,false);
+                                            =Set(varConfirmResetCounter,false);
+                                            Set(varAdminActionResult, IfError('DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction), {success:false, message:"Reset call failed: " & FirstError.Message}));
                                             If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8

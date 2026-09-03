@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.10 - 2026-09-03 (current)
+### v1.22.11 - 2026-09-03 (current)
+
+- Found the real cause of the persistent Audit Trail year-3926 date bug - the underlying timestamp is stored as ISO text (e.g. "2026-09-02T12:34:43Z"), not a plain Excel serial number as previously assumed, and the earlier fix's Value()+DateAdd() approach mis-parsed that text using the wrong internal date epoch. Now uses DateTimeValue() first (built for exactly this text format), falling back to the old numeric approach only if that fails
+- Audit Trail (Detail) now shows a "Loading recent alerts..." indicator while refreshing, plus a dedicated "Refresh now" button, instead of only silently reloading
+- The Critical/Warning/All reset buttons (Audit Trail) and the Admin Functions counter reset buttons now show a clear error notification if the underlying flow call itself fails, instead of silently doing nothing
+- Fixed the Maintenance tab's app version link - text was wrapping into an unreadable two-line block because the button was too narrow/short for its own text
+
+### v1.22.10 - 2026-09-03
 
 - Found and fixed the likely root cause of several reported bugs (version number not updating, timestamps not updating, counters/baselines staying at 0) - the very first automatic status refresh at app start set its own 'done' guard immediately, before actually checking if the call succeeded, so a single early failure (e.g. connections not yet ready) permanently blocked ALL further automatic refresh attempts for the rest of the session - the guard is now only set once a refresh actually succeeds, or after 15 retries (~12s)
 - Added a "Copy to Clipboard" button next to the Admin Functions Diagnostics panel's Refresh button, copying the 3 counter/audit lines in plain text

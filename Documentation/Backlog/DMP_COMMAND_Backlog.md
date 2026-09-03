@@ -10,39 +10,48 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-03, Stand ~14:00 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-03, Stand ~15:40 Uhr): Alle offenen Punkte
 
 **✅ Heute live UND selbstständig deployed:**
-- Agent 4 (Status Check) v1.4.3 – Solution importiert (Dataverse), **muss vom Nutzer noch reaktiviert werden** (Standard-Verhalten nach `pac solution import`: der importierte Flow wird deaktiviert und ersetzt).
-- App v1.22.10 – gepackt, Round-Trip-Diff=0, committet. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
-- `PowerApp_Version.txt` (SharePoint-Quelle für die Versionsanzeige) von v1.22.1 auf v1.22.10 synchronisiert – war seit mehreren Releases nicht mehr aktualisiert worden.
-- Solution-Version 7.11.32 → 7.11.33.
+- App v1.22.10 – vom Nutzer geladen, Datenquellen neu verbunden, veröffentlicht. **Bestätigt live.**
+- Alle 6 Agenten waren laut Nutzer-Check durchgehend aktiv (keine Deaktivierung durch den Solution-Import, anders als zuvor vermutet).
+- App v1.22.11 – gepackt, Round-Trip-Diff=0, committet. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
 
-**🎯 Root Cause für mehrere gemeldete Bugs gefunden (Version bleibt unverändert, Zeitstempel "nicht gefixt", Refresh beim Start läuft nicht, Tooltip=0, Baseline=0):**
-Der initiale Status-Refresh (`scrHome.OnVisible` + Backup-Timer `tmrInitialKickstart`) setzte seine eigene "fertig"-Sperre (`varInitialRefreshDone`) **sofort als ersten Schritt**, BEVOR der eigentliche Agent-4-Aufruf überhaupt versucht wurde. Schlug dieser erste Versuch fehl (z. B. weil Datenverbindungen beim App-Start noch nicht bereit waren – ein im Code bereits dokumentiertes bekanntes Risiko), blieb die Sperre für den Rest der Sitzung gesetzt – **kein weiterer Versuch war je möglich**, auch nicht durch den eigens dafür vorgesehenen 800ms-Backup-Timer (der zusätzlich nur EINMAL feuerte, `Repeat=false`). Alle abgeleiteten Werte (Version, Timestamps, Counter, Baselines) blieben dadurch für die gesamte Sitzung auf ihren `App.OnStart`-Standardwerten (0/false/leer) eingefroren – unabhängig davon, was tatsächlich in SharePoint stand.
-**Fix:** Die Sperre wird jetzt erst gesetzt, wenn der Aufruf tatsächlich erfolgreich war (`varStatusCallError=""`), oder nach 15 gescheiterten Versuchen (Abbruch-Sicherung). Der Backup-Timer läuft jetzt wiederholt (`Repeat=true`, alle 800ms), bis Erfolg oder Abbruch – vorher lief er nur einmal.
+**🧪 Nutzer-Retest von v1.22.10 ergab 6 neue/fortbestehende Befunde:**
+1. **Kein automatischer Refresh/Reload beim Start** – trotz des Refresh-Sperre-Fixes weiterhin gemeldet. Die Sperr-Logik wurde erneut geprüft und ist strukturell korrekt (Guard wird nur bei Erfolg/nach 15 Versuchen gesetzt, Backup-Timer wiederholt jetzt). Da die genaue Ursache ohne Live-Zugriff nicht abschließend nachweisbar ist, wurde die bestehende Status-Zeile auf dem Cockpit um eine sichtbare Diagnose ergänzt ("Not yet updated (startup attempt N/15)"), damit beim nächsten Test direkt erkennbar ist, ob die Retry-Schleife überhaupt läuft.
+2. **Audit Trail (Detail) öffnen löst unangekündigt einen Ladevorgang aus** – behoben: neuer sichtbarer "Loading recent alerts..."-Hinweis während des Refreshs, plus ein dedizierter "Refresh now"-Knopf (bisher gab es nur den automatischen Reload beim Öffnen/die Auto-Refresh-Uhr).
+3. **Datumsanzeige weiterhin falsch ("3926-09-03")** – **echte Root Cause jetzt gefunden:** Der Zeitstempel wird von Agent 1-5 als ISO-Text (`@{utcNow()}`, z. B. `"2026-09-02T12:34:43.65Z"`) geschrieben, NICHT als Excel-Seriennummer wie zuvor angenommen. Die vorherige Korrektur (`Value(rawTs,"en-US")` + `DateAdd(...,TimeUnit.Days)`) parst diesen ISO-Text über einen falschen internen Datums-Nullpunkt, was exakt den ~1900-Jahre-Versatz erklärt. **Fix:** Verwendet jetzt zuerst `DateTimeValue(rawTs,"en-US")` (die für genau dieses Textformat vorgesehene Funktion), mit Fallback auf die alte Formel (falls doch mal eine reine Zahl kommt) und zuletzt auf den Rohtext.
+4. **RunSummary-Einträge im Audit Trail sind inhaltlich nutzlos** ("[2026-09-02T12:34:43...] RunStart ... ERROR | code=n/a | message=n/a") – unklar, welcher Fehler die Zeile ausgelöst hat. Nutzer schlägt vor, die kürzlich für E-Mails eingeführte Fehlerklassifikation auch auf Audit-Einträge zu übertragen (neue Spalte "Error Code"). **Noch nicht umgesetzt** – größeres Feature, siehe neuer Backlog-Punkt unten.
+5. **Reset-Knöpfe ohne jede Wirkung/Rückmeldung** – Code-Review zeigt, dass `'DMPAgent6(AdminFunctions)'.Run(...)` bisher OHNE `IfError`-Absicherung aufgerufen wurde: Schlägt der Aufruf selbst fehl (z. B. Verbindungsproblem), bricht die GESAMTE Formel sofort ab, ohne jede Meldung – das erklärt "keine Aktion, kein Fehler". Verbindungsreferenz-Abgleich (Live-App vs. Repo, `FlowNameId` für Agent 6) zeigt exakte Übereinstimmung – die Verbindung selbst ist also nicht das Problem. **Fix:** Alle 4 Reset-Aufrufe (3× Audit Trail, 1× Admin Functions) jetzt mit `IfError(...)` abgesichert, liefern bei einem Fehlschlag jetzt mindestens eine klare Fehlermeldung statt stiller Untätigkeit. **Muss erneut getestet werden** – falls jetzt eine Fehlermeldung erscheint, verrät sie die eigentliche Ursache.
+6. **Maintenance-Tab: Versions-Link zu Release Notes umbricht/ist unlesbar** – behoben: Knopf war mit Höhe 20px zu niedrig für seinen eigenen (bei `Classic/Button` automatisch umbrechenden) Text; Breite und Höhe vergrößert.
 
-**🐛 Zusätzlicher, unabhängiger Bug in Agent 4 gefunden (Power Automate Ausführungsverlauf geprüft):**
-Die letzten 3 Läufe zeigten (bei insgesamt "erfolgreichem" Gesamtstatus) 3 interne Fehler: `SET_InternalDomainsLastModified`/`SET_ExternalDomainsLastModified`/`SET_CounterLastModified` – *"The template function 'select' is not defined or not valid."* Die verwendete `max(select(...))`-Formel zur Ermittlung des jüngsten "Modified"-Zeitstempels wird von diesem Flow-Laufzeit-Kontext nicht unterstützt. **Fix:** Ersetzt durch `$orderby=Modified desc` direkt in der bestehenden SharePoint-Abfrage (keine zusätzliche API-Anfrage nötig) + `first(...)?['Modified']` – deutlich einfacher und robuster als der ursprüngliche Ansatz.
-
-**⚠️ Weiterhin ungeklärt – benötigt Retest nach Deployment:**
-Nutzer meldete, dass die Reset-Buttons (sowohl "No DMP" in Admin Functions als auch Critical/Warning-Baseline im Audit Trail) den Wert in der SharePoint-Liste "DMP Command Counters" **nicht** zurücksetzen – direkt in SharePoint geprüft, nicht nur über die App. Code-Review von Agent 6 (GET+PATCH/CREATE-Logik für alle 5 Reset-Aktionen) zeigt keinen offensichtlichen Fehler. **Entscheidender Fund:** Der Ausführungsverlauf von Agent 6 zeigte den letzten Lauf vor über 24 Stunden – d. h. **keiner der heutigen Reset-Klicks hat Agent 6 überhaupt erreicht.** Nutzer beschrieb zudem eine dauerhafte Lade-Animation ("sich bewegende Punkte") beim Öffnen von Admin Functions, nach der Knopf-Klicks wirkungslos blieben, selbst nach 60+ Sekunden Wartezeit. Dies passt inhaltlich sehr gut zum oben gefundenen Refresh-Sperre-Bug (die App blieb vermutlich die ganze Sitzung über in einem "versuche noch zu laden"-Zustand hängen). **Muss nach Deployment der obigen Fixes neu getestet werden**, bevor an Agent 6 selbst weitergesucht wird.
-
-**Damit sind heute 2 konkrete Root-Causes gefunden und behoben (Refresh-Sperre in der App, `select()`-Fehler in Agent 4); die Reset-Button-Meldung bleibt bis zum Retest offen.**
+**Damit sind heute 6 gemeldete Punkte bearbeitet: 1 mit neuer Diagnose-Anzeige (Ursache weiter unklar), 5 mit konkretem Fix. Alle warten auf Veröffentlichung durch den Nutzer in Studio und anschließenden Retest.**
 
 ---
 
-## ✅ Update (2026-09-03, ~14:00 Uhr): Refresh-Sperre-Bug + Agent-4-`select()`-Fehler gefunden und behoben
+## ✅ Update (2026-09-03, ~15:40 Uhr): Zeitstempel-Root-Cause gefunden, Reset-Buttons abgesichert, Audit-Trail-UX verbessert
 
-**Auslöser:** Nutzer meldete 4 neue/wiederkehrende Punkte: Versionsnummer bleibt unverändert, Audit-Trail-Zeitstempel "nicht gefixt", Refresh beim App-Start läuft nicht, sowie Wunsch nach einem Copy-to-Clipboard-Knopf im Diagnose-Panel (mit exaktem Zielformat).
-
-**Root-Cause-Analyse:** Siehe STATUS-ÜBERSICHT oben für die vollständige Erklärung des Refresh-Sperre-Bugs (`scrHome.OnVisible`/`tmrInitialKickstart`) und des Agent-4-`select()`-Fehlers (bestätigt über den Power-Automate-Ausführungsverlauf).
+**Auslöser:** Nutzer-Retest von App v1.22.10 nach Reaktivierung/Neuverbindung, mit 6 konkreten Befunden (siehe Status-Übersicht oben).
 
 **Umgesetzt:**
-1. `scrHome.pa.yaml` – `varInitialRefreshDone` wird nur noch bei Erfolg (oder nach 15 Versuchen) gesetzt, sowohl in `OnVisible` als auch in `tmrInitialKickstart` (jetzt `Repeat=true`). Neue Variable `varInitialRefreshAttempts` (in `App.OnStart` auf 0 initialisiert).
-2. `scrAdminFunctions.pa.yaml` – Diagnose-Panel um einen "Copy to Clipboard"-Knopf (`btnFuncDiagnosticsCopy`) erweitert, kopiert die 3 Zeilen exakt im vom Nutzer vorgegebenen Format (`Label=Wert   Label2=Wert2`, kein Doppelpunkt).
-3. `DMPAgent302StatusCheckVS-....json` (Agent 4) – `select()`-Formeln in 3 Aktionen durch `$orderby=Modified desc` + `first(...)` ersetzt. Version v1.4.2 → v1.4.3.
-4. `PowerApp_Version.txt` – von v1.22.1 auf v1.22.10 synchronisiert (war die zweite, unabhängige Ursache für die "Version bleibt unverändert"-Meldung).
+1. `scrAuditTrail.pa.yaml` – alle 20 Zeitstempel-Formeln (Critical/Warning je 10) von `Value()+DateAdd()` auf `DateTimeValue()` (mit Fallback) umgestellt – behebt den echten Jahr-3926-Bug, der auf einer falschen Annahme über das Rohdatenformat beruhte.
+2. `scrAuditTrail.pa.yaml` – neuer "Loading recent alerts..."-Hinweis (sichtbar während `varIsRefreshing`) + neuer "Refresh now"-Knopf.
+3. `scrAuditTrail.pa.yaml` + `scrAdminFunctions.pa.yaml` – alle 4 Reset-Knopf-Aufrufe (`'DMPAgent6(AdminFunctions)'.Run(...)`) jetzt mit `IfError(...)` abgesichert statt ungeschützt – verhindert stillen Formel-Abbruch ohne jede Rückmeldung.
+4. `scrHome.pa.yaml` – Status-Zeile zeigt jetzt zusätzlich "(startup attempt N/15)" während der initialen Refresh-Retry-Schleife, um deren tatsächliches Verhalten live sichtbar zu machen.
+5. `scrMaintenance.pa.yaml` – `btnMaintenanceAppVersion` vergrößert (Höhe 20→26, Breite 320→460), behebt den unlesbaren Textumbruch.
+6. Release Notes (App v1.22.11), `PowerApp_Version.txt` (v1.22.10→v1.22.11) aktualisiert.
+
+**Validiert:** Odd-Indentation-Scan, Doppelpunkt-in-Plain-Scalar-Scan, Mojibake-Scan und App-weiter Duplikat-Namen-Scan jeweils 0 Treffer (607 Controls gesamt); Round-Trip-Diff = 0. Verbindungsreferenz für Agent 6 (`FlowNameId`) zwischen Live-App und Repo abgeglichen – identisch, keine Korrektur nötig.
+
+**Status:** Code-seitig vollständig, committet, gepusht. **Wartet auf erneute Veröffentlichung der App durch den Nutzer in Studio, danach Retest aller 6 Punkte.**
+
+---
+
+## 🆕 Neuer Backlog-Punkt: Fehlerklassifikation für Audit-Trail-Einträge (Error Code)
+
+Nutzer-Vorschlag: Die kürzlich für E-Mail-Fehler eingeführte Fehlerklassifikation soll auch auf Audit-Trail-Einträge übertragen werden. Aktuell zeigen "RunSummary"-Zeilen im Audit Trail nur unstrukturierten Rohtext (`ERROR | code=n/a | message=n/a`), aus dem sich die eigentliche Fehlerursache nicht ablesen lässt. Vorschlag: neue Spalte "Error Code" in der zentralen Audit-Trail-Tabelle, befüllt von den jeweiligen Agenten nach demselben Muster wie die Mail-Fehlerklassifikation. **Noch nicht spezifiziert/umgesetzt** – benötigt zunächst Abstimmung, welche Fehlerklassen/Codes sinnvoll sind und welcher Agent an welcher Stelle den Code setzen soll.
+
+---
 5. Release Notes (App v1.22.10, Agent 4 v1.4.3) und Solution-Version (7.11.32 → 7.11.33) aktualisiert.
 
 **Validiert:** Odd-Indentation-Scan, Doppelpunkt-in-Plain-Scalar-Scan und App-weiter Duplikat-Namen-Scan jeweils 0 Treffer; Round-Trip-Diff (App) = 0; Agent-4-JSON nach der PowerShell-Edit-Panne (siehe unten) erneut als valides JSON bestätigt.

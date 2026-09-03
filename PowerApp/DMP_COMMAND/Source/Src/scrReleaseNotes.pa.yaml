@@ -105,6 +105,7 @@ Screens:
                               Copy(
                                   If(
                                       varReleaseNotesTab="App",
+                                      lblReleaseV12211Header.Text & Char(10) & lblReleaseV12211Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV12210Header.Text & Char(10) & lblReleaseV12210Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1229Header.Text & Char(10) & lblReleaseV1229Notes.Text & Char(10) & Char(10) &
                                       lblReleaseV1228Header.Text & Char(10) & lblReleaseV1228Notes.Text & Char(10) & Char(10) &
@@ -243,6 +244,30 @@ Screens:
                         RadiusTopLeft: =12
                         RadiusTopRight: =12
                       Children:
+                        - lblReleaseV12211Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.11 - 2026-09-03 (current)"
+                              Wrap: =false
+                        - lblReleaseV12211Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =260
+                              Size: =12
+                              Text: ="- Found the real cause of the persistent Audit Trail year-3926 date bug - the underlying timestamp is stored as ISO text (e.g. ""2026-09-02T12:34:43Z""), not a plain Excel serial number as previously assumed, and the earlier fix's Value()+DateAdd() approach mis-parsed that text using the wrong internal date epoch. Now uses DateTimeValue() first (built for exactly this text format), falling back to the old numeric approach only if that fails" & Char(10) & "- Audit Trail (Detail) now shows a ""Loading recent alerts..."" indicator while refreshing, plus a dedicated ""Refresh now"" button, instead of only silently reloading" & Char(10) & "- The Critical/Warning/All reset buttons (Audit Trail) and the Admin Functions counter reset buttons now show a clear error notification if the underlying flow call itself fails, instead of silently doing nothing" & Char(10) & "- Fixed the Maintenance tab's app version link - text was wrapping into an unreadable two-line block because the button was too narrow/short for its own text"
+                              Wrap: =true
                         - lblReleaseV12210Header:
                             Control: Label@2.5.1
                             Properties:
@@ -253,7 +278,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.10 - 2026-09-03 (current)"
+                              Text: ="v1.22.10 - 2026-09-03"
                               Wrap: =false
                         - lblReleaseV12210Notes:
                             Control: Label@2.5.1
@@ -1814,6 +1839,24 @@ Screens:
                         RadiusTopRight: =12
                         Width: =170
                       Children:
+                        - btnAppReleaseV12211:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V12211",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V12211",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedAppRelease="V12211",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V12211",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V12211")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.22.11"
                         - btnAppReleaseV12210:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -2421,7 +2464,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedAppRelease, "V12210", lblReleaseV12210Header.Text, "V1229", lblReleaseV1229Header.Text, "V1228", lblReleaseV1228Header.Text, "V1227", lblReleaseV1227Header.Text, "V1226", lblReleaseV1226Header.Text, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV12210Header.Text)
+                              Text: =Switch(varSelectedAppRelease, "V12211", lblReleaseV12211Header.Text, "V12210", lblReleaseV12210Header.Text, "V1229", lblReleaseV1229Header.Text, "V1228", lblReleaseV1228Header.Text, "V1227", lblReleaseV1227Header.Text, "V1226", lblReleaseV1226Header.Text, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV12211Header.Text)
                               Wrap: =false
                         - lblReleaseDetailAppNotes:
                             Control: Label@2.5.1
@@ -2432,7 +2475,7 @@ Screens:
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Arial'
                               Size: =12
-                              Text: =Switch(varSelectedAppRelease, "V12210", lblReleaseV12210Notes.Text, "V1229", lblReleaseV1229Notes.Text, "V1228", lblReleaseV1228Notes.Text, "V1227", lblReleaseV1227Notes.Text, "V1226", lblReleaseV1226Notes.Text, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV12210Notes.Text)
+                              Text: =Switch(varSelectedAppRelease, "V12211", lblReleaseV12211Notes.Text, "V12210", lblReleaseV12210Notes.Text, "V1229", lblReleaseV1229Notes.Text, "V1228", lblReleaseV1228Notes.Text, "V1227", lblReleaseV1227Notes.Text, "V1226", lblReleaseV1226Notes.Text, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV12211Notes.Text)
                               Wrap: =true
             - conReleaseNotesSplitAgents:
                 Control: GroupContainer@1.5.0

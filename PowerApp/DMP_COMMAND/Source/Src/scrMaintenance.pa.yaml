@@ -254,16 +254,16 @@ Screens:
                         Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
-                        Height: =20
+                        Height: =26
                         HoverColor: =RGBA(45,230,155,1)
                         HoverFill: =RGBA(0,0,0,0)
                         OnSelect: =Navigate(scrReleaseNotes, ScreenTransition.None)
                         Size: =12
                         Text: ="Cockpit app:" & " " & varAppVersion & " (see Release Notes)"
                         Tooltip: ="Open Release Notes"
-                        Width: =320
+                        Width: =460
                         X: =16
-                        Y: =44
+                        Y: =42
                   - lblMaintenanceAgentVersionsHint:
                       Control: Label@2.5.1
                       Properties:
