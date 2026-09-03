@@ -10,22 +10,47 @@ Vor Umsetzung IMMER zuerst den dann aktuellen Stand der jeweils betroffenen Date
 
 ---
 
-# 🔴 STATUS-ÜBERSICHT (2026-09-03, Stand ~15:40 Uhr): Alle offenen Punkte
+# 🔴 STATUS-ÜBERSICHT (2026-09-03, Stand ~16:23 Uhr – Sitzungsende): Alle offenen Punkte
+
+**Nutzer beendet die Arbeit für heute. Dies ist der konsolidierte Übergabestand für die nächste Sitzung.**
 
 **✅ Heute live UND selbstständig deployed:**
-- App v1.22.10 – vom Nutzer geladen, Datenquellen neu verbunden, veröffentlicht. **Bestätigt live.**
-- Alle 6 Agenten waren laut Nutzer-Check durchgehend aktiv (keine Deaktivierung durch den Solution-Import, anders als zuvor vermutet).
-- App v1.22.11 – gepackt, Round-Trip-Diff=0, committet. **Wartet auf erneute Veröffentlichung durch den Nutzer in Studio.**
+- App v1.22.10, v1.22.11 – vom Nutzer geladen, alle Agenten/Datenquellen neu verbunden, veröffentlicht. **Bestätigt live.**
+- Alle 6 Agenten waren laut Nutzer-Check durchgehend aktiv (keine Deaktivierung durch Solution-Import).
+- YAML-Strukturfehler (`PA1001: duplicate key Control`, durch einen eigenen Fehler bei einer vorherigen Einfügung verursacht) sofort gefunden und behoben, App danach erneut fehlerfrei geladen.
+- Kleinere Fixes bestätigt/live: Maintenance-Tab-Versionslink lesbar, Diagnostics-Panel mit Copy-to-Clipboard.
 
-**🧪 Nutzer-Retest von v1.22.10 ergab 6 neue/fortbestehende Befunde:**
-1. **Kein automatischer Refresh/Reload beim Start** – trotz des Refresh-Sperre-Fixes weiterhin gemeldet. Die Sperr-Logik wurde erneut geprüft und ist strukturell korrekt (Guard wird nur bei Erfolg/nach 15 Versuchen gesetzt, Backup-Timer wiederholt jetzt). Da die genaue Ursache ohne Live-Zugriff nicht abschließend nachweisbar ist, wurde die bestehende Status-Zeile auf dem Cockpit um eine sichtbare Diagnose ergänzt ("Not yet updated (startup attempt N/15)"), damit beim nächsten Test direkt erkennbar ist, ob die Retry-Schleife überhaupt läuft.
-2. **Audit Trail (Detail) öffnen löst unangekündigt einen Ladevorgang aus** – behoben: neuer sichtbarer "Loading recent alerts..."-Hinweis während des Refreshs, plus ein dedizierter "Refresh now"-Knopf (bisher gab es nur den automatischen Reload beim Öffnen/die Auto-Refresh-Uhr).
-3. **Datumsanzeige weiterhin falsch ("3926-09-03")** – **echte Root Cause jetzt gefunden:** Der Zeitstempel wird von Agent 1-5 als ISO-Text (`@{utcNow()}`, z. B. `"2026-09-02T12:34:43.65Z"`) geschrieben, NICHT als Excel-Seriennummer wie zuvor angenommen. Die vorherige Korrektur (`Value(rawTs,"en-US")` + `DateAdd(...,TimeUnit.Days)`) parst diesen ISO-Text über einen falschen internen Datums-Nullpunkt, was exakt den ~1900-Jahre-Versatz erklärt. **Fix:** Verwendet jetzt zuerst `DateTimeValue(rawTs,"en-US")` (die für genau dieses Textformat vorgesehene Funktion), mit Fallback auf die alte Formel (falls doch mal eine reine Zahl kommt) und zuletzt auf den Rohtext.
-4. **RunSummary-Einträge im Audit Trail sind inhaltlich nutzlos** ("[2026-09-02T12:34:43...] RunStart ... ERROR | code=n/a | message=n/a") – unklar, welcher Fehler die Zeile ausgelöst hat. Nutzer schlägt vor, die kürzlich für E-Mails eingeführte Fehlerklassifikation auch auf Audit-Einträge zu übertragen (neue Spalte "Error Code"). **Noch nicht umgesetzt** – größeres Feature, siehe neuer Backlog-Punkt unten.
-5. **Reset-Knöpfe ohne jede Wirkung/Rückmeldung** – Code-Review zeigt, dass `'DMPAgent6(AdminFunctions)'.Run(...)` bisher OHNE `IfError`-Absicherung aufgerufen wurde: Schlägt der Aufruf selbst fehl (z. B. Verbindungsproblem), bricht die GESAMTE Formel sofort ab, ohne jede Meldung – das erklärt "keine Aktion, kein Fehler". Verbindungsreferenz-Abgleich (Live-App vs. Repo, `FlowNameId` für Agent 6) zeigt exakte Übereinstimmung – die Verbindung selbst ist also nicht das Problem. **Fix:** Alle 4 Reset-Aufrufe (3× Audit Trail, 1× Admin Functions) jetzt mit `IfError(...)` abgesichert, liefern bei einem Fehlschlag jetzt mindestens eine klare Fehlermeldung statt stiller Untätigkeit. **Muss erneut getestet werden** – falls jetzt eine Fehlermeldung erscheint, verrät sie die eigentliche Ursache.
-6. **Maintenance-Tab: Versions-Link zu Release Notes umbricht/ist unlesbar** – behoben: Knopf war mit Höhe 20px zu niedrig für seinen eigenen (bei `Classic/Button` automatisch umbrechenden) Text; Breite und Höhe vergrößert.
+**❌ NACH ERNEUTEM RETEST (v1.22.11 live) weiterhin bzw. neu bestätigt als NICHT behoben:**
 
-**Damit sind heute 6 gemeldete Punkte bearbeitet: 1 mit neuer Diagnose-Anzeige (Ursache weiter unklar), 5 mit konkretem Fix. Alle warten auf Veröffentlichung durch den Nutzer in Studio und anschließenden Retest.**
+1. **Kein automatischer Refresh/Reload beim Start – WEITERHIN nicht behoben**, trotz zweier Fix-Versuche (Guard-Sperre korrigiert, Diagnose-Anzeige "startup attempt N/15" ergänzt). Die genaue Ursache ist bisher NICHT gefunden. **Nächster Schritt:** Da reiner Code-Review die Ursache nicht aufdeckt, muss beim nächsten Live-Test konkret beobachtet werden, was die neue Diagnose-Anzeige zeigt ("Not yet updated (startup attempt N/15)" vs. z. B. dauerhaft "startup attempt 0/15" was auf einen ganz anderen Fehler hindeuten würde, z. B. dass der Timer/OnVisible gar nicht erst feuert).
+
+2. **Datumsanzeige weiterhin komplett falsch ("3926-09-03"), trotz des DateTimeValue()-Fixes in v1.22.11** – per Screenshot vom Nutzer eindeutig bestätigt (alle Zeilen, Critical UND Warning, durchgehend Jahr 3926). Das bedeutet: **meine Root-Cause-Annahme aus der letzten Sitzung war ebenfalls noch nicht die vollständige Erklärung**, oder `DateTimeValue()` verarbeitet den ISO-Text auf dieselbe fehlerhafte Weise wie zuvor `Value()`. **Dies ist jetzt der wichtigste offene Punkt für die nächste Sitzung.** Empfohlener nächster Schritt: NICHT wieder blind eine neue Formel raten, sondern zuerst den tatsächlichen Rohwert von `r.timestamp` sichtbar machen (z. B. temporär ungefiltert in einem Diagnose-Feld anzeigen, ohne jede Umwandlung), um zu sehen, was Agent 4 wirklich liefert, bevor die nächste Konvertierung geschrieben wird.
+
+3. **RunSummary-Einträge im Audit Trail weiterhin nutzlos** – zeigen nur rohen Log-Text ohne erkennbaren Bezug zum eigentlichen Fehler (`ERROR | code=n/a | message=n/a`). Nutzerwunsch: Fehlerklassifikation analog zur bereits vorhandenen E-Mail-Fehlerklassifikation, ggf. neue Spalte "Error Code" in der zentralen Audit-Trail-Tabelle. **Nicht umgesetzt, größeres Feature**, siehe eigener Backlog-Punkt unten.
+
+4. **Reset-Knöpfe weiterhin ohne jede Wirkung** – Screenshot bestätigt: "New since reset - Critical: 8 Warnings: 10" ist identisch mit den Gesamtzahlen ("Critical (total): 8", "Warnings (total): 10"), d. h. die Baseline steht weiterhin auf 0, obwohl die Knöpfe sichtbar und (laut IfError-Fix der letzten Runde) jetzt eigentlich mit Fehlermeldung reagieren sollten, falls der Aufruf scheitert. Da der Nutzer keine Fehlermeldung erwähnt, aber auch keine Wirkung sieht, bleibt unklar, ob (a) der Klick den Server-Aufruf überhaupt auslöst, oder (b) der Aufruf "erfolgreich" zurückkommt, aber Agent 6 den SharePoint-Wert aus einem eigenen Grund nicht tatsächlich schreibt. **Nutzer-Wunsch (neu):** Die Reset-Knöpfe sollen entweder ausgeblendet werden, solange eine Betätigung ohnehin wirkungslos bliebe, oder ihre Betätigung soll "gepuffert" (später nachgeholt) werden, statt stillschweigend ins Leere zu laufen. **Nächster Schritt:** Nutzer sollte nach dem nächsten Klick gezielt in Power Automate den Ausführungsverlauf von Agent 6 prüfen (läuft überhaupt ein neuer Eintrag? mit welchem Ergebnis?) – das trennt eindeutig zwischen "Klick erreicht den Flow nicht" und "Flow läuft, ändert aber nichts".
+
+**Damit bleiben 4 zentrale Punkte für die nächste Sitzung offen: Start-Refresh, Datumsanzeige (jetzt höchste Priorität, da bereits zweimal fehlgeschlagen), Reset-Knöpfe (inkl. neuem Ausblenden/Puffern-Wunsch), sowie das größere Error-Code-Feature für den Audit Trail.**
+
+---
+
+## 📋 Sitzungsende-Zusammenfassung (2026-09-03, ~16:23 Uhr): Übergabe an nächste Sitzung
+
+**Was heute erreicht wurde:**
+- Root Cause für den Refresh-Sperre-Bug gefunden und (soweit code-seitig möglich) behoben – Wirkung noch nicht abschließend bestätigt.
+- Ein zusätzlicher, unabhängiger Agent-4-Fehler (`select()`-Funktion) gefunden und behoben, bestätigt über den Power-Automate-Ausführungsverlauf.
+- Audit-Trail-UX verbessert: "Loading recent alerts..."-Anzeige + "Refresh now"-Knopf ergänzt.
+- Reset-Knopf-Aufrufe gegen stille Formel-Abbrüche abgesichert (`IfError`).
+- Maintenance-Tab-Versionslink-Lesbarkeit behoben.
+- Ein eigener YAML-Strukturfehler (durch eine unvollständige Edit-Operation) sofort gefunden und behoben, bevor er weitere Folgeprobleme verursachte.
+
+**Was NICHT erreicht wurde (höchste Priorität für nächste Sitzung):**
+- Die Datumsanzeige im Audit Trail ist trotz ZWEIER unabhängiger Fix-Versuche (unterschiedliche Root-Cause-Theorien) weiterhin komplett falsch. **Für die nächste Sitzung: zuerst den rohen, unveränderten Wert von `r.timestamp` sichtbar machen, bevor eine dritte Formel geraten wird.**
+- Der automatische Start-Refresh funktioniert weiterhin nicht, trotz behobener Guard-Sperre.
+- Die Reset-Knöpfe zeigen weiterhin keine Wirkung; neuer Wunsch, sie bei Wirkungslosigkeit auszublenden oder ihre Aktion zu puffern.
+- Das Error-Code-Feature für den Audit Trail ist noch gar nicht begonnen.
+
+**Empfehlung für den Sitzungsstart morgen:** Mit der Datumsanzeige beginnen (höchste Priorität, zweimal fehlgeschlagen), dabei zuerst diagnostizieren statt sofort erneut zu fixen.
 
 ---
 
