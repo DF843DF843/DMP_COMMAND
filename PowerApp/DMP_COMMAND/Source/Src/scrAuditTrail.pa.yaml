@@ -397,6 +397,7 @@ Screens:
                         Wrap: =false
                         X: =920
                         Y: =44
+                  - btnAuditTrailOpenFile:
                       Control: Classic/Button@2.2.0
                       Properties:
                         BorderColor: =RGBA(0,206,125,0.6)
