@@ -13,6 +13,16 @@ When the user writes "wir arbeiten an DMP_Command weiter" or similar, first read
 
 The OneDrive `Documentation` folder is the documentation/distribution copy only. Keep documentation synchronised after the local worktree change is complete; do not make it the active development worktree.
 
+**Reconfirmed by the user on 2026-09-22 — keep reminding proactively:** The user explicitly
+asked to keep being reminded that this OneDrive/SharePoint-synced location previously caused
+a real storage/synchronisation blocking error. A live re-test on 2026-09-22 showed that basic
+writes and even `git init` succeed here right now, but the user still decided to **keep
+`C:\PowerAppWork\DMP_COMMAND_Solution` as the only Git/source working copy** rather than move
+Git operations into this OneDrive folder, specifically because of that earlier real incident
+and the generally known risk of OneDrive's sync engine colliding with an active Git
+repository's internal file writes. Do not propose moving the Git working copy into OneDrive
+again without re-raising this history first.
+
 ## Mandatory first reads
 
 1. `Documentation/DMP COMMAND_Mission_und_KI_Arbeitsregeln.md`
@@ -28,13 +38,25 @@ If a change touches the Power App help/manual content, keep `DMP_COMMAND_Operati
 
 - Git working copy: `C:\PowerAppWork\DMP_COMMAND_Solution`
 - Git remote: `https://github.com/DF843DF843/DMP_COMMAND.git`
-- **Known issue (found 2026-09-22):** `C:\PowerAppWork\DMP_COMMAND_Solution\.git` exists as a
-  directory but is completely empty (0 entries) — there is currently no working local Git
-  history/remote link, even though all working files (`Documentation`, `PowerApp`,
-  `PowerAutomate`, `bin`) are present and intact. This does not block file-based work or
-  `pac` deployments, but no commits/history are possible until repaired (for example by
-  re-cloning the remote into a sibling folder and reconciling any local-only changes). Verify
-  with `git -C "C:\PowerAppWork\DMP_COMMAND_Solution" status` before assuming Git works.
+- **Git repaired on 2026-09-22 (previously broken, now fixed):** The old `.git` directory was
+  found completely empty (no history/remote link) even though all working files were intact.
+  Root cause unknown/not investigated further. Fix applied: the broken `.git` was deleted, a
+  full safety backup of the working files was made
+  (`C:\PowerAppWork\DMP_COMMAND_Solution_local_backup_20260922` and
+  `..._pre_reclone_staging`, safe to delete once this recovery is confirmed stable over a few
+  sessions), then a fresh `git clone https://github.com/DF843DF843/DMP_COMMAND.git` was done
+  directly into the canonical path. The remote's last commit (`f823e79`, dated before
+  2026-09-04) was behind essentially all work done since Git broke. All local-only/newer
+  files (Agent 7 full history through `7.11.47`, Agent 2/4/6 workflow updates, several
+  PowerApp screens, all Documentation including this guide, the Streams concept +
+  `Streams_ListTemplates`) were diffed file-by-file against the fresh clone and merged
+  forward, then committed as `694d434`. `git status`/`git log` are confirmed clean/working.
+  Verify with `git -C "C:\PowerAppWork\DMP_COMMAND_Solution" status` that this is still true;
+  if `.git` is ever found broken/empty again, repeat this same diff-and-merge-forward
+  recovery procedure — never blindly overwrite the working files from a fresh clone without
+  first diffing, since local files are routinely ahead of the last pushed commit.
+- The recovered commit `694d434` has **not yet been pushed to `origin`** (local commit only,
+  intentionally deferred pending user confirmation) — ask the user whether to `git push` it.
 - OneDrive/team-file root: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent`
 - OneDrive documentation copy: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent\Documentation`
 - Power App version file in synced SharePoint library: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent\PowerApp_Storage\PowerApp_Version.txt`
@@ -94,7 +116,7 @@ After every deployment:
 4. State the required live test.
 5. Remind the user to continue in a new session to reduce token/credit usage.
 
-## Current important state as of 2026-09-22 07:11
+## Current important state as of 2026-09-22 07:52
 
 ### Active deployment
 
@@ -199,8 +221,34 @@ Still NOT implemented in `7.11.47` (see backlog for the full current list):
 - `Sequence` field decision, Power App screen live-binding, and the first Dev end-to-end test.
 
 No end-to-end run that creates real occurrence rows has been performed. `7.11.46` was
-user-confirmed open/save/activate in the designer; `7.11.47` has not been designer-confirmed
-yet — this is the mandatory first check in the next session.
+user-confirmed open/save/activate in the designer; **`7.11.47` was user-confirmed on
+2026-09-22 to open error-free in the designer** — save/activate was not explicitly
+restated for `7.11.47` (only "opens error-free"), so re-verify save/activate succeeds too
+before assuming full designer-parity with `7.11.46`.
+
+### Confirmed work order for the rest of C5/Streams (user-approved 2026-09-22)
+
+Do NOT reorder this without asking again; the user explicitly approved this sequence in
+response to the open `CaseId`/active-case-source question:
+
+1. Harden the current C-strand (Agent 7) a little further, without inventing a real
+   active-case source yet: rule-level `TimeOfDay`/`TimeZone` existence validation, a real
+   per-item error counter, and a simple non-empty validation on the caller-supplied `CaseId`
+   (explicitly marked as a temporary placeholder).
+2. Insert **B1–B3** from the Streams concept (Section 8) next, ahead of finishing the rest of
+   C: extend `DMP Command Configuration` with the two extra Pre-/Post-Default mode columns
+   (B1), move the app from the 2×2 boolean toggle to a 5-value operating-mode enum with a
+   guard-flag pattern (B2), then create the `DMP Command Checklist Default Case Context` list
+   and the `popDefaultCaseContext` popup (B3). B3 is what finally gives Agent 7 a real,
+   authoritative `CaseId` source instead of a caller-supplied placeholder.
+3. Only then replace Agent 7's raw `CaseId` trigger input with a real lookup against
+   `Default Case Context`, and finish C4/C6/C7 (per-occurrence status/approval actions, the
+   remaining Agent 7 actions, and the live Power App binding for `scrTaskOccurrences`).
+4. Run C8 (the first real non-destructive Dev end-to-end/idempotency test) — only meaningful
+   once Post-Default actually exists as a real mode (i.e. after B2).
+5. B4–B5 (Agent 5 and Agent 2 adjustments for the 5 modes) can run in parallel with 3./4.
+6. The A-strand (CoS Leader checklist, 4-eyes principle, e-mail automation) is independent and
+   has no urgency relative to B/C — start whenever, per user priority at the time.
 
 ### C5 work still open
 
@@ -233,11 +281,27 @@ reliable created/skipped counters (former item 6, partially). Still open:
 1. Read this guide, the active backlog, release notes, and
    `Documentation/Streams_ListTemplates/README.md`.
 2. Confirm PAC still targets `DBG Team Productivity (Dev)`.
-3. **Ask the user to open, save, and activate Agent 7 `7.11.47` in the designer first** (not
-   yet confirmed) and report any error before making further changes.
-4. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.46` package.
-5. Continue with the still-open C5 items above using small designer-validated increments.
-   Never introduce several unvalidated connector fields in one deployment.
+3. **PowerApp local sync still pending (requested 2026-09-22, not yet done):** The user asked
+   to also clean up and rebuild the local PowerApp Canvas App sync (there are several stale
+   `.msapp` fragments in `PowerApp\DMP_COMMAND\` — `DMP_COMMAND.msapp`,
+   `DMP_COMMAND_Solution_counter_and_legend_fix.msapp`,
+   `DMP_COMMAND_Solution_counter_fix.msapp`, `DMP_COMMAND_Solution_pending_fixes.msapp` —
+   likely leftovers from earlier debugging sessions). **Important before touching this:** a
+   fresh `pac canvas download` + `unpack` would overwrite `PowerApp\DMP_COMMAND\Source\Src\`,
+   which currently contains real, not-yet-published-to-Studio local edits (at minimum
+   `scrTaskOccurrences.pa.yaml`, and possibly other pending screen changes) — Canvas Apps can
+   only be published back to the environment by the user manually loading the packed
+   `.msapp` into Power Apps Studio (no `pac` command does this automatically). Do the
+   download/unpack into a separate temporary folder first, diff against the current
+   `Source\Src`, and only then decide with the user what to keep/replace, exactly like the
+   Git recovery above — never blindly overwrite.
+4. **Ask the user to open, save, and activate Agent 7 `7.11.47` in the designer** (opening was
+   already confirmed 2026-09-22; save/activate was not explicitly restated) and report any
+   error before making further changes.
+5. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.46` package.
+6. Continue with the confirmed work order above (harden C a little → B1–B3 → rest of C → C8 →
+   B4–B5 → A-strand), using small designer-validated increments. Never introduce several
+   unvalidated connector fields in one deployment.
 
 ### Other previously open state
 
