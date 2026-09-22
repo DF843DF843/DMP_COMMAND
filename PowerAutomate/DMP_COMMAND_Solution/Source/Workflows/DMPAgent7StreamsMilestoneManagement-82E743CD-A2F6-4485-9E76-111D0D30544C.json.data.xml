@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Workflow WorkflowId="{82e743cd-a2f6-4485-9e76-111d0d30544c}" Name="DMP Agent 7 (Streams &amp; Milestone Management) [0.2.0]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Workflow WorkflowId="{82e743cd-a2f6-4485-9e76-111d0d30544c}" Name="DMP Agent 7 (Streams &amp; Milestone Management) [0.3.1]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <JsonFileName>/Workflows/DMPAgent7StreamsMilestoneManagement-82E743CD-A2F6-4485-9E76-111D0D30544C.json</JsonFileName>
   <Type>1</Type>
   <Subprocess>0</Subprocess>
@@ -22,6 +22,6 @@
   <ModernFlowType>0</ModernFlowType>
   <PrimaryEntity>none</PrimaryEntity>
   <LocalizedNames>
-    <LocalizedName languagecode="1033" description="DMP Agent 7 (Streams &amp; Milestone Management) [0.2.0]" />
+    <LocalizedName languagecode="1033" description="DMP Agent 7 (Streams &amp; Milestone Management) [0.3.1]" />
   </LocalizedNames>
 </Workflow>

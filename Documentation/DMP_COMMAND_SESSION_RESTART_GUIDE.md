@@ -140,21 +140,48 @@ After every deployment:
 ### Active deployment
 
 - Work only in `DBG Team Productivity (Dev)`. Production was not changed.
-- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.11.48`.
-- Agent 7 is present as `DMP Agent 7 (Streams & Milestone Management) [0.2.0]`.
-- The `[0.2.0]` suffix is the workflow component display name, not the solution version.
+- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.34.46`.
+- Agent 7 is present as `DMP Agent 7 (Streams & Milestone Management) [0.3.1]`.
+- The `[0.3.1]` suffix is Agent 7's own component version label, not the solution version —
+  **but the solution version is not a free build counter either.** Per the checksum rule
+  below, it must always equal the sum of all 8 component versions' segments.
 - `7.11.46` was user-confirmed as saveable/activatable in the designer. `7.11.47` (the
   action/date-range contract rewrite below) was user-confirmed on 2026-09-22 to open
   error-free and to be activated ("Ein"); a separate Save-only test was not possible because
   the designer only enables Save after a real change.
-- `7.11.48` (the hardening below — rule TimeOfDay/TimeZone validation, per-item error
-  counter, CaseId placeholder validation) was packed and imported via
-  `pac solution import --publish-changes` in this session (2026-09-22) and published
-  successfully; Power Automate reported "The original workflow definition has been
+- The hardening (rule TimeOfDay/TimeZone validation, per-item error counter, CaseId
+  placeholder validation) was packed and imported via `pac solution import
+  --publish-changes` in this session (2026-09-22) and published successfully as solution
+  `7.11.48` at the time; Power Automate reported "The original workflow definition has been
   deactivated and replaced" (expected). **The user has not yet reopened, saved, or
-  reactivated Agent 7 for `7.11.48`** — do that check first in the next session. Unlike
+  reactivated Agent 7 for this change** — do that check first in the next session. Unlike
   `7.11.47`, this version has real content changes, so Save will not be greyed out and is a
   genuine test.
+- **Versioning correction (2026-09-22, same session):** the solution version `7.11.48` was
+  itself found to be wrong — it was a free-running build counter, not the required checksum
+  (see the new rule in `DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section I). Agent 7's
+  own component label had also been left stale at `[0.2.0]` since `7.11.36` despite many real
+  iterations. Corrected: Agent 7 → `[0.3.1]` (0.3.0 retroactively = the `7.11.47` contract
+  rewrite, 0.3.1 = the `7.11.48` hardening), solution version recomputed and re-imported as
+  `7.34.46` (no functional flow change from `7.11.48`, only the version labels). See the
+  component table below.
+
+**Solution-version checksum table (current, 2026-09-22):**
+
+| Component | Version | Major | Minor | Patch |
+|---|---|---|---|---|
+| Agent 1 | 1.0.8 | 1 | 0 | 8 |
+| Agent 2 | 1.0.9 | 1 | 0 | 9 |
+| Agent 3 | 1.1.4 | 1 | 1 | 4 |
+| Agent 4 | 1.4.4 | 1 | 4 | 4 |
+| Agent 5 | 1.1.6 | 1 | 1 | 6 |
+| Agent 6 | 1.3.1 | 1 | 3 | 1 |
+| Agent 7 | 0.3.1 | 0 | 3 | 1 |
+| Power App | 1.22.13 | 1 | 22 | 13 |
+| **Σ (= Solution version)** | **7.34.46** | **7** | **34** | **46** |
+
+Recompute this table and the resulting solution version on every future component version
+bump — never bump the solution version number in isolation.
 
 ### Agent 7 activation root cause and verified fix
 
@@ -241,21 +268,21 @@ designer-opened/activated by the user**):
 - Response returns `success`, `message`, `createdCount`, `skippedCount`, `validationError`.
 
 Still NOT implemented in `7.11.47` (see backlog for the full current list):
-- ~~Rule-level `TimeOfDay`/`TimeZone` existence validation before `convertTimeZone`~~ —
-  prepared in local source 2026-09-22, **not yet packed/imported** (see below).
-- ~~A real per-item error counter~~ — prepared in local source 2026-09-22 (Scope/catch
-  around `CREATE_Occurrence`), **not yet packed/imported** (see below).
+- ~~Rule-level `TimeOfDay`/`TimeZone` existence validation before `convertTimeZone`~~ — done
+  in the `7.34.46` hardening (see below), imported and published in Dev.
+- ~~A real per-item error counter~~ — done in the `7.34.46` hardening (Scope/catch around
+  `CREATE_Occurrence`, see below), imported and published in Dev.
 - Authoritative active-case/mode source resolution (open user decision, see backlog).
 - `Sequence` field decision, Power App screen live-binding, and the first Dev end-to-end test.
 
 No end-to-end run that creates real occurrence rows has been performed. `7.11.46` was
 user-confirmed open/save/activate in the designer; `7.11.47` was user-confirmed on
 2026-09-22 to open error-free and to be activated ("Ein") — Save could not be separately
-tested because the designer only enables Save after a real change. `7.11.48` (below) is the
-first version since `7.11.46` with real content changes, so it is the next genuine
-save/activate test.
+tested because the designer only enables Save after a real change. The hardening now live as
+`7.34.46` (below) is the first version since `7.11.46` with real content changes, so it is
+the next genuine save/activate test.
 
-### Step 1 hardening deployed as `7.11.48` on 2026-09-22 (pending user save/activate)
+### Step 1 hardening deployed 2026-09-22 (pending user save/activate) — now solution `7.34.46`
 
 Per the confirmed work order below, item 1 ("harden Agent 7 a little further") was
 implemented in
@@ -265,7 +292,12 @@ committed to Git, then packed and imported as solution version `7.11.48` via
 "The original workflow definition has been deactivated and replaced", expected for a
 workflow-definition update). Local JSON-parse, action-name-uniqueness, and runAfter-graph
 checks all passed before packing. **The user still needs to reopen Agent 7 in the designer,
-save, and reactivate it** — do that check first in the next session. Changes:
+save, and reactivate it** — do that check first in the next session. Immediately afterwards
+in the same session, `7.11.48` was found to be a wrong, free-running solution version number
+(see the checksum rule in `DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section I) and
+Agent 7's own component label had been left stale at `[0.2.0]`; both were corrected in a
+second, versioning-only re-import to `[0.3.1]`/solution `7.34.46` — no further flow-logic
+change beyond what is listed here. Changes:
 
 - `VALIDATE_CaseId`: a new If-action after `VALIDATE_RequestedAction` that sets
   `ValidationError` when `triggerBody()?['text_3']` (CaseId) is blank/whitespace-only,
@@ -372,10 +404,10 @@ reliable created/skipped counters (former item 6, partially). Still open:
    download/unpack into a separate temporary folder first, diff against the current
    `Source\Src`, and only then decide with the user what to keep/replace, exactly like the
    Git recovery above — never blindly overwrite.
-4. **Ask the user to open, save, and reactivate Agent 7 `7.11.48` in the designer** (this is
-   the first version since `7.11.46` with real content changes, so Save is a genuine test
-   this time) and report any error before making further changes.
-5. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.47` package.
+4. **Ask the user to open, save, and reactivate Agent 7 (now solution `7.34.46`) in the
+   designer** (this is the first version since `7.11.46` with real content changes, so Save
+   is a genuine test this time) and report any error before making further changes.
+5. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.48` package.
 6. Continue with the confirmed work order above (harden C a little → B1–B3 → rest of C → C8 →
    B4–B5 → A-strand), using small designer-validated increments. Never introduce several
    unvalidated connector fields in one deployment.

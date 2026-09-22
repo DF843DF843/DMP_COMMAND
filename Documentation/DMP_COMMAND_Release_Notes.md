@@ -280,8 +280,18 @@ Backend:
 
 ## Agent (Flow) Changes
 
-### Agent 7 (Streams & Milestone Management) - v0.2.0 (current Dev component name)
+### Agent 7 (Streams & Milestone Management) - v0.3.1 (current Dev component name)
 
+- Solution `7.34.46` (2026-09-22) - **Versioning correction, no functional flow change beyond
+  `7.11.48`.** Established that the Solution version is a checksum (Σ Major, Σ Minor, Σ Patch
+  across all 7 agent components + the Power App, 8 components total), not a free-running
+  build counter. Corrected Agent 7's own component label from the stale `[0.2.0]` (unchanged
+  across all `7.11.36`–`7.11.48` iterations) to `[0.3.1]`: `0.3.0` retroactively covers the
+  `RequestedAction`/`FromDate`-`ToDate` contract rewrite (`7.11.47`), `0.3.1` covers the
+  hardening (`7.11.48`, see below). Recomputed Solution version from all current component
+  versions (Agents 1-6 unchanged, Agent 7 `0.3.1`, Power App `v1.22.13`): Σ Major=7, Σ
+  Minor=34, Σ Patch=46 → `7.34.46`. See `DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section
+  I for the exact formula; recompute this checksum on every future component version change.
 - Solution `7.11.48` (2026-09-22) - Deployed the hardening below to Dev: rule-level
   `TimeOfDay`/`TimeZone` existence validation per Daily rule (`CHECK_RuleScheduleFieldsValid`,
   skips gracefully instead of failing the whole run in `convertTimeZone`); a real per-item

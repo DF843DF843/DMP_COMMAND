@@ -25,19 +25,25 @@ Dieses Dokument war auf ca. 2650 Zeilen angewachsen (chronologisches Arbeitsprot
 
 ## 🔵 Agent 7 occurrence generation – activated in Dev, final C5 contract pending
 
-**Deployed to Dev 2026-09-22:** Solution `7.11.48` was imported and published in
-`DBG Team Productivity (Dev)` (`pac solution import --publish-changes`, succeeded; Power
-Automate reported "The original workflow definition has been deactivated and replaced" as
-expected for a workflow-definition update). **Agent 7 needs to be reactivated in the
-designer and saved** before it can run — this is the real save/activate test for this
-release (unlike `7.11.47`, this version has real content changes, so Save will not be
-greyed out).
+**Deployed to Dev 2026-09-22, corrected to `7.34.46` same day:** Solution `7.11.48` was
+imported and published in `DBG Team Productivity (Dev)` (`pac solution import
+--publish-changes`, succeeded; Power Automate reported "The original workflow definition has
+been deactivated and replaced" as expected for a workflow-definition update). **Agent 7
+needs to be reactivated in the designer and saved** before it can run — this is the real
+save/activate test for this release (unlike `7.11.47`, this version has real content
+changes, so Save will not be greyed out). Immediately afterwards, `7.11.48` was found to be
+a wrong, free-running version number: the Solution version MUST be the checksum (Σ Major, Σ
+Minor, Σ Patch) of all 8 components (7 agents + Power App), and Agent 7's own label had
+stayed stale at `[0.2.0]` since `7.11.36`. Corrected in a second, versioning-only re-import:
+Agent 7 → `[0.3.1]`, Solution → **`7.34.46`** (no further flow-logic change). See
+`DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section I for the formula and the component
+table.
 
 **Verified Dev state (2026-09-22, pre-`7.11.48`):** Solution `7.11.47` was imported and
 published only in `DBG Team Productivity (Dev)` (Agent 7 workflow component `[0.2.0]`).
 The user confirmed it opens error-free and is activated ("Ein"); Save could not be
 separately tested because the designer only enables Save after a real change — which
-`7.11.48` now provides.
+`7.34.46` now provides.
 
 The misleading `$schema` designer failure (pre-`7.11.46`) was isolated to an invalid
 SharePoint Create Item parameter. Task Occurrences `ScheduleSlot` is a Choice and must be sent
