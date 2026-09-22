@@ -23,16 +23,62 @@ and the generally known risk of OneDrive's sync engine colliding with an active 
 repository's internal file writes. Do not propose moving the Git working copy into OneDrive
 again without re-raising this history first.
 
-## ⚡ Latest session recap (2026-09-22, evening session, read this first)
+## ⚡ Latest session recap (2026-09-22, continuation session - ring bug hunt, baseline logic, msapp backup rule)
+
+Continuation of the same-day evening session below, driven by the user loading each packed
+version in Studio and reporting exact behavior. Current true state:
+
+- **Power App:** local source is at `v1.22.27`, packed as `PowerApp/DMP_COMMAND/DMP_COMMAND.msapp`.
+  `v1.22.25` (second PA1001 YAML bug in `scrTaskOccurrences.pa.yaml`) confirmed loading fine.
+  `v1.22.26` (System Health ring showing a wrong percentage instead of "N/A", and a details
+  popup missing most categories/agents) confirmed working by the user, with two follow-up
+  issues reported and fixed in `v1.22.27`: Critical/Warning ring segments and legend rows must
+  respect the existing Critical/Warning counter-baseline "confirm" mechanism (a confirmed event
+  turns green even if the raw Audit Trail still contains it), and the legend popup needed an
+  explicit scrollbar once expanded to 9 categories + 7 agents. `v1.22.27` is not yet tested by
+  the user.
+- **NEW rule established 2026-09-22, now applied - local backup copy of the last
+  confirmed-error-free-loading Power App version:** see
+  `DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section C, rule 9b, for the full rule text.
+  Summary: `DMP_COMMAND.msapp` (no suffix) is always the newest, not-yet-confirmed build;
+  `DMP_COMMAND_v<version>.msapp` is always exactly one file, the most recently
+  user-confirmed-to-load-without-error version, replaced only once a newer version is also
+  confirmed. Applied for the first time this session: rebuilt `DMP_COMMAND_v1.22.26.msapp`
+  from git commit `4cfc557` (via `git worktree add` on that commit, `pac canvas pack` there,
+  move the file, remove the worktree) since `v1.22.26` was the last confirmed-loading version;
+  deleted the old, no-longer-relevant `DMP_COMMAND_v1.22.18.msapp`. Only ever one backup file
+  should exist at a time going forward.
+- **Survey on SharePoint Lists.docx** (OneDrive-only, not in Git) is now the canonical live
+  SharePoint schema reference - see the "Canonical live SharePoint schema reference" note
+  further below in this file for the full cross-check and its one important caveat: the user
+  confirmed real Teams/SharePoint display inconsistencies can make an existing list simply not
+  appear in that export (happened for `DMP Command Checklist CoS Leader`, confirmed live via a
+  user screenshot despite being absent from the survey) - never conclude a list doesn't exist
+  from that document alone.
+- **B1 (Configuration columns):** the user recreated `DMP Command Configuration.csv` with all
+  8 mode-value columns filled in for every row (both doc copies refreshed). **Still to confirm
+  with the user:** whether the 4 new columns/values are also live in the real SharePoint list
+  yet, or only prepared in the CSV so far - the Backlog B1 entry has the open question.
+- **Agent 2 `EmailsProcessed_DMP`/`EmailsProcessed_NoDMP` naming:** investigated in detail and
+  discussed with the user; genuinely confusingly named (the "No DMP" path, which is actually
+  the normal/default case rather than a fallback, increments the column called `..._DMP`, and
+  vice versa) but deliberately NOT fixed - the user decided the SharePoint-column-rename +
+  flow-reference + reimport risk/cost isn't worth it for a cosmetic naming issue. Documented in
+  full in the Backlog (Priorität 3 section) for future reference only.
+
+## ⚡ Session recap (2026-09-22, evening session)
 
 Continuation of the same-day afternoon session. This session was driven almost entirely by
 the user actually loading the packed app in Studio and reporting exact error text/behavior
 after each iteration - confirmed far more efficient than guessing. Current true state:
 
 - **Power App:** local source is at `v1.22.24`, packed as `PowerApp/DMP_COMMAND/DMP_COMMAND.msapp`
-  (filename intentionally has **no version suffix anymore** - the user asked to stop
-  accumulating multiple stale versioned `.msapp` files; old ones were deleted). Always
-  re-`pac canvas pack` fresh into this exact same filename for the next delivery.
+  (filename intentionally has **no version suffix** - the user asked to stop accumulating
+  multiple stale versioned `.msapp` files; old ones were deleted). Always re-`pac canvas pack`
+  fresh into this exact same filename for the next delivery. **Superseded 2026-09-22 (see the
+  newer recap above): exactly one versioned backup copy of the last confirmed-loading version
+  is now deliberately kept alongside it (rule 9b) - this is not a reversion to "multiple stale
+  files", just one single, always-current backup.**
 - **Power Automate solution:** unchanged this session (still `7.34.48`, no flow edits) - only
   the Power App moved. No new Solution reimport was needed or performed.
 - **Real bugs found and fixed this session (all via live user testing, not guesswork):**
