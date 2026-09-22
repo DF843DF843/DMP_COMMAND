@@ -1151,8 +1151,8 @@ Screens:
                                           With(
                                               {
                                                   vStatusCheckColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(IsBlank(varStatusCallError) || varStatusCallError="", "rgb(0,206,125)", "rgb(255,69,58)"))),
-                                                  vCriticalColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Coalesce(varAuditFailedCount, 0)>0, "rgb(255,69,58)", "rgb(0,206,125)"))),
-                                                  vWarningsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Coalesce(varAuditWarningCount, 0)>0, "rgb(255,159,10)", "rgb(0,206,125)"))),
+                                                  vCriticalColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, "rgb(255,69,58)", "rgb(0,206,125)"))),
+                                                  vWarningsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, "rgb(255,159,10)", "rgb(0,206,125)"))),
                                                   vOperatingStateColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varLedOperationalState="Red" || varLedApplicationMode="Red", "rgb(255,69,58)", If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", "rgb(255,159,10)", "rgb(0,206,125)"))),
                                                   vEmergencyReportColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varLedEmergencyReport="Red", "rgb(255,69,58)", If(varLedEmergencyReport="Yellow", "rgb(255,159,10)", "rgb(0,206,125)"))),
                                                   vInternalDomainsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(varInternalDomainsExists, "rgb(0,206,125)", "rgb(255,69,58)"))),
@@ -1232,9 +1232,13 @@ Screens:
                                     BorderColor: =RGBA(0,206,125,0.6)
                                     BorderThickness: =2
                                     Fill: =If(varDarkMode,RGBA(20,18,30,0.97),RGBA(255,255,255,0.98))
+                                    Height: =300
                                     LayoutAlignItems: =LayoutAlignItems.Stretch
                                     LayoutDirection: =LayoutDirection.Vertical
                                     LayoutGap: =5
+                                    LayoutMaxHeight: =300
+                                    LayoutMinHeight: =300
+                                    LayoutOverflowY: =LayoutOverflow.Scroll
                                     PaddingBottom: =10
                                     PaddingLeft: =12
                                     PaddingRight: =12
@@ -1334,7 +1338,7 @@ Screens:
                                               Control: GroupContainer@1.5.0
                                               Variant: ManualLayout
                                               Properties:
-                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Coalesce(varAuditFailedCount, 0)>0, RGBA(255,69,58,1), RGBA(0,206,125,1))))
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, RGBA(255,69,58,1), RGBA(0,206,125,1))))
                                                 Height: =14
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
@@ -1352,7 +1356,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
-                                                Text: ="Critical Events - " & If(Coalesce(varAuditFailedCount, 0)>0, "Critical (" & varAuditFailedCount & ")", "None")
+                                                Text: ="Critical Events - " & If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, "Critical (" & Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0) & " new since reset)", "None")
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -1370,7 +1374,7 @@ Screens:
                                               Control: GroupContainer@1.5.0
                                               Variant: ManualLayout
                                               Properties:
-                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Coalesce(varAuditWarningCount, 0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))))
                                                 Height: =14
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
@@ -1388,7 +1392,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
-                                                Text: ="Warnings - " & If(Coalesce(varAuditWarningCount, 0)>0, "Warning (" & varAuditWarningCount & ")", "None")
+                                                Text: ="Warnings - " & If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, "Warning (" & Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0) & " new since reset)", "None")
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20

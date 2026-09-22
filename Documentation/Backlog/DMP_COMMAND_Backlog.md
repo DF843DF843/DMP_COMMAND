@@ -90,6 +90,15 @@ in `DMP Command Configuration.csv` (beide Kopien) — **noch nicht in die echte 
 bereits getrennten Power-Platform-Umgebung `DBG Team Productivity (Dev)`/`(UAT)`, nicht einem
 Konfigurationswert (Klarstellung 2026-09-22).
 
+**Update 2026-09-22 (Nachmittag):** Nutzer hat `DMP Command Configuration.csv` neu erstellt und
+alle 8 Werte-Spalten für jede Zeile befüllt (beide Doku-Kopien synchronisiert, 32 KB, vorher
+26 KB). **Noch zu klären: ist das nur die Vorbereitung in der CSV-Datei, oder wurden die 4
+neuen Spalten inkl. Werte auch schon in der echten SharePoint-Liste `DMP Command Configuration`
+angelegt?** Die Survey-Datei (Stand vor diesem Update) zeigte dort noch nur die 4
+ursprünglichen `Value - PROD/SIMU (NODMP/DMP)`-Spalten, keine der 4 neuen Pre-/Post-Default-
+Spalten. Solange das nicht bestätigt ist, bleibt B1 formal offen.
+
+
 **B2 – 5-Werte-Zustandsmodell in der App:** Implementiert 2026-09-22 in
 `PowerApp/DMP_COMMAND/Source/Src/scrHome.pa.yaml` + `App.pa.yaml` (App-Version `v1.22.15`,
 noch nicht vom Nutzer in Studio geladen/gespeichert/getestet). Der bisherige Normal/DMP-Toggle
