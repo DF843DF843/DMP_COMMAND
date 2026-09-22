@@ -23,6 +23,91 @@ and the generally known risk of OneDrive's sync engine colliding with an active 
 repository's internal file writes. Do not propose moving the Git working copy into OneDrive
 again without re-raising this history first.
 
+## ⚡ Latest session recap (2026-09-22, afternoon session, read this first)
+
+This was a very long, iterative session covering: the Solution-version checksum rule,
+B1/B2 of the Streams 5-mode concept, and a long chain of Power App bugfixes surfaced only
+after the user actually loaded the packed app in Studio. Current true state:
+
+- **Power Automate solution:** `7.34.48` imported/published in `DBG Team Productivity (Dev)`.
+  Agent 7 flow logic unchanged since the `7.11.48` hardening (see below); only the version
+  label/number moved (checksum corrections), no new flow logic this session beyond that.
+  **User still needs to open/save/reactivate Agent 7 in the designer** - not confirmed this
+  session.
+- **Power App:** local source is at `v1.22.18` (`PowerApp_Version.txt` updated, packed as
+  `PowerApp/DMP_COMMAND/DMP_COMMAND_v1.22.18.msapp`). **Not yet confirmed working end-to-end
+  by the user** - see "Still open/unconfirmed" below. The user has been loading/saving each
+  iteration in Power Apps Studio directly from this local `.msapp` file (File → Open → Browse
+  this computer), NOT via any `pac` publish command - that is the established, correct
+  workflow for this Canvas App (the user explicitly confirmed this is their process).
+- **B1 (Configuration list):** Decided as "Variante B" (8 value columns total: existing 4 +
+  new `Value - PROD (Pre-Default)`, `Value - PROD (Post-Default)`, `Value - SIMU (Pre-Default)`,
+  `Value - SIMU (Post-Default)`). Exact values for 26 rows are prepared in
+  `DMP Command Configuration.csv` (both copies) but **the user has not yet added these 4
+  columns/values to the live SharePoint list** - this is a manual, no-API-access task for the
+  user, not yet done as far as this session confirmed.
+- **B2 (5-mode state model):** Implemented in `scrHome.pa.yaml`/`App.pa.yaml`: the old
+  `tglOperationalState` toggle is replaced by `btnOperationalModeAdvance`, a single button
+  that always shows "current phase -> next phase" and advances exactly one step through the
+  cycle `Normal -> Pre-Default -> DMP -> Post-Default -> Normal` per click (confirmed
+  requirement: after Post-Default the cycle must be able to return to Normal - implemented).
+  New variables `varOperationalMode` (text) and `varOperationalStepCounter` (number, mod 4 for
+  display) sit alongside the pre-existing `varOperationalModeIsDMP` (still derived/kept for
+  backward compatibility with older color/border formulas). A deliberate decision was made
+  NOT to use a native Power Apps Slider control (never used before in this codebase, unverified
+  schema risk) - a styled `Classic/Button` was used instead; only revisit this if the user
+  explicitly still wants a literal drag-slider after seeing the button.
+- **Solution-version-as-checksum rule:** newly established this session, written up in
+  `DMP COMMAND_Mission_und_KI_Arbeitsregeln.md` section I (both copies). Solution version
+  segments = Σ Major/Minor/Patch across all 8 components (7 agent flows + the Power App).
+  Whenever ANY component's own version changes, recompute and re-import. **Open question,
+  not yet answered by the user:** should every Power-App-only version bump always trigger its
+  own dedicated Solution re-import (as was done twice this session), or may Power-App-only
+  checksum updates be batched into the next Solution import that has an actual flow-content
+  reason to run? Ask before assuming either way.
+- **`.msapr` packaging container was stale and has been refreshed** this session (see
+  "PowerApp packaging" section below) - this was the root cause of Agent 7's flow connection
+  repeatedly disappearing after every local repack. Re-verify this stays fixed; if the
+  connection disappears again, redo the same refresh procedure (`pac canvas download` into an
+  isolated scratch folder, replace the `msapp/` subfolder inside `DMP_COMMAND.msapr` with the
+  fresh download's content, re-zip, re-pack).
+
+### Still open / not confirmed by the user by end of session
+
+1. Whether `v1.22.18` (packed, not yet tested) actually fixes the System Health ring - the
+   user's Studio "Formeln"/Advanced Formula Checker panel showed 12 cascading errors all on
+   `imgHeartbeatWheel.Image`, traced to `Table(vFixedSegments, vAgentSegments)` being invalid
+   (Power Fx's `Table()` does not merge existing table variables). Reverted to the
+   `ForAll(Sequence(CountRows(vFixedSegments)+CountRows(vAgentSegments)) As idx, If(...,
+   Index(vFixedSegments, idx.Value), Index(vAgentSegments, ...)))` approach used in an earlier
+   iteration - **use Studio's own "Formeln" advanced checker panel (right-hand panel showing
+   all current formula errors per screen/control) as the primary verification tool for this
+   specific ring bug going forward - it lists every current error precisely, which is far
+   faster than guessing from screenshots.**
+2. Whether the Audit Trail (Detail) date/time bug (recurring "wrong year e.g. 3926, time
+   00:00:00" bug, previously "fixed" multiple times: v1.22.9-v1.22.13, again in v1.22.17) is
+   actually resolved now - the user reported it was still broken even after the v1.22.17 fix,
+   but it is not yet confirmed whether they were actually testing the v1.22.17 `.msapp` or an
+   older cached Studio session (each new pack has been saved under a version-numbered
+   filename, e.g. `DMP_COMMAND_v1.22.17.msapp` then `v1.22.18.msapp` - always confirm the user
+   re-does "File → Open → Browse this computer" for the newest exact file, not just re-tests
+   an already-open Studio tab).
+3. Whether the Release Notes screen now correctly shows Agent 7 and the latest version as the
+   top/current entry - same "are they testing the latest exact packed file" caveat applies.
+4. The color-contrast fix (button text always white) and the Eurex-palette safety-red
+   discussion - not yet re-confirmed visually by the user after the fix.
+5. B1 (SharePoint Configuration columns) and B3 (Default Case Context list + popup) not
+   started/not done - B3 has not been started at all this session.
+6. Whether Agent 7 needs its own status-write-back to `DMP Command Agent Status` (currently
+   only a manually-added placeholder row) - flagged as a backlog item, not implemented.
+
+**Recommended immediate next step for the new session:** ask the user to open the exact
+newest packed file (check `PowerApp/DMP_COMMAND/` for the highest version-numbered `.msapp`)
+fresh in Studio, then use Studio's "Formeln"/Advanced Formula Checker side panel (not just
+visual inspection) to get a precise, complete list of any remaining errors before making
+further changes - this was far more efficient this session than iterating from screenshots
+alone.
+
 ## Mandatory first reads
 
 1. `Documentation/DMP COMMAND_Mission_und_KI_Arbeitsregeln.md`
