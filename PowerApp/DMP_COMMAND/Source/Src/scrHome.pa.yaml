@@ -1184,7 +1184,7 @@ Screens:
                                                       },
                                                       With(
                                                           {
-                                                              vHealthSegments: Table(vFixedSegments, vAgentSegments)
+                                                              vHealthSegments: ForAll(Sequence(CountRows(vFixedSegments) + CountRows(vAgentSegments)) As idx, If(idx.Value <= CountRows(vFixedSegments), Index(vFixedSegments, idx.Value), Index(vAgentSegments, idx.Value - CountRows(vFixedSegments))))
                                                           },
                                                           With(
                                                               {

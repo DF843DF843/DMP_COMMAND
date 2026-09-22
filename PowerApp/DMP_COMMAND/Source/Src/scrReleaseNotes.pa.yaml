@@ -254,7 +254,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.17 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.18 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
                               Wrap: =false
                         - lblReleaseV12215Notes:
                             Control: Label@2.5.1
@@ -267,7 +267,7 @@ Screens:
                               Height: =220
                               Size: =12
                               Text: |-
-                                ="- Simplified the System Health ring's table union to Table(vFixedSegments, vAgentSegments) and fixed a second, separate table-union bug in vGreenFixedSegments (now CountIf(vFixedSegments, ...))" & Char(10) & "- Extended the Agents Active KPI from X/6 to X/7 with a real Agent 7 health check via a direct LookUp against DMP Command Agent Status" & Char(10) & "- Added the missing Agent 7 entry to the Release Notes Agent Changes tab" & Char(10) & "- Fixed poor text contrast on the Operating State advance button (text is now always white, regardless of dark/light theme)" & Char(10) & "- Refreshed the local packaging container so the Agent 7 flow connection stops disappearing after every repack" & Char(10) & "- Fixed the Audit Trail date/time display showing the wrong year again (recurrence of a previously-fixed bug) using a more robust numeric-vs-text check"
+                                ="- Reverted vHealthSegments from Table(vFixedSegments, vAgentSegments) - confirmed invalid by Studio's checker - back to the working ForAll/Sequence/Index union approach; Table() does not merge existing table variables in Power Fx" & Char(10) & "- Kept the vGreenFixedSegments fix (CountIf(vFixedSegments, ...)) which is unrelated and unaffected" & Char(10) & "- Extended the Agents Active KPI from X/6 to X/7 with a real Agent 7 health check via a direct LookUp against DMP Command Agent Status" & Char(10) & "- Added the missing Agent 7 entry to this Release Notes Agent Changes tab" & Char(10) & "- Fixed poor text contrast on the Operating State advance button (text is now always white, regardless of dark/light theme)" & Char(10) & "- Refreshed the local packaging container so the Agent 7 flow connection stops disappearing after every repack" & Char(10) & "- Fixed the Audit Trail date/time display showing the wrong year again (recurrence of a previously-fixed bug) using a more robust numeric-vs-text check"
                               Wrap: =true
                         - lblReleaseV12212Header:
                             Control: Label@2.5.1

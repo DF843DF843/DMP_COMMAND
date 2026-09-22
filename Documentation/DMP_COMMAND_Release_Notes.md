@@ -4,6 +4,11 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
+### v1.22.18 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+
+- Reverted the System Health ring's `vHealthSegments` from `Table(vFixedSegments, vAgentSegments)` (confirmed invalid by Studio's Advanced Formula Checker: "Die Funktion `.Table` weist ungültige Argumente auf") back to the working `ForAll(Sequence(...), If(..., Index(...), Index(...)))` union approach from an earlier iteration. `Table()` does not merge existing table variables in Power Fx, only record literals - this was a wrong simplification in v1.22.16/17.
+- Kept the `vGreenFixedSegments` fix (`CountIf(vFixedSegments, Color=...)`) from v1.22.17, which is unrelated and unaffected by this revert.
+
 ### v1.22.17 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
 
 - Fixed the System Health ring for real this time: the `vHealthSegments` union was simplified from an over-engineered `ForAll(Sequence(...), Index(...))` attempt (still errored) to the simple, Power-Fx-documented `Table(vFixedSegments, vAgentSegments)` (concatenates two tables with matching schema).
