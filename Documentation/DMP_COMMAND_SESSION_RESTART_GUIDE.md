@@ -140,13 +140,21 @@ After every deployment:
 ### Active deployment
 
 - Work only in `DBG Team Productivity (Dev)`. Production was not changed.
-- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.11.47`.
+- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.11.48`.
 - Agent 7 is present as `DMP Agent 7 (Streams & Milestone Management) [0.2.0]`.
 - The `[0.2.0]` suffix is the workflow component display name, not the solution version.
 - `7.11.46` was user-confirmed as saveable/activatable in the designer. `7.11.47` (the
-  action/date-range contract rewrite below) was imported via `pac solution import` in this
-  session but has **not yet** been opened/saved/activated by the user in the designer — do
-  that check first in the next session before assuming it behaves like `7.11.46`.
+  action/date-range contract rewrite below) was user-confirmed on 2026-09-22 to open
+  error-free and to be activated ("Ein"); a separate Save-only test was not possible because
+  the designer only enables Save after a real change.
+- `7.11.48` (the hardening below — rule TimeOfDay/TimeZone validation, per-item error
+  counter, CaseId placeholder validation) was packed and imported via
+  `pac solution import --publish-changes` in this session (2026-09-22) and published
+  successfully; Power Automate reported "The original workflow definition has been
+  deactivated and replaced" (expected). **The user has not yet reopened, saved, or
+  reactivated Agent 7 for `7.11.48`** — do that check first in the next session. Unlike
+  `7.11.47`, this version has real content changes, so Save will not be greyed out and is a
+  genuine test.
 
 ### Agent 7 activation root cause and verified fix
 
@@ -241,22 +249,41 @@ Still NOT implemented in `7.11.47` (see backlog for the full current list):
 - `Sequence` field decision, Power App screen live-binding, and the first Dev end-to-end test.
 
 No end-to-end run that creates real occurrence rows has been performed. `7.11.46` was
-user-confirmed open/save/activate in the designer; **`7.11.47` was user-confirmed on
-2026-09-22 to open error-free in the designer** — save/activate was not explicitly
-restated for `7.11.47` (only "opens error-free"), so re-verify save/activate succeeds too
-before assuming full designer-parity with `7.11.46`.
+user-confirmed open/save/activate in the designer; `7.11.47` was user-confirmed on
+2026-09-22 to open error-free and to be activated ("Ein") — Save could not be separately
+tested because the designer only enables Save after a real change. `7.11.48` (below) is the
+first version since `7.11.46` with real content changes, so it is the next genuine
+save/activate test.
 
-### Step 1 hardening prepared in local source 2026-09-22 (NOT yet packed/imported)
+### Step 1 hardening deployed as `7.11.48` on 2026-09-22 (pending user save/activate)
 
 Per the confirmed work order below, item 1 ("harden Agent 7 a little further") was
-implemented directly in
-`PowerAutomate/DMP_COMMAND_Solution/Source/Workflows/DMPAgent7StreamsMilestoneManagement-82E743CD-A2F6-4485-9E76-111D0D30544C.json`
-in the Git working copy on 2026-09-22, but **deliberately not yet packed into a new solution
-version or imported into Dev**, because the user's instruction was to proceed with hardening
-only after the `7.11.47` designer save/activate status is confirmed, and that confirmation was
-still outstanding when this was written (see the paragraph above). Ask the user for that
-confirmation before packing/importing this change. Local JSON-parse, action-name-uniqueness,
-and runAfter-graph checks all passed. Changes:
+implemented in
+`PowerAutomate/DMP_COMMAND_Solution/Source/Workflows/DMPAgent7StreamsMilestoneManagement-82E743CD-A2F6-4485-9E76-111D0D30544C.json`,
+committed to Git, then packed and imported as solution version `7.11.48` via
+`pac solution import --publish-changes` on 2026-09-22 (succeeded; Power Automate reported
+"The original workflow definition has been deactivated and replaced", expected for a
+workflow-definition update). Local JSON-parse, action-name-uniqueness, and runAfter-graph
+checks all passed before packing. **The user still needs to reopen Agent 7 in the designer,
+save, and reactivate it** — do that check first in the next session. Changes:
+
+- `VALIDATE_CaseId`: a new If-action after `VALIDATE_RequestedAction` that sets
+  `ValidationError` when `triggerBody()?['text_3']` (CaseId) is blank/whitespace-only,
+  explicitly commented as a temporary placeholder pending the real active-case lookup (B3).
+- `CHECK_RuleScheduleFieldsValid`: a new If-action inside `APPLY_Rules`, right after
+  `COMPOSE_OccurrenceId`, that only proceeds to the existing lookup/create logic when the
+  current rule's `TimeOfDay` and `TimeZone` are both non-blank; otherwise it composes a
+  per-rule error message, appends it to a new `ErrorMessages` array variable, and increments
+  a new `ErrorCount` variable, without touching `convertTimeZone`.
+- `SCOPE_CreateOccurrence`: `CREATE_Occurrence` is now wrapped in a `Scope`; a sibling
+  Failed/TimedOut branch (`COMPOSE_CreateOccurrenceError` → `APPEND_CreateOccurrenceError` →
+  `INCREMENT_ErrorCount_CreateFailed`) catches a real SharePoint create failure for one
+  occurrence, logs it, and increments `ErrorCount` instead of failing the whole run.
+- Two new variables (`ErrorCount` integer, `ErrorMessages` array) initialized alongside the
+  existing counters.
+- `RESPOND_Result` now also returns `errorCount` and `errorDetails` (joined `ErrorMessages`);
+  `success` is `false` whenever `ValidationError` is set **or** `ErrorCount > 0`.
+- `SET_ResultMessage_Success`'s text now also reports the error count.
 
 - `VALIDATE_CaseId`: a new If-action after `VALIDATE_RequestedAction` that sets
   `ValidationError` when `triggerBody()?['text_3']` (CaseId) is blank/whitespace-only,
@@ -345,10 +372,10 @@ reliable created/skipped counters (former item 6, partially). Still open:
    download/unpack into a separate temporary folder first, diff against the current
    `Source\Src`, and only then decide with the user what to keep/replace, exactly like the
    Git recovery above — never blindly overwrite.
-4. **Ask the user to open, save, and activate Agent 7 `7.11.47` in the designer** (opening was
-   already confirmed 2026-09-22; save/activate was not explicitly restated) and report any
-   error before making further changes.
-5. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.46` package.
+4. **Ask the user to open, save, and reactivate Agent 7 `7.11.48` in the designer** (this is
+   the first version since `7.11.46` with real content changes, so Save is a genuine test
+   this time) and report any error before making further changes.
+5. Re-read the current Agent 7 JSON; do not restore any earlier `7.11.36`–`7.11.47` package.
 6. Continue with the confirmed work order above (harden C a little → B1–B3 → rest of C → C8 →
    B4–B5 → A-strand), using small designer-validated increments. Never introduce several
    unvalidated connector fields in one deployment.

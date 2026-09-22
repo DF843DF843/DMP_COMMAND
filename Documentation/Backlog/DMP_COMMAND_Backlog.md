@@ -25,10 +25,19 @@ Dieses Dokument war auf ca. 2650 Zeilen angewachsen (chronologisches Arbeitsprot
 
 ## 🔵 Agent 7 occurrence generation – activated in Dev, final C5 contract pending
 
-**Verified Dev state (2026-09-22):** Solution `7.11.47` is imported and published only in
-`DBG Team Productivity (Dev)` (Agent 7 workflow component `[0.2.0]`). Imported via `pac
-solution import`; the user has **not yet** opened/saved/activated this specific version in
-the designer, and no end-to-end run against real data has been performed yet.
+**Deployed to Dev 2026-09-22:** Solution `7.11.48` was imported and published in
+`DBG Team Productivity (Dev)` (`pac solution import --publish-changes`, succeeded; Power
+Automate reported "The original workflow definition has been deactivated and replaced" as
+expected for a workflow-definition update). **Agent 7 needs to be reactivated in the
+designer and saved** before it can run — this is the real save/activate test for this
+release (unlike `7.11.47`, this version has real content changes, so Save will not be
+greyed out).
+
+**Verified Dev state (2026-09-22, pre-`7.11.48`):** Solution `7.11.47` was imported and
+published only in `DBG Team Productivity (Dev)` (Agent 7 workflow component `[0.2.0]`).
+The user confirmed it opens error-free and is activated ("Ein"); Save could not be
+separately tested because the designer only enables Save after a real change — which
+`7.11.48` now provides.
 
 The misleading `$schema` designer failure (pre-`7.11.46`) was isolated to an invalid
 SharePoint Create Item parameter. Task Occurrences `ScheduleSlot` is a Choice and must be sent
@@ -43,8 +52,8 @@ lookup-before-create idempotency, time-zone conversion to `DueUtc`, create for m
 validation (unsupported action, missing/out-of-order dates) surfaced via
 `validationError`/`message`, and reliable `createdCount`/`skippedCount` response counters.
 
-**Hardening prepared in local source on 2026-09-22 (NOT yet packed/imported/deployed — still
-`7.11.47` live in Dev):** the flow JSON in the Git working copy now additionally contains:
+**Hardening implemented in `7.11.48` (imported/published in Dev 2026-09-22, pending user
+activate/save confirmation):** the flow now additionally contains:
 - Rule-level `TimeOfDay`/`TimeZone` existence validation inside `APPLY_Rules`
   (`CHECK_RuleScheduleFieldsValid`): a rule missing either field is skipped gracefully
   (logged into a new `ErrorMessages` array + `ErrorCount` variable) instead of failing the
@@ -59,18 +68,19 @@ validation (unsupported action, missing/out-of-order dates) surfaced via
 - `RESPOND_Result` now also returns `errorCount` and `errorDetails` (joined `ErrorMessages`),
   and `success` is now `false` whenever `ErrorCount > 0`, not only on `ValidationError`.
 
-This is a source-only change (JSON-parses-clean and runAfter-graph-checked locally); it has
-**not** been packed into a new solution version or imported into Dev yet. Per the confirmed
-work order, this waits until the user confirms `7.11.47` save/activate in the designer (see
-Session Restart Guide) — do not pack/import until that is confirmed, to avoid stacking an
-unconfirmed base with new changes.
+`7.11.48` was imported via `pac solution import --publish-changes` and published
+successfully. Power Automate reported "The original workflow definition has been deactivated
+and replaced" (expected for any workflow-definition update) — **Agent 7 needs to be reopened,
+saved, and reactivated by the user in the designer before it can run again.** Unlike
+`7.11.47`, this version has real content changes, so Save will not be greyed out and is a
+real test this time.
 
 Still open:
 
 1. ~~Replace/remove `OccurrencesJson` from the final production contract.~~ Done in `7.11.47`.
 2. ~~Add `FromDate` and `ToDate` and inclusive multi-day generation.~~ Done in `7.11.47`.
-3. ~~Rule-level `TimeOfDay`/`TimeZone` existence validation.~~ Prepared in local source
-   2026-09-22 (see above); not yet packed/imported.
+3. ~~Rule-level `TimeOfDay`/`TimeZone` existence validation.~~ Done in `7.11.48` (see above);
+   pending the user's designer save/activate confirmation.
 4. Resolve authoritative active-case/mode lookup and final mode values. Central config
    `CurrentOperationMode` (Global/Runtime) already carries
    `PROD_NODMP/PROD_DMP/SIMU_NODMP/SIMU_DMP/PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT`
@@ -79,8 +89,8 @@ Still open:
    concept) are inserted next to build this; until then, `VALIDATE_CaseId` (above) only
    rejects a blank `CaseId`, it does not verify the case is real/active.
 5. ~~Add trustworthy created/skipped/error counters.~~ Created/skipped done in `7.11.47`;
-   the per-item error counter (`Scope`/try-catch around `CREATE_Occurrence`) is prepared in
-   local source 2026-09-22 (see above); not yet packed/imported.
+   the per-item error counter (`Scope`/try-catch around `CREATE_Occurrence`) is done in
+   `7.11.48` (see above); pending the user's designer save/activate confirmation.
 6. Add a numeric `Sequence` field if checklist order must be guaranteed.
 7. Connect the prepared Task Occurrences Power App screen to live SharePoint/Agent 7.
 8. Run the first non-destructive Dev end-to-end and idempotency test (still fully open,
