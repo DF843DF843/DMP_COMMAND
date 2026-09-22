@@ -222,6 +222,39 @@ this guide:
   - `DMP Command External Domains`
   - `DMP Command Counters`
 
+### Canonical live SharePoint schema reference (added 2026-09-22)
+
+`Documentation/Survey on SharePoint Lists.docx` (OneDrive copy only, not in Git - it is a live
+export, not authored content) is a per-list column/type/required survey of the **actual, current**
+SharePoint lists and **must be treated as ground truth over the CSV templates in
+`Streams_ListTemplates/` and over this guide's older claims** whenever they conflict. Re-check it
+before wiring any new list as a Power App/flow data source. Cross-checked against the templates
+and source on 2026-09-22; findings:
+
+- 11 of the 12 `Streams_ListTemplates` CSVs have a matching live list with matching columns.
+- **`DMP Command Checklist CoS Leader` (the CoS Leader working checklist, `Streams_ListTemplates/README.md`
+  item 2, `Titel`/`Phase`/`SeqNo`/`TaskDescription`/`EmailTemplateId`/`Status`/`LastChangedBy`/`ConfirmedBy`/
+  `ConfirmedUtc`) is NOT present in the survey**, contradicting both that README's "✅ already set up"
+  status and this guide's 2026-09-22 "all Streams lists already exist" note - re-confirm with the
+  user whether it still needs to be created, was intentionally dropped, or was renamed to something
+  not obviously matching before building anything against it.
+- `DMP Command Status Change Approvals` has a live `OccurrenceId` (single line of text) column not in
+  the template CSV - update the template before next use; likely meant to reference `Task Occurrences`
+  rows directly instead of via `ListName`+`ItemId`.
+- `DMP Command Checklist Recurrence Rules.IsActive` is a live **Choice** column, not `Ja/Nein` as the
+  concept implied - any future formula must compare against its choice values, not a boolean.
+- `DMP Command Checklist Task Occurrences.ProposedBy`/`ApprovedBy` are live **Person or Group** columns.
+  The current local-only `colTaskOccurrencesPreview` simulation stores `User().FullName` as plain text -
+  this will need a proper person-claims value (not a plain string) once patched against the real list.
+- `DMP Command Configuration` confirms only the original 4 `Value - PROD/SIMU (NODMP/DMP)` columns exist
+  live - the 4 new `Value - PROD/SIMU (Pre-Default/Post-Default)` columns from B1 are still genuinely not
+  created yet (no contradiction with the backlog, just confirmation).
+- Unrelated bonus finding while cross-checking `DMP Command Agent Status`: Agent 2's flow
+  (`DMPAgent2E-MailInboxTreatmentVS-...json`) writes `item/EmailsProcessed_DMP` when
+  `Detected Workflow Path = 'No DMP'` and `item/EmailsProcessed_NoDMP` when
+  `Detected Workflow Path = 'DMP internal Sender'` - these two look swapped based on their field
+  names; not yet fixed, flagged for user confirmation before touching Agent 2 flow logic.
+
 ## Source layout in Git
 
 - Power Automate solution source: `C:\PowerAppWork\DMP_COMMAND_Solution\PowerAutomate\DMP_COMMAND_Solution\Source`

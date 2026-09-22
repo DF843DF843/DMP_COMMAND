@@ -201,7 +201,8 @@ Screens:
                         Font: =Font.'Arial'
                         Size: =10.5
                         Height: =22
-                        Text: ="Awaiting a different approver (four-eyes: proposer cannot self-approve)"
+                        Text: |-
+                          ="Awaiting a different approver (four-eyes: proposer cannot self-approve)"
                         Visible: =ThisItem.ApprovalState="Pending" && ThisItem.ProposedBy=User().FullName
                         Width: =430
                         X: =470
@@ -218,13 +219,15 @@ Screens:
                         FontWeight: =FontWeight.Semibold
                         Height: =28
                         HoverFill: =RGBA(0,120,215,0.12)
-                        OnSelect: =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {Status: Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", ThisItem.Status), ProposedBy: User().FullName, ProposedUtc: Now(), ApprovalState: "Pending", ApprovedBy: "", ApprovedUtc: Blank()})
+                        OnSelect: |-
+                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {Status: Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", ThisItem.Status), ProposedBy: User().FullName, ProposedUtc: Now(), ApprovalState: "Pending", ApprovedBy: "", ApprovedUtc: Blank()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
                         Size: =10.5
-                        Text: ="Propose: " & Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", "Done")
+                        Text: |-
+                          ="Propose: " & Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", "Done")
                         Visible: =ThisItem.Status<>"Done" && ThisItem.ApprovalState<>"Pending"
                         Width: =150
                         X: =900
@@ -240,7 +243,8 @@ Screens:
                         FontWeight: =FontWeight.Semibold
                         Height: =28
                         HoverFill: =RGBA(0,180,110,1)
-                        OnSelect: =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Approved", ApprovedBy: User().FullName, ApprovedUtc: Now()})
+                        OnSelect: |-
+                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Approved", ApprovedBy: User().FullName, ApprovedUtc: Now()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
@@ -262,7 +266,8 @@ Screens:
                         FontWeight: =FontWeight.Semibold
                         Height: =28
                         HoverFill: =RGBA(220,50,40,1)
-                        OnSelect: =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Rejected", ApprovedBy: User().FullName, ApprovedUtc: Now()})
+                        OnSelect: |-
+                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Rejected", ApprovedBy: User().FullName, ApprovedUtc: Now()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6

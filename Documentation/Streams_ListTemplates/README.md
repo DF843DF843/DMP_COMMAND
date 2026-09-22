@@ -75,6 +75,13 @@ For `Auswahl` columns the concrete option values are listed (please create them 
 
 ### 2) DMP Command Checklist CoS Leader ✅ already set up
 
+**⚠️ Discrepancy found 2026-09-22:** a schema survey of the live SharePoint lists
+(`Documentation/Survey on SharePoint Lists.docx`) does NOT show a list with this column set
+(`Titel`/`Phase`/`SeqNo`/`TaskDescription`/`EmailTemplateId`/`Status`/`LastChangedBy`/`ConfirmedBy`/
+`ConfirmedUtc`) among the currently existing lists, contradicting the "✅ already set up" status
+below. Re-confirm with the user before building against this list - it may need to be created,
+or may have been created under a name that doesn't match this convention.
+
 **List description (English):**
 "Working checklist of the CoS Leader sub stream. Each task references a unique TaskID linked to DMP Command Checklist Overall Process. Status changes require four-eyes confirmation (see DMP Command Checklist Status Change Approvals) before they become effective."
 
@@ -222,6 +229,8 @@ Pre-filled with the actions known from the concept (see the accompanying CSV fil
 | ProposedUtc | Datum und Uhrzeit | Timestamp (UTC) of the proposal. |
 | ApprovedBy | Person oder Gruppe | Person who confirmed the change under the four-eyes principle (must be ≠ `ProposedBy` and the same sub stream/CoS Lead – strictly enforced by Agent 7). |
 | ApprovedUtc | Datum und Uhrzeit | Timestamp (UTC) of the confirmation. |
+| ApprovalState | Auswahl: `Pending`, `Approved`, `Rejected` | Current state of the approval request (already in the CSV template, missing from this table until 2026-09-22). |
+| OccurrenceId | Einzelne Zeile Text | **Live column added directly in SharePoint (found via the 2026-09-22 schema survey, not originally in this template):** direct reference to the affected `DMP Command Checklist Task Occurrences` row, as an alternative/addition to the generic `ListName`+`ItemId` pair. |
 | ApprovalState | Auswahl: `Pending`, `Approved`, `Rejected` | Current state of the approval process. |
 
 ### 12) DMP Command Checklist Task Occurrences
