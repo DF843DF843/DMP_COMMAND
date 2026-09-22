@@ -10,7 +10,19 @@
 
 ---
 
-## 🟠 v1.22.22 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — 4 echte Root-Cause-Fixes aus Live-Test-Feedback
+## 🟠 v1.22.23 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — Ring-Scope-Bug + Agent-7-Release-Notes + Label-Fix
+
+Aus dem 2. Live-Test-Feedback nach v1.22.22:
+
+1. **Ring immer noch nicht sichtbar, neuer Fehler:** `vFixedSegments wird nicht erkannt`. Root Cause: `vGreenFixedSegments: CountIf(vFixedSegments, ...)` stand im GLEICHEN Record-Literal wie `vFixedSegments` selbst — Power-Fx-Records können keine Geschwister-Felder referenzieren, nur verschachtelte `With()`-Aufrufe können auf zuvor gebundene Namen zugreifen. In eine eigene `With()`-Ebene ausgelagert (gleiches Muster wie der Rest der Formel). Vermutlich seit Erstellung dieser Formel unentdeckt, nur bisher von anderen Fehlern verdeckt.
+2. **Release Notes „Agent 7 fehlt" — derselbe Bug wie beim App-Tab, jetzt auch im Agent-Tab gefunden:** `varSelectedAgentRelease` war nie initialisiert, kein Switch-Case/Menü-Button für Agent 7 — fiel auf Agent 1 zurück. Fix: `btnAgentRelease7`, Switch-Case „7", Default auf „7".
+3. **Popup-Label abgeschnitten:** „Termination Date + Time (local time, YYYY-MM-DD HH:M" gekürzt auf „Termination Date + Time (local) *" — das genaue Format steht bereits im Platzhaltertext des Eingabefelds.
+
+Pack/Unpack-Rückvergleich: 0 Diff auf `scrHome.pa.yaml`, `scrReleaseNotes.pa.yaml`, `App.pa.yaml`.
+
+---
+
+## 🟠 v1.22.22 (2026-09-22, historisch, in v1.22.23 gefaltet) — 4 echte Root-Cause-Fixes aus Live-Test-Feedback
 
 Der Nutzer hat v1.22.21 tatsächlich in Studio getestet und 4 konkrete Findings gemeldet — alle 4 sind jetzt mit echter Ursachenanalyse behoben, nicht nur symptomatisch:
 

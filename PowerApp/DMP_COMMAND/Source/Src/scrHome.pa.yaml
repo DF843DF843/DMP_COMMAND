@@ -1174,9 +1174,12 @@ Screens:
                                                           {SegColor: vCounterColor, Label: "Counter"},
                                                           {SegColor: vAuditTrailColor, Label: "Audit Trail"}
                                                       ),
-                                                      vAgents: SortByColumns(Filter('DMP Command Agent Status', StartsWith(AgentKey, "Agent_")), "AgentKey"),
-                                                      vGreenFixedSegments: CountIf(vFixedSegments, SegColor="rgb(0,206,125)")
+                                                      vAgents: SortByColumns(Filter('DMP Command Agent Status', StartsWith(AgentKey, "Agent_")), "AgentKey")
                                                   },
+                                                  With(
+                                                      {
+                                                          vGreenFixedSegments: CountIf(vFixedSegments, SegColor="rgb(0,206,125)")
+                                                      },
                                                   With(
                                                       {
                                                           vAgentSegments: ForAll(vAgents As agent, {SegColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey}),
@@ -1199,6 +1202,7 @@ Screens:
                                               )
                                           )
                                       )
+                                    )
                                     Width: =312
                                     X: =12
                                     Y: =8
@@ -3353,7 +3357,7 @@ Screens:
                         FontWeight: =FontWeight.Semibold
                         Height: =18
                         Size: =11
-                        Text: ="Termination Date + Time (local time, YYYY-MM-DD HH:MM) *"
+                        Text: ="Termination Date + Time (local) *"
                         Wrap: =false
                   - txtDefaultCaseContextDateTime:
                       Control: Classic/TextInput@2.3.2
