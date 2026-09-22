@@ -179,6 +179,42 @@
             ]
           }
         },
+        "INIT_ErrorCount": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_SkippedCount": [
+              "Succeeded"
+            ]
+          }
+        },
+        "INIT_ErrorMessages": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ErrorMessages",
+                "type": "array",
+                "value": [
+                  
+                ]
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_ErrorCount": [
+              "Succeeded"
+            ]
+          }
+        },
         "INIT_OccurrenceDates": {
           "type": "InitializeVariable",
           "inputs": {
@@ -193,7 +229,7 @@
             ]
           },
           "runAfter": {
-            "INIT_SkippedCount": [
+            "INIT_ErrorMessages": [
               "Succeeded"
             ]
           }
@@ -400,6 +436,48 @@
           },
           "description": "Validates RequestedAction and builds the inclusive OccurrenceDates list from the request contract."
         },
+        "VALIDATE_CaseId": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@variables('ValidationError')",
+                  ""
+                ]
+              },
+              {
+                "equals": [
+                  "@trim(coalesce(triggerBody()?['text_3'], ''))",
+                  ""
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "SET_ValidationError_MissingCaseId": {
+              "type": "SetVariable",
+              "inputs": {
+                "name": "ValidationError",
+                "value": "CaseId is required (temporary placeholder validation pending the real active-case lookup)."
+              },
+              "runAfter": {
+                
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              
+            }
+          },
+          "runAfter": {
+            "VALIDATE_RequestedAction": [
+              "Succeeded"
+            ]
+          },
+          "description": "Temporary placeholder validation: rejects a blank/whitespace-only CaseId until a real active-case lookup replaces the caller-supplied value (see backlog item 4)."
+        },
         "CHECK_ValidationPassed": {
           "type": "If",
           "expression": {
@@ -454,63 +532,44 @@
                           "type": "Compose",
                           "inputs": "@concat(triggerBody()?['text_3'], '-', formatDateTime(items('FOREACH_Dates'), 'yyyyMMdd'), '-', replace(items('APPLY_Rules')?['TaskId'], ' ', ''), '-', toUpper(items('APPLY_Rules')?['ScheduleSlot']))",
                           "runAfter": {
-                            
                           }
                         },
-                        "GET_ExistingOccurrence": {
-                          "type": "OpenApiConnection",
-                          "inputs": {
-                            "parameters": {
-                              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
-                              "table": "5c413852-2dab-4844-b886-a8cf8334fcf6",
-                              "$filter": "Title eq '@{outputs('COMPOSE_OccurrenceId')}'",
-                              "$top": 1
-                            },
-                            "host": {
-                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-                              "connectionName": "shared_sharepointonline",
-                              "operationId": "GetItems"
-                            },
-                            "authentication": {
-                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
-                              "type": "Raw"
-                            }
-                          },
-                          "runAfter": {
-                            "COMPOSE_OccurrenceId": [
-                              "Succeeded"
-                            ]
-                          }
-                        },
-                        "CHECK_NotExisting": {
+                        "CHECK_RuleScheduleFieldsValid": {
                           "type": "If",
                           "expression": {
-                            "equals": [
-                              "@length(body('GET_ExistingOccurrence')?['value'])",
-                              0
+                            "and": [
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@trim(coalesce(items('APPLY_Rules')?['TimeOfDay'], ''))",
+                                    ""
+                                  ]
+                                }
+                              },
+                              {
+                                "not": {
+                                  "equals": [
+                                    "@trim(coalesce(items('APPLY_Rules')?['TimeZone'], ''))",
+                                    ""
+                                  ]
+                                }
+                              }
                             ]
                           },
                           "actions": {
-                            "CREATE_Occurrence": {
+                            "GET_ExistingOccurrence": {
                               "type": "OpenApiConnection",
                               "inputs": {
                                 "parameters": {
                                   "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
                                   "table": "5c413852-2dab-4844-b886-a8cf8334fcf6",
-                                  "item/Title": "@outputs('COMPOSE_OccurrenceId')",
-                                  "item/CaseId": "@triggerBody()?['text_3']",
-                                  "item/TaskId": "@items('APPLY_Rules')?['TaskId']",
-                                  "item/OccurrenceDate": "@concat(items('FOREACH_Dates'), 'T00:00:00')",
-                                  "item/ScheduleSlot/Value": "@items('APPLY_Rules')?['ScheduleSlot']",
-                                  "item/DueUtc": "@convertTimeZone(concat(items('FOREACH_Dates'), 'T', items('APPLY_Rules')?['TimeOfDay']), items('APPLY_Rules')?['TimeZone'], 'UTC', 'yyyy-MM-ddTHH:mm:ssZ')",
-                                  "item/Status/Value": "Not Started",
-                                  "item/ApprovalState/Value": "Not Required",
-                                  "item/Notes": "Created by Agent 7 occurrence management."
+                                  "$filter": "Title eq '@{outputs('COMPOSE_OccurrenceId')}'",
+                                  "$top": 1
                                 },
                                 "host": {
                                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
                                   "connectionName": "shared_sharepointonline",
-                                  "operationId": "PostItem"
+                                  "operationId": "GetItems"
                                 },
                                 "authentication": {
                                   "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
@@ -518,18 +577,126 @@
                                 }
                               },
                               "runAfter": {
-                                
-                              },
-                              "description": "Creates one occurrence after the exact OccurrenceId lookup returned no match."
+                              }
                             },
-                            "INCREMENT_CreatedCount": {
-                              "type": "IncrementVariable",
-                              "inputs": {
-                                "name": "CreatedCount",
-                                "value": 1
+                            "CHECK_NotExisting": {
+                              "type": "If",
+                              "expression": {
+                                "equals": [
+                                  "@length(body('GET_ExistingOccurrence')?['value'])",
+                                  0
+                                ]
+                              },
+                              "actions": {
+                                "SCOPE_CreateOccurrence": {
+                                  "type": "Scope",
+                                  "actions": {
+                                    "CREATE_Occurrence": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
+                                          "table": "5c413852-2dab-4844-b886-a8cf8334fcf6",
+                                          "item/Title": "@outputs('COMPOSE_OccurrenceId')",
+                                          "item/CaseId": "@triggerBody()?['text_3']",
+                                          "item/TaskId": "@items('APPLY_Rules')?['TaskId']",
+                                          "item/OccurrenceDate": "@concat(items('FOREACH_Dates'), 'T00:00:00')",
+                                          "item/ScheduleSlot/Value": "@items('APPLY_Rules')?['ScheduleSlot']",
+                                          "item/DueUtc": "@convertTimeZone(concat(items('FOREACH_Dates'), 'T', items('APPLY_Rules')?['TimeOfDay']), items('APPLY_Rules')?['TimeZone'], 'UTC', 'yyyy-MM-ddTHH:mm:ssZ')",
+                                          "item/Status/Value": "Not Started",
+                                          "item/ApprovalState/Value": "Not Required",
+                                          "item/Notes": "Created by Agent 7 occurrence management."
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                          "connectionName": "shared_sharepointonline",
+                                          "operationId": "PostItem"
+                                        },
+                                        "authentication": {
+                                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                          "type": "Raw"
+                                        }
+                                      },
+                                      "runAfter": {
+                                      },
+                                      "description": "Creates one occurrence after the exact OccurrenceId lookup returned no match."
+                                    }
+                                  },
+                                  "runAfter": {
+                                  },
+                                  "description": "Isolates the SharePoint create call so a technical failure can be caught and counted instead of failing the whole run."
+                                },
+                                "INCREMENT_CreatedCount": {
+                                  "type": "IncrementVariable",
+                                  "inputs": {
+                                    "name": "CreatedCount",
+                                    "value": 1
+                                  },
+                                  "runAfter": {
+                                    "SCOPE_CreateOccurrence": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "COMPOSE_CreateOccurrenceError": {
+                                  "type": "Compose",
+                                  "inputs": "@concat('Failed to create occurrence ', outputs('COMPOSE_OccurrenceId'), ': ', coalesce(first(result('SCOPE_CreateOccurrence'))?['error']?['message'], 'unknown technical error'))",
+                                  "runAfter": {
+                                    "SCOPE_CreateOccurrence": [
+                                      "Failed",
+                                      "TimedOut"
+                                    ]
+                                  }
+                                },
+                                "APPEND_CreateOccurrenceError": {
+                                  "type": "AppendToArrayVariable",
+                                  "inputs": {
+                                    "name": "ErrorMessages",
+                                    "value": "@outputs('COMPOSE_CreateOccurrenceError')"
+                                  },
+                                  "runAfter": {
+                                    "COMPOSE_CreateOccurrenceError": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                },
+                                "INCREMENT_ErrorCount_CreateFailed": {
+                                  "type": "IncrementVariable",
+                                  "inputs": {
+                                    "name": "ErrorCount",
+                                    "value": 1
+                                  },
+                                  "runAfter": {
+                                    "APPEND_CreateOccurrenceError": [
+                                      "Succeeded"
+                                    ]
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {
+                                  "COMPOSE_AlreadyExists": {
+                                    "type": "Compose",
+                                    "inputs": "@outputs('COMPOSE_OccurrenceId')",
+                                    "runAfter": {
+                                    }
+                                  },
+                                  "INCREMENT_SkippedCount": {
+                                    "type": "IncrementVariable",
+                                    "inputs": {
+                                      "name": "SkippedCount",
+                                      "value": 1
+                                    },
+                                    "runAfter": {
+                                      "COMPOSE_AlreadyExists": [
+                                        "Succeeded"
+                                      ]
+                                    }
+                                  }
+                                }
                               },
                               "runAfter": {
-                                "CREATE_Occurrence": [
+                                "GET_ExistingOccurrence": [
                                   "Succeeded"
                                 ]
                               }
@@ -537,21 +704,32 @@
                           },
                           "else": {
                             "actions": {
-                              "COMPOSE_AlreadyExists": {
+                              "COMPOSE_RuleScheduleFieldsError": {
                                 "type": "Compose",
-                                "inputs": "@outputs('COMPOSE_OccurrenceId')",
+                                "inputs": "@concat('Rule ', coalesce(items('APPLY_Rules')?['Title'], '(unknown RuleId)'), ' is missing TimeOfDay or TimeZone; occurrence ', outputs('COMPOSE_OccurrenceId'), ' was not created.')",
                                 "runAfter": {
-                                  
                                 }
                               },
-                              "INCREMENT_SkippedCount": {
+                              "APPEND_RuleScheduleFieldsError": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "ErrorMessages",
+                                  "value": "@outputs('COMPOSE_RuleScheduleFieldsError')"
+                                },
+                                "runAfter": {
+                                  "COMPOSE_RuleScheduleFieldsError": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              },
+                              "INCREMENT_ErrorCount_MissingScheduleFields": {
                                 "type": "IncrementVariable",
                                 "inputs": {
-                                  "name": "SkippedCount",
+                                  "name": "ErrorCount",
                                   "value": 1
                                 },
                                 "runAfter": {
-                                  "COMPOSE_AlreadyExists": [
+                                  "APPEND_RuleScheduleFieldsError": [
                                     "Succeeded"
                                   ]
                                 }
@@ -559,14 +737,14 @@
                             }
                           },
                           "runAfter": {
-                            "GET_ExistingOccurrence": [
+                            "COMPOSE_OccurrenceId": [
                               "Succeeded"
                             ]
-                          }
+                          },
+                          "description": "Skips creation and logs a graceful per-rule error when a Daily rule is missing TimeOfDay or TimeZone, instead of failing the whole run in convertTimeZone."
                         }
                       },
                       "runAfter": {
-                        
                       },
                       "description": "Applies every active rule to the current OccurrenceDates entry with exact-match idempotency."
                     }
@@ -582,7 +760,7 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "ResultMessage",
-                    "value": "@concat('Processed ', string(length(variables('OccurrenceDates'))), ' date(s): created ', string(variables('CreatedCount')), ', skipped (already existing) ', string(variables('SkippedCount')), '.')"
+                    "value": "@concat('Processed ', string(length(variables('OccurrenceDates'))), ' date(s): created ', string(variables('CreatedCount')), ', skipped (already existing) ', string(variables('SkippedCount')), ', errors ', string(variables('ErrorCount')), '.')"
                   },
                   "runAfter": {
                     "FOREACH_Dates": [
@@ -617,7 +795,7 @@
             }
           },
           "runAfter": {
-            "VALIDATE_RequestedAction": [
+            "VALIDATE_CaseId": [
               "Succeeded"
             ]
           },
@@ -629,10 +807,12 @@
           "inputs": {
             "statusCode": 200,
             "body": {
-              "success": "@equals(variables('ValidationError'), '')",
+              "success": "@and(equals(variables('ValidationError'), ''), equals(variables('ErrorCount'), 0))",
               "message": "@if(equals(variables('ValidationError'), ''), variables('ResultMessage'), variables('ValidationError'))",
               "createdCount": "@variables('CreatedCount')",
               "skippedCount": "@variables('SkippedCount')",
+              "errorCount": "@variables('ErrorCount')",
+              "errorDetails": "@join(variables('ErrorMessages'), ' | ')",
               "validationError": "@variables('ValidationError')"
             },
             "schema": {
@@ -650,6 +830,12 @@
                 "skippedCount": {
                   "type": "integer"
                 },
+                "errorCount": {
+                  "type": "integer"
+                },
+                "errorDetails": {
+                  "type": "string"
+                },
                 "validationError": {
                   "type": "string"
                 }
@@ -664,7 +850,7 @@
               "TimedOut"
             ]
           },
-          "description": "Returns success, message, created/skipped counters, and any validation error to the caller."
+          "description": "Returns success, message, created/skipped/error counters, per-item error details, and any validation error to the caller. success is false whenever ValidationError is set or ErrorCount > 0."
         }
       }
     },

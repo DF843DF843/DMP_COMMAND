@@ -351,6 +351,20 @@ This remains a partial C5 implementation. Inclusive `FromDate`/`ToDate` expansio
 action contract, authoritative case/mode validation, counters, and live Power Apps binding
 remain pending.
 
+**Update 2026-09-22 (local source only, not yet packed/imported into Dev):** on top of the
+`RequestedAction`/`FromDate`-`ToDate` contract shipped in `7.11.47`, the local source now also
+contains: (a) a rule-level `TimeOfDay`/`TimeZone` existence check inside the rule-application
+loop that skips a misconfigured Daily rule gracefully (logging into new `ErrorCount`/
+`ErrorMessages` variables) instead of failing the whole run in `convertTimeZone`; (b) a real
+per-item error counter using a `Scope` wrapped around the SharePoint `CREATE_Occurrence` call
+with a Failed/TimedOut catch branch, so a technical create failure for one occurrence is
+counted and logged rather than stopping the run; (c) a temporary placeholder validation that
+rejects a blank/whitespace-only caller-supplied `CaseId` before any SharePoint call, explicitly
+marked as a stand-in until the real active-case lookup (B3 below) exists; and (d) `errorCount`/
+`errorDetails` added to the `RESPOND_Result` output, with `success` now also `false` whenever
+`ErrorCount > 0`. This is pending the user's designer save/activate confirmation for `7.11.47`
+before being packed into a new solution version.
+
 ### Confirmed SharePoint bindings
 
 The following bindings were supplied from the SharePoint List Settings pages and are now used

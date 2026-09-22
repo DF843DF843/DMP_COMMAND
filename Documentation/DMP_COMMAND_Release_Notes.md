@@ -282,6 +282,16 @@ Backend:
 
 ### Agent 7 (Streams & Milestone Management) - v0.2.0 (current Dev component name)
 
+- Local source only, 2026-09-22 (not yet packed/imported into Dev) - hardening on top of
+  `7.11.47`: rule-level `TimeOfDay`/`TimeZone` existence validation per Daily rule
+  (`CHECK_RuleScheduleFieldsValid`, skips gracefully instead of failing the whole run in
+  `convertTimeZone`); a real per-item error counter via a `Scope`/catch pattern around
+  `CREATE_Occurrence` (`SCOPE_CreateOccurrence` + Failed/TimedOut handler); a temporary
+  placeholder validation rejecting a blank/whitespace-only caller-supplied `CaseId`
+  (`VALIDATE_CaseId`); and new `errorCount`/`errorDetails` fields on the `RESPOND_Result`
+  output (`success` is now also `false` when `ErrorCount > 0`). Waiting on user confirmation
+  that `7.11.47` save/activate succeeds in the designer before this is packed into a new
+  solution version and imported into Dev.
 - Solution `7.11.47` (2026-09-22) - Implemented the `RequestedAction` contract:
   `CreateTaskOccurrences` (single `BusinessDate`) and `GenerateMissingOccurrences`
   (inclusive `FromDate`/`ToDate` multi-day expansion). Removed the obsolete

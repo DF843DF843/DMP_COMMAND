@@ -214,9 +214,10 @@ designer-opened/activated by the user**):
 - Response returns `success`, `message`, `createdCount`, `skippedCount`, `validationError`.
 
 Still NOT implemented in `7.11.47` (see backlog for the full current list):
-- Rule-level `TimeOfDay`/`TimeZone` existence validation before `convertTimeZone` (a rule
-  missing either field will still fail the whole run instead of a graceful per-rule error).
-- A real per-item error counter (needs a Scope/try-catch pattern around `CREATE_Occurrence`).
+- ~~Rule-level `TimeOfDay`/`TimeZone` existence validation before `convertTimeZone`~~ —
+  prepared in local source 2026-09-22, **not yet packed/imported** (see below).
+- ~~A real per-item error counter~~ — prepared in local source 2026-09-22 (Scope/catch
+  around `CREATE_Occurrence`), **not yet packed/imported** (see below).
 - Authoritative active-case/mode source resolution (open user decision, see backlog).
 - `Sequence` field decision, Power App screen live-binding, and the first Dev end-to-end test.
 
@@ -225,6 +226,36 @@ user-confirmed open/save/activate in the designer; **`7.11.47` was user-confirme
 2026-09-22 to open error-free in the designer** — save/activate was not explicitly
 restated for `7.11.47` (only "opens error-free"), so re-verify save/activate succeeds too
 before assuming full designer-parity with `7.11.46`.
+
+### Step 1 hardening prepared in local source 2026-09-22 (NOT yet packed/imported)
+
+Per the confirmed work order below, item 1 ("harden Agent 7 a little further") was
+implemented directly in
+`PowerAutomate/DMP_COMMAND_Solution/Source/Workflows/DMPAgent7StreamsMilestoneManagement-82E743CD-A2F6-4485-9E76-111D0D30544C.json`
+in the Git working copy on 2026-09-22, but **deliberately not yet packed into a new solution
+version or imported into Dev**, because the user's instruction was to proceed with hardening
+only after the `7.11.47` designer save/activate status is confirmed, and that confirmation was
+still outstanding when this was written (see the paragraph above). Ask the user for that
+confirmation before packing/importing this change. Local JSON-parse, action-name-uniqueness,
+and runAfter-graph checks all passed. Changes:
+
+- `VALIDATE_CaseId`: a new If-action after `VALIDATE_RequestedAction` that sets
+  `ValidationError` when `triggerBody()?['text_3']` (CaseId) is blank/whitespace-only,
+  explicitly commented as a temporary placeholder pending the real active-case lookup (B3).
+- `CHECK_RuleScheduleFieldsValid`: a new If-action inside `APPLY_Rules`, right after
+  `COMPOSE_OccurrenceId`, that only proceeds to the existing lookup/create logic when the
+  current rule's `TimeOfDay` and `TimeZone` are both non-blank; otherwise it composes a
+  per-rule error message, appends it to a new `ErrorMessages` array variable, and increments
+  a new `ErrorCount` variable, without touching `convertTimeZone`.
+- `SCOPE_CreateOccurrence`: `CREATE_Occurrence` is now wrapped in a `Scope`; a sibling
+  Failed/TimedOut branch (`COMPOSE_CreateOccurrenceError` → `APPEND_CreateOccurrenceError` →
+  `INCREMENT_ErrorCount_CreateFailed`) catches a real SharePoint create failure for one
+  occurrence, logs it, and increments `ErrorCount` instead of failing the whole run.
+- Two new variables (`ErrorCount` integer, `ErrorMessages` array) initialized alongside the
+  existing counters.
+- `RESPOND_Result` now also returns `errorCount` and `errorDetails` (joined `ErrorMessages`);
+  `success` is `false` whenever `ValidationError` is set **or** `ErrorCount > 0`.
+- `SET_ResultMessage_Success`'s text now also reports the error count.
 
 ### Confirmed work order for the rest of C5/Streams (user-approved 2026-09-22)
 

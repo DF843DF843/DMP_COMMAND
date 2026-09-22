@@ -43,27 +43,48 @@ lookup-before-create idempotency, time-zone conversion to `DueUtc`, create for m
 validation (unsupported action, missing/out-of-order dates) surfaced via
 `validationError`/`message`, and reliable `createdCount`/`skippedCount` response counters.
 
+**Hardening prepared in local source on 2026-09-22 (NOT yet packed/imported/deployed — still
+`7.11.47` live in Dev):** the flow JSON in the Git working copy now additionally contains:
+- Rule-level `TimeOfDay`/`TimeZone` existence validation inside `APPLY_Rules`
+  (`CHECK_RuleScheduleFieldsValid`): a rule missing either field is skipped gracefully
+  (logged into a new `ErrorMessages` array + `ErrorCount` variable) instead of failing the
+  whole run in `convertTimeZone`.
+- A real per-item error counter: `CREATE_Occurrence` is now wrapped in `SCOPE_CreateOccurrence`
+  with a Failed/TimedOut catch branch (`COMPOSE_CreateOccurrenceError` →
+  `APPEND_CreateOccurrenceError` → `INCREMENT_ErrorCount_CreateFailed`) that increments the same
+  `ErrorCount`/`ErrorMessages` instead of failing the run.
+- A temporary placeholder validation on the caller-supplied `CaseId` (`VALIDATE_CaseId`):
+  a blank/whitespace-only `CaseId` now sets `ValidationError` before any SharePoint read/write,
+  explicitly marked as a stand-in until the real active-case lookup (B3) replaces it.
+- `RESPOND_Result` now also returns `errorCount` and `errorDetails` (joined `ErrorMessages`),
+  and `success` is now `false` whenever `ErrorCount > 0`, not only on `ValidationError`.
+
+This is a source-only change (JSON-parses-clean and runAfter-graph-checked locally); it has
+**not** been packed into a new solution version or imported into Dev yet. Per the confirmed
+work order, this waits until the user confirms `7.11.47` save/activate in the designer (see
+Session Restart Guide) — do not pack/import until that is confirmed, to avoid stacking an
+unconfirmed base with new changes.
+
 Still open:
 
 1. ~~Replace/remove `OccurrencesJson` from the final production contract.~~ Done in `7.11.47`.
 2. ~~Add `FromDate` and `ToDate` and inclusive multi-day generation.~~ Done in `7.11.47`.
-3. Validate action/date inputs done in `7.11.47`; **rule-level `TimeOfDay`/`TimeZone`
-   existence validation on each Recurrence Rule before `convertTimeZone` is still open**
-   (a rule missing either field will currently fail the whole run instead of a graceful
-   per-rule error).
+3. ~~Rule-level `TimeOfDay`/`TimeZone` existence validation.~~ Prepared in local source
+   2026-09-22 (see above); not yet packed/imported.
 4. Resolve authoritative active-case/mode lookup and final mode values. Central config
    `CurrentOperationMode` (Global/Runtime) already carries
    `PROD_NODMP/PROD_DMP/SIMU_NODMP/SIMU_DMP/PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT`
    and is reused by other agents, but there is still no discovered central "active
-   CaseId" source anywhere in the app/config — needs a user decision on where Agent 7
-   should get `CaseId`/`OperatingMode` from when not passed explicitly by the caller.
+   CaseId" source anywhere in the app/config. Per the confirmed work order, B1–B3 (Streams
+   concept) are inserted next to build this; until then, `VALIDATE_CaseId` (above) only
+   rejects a blank `CaseId`, it does not verify the case is real/active.
 5. ~~Add trustworthy created/skipped/error counters.~~ Created/skipped done in `7.11.47`;
-   a real per-item **error** counter still needs a Scope/try-catch pattern around
-   `CREATE_Occurrence`, not yet added.
+   the per-item error counter (`Scope`/try-catch around `CREATE_Occurrence`) is prepared in
+   local source 2026-09-22 (see above); not yet packed/imported.
 6. Add a numeric `Sequence` field if checklist order must be guaranteed.
 7. Connect the prepared Task Occurrences Power App screen to live SharePoint/Agent 7.
 8. Run the first non-destructive Dev end-to-end and idempotency test (still fully open,
-   including for the new `7.11.47` date-range contract).
+   including for the new `7.11.47` date-range contract and this hardening).
 
 Do not reintroduce `item/TimeZone` into Create Item unless the connector schema confirms that
 field. Do not restore pre-`7.11.46` Agent 7 definitions.
