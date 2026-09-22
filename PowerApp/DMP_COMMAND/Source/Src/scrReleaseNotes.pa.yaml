@@ -254,7 +254,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.16 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.17 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
                               Wrap: =false
                         - lblReleaseV12215Notes:
                             Control: Label@2.5.1
@@ -266,7 +266,8 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =220
                               Size: =12
-                              Text: ="- Replaced the Normal/DMP Operating State toggle with a single colored 'advance' button showing the current phase and the next one (e.g. 'Normal -> Pre-Default'), enforcing the linear Normal -> Pre-Default -> DMP -> Post-Default -> Normal cycle - direct jumps between non-adjacent phases are no longer possible" & Char(10) & "- Switching Environment to PROD now always resets Operating State back to Normal for safety (previously this safety reset only fired from DMP); switching to SIMU now preserves any of the 4 phases, not just DMP/Normal" & Char(10) & "- Fixed the pre-existing P1 System Health ring bug (imgHeartbeatWheel.Image, open since 2026-09-04) - an invalid table concatenation via the text '&' operator, replaced with a correct ForAll/Sequence/Index union" & Char(10) & "- Fixed the Operating State mode label/color and the 4 ambient screen-border strips, which still only distinguished 2 modes after the button change" & Char(10) & "- Added the missing Agent 7 tile to the Agent Monitoring screen (previously only had static tiles for Agents 1-6); needs a corresponding Agent_07 row in DMP Command Agent Status (user action required)"
+                              Text: |-
+                                ="- Simplified the System Health ring's table union to Table(vFixedSegments, vAgentSegments) and fixed a second, separate table-union bug in vGreenFixedSegments (now CountIf(vFixedSegments, ...))" & Char(10) & "- Extended the Agents Active KPI from X/6 to X/7 with a real Agent 7 health check via a direct LookUp against DMP Command Agent Status" & Char(10) & "- Added the missing Agent 7 entry to the Release Notes Agent Changes tab" & Char(10) & "- Fixed poor text contrast on the Operating State advance button (text is now always white, regardless of dark/light theme)" & Char(10) & "- Refreshed the local packaging container so the Agent 7 flow connection stops disappearing after every repack" & Char(10) & "- Fixed the Audit Trail date/time display showing the wrong year again (recurrence of a previously-fixed bug) using a more robust numeric-vs-text check"
                               Wrap: =true
                         - lblReleaseV12212Header:
                             Control: Label@2.5.1
@@ -1877,6 +1878,52 @@ Screens:
                               Height: =300
                               Size: =12
                               Text: ="- v1.3.1 (2026-09-04) - Fixed the Reset All action's Critical/Warning baseline row lookup, which used the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) and silently failed - replaced with a proper Query action, same pattern as the individual Reset Critical/Reset Warning actions already used" & Char(10) & "- v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset" & Char(10) & "- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0" & Char(10) & "- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page"
+                              Wrap: =true
+                  - conAgentNote7:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(120,115,140,0.35)
+                        BorderThickness: =1
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.03),RGBA(32,23,81,0.03))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        LayoutMaxHeight: =280
+                        LayoutOverflowY: =LayoutOverflow.Scroll
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblAgentNote7Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent 7 (Streams & Milestone Management) - v0.3.1 (current)"
+                              Wrap: =false
+                        - lblAgentNote7Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =300
+                              Size: =12
+                              Text: |-
+                                ="- v0.3.1 (solution 7.34.48) - Hardening: rule-level TimeOfDay/TimeZone existence validation per Daily rule, a real per-item error counter via a Scope/catch pattern around the SharePoint create call, a temporary placeholder validation rejecting a blank caller-supplied CaseId, and new errorCount/errorDetails fields on the response" & Char(10) & "- v0.3.0 (solution 7.11.47) - Implemented the RequestedAction contract (CreateTaskOccurrences with BusinessDate, GenerateMissingOccurrences with inclusive FromDate/ToDate), removed the obsolete OccurrencesJson trigger input, added explicit validation and reliable createdCount/skippedCount counters" & Char(10) & "- v0.2.0 (solution 7.11.36-7.11.46) - Initial activation-compatible scaffold; reads active Daily DMP recurrence rules, derives the canonical CaseId-Date-TaskId-ScheduleSlot occurrence key, performs an exact lookup before creating, converts the rule's local time to a UTC due time, and creates a Task Occurrences row only when no matching row already exists" & Char(10) & "- Generates recurring/one-time checklist task occurrences (Streams concept, Strang C); not yet live-bound to the Task Occurrences Power App screen and no end-to-end test with real data has been run yet"
                               Wrap: =true
             - conReleaseNotesSplitApp:
                 Control: GroupContainer@1.5.0

@@ -4,7 +4,17 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.16 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+### v1.22.17 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+
+- Fixed the System Health ring for real this time: the `vHealthSegments` union was simplified from an over-engineered `ForAll(Sequence(...), Index(...))` attempt (still errored) to the simple, Power-Fx-documented `Table(vFixedSegments, vAgentSegments)` (concatenates two tables with matching schema).
+- Also found and fixed a second, separate instance of the exact same class of bug in the same formula: `vGreenFixedSegments: CountIf(Table(vStatusCheckColor, ...), Value=...)` passed 9 plain text values into `Table()`, which is invalid - simplified to `CountIf(vFixedSegments, Color=...)`, reusing the already-correctly-typed table instead.
+- Extended the "Agents Active" KPI (Cockpit header) from `X/6` to `X/7`: added a real, client-side `varAgent7Healthy` check (`LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational"`, no Agent 4 flow change needed) as a 7th term.
+- Added the missing Agent 7 entry to the Release Notes screen's "Agent (Flow) Changes" tab (previously only Agents 1-6 were listed there, even though the Agent Monitoring tab and this document already covered Agent 7).
+- Fixed poor text contrast on the new Operating State "advance" button: text color was following the app's dark/light theme setting instead of being readable against the button's own (always colored) background - now always white, regardless of theme, matching standard practice for colored badge/pill buttons. (Per the project's established Eurex-palette rule, the safety-critical mode colors themselves - including DMP's red - intentionally stay a generic warning red rather than a branded color.)
+- Refreshed the local `.msapr` packaging container from a fresh `pac canvas download` of the live app - the previous container was stale from 2026-09-04 (before Agent 7 existed) and did not carry the Agent 7 flow connection, so every local repack silently dropped it again even after the user manually reconnected it in Studio. This should stop the Agent 7 connection from repeatedly disappearing.
+- Fixed the Audit Trail (Detail) date/time display showing the wrong year again (e.g. "3926" instead of "2026") on the Recent Critical/Warning rows, a recurrence of a bug previously fixed several times (v1.22.9-v1.22.13). Root cause this time: the numeric-vs-ISO-text branch decision used `Value(rawTs, "en-US")` succeeding/failing to decide the format, but `Value()` was too lenient and partially parsed some ISO datetime strings as numbers instead of failing outright. Replaced with an explicit `IsMatch(rawTs, "^\d+(\.\d+)?$")` check (true only for a pure decimal number) to decide the branch, which cannot misfire the same way.
+
+### v1.22.16 - 2026-09-22 (superseded same day, folded into v1.22.17 above)
 
 - Fixed the pre-existing P1 System Health ring bug (`imgHeartbeatWheel.Image`, open since 2026-09-04): `vFixedSegments & ForAll(...)` tried to concatenate two tables with the text `&` operator (invalid). Replaced with a `ForAll(Sequence(...), If(..., Index(...), Index(...)))` pattern that correctly unions the two tables.
 - Fixed the Operating State mode label/color (`lblOperatingModeText` area) which still only distinguished 2 states (Normal/DMP) after the B2 5-mode change, showing misleading text like "Normal non-DMP Operation" while actually in Pre-Default/Post-Default. Extended to all 4 modes, matching the new advance button's color scheme.

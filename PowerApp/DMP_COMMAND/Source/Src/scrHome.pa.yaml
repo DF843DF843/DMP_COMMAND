@@ -1606,7 +1606,7 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           BorderThickness: =0
-                                          Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                          Color: =RGBA(255,255,255,1)
                                           Fill: =Switch(Mod(varOperationalStepCounter,4), 0, RGBA(0,206,125,1), 1, RGBA(255,159,10,1), 2, RGBA(102,52,142,1), RGBA(60,125,190,1))
                                           Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
