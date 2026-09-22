@@ -42,7 +42,7 @@ App:
       // Switch case for any version after v1.22.13, so it silently always fell back to showing
       // v1.22.13 (found 2026-09-22 from user feedback "Agent 7 missing, shows old version").
       // Defaults to the newest App version now; keep this in sync with the current version.
-      Set(varSelectedAppRelease,"V12224");
+      Set(varSelectedAppRelease,"V12226");
       // Same bug, same fix, Agent tab: varSelectedAgentRelease was never initialized and had no
       // Switch case/menu button for Agent 7 - defaulted to Agent 1 instead of the newest agent.
       Set(varSelectedAgentRelease,"7");

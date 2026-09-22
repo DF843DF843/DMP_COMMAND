@@ -1182,9 +1182,12 @@ Screens:
                                                       },
                                                   With(
                                                       {
-                                                          vAgentSegments: ForAll(vAgents As agent, {SegColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey}),
-                                                          vGreenSegments: vGreenFixedSegments + CountIf(vAgents, CurrentStatus.Value="Operational")
+                                                          vAgentSegments: ForAll(vAgents As agent, {SegColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey})
                                                       },
+                                                      With(
+                                                          {
+                                                              vGreenSegments: vGreenFixedSegments + CountIf(vAgentSegments, SegColor="rgb(0,206,125)")
+                                                          },
                                                       With(
                                                           {
                                                               vHealthSegments: ForAll(Sequence(CountRows(vFixedSegments) + CountRows(vAgentSegments)) As idx, If(idx.Value <= CountRows(vFixedSegments), Index(vFixedSegments, idx.Value), Index(vAgentSegments, idx.Value - CountRows(vFixedSegments))))
@@ -1195,8 +1198,9 @@ Screens:
                                                                   vSegmentCount: CountRows(vHealthSegments),
                                                                   vSegmentSpan: Max((408.407 / CountRows(vHealthSegments)) - 6, 0)
                                                               },
-                                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" & Concat(Sequence(vSegmentCount) As position, With({segment: Index(vSortedSegments, position.Value)}, "<circle cx='90' cy='90' r='65' fill='none' stroke='" & segment.SegColor & "' stroke-width='20' stroke-dasharray='" & Text(vSegmentSpan, "0.00", "en-US") & " " & Text(408.407-vSegmentSpan, "0.00", "en-US") & "' stroke-dashoffset='" & Text(-((position.Value-1) * (408.407 / vSegmentCount)), "0.00", "en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>")) & "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & If(vGreenSegments=vSegmentCount, "rgb(0,206,125)", If(vGreenSegments=0, "rgb(255,69,58)", "rgb(255,159,10)")) & "'>" & Text(RoundDown((vGreenSegments/vSegmentCount)*100, 0), "0") & "%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
+                                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" & Concat(Sequence(vSegmentCount) As position, With({segment: Index(vSortedSegments, position.Value)}, "<circle cx='90' cy='90' r='65' fill='none' stroke='" & segment.SegColor & "' stroke-width='20' stroke-dasharray='" & Text(vSegmentSpan, "0.00", "en-US") & " " & Text(408.407-vSegmentSpan, "0.00", "en-US") & "' stroke-dashoffset='" & Text(-((position.Value-1) * (408.407 / vSegmentCount)), "0.00", "en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>")) & "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & If(vNeverSucceeded, "rgb(150,150,160)", If(vGreenSegments=vSegmentCount, "rgb(0,206,125)", If(vGreenSegments=0, "rgb(255,69,58)", "rgb(255,159,10)"))) & "'>" & If(vNeverSucceeded, "N/A", Text(RoundDown((vGreenSegments/vSegmentCount)*100, 0), "0") & "%") & "</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
                                                           )
+                                                      )
                                                       )
                                                   )
                                               )
@@ -1281,6 +1285,150 @@ Screens:
                                                 Width: =20
                                                 X: =268
                                                 Y: =0
+                                    - conHeartbeatLegendRowStatusCheck:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendStatusCheck:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(IsBlank(varStatusCallError) || varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendStatusCheck:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Status Check - " & If(IsBlank(varStatusCallError) || varStatusCallError="", "OK", "Error")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowCritical:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendCritical:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Coalesce(varAuditFailedCount, 0)>0, RGBA(255,69,58,1), RGBA(0,206,125,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendCritical:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Critical Events - " & If(Coalesce(varAuditFailedCount, 0)>0, "Critical (" & varAuditFailedCount & ")", "None")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowWarnings:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendWarnings:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Coalesce(varAuditWarningCount, 0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendWarnings:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Warnings - " & If(Coalesce(varAuditWarningCount, 0)>0, "Warning (" & varAuditWarningCount & ")", "None")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowOperatingState:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendOperatingState:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedOperationalState="Red" || varLedApplicationMode="Red", RGBA(255,69,58,1), If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendOperatingState:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Operating State - " & If(varLedOperationalState="Red" || varLedApplicationMode="Red", "Critical", If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", "Warning", "OK"))
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
                                     - conHeartbeatLegendRow1:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
@@ -1294,7 +1442,7 @@ Screens:
                                               Control: GroupContainer@1.5.0
                                               Variant: ManualLayout
                                               Properties:
-                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varEmergencyReportExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedEmergencyReport="Red", RGBA(255,69,58,1), If(varLedEmergencyReport="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
                                                 Height: =14
                                                 RadiusBottomLeft: =7
                                                 RadiusBottomRight: =7
@@ -1312,7 +1460,7 @@ Screens:
                                                 Font: =Font.'Arial'
                                                 Height: =17
                                                 Size: =10.5
-                                                Text: ="Emergency Report - " & If(varEmergencyReportExists,"OK","Missing")
+                                                Text: ="Emergency Report Processing - " & If(varLedEmergencyReport="Red","Critical",If(varLedEmergencyReport="Yellow","Warning","OK")) & " (file " & If(varEmergencyReportExists,"present","missing") & ")"
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
@@ -1461,7 +1609,187 @@ Screens:
                                                 Wrap: =false
                                                 X: =20
                                                 Y: =0
-                                    - conHeartbeatLegendRow6:
+                                    - conHeartbeatLegendRowAgent1:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent1:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent1:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 1 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational","OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent2:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent2:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent2:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 2 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational","OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent3:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent3:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent3:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 3 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational","OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent4:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent4:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent4:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 4 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational","OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent5:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent5:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent5:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 5 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational","OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent6:
                                         Control: GroupContainer@1.5.0
                                         Variant: ManualLayout
                                         Properties:
@@ -1493,6 +1821,42 @@ Screens:
                                                 Height: =17
                                                 Size: =10.5
                                                 Text: ="Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
+                                                Width: =254
+                                                Wrap: =false
+                                                X: =20
+                                                Y: =0
+                                    - conHeartbeatLegendRowAgent7:
+                                        Control: GroupContainer@1.5.0
+                                        Variant: ManualLayout
+                                        Properties:
+                                          Fill: =RGBA(0,0,0,0)
+                                          FillPortions: =0
+                                          Height: =17
+                                          Width: =288
+                                        Children:
+                                          - sqHeartbeatLegendAgent7:
+                                              Control: GroupContainer@1.5.0
+                                              Variant: ManualLayout
+                                              Properties:
+                                                Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                                Height: =14
+                                                RadiusBottomLeft: =7
+                                                RadiusBottomRight: =7
+                                                RadiusTopLeft: =7
+                                                RadiusTopRight: =7
+                                                Width: =14
+                                                X: =0
+                                                Y: =1
+                                          - lblHeartbeatLegendAgent7:
+                                              Control: Label@2.5.1
+                                              Properties:
+                                                BorderColor: =RGBA(0,0,0,0)
+                                                BorderStyle: =BorderStyle.None
+                                                Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                                Font: =Font.'Arial'
+                                                Height: =17
+                                                Size: =10.5
+                                                Text: ="Agent 7 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_07").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational","OK","Not Responding")
                                                 Width: =254
                                                 Wrap: =false
                                                 X: =20
