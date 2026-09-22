@@ -78,6 +78,25 @@ pac env list
 
 Do not assume access is missing. Test the exact access path first.
 
+## User's manual/UI workflow (clarified 2026-09-22 — keep reminding, do not re-assume)
+
+The user explicitly clarified their actual manual/UI role, correcting an earlier assumption in
+this guide:
+
+- The user only loads, opens, and saves the **Power App (Canvas App)** in Power Apps Studio.
+  As of 2026-09-22 the live Power App's last-modified timestamp is still **2026-09-04 10:08**
+  — it has not been reloaded/resaved since, so any local `PowerApp/DMP_COMMAND/Source/Src`
+  changes made after that date are **not live** yet (ties into the still-pending local
+  PowerApp sync/diff task above).
+- The user only activates individual **Power Automate flows** (agents) in the designer, and
+  only when asked/necessary — this is the "open/save/activate" check this guide has been
+  asking for regarding Agent 7.
+- The user does **not** independently manage the **Solution version** (`7.11.x`) — do not
+  expect the user to bump, pack, or import solution versions on their own initiative. Always
+  give an explicit, concrete instruction for exactly what to do (which flow to open, which
+  button to click) rather than a general status question; the AI is responsible for deciding
+  when a version bump/pack/import is due and must ask/instruct explicitly at that point.
+
 ## SharePoint / OneDrive context
 
 - SharePoint site used by the flows/lists: `https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication`
