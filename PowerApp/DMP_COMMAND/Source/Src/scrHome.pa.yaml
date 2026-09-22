@@ -56,6 +56,7 @@ Screens:
             Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
             Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
             Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+            Set(varAgent7Healthy, Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", false));
             Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
             Set(
                 varAgentsHealthyCount,
@@ -64,9 +65,10 @@ Screens:
                 If(varExternalDomainsExists,1,0) +
                 If(varCounterExists,1,0) +
                 If(varAuditTrailExists,1,0) +
-                If(varAgent6Healthy,1,0)
+                If(varAgent6Healthy,1,0) +
+                If(varAgent7Healthy,1,0)
             );
-            Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+            Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 7) * 100, 0));
             Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
             Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
             Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
@@ -433,6 +435,7 @@ Screens:
                                 Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
                                 Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
                                 Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                Set(varAgent7Healthy, Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", false));
                                 Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
                                 Set(
                                     varAgentsHealthyCount,
@@ -441,9 +444,10 @@ Screens:
                                     If(varExternalDomainsExists,1,0) +
                                     If(varCounterExists,1,0) +
                                     If(varAuditTrailExists,1,0) +
-                                    If(varAgent6Healthy,1,0)
+                                    If(varAgent6Healthy,1,0) +
+                                    If(varAgent7Healthy,1,0)
                                 );
-                                Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 7) * 100, 0));
                                 Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
                                 Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
                                 Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
@@ -592,6 +596,7 @@ Screens:
                                     Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
                                     Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
                                     Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                    Set(varAgent7Healthy, Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", false));
                                     Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
                                     Set(
                                         varAgentsHealthyCount,
@@ -600,9 +605,10 @@ Screens:
                                         If(varExternalDomainsExists,1,0) +
                                         If(varCounterExists,1,0) +
                                         If(varAuditTrailExists,1,0) +
-                                        If(varAgent6Healthy,1,0)
+                                        If(varAgent6Healthy,1,0) +
+                                        If(varAgent7Healthy,1,0)
                                     );
-                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 7) * 100, 0));
                                     Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
                                     Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
                                     Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
@@ -719,6 +725,7 @@ Screens:
                                     Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline));
                                     Set(varAppVersion, Coalesce(varStatusResult.appversion, varAppVersion));
                                     Set(varAgent6Healthy, Coalesce(varStatusResult.agent6healthy, varAgent6Healthy));
+                                    Set(varAgent7Healthy, Coalesce(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", false));
                                     Set(varNextMilestones, If(IsBlank(varStatusResult.nextmilestones), varNextMilestones, varStatusResult.nextmilestones));
                                     Set(
                                         varAgentsHealthyCount,
@@ -727,9 +734,10 @@ Screens:
                                         If(varExternalDomainsExists,1,0) +
                                         If(varCounterExists,1,0) +
                                         If(varAuditTrailExists,1,0) +
-                                        If(varAgent6Healthy,1,0)
+                                        If(varAgent6Healthy,1,0) +
+                                        If(varAgent7Healthy,1,0)
                                     );
-                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
+                                    Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 7) * 100, 0));
                                     Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
                                     Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
                                     Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
@@ -962,13 +970,13 @@ Screens:
                               Align: =Align.Center
                               BorderColor: =RGBA(0,0,0,0)
                               BorderStyle: =BorderStyle.None
-                              Color: =If(IsBlank(varStatusLastRefreshed), RGBA(160,155,190,1), If(Coalesce(varAgentsHealthyCount,0)>=6, RGBA(0,206,125,1), RGBA(255,159,10,1)))
+                              Color: =If(IsBlank(varStatusLastRefreshed), RGBA(160,155,190,1), If(Coalesce(varAgentsHealthyCount,0)>=7, RGBA(0,206,125,1), RGBA(255,159,10,1)))
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Bold
                               Height: =40
                               OnSelect: =Set(varLastAckAgentsHealthyCount, Coalesce(varAgentsHealthyCount,0)); Navigate(scrAgentMonitoring, ScreenTransition.None)
                               Size: =32
-                              Text: =If(IsBlank(varStatusLastRefreshed), "?/6", Coalesce(varAgentsHealthyCount,0) & "/6")
+                              Text: =If(IsBlank(varStatusLastRefreshed), "?/7", Coalesce(varAgentsHealthyCount,0) & "/7")
                               Width: =140
                               Wrap: =false
                               X: =Parent.Width - 452
@@ -1176,7 +1184,7 @@ Screens:
                                                       },
                                                       With(
                                                           {
-                                                              vHealthSegments: ForAll(Sequence(CountRows(vFixedSegments) + CountRows(vAgentSegments)) As idx, If(idx.Value <= CountRows(vFixedSegments), Index(vFixedSegments, idx.Value), Index(vAgentSegments, idx.Value - CountRows(vFixedSegments))))
+                                                              vHealthSegments: Table(vFixedSegments, vAgentSegments)
                                                           },
                                                           With(
                                                               {

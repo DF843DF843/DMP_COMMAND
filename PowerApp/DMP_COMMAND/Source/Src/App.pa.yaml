@@ -79,6 +79,7 @@ App:
       Set(varAuditLastModified,Blank());
 
       Set(varAgent6Healthy,true);
+      Set(varAgent7Healthy,true);
 
       Set(varNextMilestones,Filter(Table({phase:"",milestone:"",responsibility:"",status:""}),false));
 
