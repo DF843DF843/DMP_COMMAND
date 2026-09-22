@@ -4,7 +4,15 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.18 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+### v1.22.20 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+
+- Added a temporary "TIMESTAMP DEBUG" panel to the Admin Functions screen (`conFuncTimestampDebug`, orange-bordered), directly below the existing Diagnostics panel. It takes the most recent real Critical/Warning row's raw `timestamp` value and shows it side-by-side with 4 parsing approaches (A: current production formula, B: always-Excel-serial, C: `DateTimeValue` with app/system locale, D: `DateTimeValue` forced to `en-US`), so the correct approach can be identified from real live data instead of guessing. Root cause context: source-side investigation this session confirmed the app-side date parser (`scrAuditTrail.pa.yaml`) already contains the numeric-first-check approach documented as fixed since v1.22.13/17 - the user-reported "still broken" symptom is most likely explained by the live Studio app not having been reloaded since 2026-09-04 (confirmed via source review, not yet confirmed against live data). This panel is meant to be removed again once the correct approach is confirmed live.
+
+### v1.22.19 - 2026-09-22 (superseded same day, folded into v1.22.20 above)
+
+- Fixed `vGreenFixedSegments` for real: it still contained `CountIf(Table(vStatusCheckColor, vCriticalColor, ..., vAuditTrailColor), Value="rgb(0,206,125)")`, passing nine plain text values into `Table()` (invalid - confirmed by Studio's Advanced Formula Checker via user-supplied error analysis). The v1.22.17/v1.22.18 release notes incorrectly claimed this was already fixed (`CountIf(vFixedSegments, Color=...)`); that edit was never actually saved into `scrHome.pa.yaml`. Now genuinely applied: `vGreenFixedSegments: CountIf(vFixedSegments, Color="rgb(0,206,125)")`, reusing the already correctly-typed `vFixedSegments` table instead of building a new `Table()` from scalars.
+
+### v1.22.18 - 2026-09-22 (superseded same day, folded into v1.22.19 above)
 
 - Reverted the System Health ring's `vHealthSegments` from `Table(vFixedSegments, vAgentSegments)` (confirmed invalid by Studio's Advanced Formula Checker: "Die Funktion `.Table` weist ungültige Argumente auf") back to the working `ForAll(Sequence(...), If(..., Index(...), Index(...)))` union approach from an earlier iteration. `Table()` does not merge existing table variables in Power Fx, only record literals - this was a wrong simplification in v1.22.16/17.
 - Kept the `vGreenFixedSegments` fix (`CountIf(vFixedSegments, Color=...)`) from v1.22.17, which is unrelated and unaffected by this revert.

@@ -223,7 +223,7 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 176
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
-                  - conReleaseV1221:
+                  - conReleaseV12219:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
                       Properties:
@@ -244,7 +244,7 @@ Screens:
                         RadiusTopLeft: =12
                         RadiusTopRight: =12
                       Children:
-                        - lblReleaseV12215Header:
+                        - lblReleaseV12220Header:
                             Control: Label@2.5.1
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)
@@ -254,7 +254,57 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.18 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.20 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Wrap: =false
+                        - lblReleaseV12220Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =220
+                              Size: =12
+                              Text: |-
+                                ="- Added a temporary TIMESTAMP DEBUG panel to Admin Functions (conFuncTimestampDebug), showing the most recent real Critical/Warning row's raw timestamp side-by-side with 4 parsing approaches (current formula, always-Excel-serial, DateTimeValue system locale, DateTimeValue en-US forced) to identify the correct one from live data" & Char(10) & "- Source review confirmed scrAuditTrail.pa.yaml already contains the numeric-first-check date parser documented as fixed since v1.22.13/17 - remove the debug panel once the correct approach is confirmed against live data"
+                              Wrap: =true
+                        - lblReleaseV12219Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.19 - 2026-09-22 (superseded same day, folded into v1.22.20 above)"
+                              Wrap: =false
+                        - lblReleaseV12219Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =220
+                              Size: =12
+                              Text: |-
+                                ="- Fixed vGreenFixedSegments for real: it still contained CountIf(Table(vStatusCheckColor, ..., vAuditTrailColor), Value=...), passing nine plain text values into Table() (invalid, confirmed by Studio's checker). The v1.22.17/v1.22.18 notes wrongly claimed this was already fixed - that edit was never actually saved. Now genuinely applied: CountIf(vFixedSegments, Color=...), reusing the already correctly-typed table"
+                              Wrap: =true
+                        - lblReleaseV1221Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.18 - 2026-09-22 (superseded same day, folded into v1.22.19 above)"
                               Wrap: =false
                         - lblReleaseV12215Notes:
                             Control: Label@2.5.1

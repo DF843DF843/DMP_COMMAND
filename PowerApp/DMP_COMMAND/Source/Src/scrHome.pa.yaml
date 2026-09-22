@@ -1175,7 +1175,7 @@ Screens:
                                                           {Color: vAuditTrailColor, Label: "Audit Trail"}
                                                       ),
                                                       vAgents: SortByColumns(Filter('DMP Command Agent Status', StartsWith(AgentKey, "Agent_")), "AgentKey"),
-                                                      vGreenFixedSegments: CountIf(Table(vStatusCheckColor, vCriticalColor, vWarningsColor, vOperatingStateColor, vEmergencyReportColor, vInternalDomainsColor, vExternalDomainsColor, vCounterColor, vAuditTrailColor), Value="rgb(0,206,125)")
+                                                      vGreenFixedSegments: CountIf(vFixedSegments, Color="rgb(0,206,125)")
                                                   },
                                                   With(
                                                       {

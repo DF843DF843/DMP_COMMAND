@@ -10,6 +10,15 @@
 
 ---
 
+## 🟠 v1.22.20 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — gebündelter Fix + temporäres Debug-Panel
+
+- `vGreenFixedSegments` (System Health ring) enthielt trotz gegenteiliger Release-Notes-Behauptung (v1.22.17/18) weiterhin den ungültigen `Table(vStatusCheckColor, ...)`-Aufruf mit Text-Skalaren (vom Nutzer per Studio-Fehleranalyse gefunden) — jetzt echt korrigiert auf `CountIf(vFixedSegments, Color=...)`.
+- Neues temporäres Panel `conFuncTimestampDebug` auf dem Admin-Functions-Screen zeigt die reale, aktuellste Audit-Trail-Zeile mit 4 parallelen Datums-Parsing-Ansätzen (aktuelle Prod-Formel / immer-Excel-Serial / DateTimeValue System-Locale / DateTimeValue en-US) — soll helfen, den gemeldeten Audit-Trail-Datum/Uhrzeit-Bug anhand echter Live-Daten zu bestätigen, statt weiter zu raten. Nach Bestätigung des korrekten Ansatzes wieder entfernen.
+- Quellcode-Prüfung ergab: `scrAuditTrail.pa.yaml` enthält bereits die robuste numerische Vorprüfung (dokumentiert seit v1.22.13/17); ebenso ist Agent 7 in `scrReleaseNotes.pa.yaml` bereits vollständig gepflegt. Der vom Nutzer gemeldete Stand "v1.22.13, Agent 7 fehlt" stammt sehr wahrscheinlich aus der seit 2026-09-04 nicht neu geladenen Studio-Session, nicht aus fehlendem Code — **zu bestätigen, sobald `DMP_COMMAND_v1.22.20.msapp` frisch geladen wurde.**
+- Pack/Unpack-Rückvergleich: 0 Diff für beide geänderten Screens.
+
+---
+
 ## 📌 Große Aufräum-Aktion am 2026-09-04
 
 Dieses Dokument war auf ca. 2650 Zeilen angewachsen (chronologisches Arbeitsprotokoll seit 2026-08-06) und wurde vor einer 2-wöchigen Nutzer-Abwesenheit komplett neu strukturiert:
