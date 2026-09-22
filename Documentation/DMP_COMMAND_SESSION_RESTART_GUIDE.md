@@ -55,8 +55,8 @@ If a change touches the Power App help/manual content, keep `DMP_COMMAND_Operati
   if `.git` is ever found broken/empty again, repeat this same diff-and-merge-forward
   recovery procedure — never blindly overwrite the working files from a fresh clone without
   first diffing, since local files are routinely ahead of the last pushed commit.
-- The recovered commit `694d434` has **not yet been pushed to `origin`** (local commit only,
-  intentionally deferred pending user confirmation) — ask the user whether to `git push` it.
+- The recovery commits `694d434` and `dec7f0a` were **pushed to `origin/main` on 2026-09-22**
+  (`f823e79..dec7f0a main -> main`); `git status` confirms the branch is clean and in sync.
 - OneDrive/team-file root: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent`
 - OneDrive documentation copy: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent\Documentation`
 - Power App version file in synced SharePoint library: `C:\Users\df843\OneDrive - Deutsche Börse AG\GO365_DMP Communication - Email Hotline\AI_Agent\PowerApp_Storage\PowerApp_Version.txt`
