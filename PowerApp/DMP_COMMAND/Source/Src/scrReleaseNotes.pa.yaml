@@ -254,7 +254,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.15 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.16 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
                               Wrap: =false
                         - lblReleaseV12215Notes:
                             Control: Label@2.5.1
@@ -266,7 +266,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =220
                               Size: =12
-                              Text: ="- Replaced the Normal/DMP Operating State toggle with a single colored 'advance' button showing the current phase and the next one (e.g. 'Normal -> Pre-Default'), enforcing the linear Normal -> Pre-Default -> DMP -> Post-Default -> Normal cycle - direct jumps between non-adjacent phases are no longer possible" & Char(10) & "- Switching Environment to PROD now always resets Operating State back to Normal for safety (previously this safety reset only fired from DMP); switching to SIMU now preserves any of the 4 phases, not just DMP/Normal" & Char(10) & "- New internal state model (varOperationalMode/varOperationalStepCounter alongside the existing varOperationalModeIsDMP) - part of the Streams concept's B2 5-mode rollout; not yet loaded/saved/tested by the user in Power Apps Studio this session"
+                              Text: ="- Replaced the Normal/DMP Operating State toggle with a single colored 'advance' button showing the current phase and the next one (e.g. 'Normal -> Pre-Default'), enforcing the linear Normal -> Pre-Default -> DMP -> Post-Default -> Normal cycle - direct jumps between non-adjacent phases are no longer possible" & Char(10) & "- Switching Environment to PROD now always resets Operating State back to Normal for safety (previously this safety reset only fired from DMP); switching to SIMU now preserves any of the 4 phases, not just DMP/Normal" & Char(10) & "- Fixed the pre-existing P1 System Health ring bug (imgHeartbeatWheel.Image, open since 2026-09-04): an invalid table concatenation via the text '&' operator, replaced with a correct ForAll/Sequence/Index union" & Char(10) & "- Fixed the Operating State mode label/color and the 4 ambient screen-border strips, which still only distinguished 2 modes after the button change" & Char(10) & "- Added the missing Agent 7 tile to the Agent Monitoring screen (previously only had static tiles for Agents 1-6); needs a corresponding Agent_07 row in DMP Command Agent Status (user action required)"
                               Wrap: =true
                         - lblReleaseV12212Header:
                             Control: Label@2.5.1

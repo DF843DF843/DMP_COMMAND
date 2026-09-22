@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.15 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+### v1.22.16 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+
+- Fixed the pre-existing P1 System Health ring bug (`imgHeartbeatWheel.Image`, open since 2026-09-04): `vFixedSegments & ForAll(...)` tried to concatenate two tables with the text `&` operator (invalid). Replaced with a `ForAll(Sequence(...), If(..., Index(...), Index(...)))` pattern that correctly unions the two tables.
+- Fixed the Operating State mode label/color (`lblOperatingModeText` area) which still only distinguished 2 states (Normal/DMP) after the B2 5-mode change, showing misleading text like "Normal non-DMP Operation" while actually in Pre-Default/Post-Default. Extended to all 4 modes, matching the new advance button's color scheme.
+- Same fix applied to the 4 ambient screen-border strips (`conFrameTop/Bottom/Left/Right`), which also only recognized 2 modes.
+- Added the missing Agent 7 tile (`conAgentTile07`) to the Agent Monitoring screen - it only had static tiles for Agents 1-6. Requires a corresponding `Agent_07` row in the `DMP Command Agent Status` SharePoint list (not yet added - user action required) to display real data instead of blanks/errors.
+
+### v1.22.15 - 2026-09-22 (superseded same day, folded into v1.22.16 above)
 
 - Replaced the Normal/DMP Operating State toggle with a single colored "advance" button showing the current phase and the next one (e.g. "Normal -> Pre-Default"), enforcing the linear Normal -> Pre-Default -> DMP -> Post-Default -> Normal cycle - direct jumps between non-adjacent phases are no longer possible. Part of the Streams concept's B2 (5-mode rollout).
 - Switching Environment to PROD now always resets Operating State back to Normal for safety (previously this safety reset only fired from DMP); switching to SIMU now preserves any of the 4 phases, not just DMP/Normal.

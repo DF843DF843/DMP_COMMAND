@@ -1171,16 +1171,21 @@ Screens:
                                                   },
                                                   With(
                                                       {
-                                                          vHealthSegments: vFixedSegments & ForAll(vAgents As agent, {Color: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey}),
+                                                          vAgentSegments: ForAll(vAgents As agent, {Color: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey}),
                                                           vGreenSegments: vGreenFixedSegments + CountIf(vAgents, CurrentStatus.Value="Operational")
                                                       },
                                                       With(
                                                           {
-                                                              vSortedSegments: SortByColumns(AddColumns(vHealthSegments, ColorRank, Switch(Color, "rgb(0,206,125)", 1, "rgb(255,159,10)", 2, "rgb(255,69,58)", 3, 4)), "ColorRank", SortOrder.Ascending, "Label", SortOrder.Ascending),
-                                                              vSegmentCount: CountRows(vHealthSegments),
-                                                              vSegmentSpan: Max((408.407 / CountRows(vHealthSegments)) - 6, 0)
+                                                              vHealthSegments: ForAll(Sequence(CountRows(vFixedSegments) + CountRows(vAgentSegments)) As idx, If(idx.Value <= CountRows(vFixedSegments), Index(vFixedSegments, idx.Value), Index(vAgentSegments, idx.Value - CountRows(vFixedSegments))))
                                                           },
-                                                          "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" & Concat(Sequence(vSegmentCount) As position, With({segment: Index(vSortedSegments, position.Value)}, "<circle cx='90' cy='90' r='65' fill='none' stroke='" & segment.Color & "' stroke-width='20' stroke-dasharray='" & Text(vSegmentSpan, "0.00", "en-US") & " " & Text(408.407-vSegmentSpan, "0.00", "en-US") & "' stroke-dashoffset='" & Text(-((position.Value-1) * (408.407 / vSegmentCount)), "0.00", "en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>")) & "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & If(vGreenSegments=vSegmentCount, "rgb(0,206,125)", If(vGreenSegments=0, "rgb(255,69,58)", "rgb(255,159,10)")) & "'>" & Text(RoundDown((vGreenSegments/vSegmentCount)*100, 0), "0") & "%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
+                                                          With(
+                                                              {
+                                                                  vSortedSegments: SortByColumns(AddColumns(vHealthSegments, ColorRank, Switch(Color, "rgb(0,206,125)", 1, "rgb(255,159,10)", 2, "rgb(255,69,58)", 3, 4)), "ColorRank", SortOrder.Ascending, "Label", SortOrder.Ascending),
+                                                                  vSegmentCount: CountRows(vHealthSegments),
+                                                                  vSegmentSpan: Max((408.407 / CountRows(vHealthSegments)) - 6, 0)
+                                                              },
+                                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" & Concat(Sequence(vSegmentCount) As position, With({segment: Index(vSortedSegments, position.Value)}, "<circle cx='90' cy='90' r='65' fill='none' stroke='" & segment.Color & "' stroke-width='20' stroke-dasharray='" & Text(vSegmentSpan, "0.00", "en-US") & " " & Text(408.407-vSegmentSpan, "0.00", "en-US") & "' stroke-dashoffset='" & Text(-((position.Value-1) * (408.407 / vSegmentCount)), "0.00", "en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>")) & "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & If(vGreenSegments=vSegmentCount, "rgb(0,206,125)", If(vGreenSegments=0, "rgb(255,69,58)", "rgb(255,159,10)")) & "'>" & Text(RoundDown((vGreenSegments/vSegmentCount)*100, 0), "0") & "%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
+                                                          )
                                                       )
                                                   )
                                               )
@@ -1532,12 +1537,12 @@ Screens:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           Color: |-
-                                            =With({vModeColor: Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))}, If(varLedOperationalState="Yellow" Or varLedApplicationMode="Yellow", If(varBlinkPhase, vModeColor, RGBA(150,150,158,0.35)), vModeColor))
+                                            =With({vModeColor: Switch(varOperationalMode, "Normal", RGBA(0,206,125,1), "PreDefault", RGBA(255,159,10,1), "DMP", If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1)), "PostDefault", RGBA(60,125,190,1), RGBA(150,150,158,1))}, If(varLedOperationalState="Yellow" Or varLedApplicationMode="Yellow", If(varBlinkPhase, vModeColor, RGBA(150,150,158,0.35)), vModeColor))
                                           Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =18
                                           Size: =11
-                                          Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & If(varOperationalModeIsDMP,"DMP Operation","Normal non-DMP Operation")
+                                          Text: =If(varEnvironmentIsPROD,"PRODUCTION","SIMULATION") & " - " & Switch(varOperationalMode, "Normal", "Normal non-DMP Operation", "PreDefault", "Pre-Default Operation", "DMP", "DMP Operation", "PostDefault", "Post-Default Operation", "Normal non-DMP Operation")
                                           Width: =400
                                           Wrap: =false
                                           X: =16
@@ -3140,8 +3145,8 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
-            Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Fill: =Switch(varOperationalMode, "Normal", RGBA(0,206,125,1), "PreDefault", RGBA(255,159,10,1), "DMP", If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1)), "PostDefault", RGBA(60,125,190,1), RGBA(150,150,158,1))
+            Height: =Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             Width: =Parent.Width
             X: =0
             Y: =0
@@ -3149,26 +3154,26 @@ Screens:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
-            Height: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Fill: =Switch(varOperationalMode, "Normal", RGBA(0,206,125,1), "PreDefault", RGBA(255,159,10,1), "DMP", If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1)), "PostDefault", RGBA(60,125,190,1), RGBA(150,150,158,1))
+            Height: =Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             Width: =Parent.Width
             X: =0
-            Y: =Parent.Height - Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Y: =Parent.Height - Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
       - conFrameLeft:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
+            Fill: =Switch(varOperationalMode, "Normal", RGBA(0,206,125,1), "PreDefault", RGBA(255,159,10,1), "DMP", If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1)), "PostDefault", RGBA(60,125,190,1), RGBA(150,150,158,1))
             Height: =Parent.Height
-            Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Width: =Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             X: =0
             Y: =0
       - conFrameRight:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
-            Fill: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(255,69,58,1), varEnvironmentIsPROD && !varOperationalModeIsDMP, RGBA(0,206,125,1), !varEnvironmentIsPROD && varOperationalModeIsDMP, RGBA(102,52,142,1), RGBA(150,150,158,1))
+            Fill: =Switch(varOperationalMode, "Normal", RGBA(0,206,125,1), "PreDefault", RGBA(255,159,10,1), "DMP", If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1)), "PostDefault", RGBA(60,125,190,1), RGBA(150,150,158,1))
             Height: =Parent.Height
-            Width: =Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
-            X: =Parent.Width - Switch(true, varEnvironmentIsPROD && varOperationalModeIsDMP, 9, !varEnvironmentIsPROD && varOperationalModeIsDMP, 6, varEnvironmentIsPROD && !varOperationalModeIsDMP, 4, 3)
+            Width: =Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
+            X: =Parent.Width - Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             Y: =0
