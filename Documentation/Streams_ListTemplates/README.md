@@ -75,12 +75,13 @@ For `Auswahl` columns the concrete option values are listed (please create them 
 
 ### 2) DMP Command Checklist CoS Leader ✅ already set up
 
-**⚠️ Discrepancy found 2026-09-22:** a schema survey of the live SharePoint lists
-(`Documentation/Survey on SharePoint Lists.docx`) does NOT show a list with this column set
-(`Titel`/`Phase`/`SeqNo`/`TaskDescription`/`EmailTemplateId`/`Status`/`LastChangedBy`/`ConfirmedBy`/
-`ConfirmedUtc`) among the currently existing lists, contradicting the "✅ already set up" status
-below. Re-confirm with the user before building against this list - it may need to be created,
-or may have been created under a name that doesn't match this convention.
+**Confirmed live 2026-09-22** (user-provided list settings screenshot), despite being absent
+from the `Survey on SharePoint Lists.docx` schema export - a known Teams/SharePoint display
+inconsistency can make an existing list simply not show up in that kind of export, so its
+absence there must never be read as "doesn't exist" on its own. Site
+`GO365_DMPCommunication-CoSLeader`, list GUID `E3E95266-BB35-4E32-A60D-06E8E9E379A1`,
+internal/URL list name still `NextSteps_CosLeaderChecklist` (pre-rename technical name - only
+the display title was ever renamed). Columns confirmed 1:1 against the table below.
 
 **List description (English):**
 "Working checklist of the CoS Leader sub stream. Each task references a unique TaskID linked to DMP Command Checklist Overall Process. Status changes require four-eyes confirmation (see DMP Command Checklist Status Change Approvals) before they become effective."

@@ -227,17 +227,27 @@ this guide:
 `Documentation/Survey on SharePoint Lists.docx` (OneDrive copy only, not in Git - it is a live
 export, not authored content) is a per-list column/type/required survey of the **actual, current**
 SharePoint lists and **must be treated as ground truth over the CSV templates in
-`Streams_ListTemplates/` and over this guide's older claims** whenever they conflict. Re-check it
-before wiring any new list as a Power App/flow data source. Cross-checked against the templates
-and source on 2026-09-22; findings:
+`Streams_ListTemplates/` and over this guide's older claims** whenever they conflict. **However,
+the user has confirmed (2026-09-22) that there are known, serious Teams/SharePoint display
+inconsistencies that can make an existing list simply not show up in this kind of survey/export -
+treat any "list not found" conclusion drawn from this document alone as a hypothesis to verify
+directly with the user/in SharePoint, never as confirmed absence.** Re-check the survey before
+wiring any new list as a Power App/flow data source, but do not conclude a list doesn't exist from
+it alone. Cross-checked against the templates and source on 2026-09-22; findings:
 
-- 11 of the 12 `Streams_ListTemplates` CSVs have a matching live list with matching columns.
-- **`DMP Command Checklist CoS Leader` (the CoS Leader working checklist, `Streams_ListTemplates/README.md`
-  item 2, `Titel`/`Phase`/`SeqNo`/`TaskDescription`/`EmailTemplateId`/`Status`/`LastChangedBy`/`ConfirmedBy`/
-  `ConfirmedUtc`) is NOT present in the survey**, contradicting both that README's "✅ already set up"
-  status and this guide's 2026-09-22 "all Streams lists already exist" note - re-confirm with the
-  user whether it still needs to be created, was intentionally dropped, or was renamed to something
-  not obviously matching before building anything against it.
+- 11 of the 12 `Streams_ListTemplates` CSVs have a matching live list with matching columns via the
+  survey directly.
+- **`DMP Command Checklist CoS Leader` (the CoS Leader working checklist) - confirmed live and
+  correct by the user 2026-09-22 despite being absent from the survey document** (exactly the
+  Teams/SharePoint display-inconsistency case above). Site `GO365_DMPCommunication-CoSLeader`,
+  list GUID `E3E95266-BB35-4E32-A60D-06E8E9E379A1`, internal/URL list name still
+  `NextSteps_CosLeaderChecklist` (pre-rename technical name, only the display title was ever
+  renamed - relevant if a connector ever needs the internal name/GUID instead of the display
+  title). Columns confirmed 1:1 against `Streams_ListTemplates/README.md` item 2: `Title`,
+  `Phase` (Choice), `SeqNo` (Number), `TaskDescription` (Multiple lines of text), `EmailTemplateId`
+  (Single line of text), `Status` (Choice), `LastChangedBy`/`ConfirmedBy` (Person or Group),
+  `ConfirmedUtc` (Date and Time), plus standard `Modified`/`Created`/`Created By`/`Modified By`.
+  All 12/12 Streams lists are therefore confirmed to exist.
 - `DMP Command Status Change Approvals` has a live `OccurrenceId` (single line of text) column not in
   the template CSV - update the template before next use; likely meant to reference `Task Occurrences`
   rows directly instead of via `ListName`+`ItemId`.
