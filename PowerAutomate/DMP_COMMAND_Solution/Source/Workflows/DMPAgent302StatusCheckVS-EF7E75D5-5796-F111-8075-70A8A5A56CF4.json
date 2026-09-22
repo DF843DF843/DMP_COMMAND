@@ -1415,9 +1415,22 @@
             },
             "Counter_File_does_exist": {
               "actions": {
-                "SET_Counter_NoDMP": {
+                "FILTER_Counter_NoDMP": {
                   "runAfter": {
                     "SET_CounterLastModified": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'No DMP')"
+                  },
+                  "description": "Filters the Counters list down to the 'No DMP' row. Replaces the invalid inline filter() expression (not a real WDL function, caused a runtime error)."
+                },
+                "SET_Counter_NoDMP": {
+                  "runAfter": {
+                    "FILTER_Counter_NoDMP": [
                       "Succeeded"
                     ]
                   },
@@ -1427,13 +1440,26 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterNoDMP",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'No DMP')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_Counter_NoDMP'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Stores the No DMP workflow counter value read from the DMP Command Counters SharePoint list for the Cockpit Counter card."
                 },
-                "SET_Counter_InternalSender": {
+                "FILTER_Counter_InternalSender": {
                   "runAfter": {
                     "SET_Counter_NoDMP": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'DMP internal Sender')"
+                  },
+                  "description": "Filters the Counters list down to the 'DMP internal Sender' row. Replaces the invalid inline filter() expression (not a real WDL function)."
+                },
+                "SET_Counter_InternalSender": {
+                  "runAfter": {
+                    "FILTER_Counter_InternalSender": [
                       "Succeeded"
                     ]
                   },
@@ -1443,13 +1469,26 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterInternalSender",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP internal Sender')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_Counter_InternalSender'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Stores the current DMP internal Sender workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
-                "SET_Counter_NotEffected": {
+                "FILTER_Counter_NotEffected": {
                   "runAfter": {
                     "SET_Counter_InternalSender": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'DMP not effected Sender')"
+                  },
+                  "description": "Filters the Counters list down to the 'DMP not effected Sender' row. Replaces the invalid inline filter() expression (not a real WDL function)."
+                },
+                "SET_Counter_NotEffected": {
+                  "runAfter": {
+                    "FILTER_Counter_NotEffected": [
                       "Succeeded"
                     ]
                   },
@@ -1459,13 +1498,26 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterNotEffected",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP not effected Sender')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_Counter_NotEffected'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Stores the current DMP not effected Sender workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
-                "SET_Counter_Effected": {
+                "FILTER_Counter_Effected": {
                   "runAfter": {
                     "SET_Counter_NotEffected": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'DMP effected Member')"
+                  },
+                  "description": "Filters the Counters list down to the 'DMP effected Member' row. Replaces the invalid inline filter() expression (not a real WDL function)."
+                },
+                "SET_Counter_Effected": {
+                  "runAfter": {
+                    "FILTER_Counter_Effected": [
                       "Succeeded"
                     ]
                   },
@@ -1475,33 +1527,59 @@
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CounterEffected",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'DMP effected Member')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_Counter_Effected'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Stores the current DMP effected Member workflow counter value.\n\nIf the SharePoint row is blank or unavailable, the value defaults to 0."
                 },
-                "SET_CriticalCounterBaseline": {
+                "FILTER_CriticalCounterBaseline": {
                   "runAfter": {
                     "SET_Counter_Effected": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'CriticalCounterBaseline')"
+                  },
+                  "description": "Filters the Counters list down to the CriticalCounterBaseline row. Replaces the invalid inline filter() expression (not a real WDL function)."
+                },
+                "SET_CriticalCounterBaseline": {
+                  "runAfter": {
+                    "FILTER_CriticalCounterBaseline": [
                       "Succeeded"
                     ]
                   },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "CriticalCounterBaseline",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'CriticalCounterBaseline')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_CriticalCounterBaseline'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Reads the Critical (Failed) counter baseline captured at the last Cockpit reset (row created on first use by Agent 6's reset action) - reuses the same GET_Counters_List read, no extra API call needed."
                 },
-                "SET_WarningCounterBaseline": {
+                "FILTER_WarningCounterBaseline": {
                   "runAfter": {
                     "SET_CriticalCounterBaseline": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_Counters_List')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'WarningCounterBaseline')"
+                  },
+                  "description": "Filters the Counters list down to the WarningCounterBaseline row. Replaces the invalid inline filter() expression (not a real WDL function)."
+                },
+                "SET_WarningCounterBaseline": {
+                  "runAfter": {
+                    "FILTER_WarningCounterBaseline": [
                       "Succeeded"
                     ]
                   },
                   "type": "SetVariable",
                   "inputs": {
                     "name": "WarningCounterBaseline",
-                    "value": "@int(coalesce(first(filter(coalesce(body('GET_Counters_List')?['value'], createArray()), equals(item()?['Title'], 'WarningCounterBaseline')))?['NumberProcessedEmails'], 0))"
+                    "value": "@int(coalesce(first(body('FILTER_WarningCounterBaseline'))?['NumberProcessedEmails'], 0))"
                   },
                   "description": "Reads the Warning counter baseline captured at the last Cockpit reset (row created on first use by Agent 6's reset action) - reuses the same GET_Counters_List read, no extra API call needed."
                 },
@@ -4296,7 +4374,8 @@
                   "source": "groups/315cc2bf-4913-418b-9925-f64e87de1a43",
                   "drive": "b!USbeKdem8U6Jip83VkG-YM0lBpsJ_NhNoCocJEEUwbYxWhjNmKr-SpTxy6_EQXzB",
                   "file": "01UINNLKKBG24NTK66EVBYXRQJ57RVT7XD",
-                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}"
+                  "table": "{81828E1C-0910-4D64-AD3B-C3AA13BE95B9}",
+                  "dateTimeFormat": "ISO 8601"
                 },
                 "host": {
                   "apiId": "/providers/Microsoft.PowerApps/apis/shared_excelonlinebusiness",
@@ -4313,7 +4392,7 @@
                   "minimumItemCount": 50000
                 }
               },
-              "description": "Reads all rows from the central Audit Trail table (same workbook Agent 6 writes run-summaries to). Pagination enabled so tables larger than one connector page are still read completely."
+              "description": "Reads all rows from the central Audit Trail table. dateTimeFormat=ISO 8601 added (2026-09-04): fixes TimestampUtc being returned as a raw Excel serial number, root cause of the wrong-year date display bug. Pagination enabled for large tables."
             },
             "FILTER_AuditTrail_Critical": {
               "runAfter": {

@@ -1,0 +1,9 @@
+"Titel (ActionName)","Description"
+"GetChecklist","Agent 7 action: retrieves the checklist rows for a given working sub stream."
+"ProposeStatusChange","Agent 7 action: proposes a status change for a checklist task, pending four-eyes approval."
+"ApproveStatusChange","Agent 7 action: confirms a proposed status change under the four-eyes principle and writes the final status."
+"SendChecklistEmail","Agent 7 action: renders and sends a checklist e-mail via default@eurex.com, archives it and writes an audit entry."
+"SetDefaultCaseContext","Agent 7 action: stores the default case context captured in the DMP switch-over popup."
+"GetMasterStatus","Agent 7 action: retrieves the aggregated status across all working sub streams for the CoS Leader master screen."
+"EditEmailTemplates","Permission to open and edit e-mail templates via scrEmailTemplateEditor."
+

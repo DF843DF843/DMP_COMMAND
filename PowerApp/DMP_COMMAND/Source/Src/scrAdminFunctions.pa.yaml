@@ -1,4 +1,4 @@
-# ************************************************************************************************
+﻿# ************************************************************************************************
 # Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
 # Use the maker portal to create and edit your Power Apps.
 # 
@@ -238,7 +238,7 @@ Screens:
                                           Height: =32
                                           HoverFill: =RGBA(189,45,59,1)
                                           OnSelect: |
-                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
+                                            =Set(varAdminActionResult,'DMPAgent6(AdminFunctions)[1.1.0]'.Run(User().Email,"DeleteProcessedMailsFolderTree"));
                                             Set(varConfirmDeleteMailboxFolders,false);
                                             If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
                                           RadiusBottomLeft: =8
@@ -471,7 +471,7 @@ Screens:
                                           HoverFill: =RGBA(189,45,59,1)
                                           OnSelect: |
                                             =Set(varConfirmResetCounter,false);
-                                            Set(varAdminActionResult, IfError('DMPAgent6(AdminFunctions)'.Run(User().Email,varPendingResetAction), {success:false, message:"Reset call failed: " & FirstError.Message}));
+                                            Set(varAdminActionResult, IfError('DMPAgent6(AdminFunctions)[1.1.0]'.Run(User().Email,varPendingResetAction), {success:false, message:"Reset call failed: " & FirstError.Message, requestedaction:"", deletedcount:0}));
                                             If(varAdminActionResult.success,Notify(varAdminActionResult.message,NotificationType.Success),Notify(varAdminActionResult.message,NotificationType.Error))
                                           RadiusBottomLeft: =8
                                           RadiusBottomRight: =8
@@ -548,7 +548,7 @@ Screens:
                                     FontWeight: =FontWeight.Semibold
                                     Height: =28
                                     HoverFill: =RGBA(0,120,215,0.12)
-                                    OnSelect: =Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult)); Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount)); Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount)); Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline)); Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline)); Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP)); Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender)); Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected)); Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected))
+                                    OnSelect: =Set(varStatusResult, IfError('DMPAgent4(StatusCheck)=>VS'.Run(), varStatusResult)); Refresh('DMP Command Counters'); Set(varAuditFailedCount, IfError(Coalesce(varStatusResult.auditfailedcount, varAuditFailedCount), varAuditFailedCount)); Set(varAuditWarningCount, IfError(Coalesce(varStatusResult.auditwarningcount, varAuditWarningCount), varAuditWarningCount)); Set(varCriticalCounterBaseline, IfError(Coalesce(varStatusResult.criticalcounterbaseline, varCriticalCounterBaseline), varCriticalCounterBaseline)); Set(varWarningCounterBaseline, IfError(Coalesce(varStatusResult.warningcounterbaseline, varWarningCounterBaseline), varWarningCounterBaseline)); Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP)); Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender)); Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected)); Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected))
                                     RadiusBottomLeft: =6
                                     RadiusBottomRight: =6
                                     RadiusTopLeft: =6

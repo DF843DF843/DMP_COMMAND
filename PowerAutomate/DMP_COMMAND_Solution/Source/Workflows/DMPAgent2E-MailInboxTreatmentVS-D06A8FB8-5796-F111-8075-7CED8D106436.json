@@ -7463,9 +7463,12 @@
                               "metadata": {
                                 "operationMetadataId": "24b9d8a6-6e5d-450f-a19c-341906c21a5c"
                               },
-                              "type": "Compose",
-                              "inputs": "@select(\r\n  coalesce(body('Check_Existence_of_External_Domains_File')?['value'], createArray()),\r\n  toLower(trim(string(item()?['Title'])))\r\n)\r\n",
-                              "description": "Builds a lower-case array of the External Domains list rows. coalesce() guards select() itself (not just a wrapping if()) since Power Automate evaluates both if() branches eagerly - a null value would otherwise crash select() regardless of branch."
+                              "type": "Query",
+                              "inputs": {
+                                "from": "@coalesce(body('Check_Existence_of_External_Domains_File')?['value'], createArray())",
+                                "where": "@equals(toLower(trim(string(item()?['Title']))), outputs('SenderDomainNormalized'))"
+                              },
+                              "description": "Filters External Domains list rows to the normalized sender domain. Uses a real Filter array operation because select() is not a valid inline template function here."
                             },
                             "DomainClassificationFinal": {
                               "runAfter": {
@@ -7503,8 +7506,8 @@
                                 "operationMetadataId": "d0ea2f00-bcd8-44a6-8c29-6e7689337831"
                               },
                               "type": "Compose",
-                              "inputs": "@if(\n  contains(\n    outputs('Parse_external_domains_file_+_create_array'),\n    outputs('SenderDomainNormalized')\n  ),\n  outputs('SenderDomainNormalized'),\n  ''\n)\n",
-                              "description": "Checks whether the normalized sender domain exists in the normalized external domains array and returns the matched domain or an empty string."
+                              "inputs": "@if(\n  greater(length(coalesce(body('Parse_external_domains_file_+_create_array'), createArray())), 0),\n  outputs('SenderDomainNormalized'),\n  ''\n)\n",
+                              "description": "Checks whether the External Domains filter returned a row for the normalized sender domain and returns the matched domain or an empty string."
                             }
                           }
                         },
@@ -7530,9 +7533,12 @@
                         "metadata": {
                           "operationMetadataId": "bae4b483-66b8-4fa9-83c8-e4b1cbf35817"
                         },
-                        "type": "Compose",
-                        "inputs": "@select(\r\n  coalesce(body('Check_Existence_of_Internal_Domains_File')?['value'], createArray()),\r\n  toLower(trim(string(item()?['Title'])))\r\n)\r\n",
-                        "description": "Builds a lower-case array of active Internal Domains list rows. coalesce() guards select() itself (not just a wrapping if()) since Power Automate evaluates both if() branches eagerly - a null value would otherwise crash select() regardless of branch."
+                        "type": "Query",
+                        "inputs": {
+                          "from": "@coalesce(body('Check_Existence_of_Internal_Domains_File')?['value'], createArray())",
+                          "where": "@equals(toLower(trim(string(item()?['Title']))), outputs('SenderDomainNormalized'))"
+                        },
+                        "description": "Filters active Internal Domains list rows to the normalized sender domain. Uses a real Filter array operation because select() is not a valid inline template function here."
                       },
                       "MatchedInternalDomain": {
                         "runAfter": {
@@ -7544,8 +7550,8 @@
                           "operationMetadataId": "f1c746b2-ee2f-4336-9ca8-b8fed88002d9"
                         },
                         "type": "Compose",
-                        "inputs": "@if(\r\n  contains(\r\n    outputs('Parse_internal_domains_file_+_create_array'),\r\n    outputs('SenderDomainNormalized')\r\n  ),\r\n  outputs('SenderDomainNormalized'),\r\n  ''\r\n)\r\n",
-                        "description": "Checks whether the normalized sender domain exists in the normalized internal domains array and returns the matched domain or an empty string."
+                        "inputs": "@if(\r\n  greater(length(coalesce(body('Parse_internal_domains_file_+_create_array'), createArray())), 0),\r\n  outputs('SenderDomainNormalized'),\r\n  ''\r\n)\r\n",
+                        "description": "Checks whether the Internal Domains filter returned a row for the normalized sender domain and returns the matched domain or an empty string."
                       },
                       "DomainClassificationInternal": {
                         "runAfter": {
@@ -8136,6 +8142,40 @@
                 "value": "@\r\nconcat(\r\n  '[', utcNow(), '] ERROR | ',\r\n  'code=', coalesce(workflow()?['run']?['error']?['code'], 'n/a'),\r\n  ' | message=', coalesce(workflow()?['run']?['error']?['message'], 'n/a'),\r\n  '\\n'\r\n)\r\n"
               },
               "description": "Appends a technical error marker (run error code and message) to the run's audit trail buffer."
+            },
+            "Compose_Subject_(Technical_Main_Flow_Failed)": {
+              "runAfter": {
+                "Workflow_Status_-_Failed": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Compose",
+              "inputs": "@concat(\n  outputs('Mail_Mode_Subject_Prefix'),\n  '[Agent 2][FAILED] Technical Main Flow Failed ',\n  '[EC:A2-MAINFLOW-FAILED][RID:',\n  workflow()?['run']?['name'],\n  ']'\n)",
+              "description": "Builds the subject for the critical Agent 2 technical main-flow failure alert."
+            },
+            "Send_alert_E-Mail_(Technical_Main_Flow_Failed)": {
+              "runAfter": {
+                "Compose_Subject_(Technical_Main_Flow_Failed)": [
+                  "Succeeded"
+                ]
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "emailMessage/To": "@trim(string(outputs('CMP_ConfigObject')?['AlertEmailRecipient']))",
+                  "emailMessage/Subject": "@outputs('Compose_Subject_(Technical_Main_Flow_Failed)')",
+                  "emailMessage/Body": "<p class=\"editor-paragraph\">@{outputs('Mail_Mode_Body_Header')}<br><br>Hello Hotline Team,<br><br>Agent 2 detected a critical technical failure in the main e-mail processing flow.<br><br><b>Run ID:</b> @{workflow()?['run']?['name']}<br><b>Error code:</b> @{coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['code'], 'n/a')}<br><b>Error message:</b> @{coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['message'], 'n/a')}<br><br>The incoming e-mail may not have been classified or processed correctly. Please inspect the Power Automate run immediately.<br><br>Kind regards,<br>DMP Hotline Team</p>",
+                  "emailMessage/From": "@trim(string(outputs('CMP_ConfigObject')?['SharedDMPMailbox']))",
+                  "emailMessage/Importance": "@trim(string(outputs('CMP_ConfigObject')?['MailImportanceError']))"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                  "connectionName": "shared_office365",
+                  "operationId": "SendEmailV2"
+                },
+                "authentication": "@parameters('$authentication')"
+              },
+              "description": "Sends the mandatory critical alert when Agent 2 main processing fails or times out."
             }
           },
           "runAfter": {
@@ -9578,7 +9618,7 @@
               "item/LastRunDurationSec": "@formatNumber( div( float( sub( ticks(utcNow()), variables('RunStartTicks') ) ), 10000000 ), '0.00' )",
               "item/LastFailureTimestamp": "@if( or( equals(variables('AuditOutcome'), 'Succeeded'), equals(variables('AuditOutcome'), 'Warning') ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastFailureTimestamp'], utcNow() )",
               "item/LastFailureStep": "@if( or( equals(variables('AuditOutcome'), 'Succeeded'), equals(variables('AuditOutcome'), 'Warning') ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastFailureStep'], if( greater(length(variables('AuditEvents')), 0), last(variables('AuditEvents'))?['StepName'], 'Agent2_EmailInboxTreatment' ) )",
-              "item/LastFailureMessage": "@if( or( equals(variables('AuditOutcome'), 'Succeeded'), equals(variables('AuditOutcome'), 'Warning') ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastFailureMessage'], concat( 'Agent 2 completed with failure. AuditOutcome=', variables('AuditOutcome'), ' | WorkflowPath=', coalesce(variables('Detected Workflow Path'), ''), ' | SenderDomain=', outputs('SenderDomainNormalized') ) )",
+              "item/LastFailureMessage": "@if( or( equals(variables('AuditOutcome'), 'Succeeded'), equals(variables('AuditOutcome'), 'Warning') ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastFailureMessage'], concat( 'Agent 2 completed with failure. AuditOutcome=', variables('AuditOutcome'), ' | WorkflowPath=', coalesce(variables('Detected Workflow Path'), ''), ' | SenderDomain=', outputs('SenderDomainNormalized'), ' | ErrorCode=', coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['code'], 'n/a'), ' | ErrorMessage=', coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['message'], 'n/a') ) )",
               "item/LastWarningTimestamp": "@if( equals(variables('AuditOutcome'), 'Warning'), utcNow(), first(body('GET_StatusRow_Agent_02')?['value'])?['LastWarningTimestamp'] )",
               "item/LastWarningStep": "@if( equals(variables('AuditOutcome'), 'Warning'), if( greater(length(variables('AuditEvents')), 0), last(variables('AuditEvents'))?['StepName'], 'Agent2_EmailInboxTreatment' ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastWarningStep'] )",
               "item/LastWarningMessage": "@if( equals(variables('AuditOutcome'), 'Warning'), concat( 'Agent 2 completed with warning. WorkflowPath=', coalesce(variables('Detected Workflow Path'), ''), ' | SenderDomain=', outputs('SenderDomainNormalized') ), first(body('GET_StatusRow_Agent_02')?['value'])?['LastWarningMessage'] )",
@@ -9594,7 +9634,7 @@
               "item/LastStatusUpdateSource": "Agent_02",
               "item/StatusSeverity/Value": "@if( equals(variables('AuditOutcome'), 'Succeeded'), 'Information', if( equals(variables('AuditOutcome'), 'Warning'), 'Warning', 'Critical' ) )",
               "item/LastHeartbeatTimestamp": "@utcNow()",
-              "item/StatusMessage": "@concat( 'Agent 2 e-mail inbox treatment completed. AuditOutcome=', variables('AuditOutcome'), ' | WorkflowPath=', coalesce(variables('Detected Workflow Path'), ''), ' | SenderDomain=', outputs('SenderDomainNormalized') )"
+              "item/StatusMessage": "@concat( 'Agent 2 e-mail inbox treatment completed. AuditOutcome=', variables('AuditOutcome'), ' | WorkflowPath=', coalesce(variables('Detected Workflow Path'), ''), ' | SenderDomain=', outputs('SenderDomainNormalized'), if( equals(variables('AuditOutcome'), 'Failed'), concat(' | ErrorCode=', coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['code'], 'n/a'), ' | ErrorMessage=', coalesce(actions('Main_E-Mail_Processing_Flow')?['error']?['message'], 'n/a')), '' ) )"
             },
             "host": {
               "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",

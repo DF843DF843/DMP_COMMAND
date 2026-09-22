@@ -42,10 +42,10 @@ Screens:
             Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
             Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
             Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-            Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-            Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-            Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-            Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+            Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP));
+            Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender));
+            Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected));
+            Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected));
             Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
             Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
             Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
@@ -81,8 +81,8 @@ Screens:
                 Reset(tglOperationalState);
                 Reset(tglApplicationMode)
             );
-            Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
-            Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
+            Set(varLedOperationalState, If(varStatusCallError="", If(varLedOperationalState="Red", "Red", "Green"), "Gray"));
+            Set(varLedApplicationMode, If(varStatusCallError="", If(varLedApplicationMode="Red", "Red", "Green"), "Gray"));
             // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles): establish the
             // "last acknowledged" baseline exactly once, on the very first successful refresh of this
             // session. Later refreshes (tmrAutoRefreshTick) deliberately do NOT touch this baseline -
@@ -256,6 +256,22 @@ Screens:
                         PaddingLeft: =12
                         PressedFill: =RGBA(255,255,255,0.1)
                         Text: ="Maintenance"
+                  - btnNavTaskOccurrences:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Align: =Align.Left
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(154,154,160,1)
+                        Fill: =RGBA(0,0,0,0)
+                        Font: =Font.'Arial'
+                        Height: =38
+                        HoverColor: =RGBA(255,255,255,1)
+                        HoverFill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        OnSelect: =Navigate(scrTaskOccurrences, ScreenTransition.None)
+                        PaddingLeft: =12
+                        PressedFill: =RGBA(255,255,255,0.1)
+                        Text: ="Task Occurrences"
                   - btnNavAdminFunctions:
                       Control: Classic/Button@2.2.0
                       Properties:
@@ -402,10 +418,10 @@ Screens:
                                 Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
                                 Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
                                 Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP));
+                                Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender));
+                                Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected));
+                                Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected));
                                 Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
                                 Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
                                 Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
@@ -560,10 +576,10 @@ Screens:
                                     Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
                                     Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
                                     Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                    Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                    Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                    Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                    Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                    Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP));
+                                    Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender));
+                                    Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected));
+                                    Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected));
                                     Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
                                     Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
                                     Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
@@ -592,8 +608,8 @@ Screens:
                                         Reset(tglOperationalState);
                                         Reset(tglApplicationMode)
                                     );
-                                    Set(varLedOperationalState, If(varStatusCallError="", "Green", "Gray"));
-                                    Set(varLedApplicationMode, If(varStatusCallError="", "Green", "Gray"));
+                                    Set(varLedOperationalState, If(varStatusCallError="", If(varLedOperationalState="Red", "Red", "Green"), "Gray"));
+                                    Set(varLedApplicationMode, If(varStatusCallError="", If(varLedApplicationMode="Red", "Red", "Green"), "Gray"));
                                     Set(varReadyToLiftToggleGuard, true);
                                     // Same success/attempt-cap logic as scrHome.OnVisible - see comment there.
                                     // Repeat=true (below) turns this into a genuine ~800ms retry loop, capped
@@ -686,10 +702,10 @@ Screens:
                                     Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
                                     Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
                                     Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                    Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                    Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                    Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                    Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                    Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP));
+                                    Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender));
+                                    Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected));
+                                    Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected));
                                     Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
                                     Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
                                     Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
@@ -788,10 +804,10 @@ Screens:
                                         Set(varExternalDomainsCount, Coalesce(varStatusResult.externaldomainscount, varExternalDomainsCount));
                                         Set(varExternalDomainsLastModified, Coalesce(varStatusResult.externaldomainslastmodified, varExternalDomainsLastModified));
                                         Set(varCounterExists, Coalesce(varStatusResult.counterexists, varCounterExists));
-                                        Set(varCounterNoDMP, Coalesce(varStatusResult.counternodmp, varCounterNoDMP));
-                                        Set(varCounterInternalSender, Coalesce(varStatusResult.counterinternalsender, varCounterInternalSender));
-                                        Set(varCounterNotEffected, Coalesce(varStatusResult.counternoteffected, varCounterNotEffected));
-                                        Set(varCounterEffected, Coalesce(varStatusResult.countereffected, varCounterEffected));
+                                        Set(varCounterNoDMP, Coalesce(LookUp('DMP Command Counters', Title = "No DMP", NumberProcessedEmails), varStatusResult.counternodmp, varCounterNoDMP));
+                                        Set(varCounterInternalSender, Coalesce(LookUp('DMP Command Counters', Title = "DMP internal Sender", NumberProcessedEmails), varStatusResult.counterinternalsender, varCounterInternalSender));
+                                        Set(varCounterNotEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP not effected Sender", NumberProcessedEmails), varStatusResult.counternoteffected, varCounterNotEffected));
+                                        Set(varCounterEffected, Coalesce(LookUp('DMP Command Counters', Title = "DMP effected Member", NumberProcessedEmails), varStatusResult.countereffected, varCounterEffected));
                                         Set(varCounterLastModified, Coalesce(varStatusResult.counterlastmodified, varCounterLastModified));
                                         Set(varAuditTrailExists, Coalesce(varStatusResult.audittrailexists, varAuditTrailExists));
                                         Set(varAuditLastModified, Coalesce(varStatusResult.auditlastmodified, varAuditLastModified));
@@ -1122,12 +1138,48 @@ Screens:
                                           },
                                           With(
                                               {
-                                                  vColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varSystemHealthPercent>=80,"rgb(0,206,125)",If(varSystemHealthPercent>=50,"rgb(255,159,10)","rgb(255,69,58)"))),
-                                                  vPercentText: If(vNeverSucceeded, "N/A", Text(varSystemHealthPercent,"0") & "%"),
-                                                  vArcLength: If(vNeverSucceeded, 0, (varSystemHealthPercent/100)*408.407),
+                                                  vStatusCheckColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(IsBlank(varStatusCallError) || varStatusCallError="", "rgb(0,206,125)", "rgb(255,69,58)"))),
+                                                  vCriticalColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Coalesce(varAuditFailedCount, 0)>0, "rgb(255,69,58)", "rgb(0,206,125)"))),
+                                                  vWarningsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(Coalesce(varAuditWarningCount, 0)>0, "rgb(255,159,10)", "rgb(0,206,125)"))),
+                                                  vOperatingStateColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varLedOperationalState="Red" || varLedApplicationMode="Red", "rgb(255,69,58)", If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", "rgb(255,159,10)", "rgb(0,206,125)"))),
+                                                  vEmergencyReportColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varLedEmergencyReport="Red", "rgb(255,69,58)", If(varLedEmergencyReport="Yellow", "rgb(255,159,10)", "rgb(0,206,125)"))),
+                                                  vInternalDomainsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(varInternalDomainsExists, "rgb(0,206,125)", "rgb(255,69,58)"))),
+                                                  vExternalDomainsColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(varExternalDomainsExists, "rgb(0,206,125)", "rgb(255,69,58)"))),
+                                                  vCounterColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(varCounterExists, "rgb(0,206,125)", "rgb(255,69,58)"))),
+                                                  vAuditTrailColor: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(varAuditTrailExists, "rgb(0,206,125)", "rgb(255,69,58)"))),
                                                   vSubLabel: If(varIsRefreshing, "REFRESHING...", "SYSTEM HEALTH")
                                               },
-                                              "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-opacity='0.18' stroke-width='20'/><circle cx='90' cy='90' r='65' fill='none' stroke='" & vColor & "' stroke-width='20' stroke-dasharray='" & Text(vArcLength,"0.00","en-US") & " 408.407' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/><text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & vColor & "'>" & vPercentText & "</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
+                                              With(
+                                                  {
+                                                      vFixedSegments: Table(
+                                                          {Color: vStatusCheckColor, Label: "Status Check"},
+                                                          {Color: vCriticalColor, Label: "Critical Events"},
+                                                          {Color: vWarningsColor, Label: "Warnings"},
+                                                          {Color: vOperatingStateColor, Label: "Operating State"},
+                                                          {Color: vEmergencyReportColor, Label: "Emergency Report Processing"},
+                                                          {Color: vInternalDomainsColor, Label: "Internal Domains"},
+                                                          {Color: vExternalDomainsColor, Label: "External Domains"},
+                                                          {Color: vCounterColor, Label: "Counter"},
+                                                          {Color: vAuditTrailColor, Label: "Audit Trail"}
+                                                      ),
+                                                      vAgents: SortByColumns(Filter('DMP Command Agent Status', StartsWith(AgentKey, "Agent_")), "AgentKey"),
+                                                      vGreenFixedSegments: CountIf(Table(vStatusCheckColor, vCriticalColor, vWarningsColor, vOperatingStateColor, vEmergencyReportColor, vInternalDomainsColor, vExternalDomainsColor, vCounterColor, vAuditTrailColor), Value="rgb(0,206,125)")
+                                                  },
+                                                  With(
+                                                      {
+                                                          vHealthSegments: vFixedSegments & ForAll(vAgents As agent, {Color: If(vNeverSucceeded, "rgb(150,150,160)", If(varIsRefreshing, "rgb(255,159,10)", If(agent.CurrentStatus.Value="Operational", "rgb(0,206,125)", "rgb(255,69,58)"))), Label: agent.AgentKey}),
+                                                          vGreenSegments: vGreenFixedSegments + CountIf(vAgents, CurrentStatus.Value="Operational")
+                                                      },
+                                                      With(
+                                                          {
+                                                              vSortedSegments: SortByColumns(AddColumns(vHealthSegments, ColorRank, Switch(Color, "rgb(0,206,125)", 1, "rgb(255,159,10)", 2, "rgb(255,69,58)", 3, 4)), "ColorRank", SortOrder.Ascending, "Label", SortOrder.Ascending),
+                                                              vSegmentCount: CountRows(vHealthSegments),
+                                                              vSegmentSpan: Max((408.407 / CountRows(vHealthSegments)) - 6, 0)
+                                                          },
+                                                          "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" & Concat(Sequence(vSegmentCount) As position, With({segment: Index(vSortedSegments, position.Value)}, "<circle cx='90' cy='90' r='65' fill='none' stroke='" & segment.Color & "' stroke-width='20' stroke-dasharray='" & Text(vSegmentSpan, "0.00", "en-US") & " " & Text(408.407-vSegmentSpan, "0.00", "en-US") & "' stroke-dashoffset='" & Text(-((position.Value-1) * (408.407 / vSegmentCount)), "0.00", "en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>")) & "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='26' font-weight='bold' fill='" & If(vGreenSegments=vSegmentCount, "rgb(0,206,125)", If(vGreenSegments=0, "rgb(255,69,58)", "rgb(255,159,10)")) & "'>" & Text(RoundDown((vGreenSegments/vSegmentCount)*100, 0), "0") & "%</text><text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & vSubLabel & "</text></svg>"
+                                                      )
+                                                  )
+                                              )
                                           )
                                       )
                                     Width: =312
@@ -2602,10 +2654,10 @@ Screens:
                                               { vTotal: Max(vNoDMP + vDEE + vDIS + vDNES, 1) },
                                               With(
                                                   {
-                                                      vLen1: (vNoDMP/vTotal)*408.407 - 8,
-                                                      vLen2: (vDEE/vTotal)*408.407 - 8,
-                                                      vLen3: (vDIS/vTotal)*408.407 - 8,
-                                                      vLen4: (vDNES/vTotal)*408.407 - 8,
+                                                      vLen1: Max((vNoDMP/vTotal)*408.407 - 8, 0),
+                                                      vLen2: Max((vDEE/vTotal)*408.407 - 8, 0),
+                                                      vLen3: Max((vDIS/vTotal)*408.407 - 8, 0),
+                                                      vLen4: Max((vDNES/vTotal)*408.407 - 8, 0),
                                                       vOff2: -((vNoDMP/vTotal)*408.407),
                                                       vOff3: -(((vNoDMP+vDEE)/vTotal)*408.407),
                                                       vOff4: -(((vNoDMP+vDEE+vDIS)/vTotal)*408.407)
@@ -2614,10 +2666,10 @@ Screens:
                                                       vNeverSucceeded,
                                                       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'><circle cx='90' cy='90' r='65' fill='none' stroke='rgb(150,150,158)' stroke-width='20' stroke-opacity='0.35'/><text x='90' y='95' text-anchor='middle' font-family='Segoe UI' font-size='16' font-weight='bold' fill='" & vLabelColor & "'>Loading...</text></svg>",
                                                       "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='312' height='312' viewBox='0 0 180 180'>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,69,58)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
-                                                      "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>" &
+                                                      If(vNoDMP > 0, "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(60,125,190)' stroke-width='20' stroke-dasharray='" & Text(vLen1,"0.00","en-US") & " " & Text(408.407-vLen1,"0.00","en-US") & "' stroke-dashoffset='0' stroke-linecap='round' transform='rotate(-90 90 90)'/>", "") &
+                                                      If(vDEE > 0, "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(255,69,58)' stroke-width='20' stroke-dasharray='" & Text(vLen2,"0.00","en-US") & " " & Text(408.407-vLen2,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff2,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>", "") &
+                                                      If(vDIS > 0, "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(102,52,142)' stroke-width='20' stroke-dasharray='" & Text(vLen3,"0.00","en-US") & " " & Text(408.407-vLen3,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff3,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>", "") &
+                                                      If(vDNES > 0, "<circle cx='90' cy='90' r='65' fill='none' stroke='rgb(0,206,125)' stroke-width='20' stroke-dasharray='" & Text(vLen4,"0.00","en-US") & " " & Text(408.407-vLen4,"0.00","en-US") & "' stroke-dashoffset='" & Text(vOff4,"0.00","en-US") & "' stroke-linecap='round' transform='rotate(-90 90 90)'/>", "") &
                                                       "<text x='90' y='85' text-anchor='middle' font-family='Segoe UI' font-size='28' font-weight='bold' fill='rgb(60,125,190)'>" & Text(vTotal,"0") & "</text>" &
                                                       "<text x='90' y='103' text-anchor='middle' font-family='Segoe UI' font-size='11' fill='" & vLabelColor & "'>" & If(varIsRefreshing, "REFRESHING...", "EMAILS PROCESSED") & "</text></svg>"
                                                   )

@@ -4,7 +4,29 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.11 - 2026-09-03 (current)
+### v1.22.14 - 2026-09-04 (published; P1 follow-up required)
+
+- Published the direct SharePoint counter refresh and zero-value Emails Processed ring fix.
+- Published the first System Health dynamic-segment implementation, but it has a live Power Fx type error ("Only record or table values can be used in that context") in the dynamic table composition. This implementation is not accepted as complete; its repair is the first P1 task of the next session.
+
+### v1.22.13 - 2026-09-04 (current)
+
+- Found and fixed the actual root cause of the non-responsive Admin Functions and Audit Trail Reset buttons - the app's internal reference to the Agent 6 flow was named "DMPAgent6(AdminFunctions)[1.1.0]" while all 5 button formulas called it without the version suffix; all 5 call sites corrected to the exact live connector name
+- Rebuilt the Audit Trail date/time parsing to be more robust - the raw timestamp is now checked first for being a plain number (Excel serial date) and converted directly; only genuine ISO-formatted text falls back to the text-based date parser, removing the previous unreliable "try text-parsing first" approach and its accompanying implausible-year workaround
+- The "Loading..." indicator shown while an Audit Trail action is running now shows a context-specific message (e.g. "Resetting Critical baseline...", "Resetting Warning baseline...", "Resetting all baselines...", "Refreshing audit data..."), vertically centered with the button row instead of a generic fixed text
+- Removed the temporary raw-timestamp diagnostic label from the Audit Trail screen, now that the underlying date bug is confirmed fixed
+
+### v1.22.12 - 2026-09-04
+
+- Fixed the Audit Trail date/time display - dates now use direct date arithmetic instead of a function that silently truncated the time-of-day to 00:00; both the date and the time portion now display correctly
+- Fixed a stale Agent 6 flow connection reference in the packaged app file (re-synced from a live download after the flow was reconnected in Studio)
+- Fixed the 3 Audit Trail Reset buttons and the Admin Functions counter-reset action, which failed to run at all ("IfError has invalid arguments") because their error-fallback result did not have the same fields as the flow's real response - all 5 call sites corrected
+- Audit Trail (Detail) no longer triggers its own separate Agent 4 call when the tab is opened - it now just kicks off the same shared periodic refresh timer the Cockpit already uses, avoiding a duplicate refresh
+- The 3 Reset buttons (Critical/Warning/All) on the Audit Trail screen now show the existing "Loading..." indicator immediately after being clicked, instead of giving no visible feedback while the call is in flight
+- Help / Operational Manual screen extended with 6 new sections (Agent Monitoring, Audit Trail (Detail), Configuration (Lists), Maintenance, Admin Functions, Release Notes), matching the full screen set of the app; System Health legend corrected to 6 monitored items (added Agent 6) and the Sidebar section updated to include Release Notes
+- Synced the PowerApp_Version.txt source file to the actual current version, which had been stuck at v1.22.11
+
+### v1.22.11 - 2026-09-03
 
 - Found the real cause of the persistent Audit Trail year-3926 date bug - the underlying timestamp is stored as ISO text (e.g. "2026-09-02T12:34:43Z"), not a plain Excel serial number as previously assumed, and the earlier fix's Value()+DateAdd() approach mis-parsed that text using the wrong internal date epoch. Now uses DateTimeValue() first (built for exactly this text format), falling back to the old numeric approach only if that fails
 - Audit Trail (Detail) now shows a "Loading recent alerts..." indicator while refreshing, plus a dedicated "Refresh now" button, instead of only silently reloading
@@ -258,14 +280,47 @@ Backend:
 
 ## Agent (Flow) Changes
 
-### Agent 2 (E-Mail Inbox Treatment) - v1.0.8 (current)
+### Agent 7 (Streams & Milestone Management) - v0.2.0 (current Dev component name)
 
-- v1.0.8 (2026-09-02) - Counter increment (all 4 workflow paths) and external domains read now use the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt. Also fixes a runtime crash ("Parse internal domains file + create array" InvalidTemplate error) caused by Power Automate evaluating both branches of an if() eagerly - select() is now guarded directly with coalesce() instead of relying on an outer length check
+- Solution `7.11.47` (2026-09-22) - Implemented the `RequestedAction` contract:
+  `CreateTaskOccurrences` (single `BusinessDate`) and `GenerateMissingOccurrences`
+  (inclusive `FromDate`/`ToDate` multi-day expansion). Removed the obsolete
+  `OccurrencesJson` trigger input; the trigger now exposes `InitiatedBy`,
+  `RequestedAction`, `OperatingMode`, `CaseId`, `FromDate`, `BusinessDate`, `ToDate`.
+  Added explicit validation (unsupported action, missing/out-of-order dates) returned as
+  `validationError`/`message`, and reliable `createdCount`/`skippedCount` response
+  counters. The rule-application loop now nests per validated date
+  (`FOREACH_Dates` &gt; `APPLY_Rules`) instead of a single `BusinessDate`. Not yet
+  imported-and-activated-confirmed by the user in the designer; not yet run end-to-end
+  against real data.
+- Solution `7.11.46` (2026-09-21) - Agent 7 now opens in the new designer and was
+  user-confirmed as saveable and activatable in `DBG Team Productivity (Dev)`. Corrected the
+  Task Occurrences `ScheduleSlot` Create Item mapping from invalid plain-text
+  `item/ScheduleSlot` to Choice binding `item/ScheduleSlot/Value`.
+- Solution `7.11.41`–`7.11.45` - isolated the misleading `$schema` designer failure through
+  controlled deployments: minimal Power Apps V2 flow, SharePoint read, DMP Condition,
+  recurrence-rule loop, OccurrenceId/duplicate lookup, then Create Item. The first four
+  stages loaded; adding Create Item exposed the actual
+  `OpenApiOperationParameterValidationFailed` error for `ScheduleSlot`.
+- Corrected all Agent 7 SharePoint datasets to
+  `https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader`.
+- Current partial C5 behavior: reads active Daily recurrence rules for one `BusinessDate`,
+  generates the canonical OccurrenceId, checks exact existence, and creates only missing
+  Task Occurrences with UTC due time. No real-row end-to-end test was performed yet.
+- Still pending: final `BusinessDate`/`FromDate`/`ToDate` contract, inclusive date-range
+  generation, active-case/mode validation, response counters, live Power App binding, and
+  Dev idempotency test.
+
+### Agent 2 (E-Mail Inbox Treatment) - v1.0.9 (current)
+
+- v1.0.9 (2026-09-04) - Hotfix for the invalid inline `@select(...)` Power-Automate expressions in internal/external domains classification. Replaced both parse actions with real Query/Filter-array operations and added a mandatory critical technical main-flow failure alert e-mail `[EC:A2-MAINFLOW-FAILED]`. Solution 7.11.35 imported and published in DBG Team Productivity (Dev).
+- v1.0.8 (2026-09-02) - Counter increment (all 4 workflow paths) and external domains read now use the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt. Follow-up finding on 2026-09-04: the attempted runtime-crash fix for "Parse internal domains file + create array" is still faulty because `select()` is not a valid inline Power-Automate template function in this context; Agent 2 needs a follow-up flow fix using a real Data Operation Select or equivalent non-`select()` expression logic.
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
-### Agent 4 (Status Check) - v1.4.3 (current)
+### Agent 4 (Status Check) - v1.4.4 (current)
 
+- v1.4.4 (2026-09-04) - Fixed 2 separate bugs found via the real flow run history: (1) the Audit Trail read now requests dateTimeFormat=ISO 8601 like every write action already does, instead of returning raw Excel serial numbers for TimestampUtc; (2) replaced 6 uses of the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) in the Counter card and Critical/Warning baseline reads with proper Query actions - this was silently breaking the No DMP/Internal Sender/Not Effected/Effected counters and both baseline reads
 - v1.4.3 (2026-09-03) - Fixed the Internal/External Domains and Counter "Last Updated" fields silently failing every run ("The template function 'select' is not defined or not valid") - replaced the select()/max() expression with a simple $orderby=Modified desc on the existing list read, no extra API call needed
 - v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature
 - v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating after Agent 1/2 were migrated to the new lists
@@ -293,10 +348,10 @@ Backend:
 - 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)
 - 2026-08-13 - renamed from "Agent 3.03 (YES File Management)" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value
 
-### Agent 6 (Admin Functions) - v1.3.0 (current)
+### Agent 6 (Admin Functions) - v1.3.1 (current)
 
+- v1.3.1 (2026-09-04) - Fixed the Reset All action's Critical/Warning baseline row lookup, which used the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) and silently failed - replaced with a proper Query action, same pattern as the individual Reset Critical/Reset Warning actions already used
 - v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset
 - v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0
 
 v1.5.x & older
-

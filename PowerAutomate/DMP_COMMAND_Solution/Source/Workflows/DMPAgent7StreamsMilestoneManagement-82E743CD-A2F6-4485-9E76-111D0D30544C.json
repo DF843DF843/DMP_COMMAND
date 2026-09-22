@@ -1,0 +1,674 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dmpcmnd_sharedsharepointonline_626f1"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {
+            
+          },
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {
+            
+          },
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "a37c98bb-b431-49a5-84b0-91d72bbc1aa8"
+          },
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "InitiatedBy",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "RequestedAction",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_2": {
+                  "title": "OperatingMode",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_3": {
+                  "title": "CaseId",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_4": {
+                  "title": "FromDate",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_5": {
+                  "title": "BusinessDate",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_6": {
+                  "title": "ToDate",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Enter input",
+                  "x-ms-content-hint": "TEXT"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "text_3",
+                "text_4",
+                "text_5",
+                "text_6"
+              ]
+            }
+          },
+          "description": "Starts Agent 7 task-occurrence generation (CreateTaskOccurrences / GenerateMissingOccurrences)."
+        }
+      },
+      "actions": {
+        "COMPOSE_ActivationTest": {
+          "type": "Compose",
+          "inputs": "Agent 7 action/date-range contract active.",
+          "runAfter": {
+            
+          }
+        },
+        "INIT_ValidationError": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ValidationError",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "COMPOSE_ActivationTest": [
+              "Succeeded"
+            ]
+          }
+        },
+        "INIT_ResultMessage": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "ResultMessage",
+                "type": "string",
+                "value": ""
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_ValidationError": [
+              "Succeeded"
+            ]
+          }
+        },
+        "INIT_CreatedCount": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "CreatedCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_ResultMessage": [
+              "Succeeded"
+            ]
+          }
+        },
+        "INIT_SkippedCount": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "SkippedCount",
+                "type": "integer",
+                "value": 0
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_CreatedCount": [
+              "Succeeded"
+            ]
+          }
+        },
+        "INIT_OccurrenceDates": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "OccurrenceDates",
+                "type": "array",
+                "value": [
+                  
+                ]
+              }
+            ]
+          },
+          "runAfter": {
+            "INIT_SkippedCount": [
+              "Succeeded"
+            ]
+          }
+        },
+        "VALIDATE_RequestedAction": {
+          "type": "If",
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@triggerBody()?['text_1']",
+                  "CreateTaskOccurrences"
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerBody()?['text_1']",
+                  "GenerateMissingOccurrences"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "CHECK_ActionType": {
+              "type": "If",
+              "expression": {
+                "equals": [
+                  "@triggerBody()?['text_1']",
+                  "CreateTaskOccurrences"
+                ]
+              },
+              "actions": {
+                "CHECK_BusinessDateProvided": {
+                  "type": "If",
+                  "expression": {
+                    "not": {
+                      "equals": [
+                        "@triggerBody()?['text_5']",
+                        ""
+                      ]
+                    }
+                  },
+                  "actions": {
+                    "SET_DatesFromBusinessDate": {
+                      "type": "SetVariable",
+                      "inputs": {
+                        "name": "OccurrenceDates",
+                        "value": "@createArray(triggerBody()?['text_5'])"
+                      },
+                      "runAfter": {
+                        
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "SET_ValidationError_MissingBusinessDate": {
+                        "type": "SetVariable",
+                        "inputs": {
+                          "name": "ValidationError",
+                          "value": "CreateTaskOccurrences requires BusinessDate."
+                        },
+                        "runAfter": {
+                          
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    
+                  },
+                  "description": "Requires BusinessDate for CreateTaskOccurrences and seeds the single-date OccurrenceDates list."
+                }
+              },
+              "else": {
+                "actions": {
+                  "CHECK_FromToProvided": {
+                    "type": "If",
+                    "expression": {
+                      "and": [
+                        {
+                          "not": {
+                            "equals": [
+                              "@triggerBody()?['text_4']",
+                              ""
+                            ]
+                          }
+                        },
+                        {
+                          "not": {
+                            "equals": [
+                              "@triggerBody()?['text_6']",
+                              ""
+                            ]
+                          }
+                        }
+                      ]
+                    },
+                    "actions": {
+                      "CHECK_DateOrder": {
+                        "type": "If",
+                        "expression": {
+                          "lessOrEquals": [
+                            "@ticks(triggerBody()?['text_4'])",
+                            "@ticks(triggerBody()?['text_6'])"
+                          ]
+                        },
+                        "actions": {
+                          "COMPOSE_DayCount": {
+                            "type": "Compose",
+                            "inputs": "@div(sub(ticks(triggerBody()?['text_6']), ticks(triggerBody()?['text_4'])), 864000000000)",
+                            "runAfter": {
+                              
+                            }
+                          },
+                          "FOREACH_BuildDateRange": {
+                            "type": "Foreach",
+                            "foreach": "@range(0, add(outputs('COMPOSE_DayCount'), 1))",
+                            "actions": {
+                              "APPEND_OccurrenceDate": {
+                                "type": "AppendToArrayVariable",
+                                "inputs": {
+                                  "name": "OccurrenceDates",
+                                  "value": "@formatDateTime(addDays(triggerBody()?['text_4'], items('FOREACH_BuildDateRange')), 'yyyy-MM-dd')"
+                                },
+                                "runAfter": {
+                                  
+                                }
+                              }
+                            },
+                            "runAfter": {
+                              "COMPOSE_DayCount": [
+                                "Succeeded"
+                              ]
+                            },
+                            "description": "Expands FromDate..ToDate into the inclusive OccurrenceDates list for GenerateMissingOccurrences."
+                          }
+                        },
+                        "else": {
+                          "actions": {
+                            "SET_ValidationError_DateOrder": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "ValidationError",
+                                "value": "FromDate must be on or before ToDate."
+                              },
+                              "runAfter": {
+                                
+                              }
+                            }
+                          }
+                        },
+                        "runAfter": {
+                          
+                        },
+                        "description": "Confirms FromDate is not later than ToDate before building the inclusive date range."
+                      }
+                    },
+                    "else": {
+                      "actions": {
+                        "SET_ValidationError_MissingRange": {
+                          "type": "SetVariable",
+                          "inputs": {
+                            "name": "ValidationError",
+                            "value": "GenerateMissingOccurrences requires FromDate and ToDate."
+                          },
+                          "runAfter": {
+                            
+                          }
+                        }
+                      }
+                    },
+                    "runAfter": {
+                      
+                    },
+                    "description": "Requires both FromDate and ToDate for GenerateMissingOccurrences."
+                  }
+                }
+              },
+              "runAfter": {
+                
+              },
+              "description": "Branches date-input validation by RequestedAction."
+            }
+          },
+          "else": {
+            "actions": {
+              "SET_ValidationError_UnsupportedAction": {
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "ValidationError",
+                  "value": "@concat('Unsupported RequestedAction value: ', triggerBody()?['text_1'])"
+                },
+                "runAfter": {
+                  
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "INIT_OccurrenceDates": [
+              "Succeeded"
+            ]
+          },
+          "description": "Validates RequestedAction and builds the inclusive OccurrenceDates list from the request contract."
+        },
+        "CHECK_ValidationPassed": {
+          "type": "If",
+          "expression": {
+            "equals": [
+              "@variables('ValidationError')",
+              ""
+            ]
+          },
+          "actions": {
+            "CHECK_DMP_Gate": {
+              "type": "If",
+              "expression": {
+                "equals": [
+                  "@triggerBody()?['text_2']",
+                  "DMP"
+                ]
+              },
+              "actions": {
+                "GET_Rules": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
+                      "table": "728f1f87-2cc6-476f-be56-0f1feb05158f",
+                      "$filter": "IsActive eq 'Yes' and RecurrenceType eq 'Daily' and StartMode eq 'DMP'",
+                      "$top": 5000
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems"
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  },
+                  "runAfter": {
+                    
+                  },
+                  "description": "Loads active DMP recurrence rules from the confirmed SharePoint list."
+                },
+                "FOREACH_Dates": {
+                  "type": "Foreach",
+                  "foreach": "@variables('OccurrenceDates')",
+                  "actions": {
+                    "APPLY_Rules": {
+                      "type": "Foreach",
+                      "foreach": "@body('GET_Rules')?['value']",
+                      "actions": {
+                        "COMPOSE_OccurrenceId": {
+                          "type": "Compose",
+                          "inputs": "@concat(triggerBody()?['text_3'], '-', formatDateTime(items('FOREACH_Dates'), 'yyyyMMdd'), '-', replace(items('APPLY_Rules')?['TaskId'], ' ', ''), '-', toUpper(items('APPLY_Rules')?['ScheduleSlot']))",
+                          "runAfter": {
+                            
+                          }
+                        },
+                        "GET_ExistingOccurrence": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
+                              "table": "5c413852-2dab-4844-b886-a8cf8334fcf6",
+                              "$filter": "Title eq '@{outputs('COMPOSE_OccurrenceId')}'",
+                              "$top": 1
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "connectionName": "shared_sharepointonline",
+                              "operationId": "GetItems"
+                            },
+                            "authentication": {
+                              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                              "type": "Raw"
+                            }
+                          },
+                          "runAfter": {
+                            "COMPOSE_OccurrenceId": [
+                              "Succeeded"
+                            ]
+                          }
+                        },
+                        "CHECK_NotExisting": {
+                          "type": "If",
+                          "expression": {
+                            "equals": [
+                              "@length(body('GET_ExistingOccurrence')?['value'])",
+                              0
+                            ]
+                          },
+                          "actions": {
+                            "CREATE_Occurrence": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader",
+                                  "table": "5c413852-2dab-4844-b886-a8cf8334fcf6",
+                                  "item/Title": "@outputs('COMPOSE_OccurrenceId')",
+                                  "item/CaseId": "@triggerBody()?['text_3']",
+                                  "item/TaskId": "@items('APPLY_Rules')?['TaskId']",
+                                  "item/OccurrenceDate": "@concat(items('FOREACH_Dates'), 'T00:00:00')",
+                                  "item/ScheduleSlot/Value": "@items('APPLY_Rules')?['ScheduleSlot']",
+                                  "item/DueUtc": "@convertTimeZone(concat(items('FOREACH_Dates'), 'T', items('APPLY_Rules')?['TimeOfDay']), items('APPLY_Rules')?['TimeZone'], 'UTC', 'yyyy-MM-ddTHH:mm:ssZ')",
+                                  "item/Status/Value": "Not Started",
+                                  "item/ApprovalState/Value": "Not Required",
+                                  "item/Notes": "Created by Agent 7 occurrence management."
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "connectionName": "shared_sharepointonline",
+                                  "operationId": "PostItem"
+                                },
+                                "authentication": {
+                                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                                  "type": "Raw"
+                                }
+                              },
+                              "runAfter": {
+                                
+                              },
+                              "description": "Creates one occurrence after the exact OccurrenceId lookup returned no match."
+                            },
+                            "INCREMENT_CreatedCount": {
+                              "type": "IncrementVariable",
+                              "inputs": {
+                                "name": "CreatedCount",
+                                "value": 1
+                              },
+                              "runAfter": {
+                                "CREATE_Occurrence": [
+                                  "Succeeded"
+                                ]
+                              }
+                            }
+                          },
+                          "else": {
+                            "actions": {
+                              "COMPOSE_AlreadyExists": {
+                                "type": "Compose",
+                                "inputs": "@outputs('COMPOSE_OccurrenceId')",
+                                "runAfter": {
+                                  
+                                }
+                              },
+                              "INCREMENT_SkippedCount": {
+                                "type": "IncrementVariable",
+                                "inputs": {
+                                  "name": "SkippedCount",
+                                  "value": 1
+                                },
+                                "runAfter": {
+                                  "COMPOSE_AlreadyExists": [
+                                    "Succeeded"
+                                  ]
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "GET_ExistingOccurrence": [
+                              "Succeeded"
+                            ]
+                          }
+                        }
+                      },
+                      "runAfter": {
+                        
+                      },
+                      "description": "Applies every active rule to the current OccurrenceDates entry with exact-match idempotency."
+                    }
+                  },
+                  "runAfter": {
+                    "GET_Rules": [
+                      "Succeeded"
+                    ]
+                  },
+                  "description": "Iterates every validated date in OccurrenceDates (single BusinessDate or FromDate..ToDate range)."
+                },
+                "SET_ResultMessage_Success": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "ResultMessage",
+                    "value": "@concat('Processed ', string(length(variables('OccurrenceDates'))), ' date(s): created ', string(variables('CreatedCount')), ', skipped (already existing) ', string(variables('SkippedCount')), '.')"
+                  },
+                  "runAfter": {
+                    "FOREACH_Dates": [
+                      "Succeeded"
+                    ]
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "SET_ResultMessage_DmpOnly": {
+                    "type": "SetVariable",
+                    "inputs": {
+                      "name": "ResultMessage",
+                      "value": "Occurrence generation is permitted only in DMP mode; no dates were evaluated."
+                    },
+                    "runAfter": {
+                      
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                
+              },
+              "description": "Gates occurrence generation to DMP operating mode using the confirmed SharePoint bindings."
+            }
+          },
+          "else": {
+            "actions": {
+              
+            }
+          },
+          "runAfter": {
+            "VALIDATE_RequestedAction": [
+              "Succeeded"
+            ]
+          },
+          "description": "Skips all occurrence generation when request validation produced a ValidationError."
+        },
+        "RESPOND_Result": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "success": "@equals(variables('ValidationError'), '')",
+              "message": "@if(equals(variables('ValidationError'), ''), variables('ResultMessage'), variables('ValidationError'))",
+              "createdCount": "@variables('CreatedCount')",
+              "skippedCount": "@variables('SkippedCount')",
+              "validationError": "@variables('ValidationError')"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "createdCount": {
+                  "type": "integer"
+                },
+                "skippedCount": {
+                  "type": "integer"
+                },
+                "validationError": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "CHECK_ValidationPassed": [
+              "Succeeded",
+              "Failed",
+              "Skipped",
+              "TimedOut"
+            ]
+          },
+          "description": "Returns success, message, created/skipped counters, and any validation error to the caller."
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

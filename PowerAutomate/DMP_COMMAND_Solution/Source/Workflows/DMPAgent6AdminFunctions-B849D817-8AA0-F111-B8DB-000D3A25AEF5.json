@@ -1863,15 +1863,41 @@
                   },
                   "description": "Checks whether the CriticalCounterBaseline and/or WarningCounterBaseline rows already exist in the DMP Command Counters SharePoint list."
                 },
-                "IF_CriticalBaselineRow_Exists_ForAllReset": {
+                "FILTER_CriticalBaselineRow_ForAllReset": {
                   "runAfter": {
                     "GET_AllBaselineRows": [
                       "Succeeded"
                     ]
                   },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_AllBaselineRows')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'CriticalCounterBaseline')"
+                  },
+                  "description": "Filters the baseline rows down to CriticalCounterBaseline. Replaces the invalid inline filter() expression (not a real WDL function, caused a runtime error)."
+                },
+                "FILTER_WarningBaselineRow_ForAllReset": {
+                  "runAfter": {
+                    "GET_AllBaselineRows": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "Query",
+                  "inputs": {
+                    "from": "@coalesce(body('GET_AllBaselineRows')?['value'], createArray())",
+                    "where": "@equals(item()?['Title'], 'WarningCounterBaseline')"
+                  },
+                  "description": "Filters the baseline rows down to WarningCounterBaseline. Replaces the invalid inline filter() expression (not a real WDL function, caused a runtime error)."
+                },
+                "IF_CriticalBaselineRow_Exists_ForAllReset": {
+                  "runAfter": {
+                    "FILTER_CriticalBaselineRow_ForAllReset": [
+                      "Succeeded"
+                    ]
+                  },
                   "expression": {
                     "greater": [
-                      "@length(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'CriticalCounterBaseline')))",
+                      "@length(body('FILTER_CriticalBaselineRow_ForAllReset'))",
                       0
                     ]
                   },
@@ -1883,7 +1909,7 @@
                         "parameters": {
                           "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                           "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
-                          "id": "@first(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'CriticalCounterBaseline')))?['ID']",
+                          "id": "@first(body('FILTER_CriticalBaselineRow_ForAllReset'))?['ID']",
                           "item/NumberProcessedEmails": "@outputs('CMP_CurrentCriticalTotal_ForAllReset')"
                         },
                         "host": {
@@ -1932,11 +1958,14 @@
                   "runAfter": {
                     "IF_CriticalBaselineRow_Exists_ForAllReset": [
                       "Succeeded"
+                    ],
+                    "FILTER_WarningBaselineRow_ForAllReset": [
+                      "Succeeded"
                     ]
                   },
                   "expression": {
                     "greater": [
-                      "@length(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'WarningCounterBaseline')))",
+                      "@length(body('FILTER_WarningBaselineRow_ForAllReset'))",
                       0
                     ]
                   },
@@ -1948,7 +1977,7 @@
                         "parameters": {
                           "dataset": "https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication",
                           "table": "277307f0-195a-4e78-afc8-850dbdf956b2",
-                          "id": "@first(filter(body('GET_AllBaselineRows')?['value'], equals(item()?['Title'], 'WarningCounterBaseline')))?['ID']",
+                          "id": "@first(body('FILTER_WarningBaselineRow_ForAllReset'))?['ID']",
                           "item/NumberProcessedEmails": "@outputs('CMP_CurrentWarningTotal_ForAllReset')"
                         },
                         "host": {

@@ -1,0 +1,184 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# ************************************************************************************************
+Screens:
+  scrTaskOccurrences:
+    Properties:
+      Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
+      LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
+    Children:
+      - conTaskOccurrencesRoot:
+          Control: GroupContainer@1.5.0
+          Variant: AutoLayout
+          Properties:
+            Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
+            Height: =Parent.Height
+            Width: =Parent.Width
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            PaddingBottom: =16
+            PaddingLeft: =20
+            PaddingRight: =20
+            PaddingTop: =16
+          Children:
+            - conTaskOccurrencesHeader:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =RGBA(32,23,81,1)
+                  Height: =72
+                  LayoutMaxHeight: =72
+                  LayoutMinHeight: =72
+                  RadiusBottomLeft: =18
+                  RadiusBottomRight: =18
+                  RadiusTopLeft: =18
+                  RadiusTopRight: =18
+                Children:
+                  - btnBackToCockpitFromOccurrences:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(255,255,255,1)
+                        Fill: =RGBA(255,255,255,0.12)
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Height: =36
+                        HoverFill: =RGBA(255,255,255,0.22)
+                        OnSelect: =Navigate(scrHome,ScreenTransition.None)
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Text: ="< Back to Cockpit"
+                        Width: =190
+                        X: =20
+                        Y: =18
+                  - lblTaskOccurrencesTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(255,255,255,1)
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Height: =31
+                        Size: =20
+                        Text: ="Task Occurrences"
+                        Width: =500
+                        X: =230
+                        Y: =12
+                  - lblTaskOccurrencesSubtitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(215,210,235,1)
+                        Font: =Font.'Arial'
+                        Height: =20
+                        Size: =11.5
+                        Text: ="Daily execution view for recurring DMP checklist tasks"
+                        Width: =650
+                        X: =230
+                        Y: =42
+            - conTaskOccurrencesInfo:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(255,255,255,1))
+                  Height: =88
+                  LayoutMaxHeight: =88
+                  LayoutMinHeight: =88
+                  RadiusBottomLeft: =12
+                  RadiusBottomRight: =12
+                  RadiusTopLeft: =12
+                  RadiusTopRight: =12
+                Children:
+                  - lblTaskOccurrencesMode:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =If(varDarkMode,RGBA(240,238,248,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        Size: =14
+                        Text: ="Current view"
+                        Width: =180
+                        X: =20
+                        Y: =14
+                  - lblTaskOccurrencesModeValue:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(32,23,81,1)
+                        Font: =Font.'Arial'
+                        Height: =28
+                        Size: =14
+                        Text: ="Open and overdue occurrences"
+                        Width: =350
+                        X: =200
+                        Y: =14
+                  - lblTaskOccurrencesContract:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =If(varDarkMode,RGBA(215,210,235,1),RGBA(90,88,98,1))
+                        Font: =Font.'Arial'
+                        Height: =28
+                        Size: =11
+                        Text: ="Live SharePoint binding and Agent 7 actions will be connected after the flow contract is imported."
+                        Width: =900
+                        X: =20
+                        Y: =48
+            - galTaskOccurrencesPreview:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  AccessibleLabel: ="Task occurrence preview"
+                  Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(255,255,255,1))
+                  Height: =Parent.Height-208
+                  Items: =Table({OccurrenceId:"CASE-YYYY-001-20260921-21-MIDDAY",TaskId:"21",ScheduleSlot:"Midday",Status:"Not Started",DueUtc:"Pending rule binding"},{OccurrenceId:"CASE-YYYY-001-20260921-22-EVENING",TaskId:"22",ScheduleSlot:"Evening",Status:"Not Started",DueUtc:"Pending rule binding"})
+                  TemplateSize: =64
+                  Width: =Parent.Width-40
+                Children:
+                  - lblOccurrenceId:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =If(varDarkMode,RGBA(240,238,248,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        Size: =12
+                        Text: =ThisItem.OccurrenceId
+                        Width: =430
+                        X: =16
+                        Y: =8
+                  - lblOccurrenceTask:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =If(varDarkMode,RGBA(215,210,235,1),RGBA(90,88,98,1))
+                        Font: =Font.'Arial'
+                        Height: =22
+                        Size: =11
+                        Text: ="Task " & ThisItem.TaskId & " - " & ThisItem.ScheduleSlot
+                        Width: =300
+                        X: =470
+                        Y: =10
+                  - lblOccurrenceStatus:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(32,23,81,1)
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Height: =22
+                        Size: =11
+                        Text: =ThisItem.Status
+                        Width: =160
+                        X: =800
+                        Y: =10
+                  - lblOccurrenceDue:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =If(varDarkMode,RGBA(215,210,235,1),RGBA(90,88,98,1))
+                        Font: =Font.'Arial'
+                        Height: =22
+                        Size: =11
+                        Text: =ThisItem.DueUtc
+                        Width: =220
+                        X: =980
+                        Y: =10

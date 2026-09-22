@@ -13,6 +13,9 @@ Source-controlled working copy for the DMP COMMAND system (Power Automate flows 
 - `Documentation/` - Mission & AI working rules, backlog, and periodic exports of the two SharePoint lists
   (`DMP Command Configuration`, `DMP Command Agent Status`) for reference. These CSVs are point-in-time
   snapshots, not the live data source.
+- `Documentation/DMP_COMMAND_SESSION_RESTART_GUIDE.md` - mandatory restart/handover guide for future AI
+  sessions, including local paths, Power Platform environment, SharePoint/OneDrive context, and deployment
+  discipline.
 
 ## Workflow (Power Automate side)
 
@@ -20,6 +23,7 @@ Source-controlled working copy for the DMP COMMAND system (Power Automate flows 
 pac solution export --name "DMP_COMMAND_Solution" --path bin\DMP_COMMAND_Solution.zip --overwrite true
 pac solution unpack --zipfile bin\DMP_COMMAND_Solution.zip --folder PowerAutomate\DMP_COMMAND_Solution\Source --packagetype Unmanaged
 # edit PowerAutomate\DMP_COMMAND_Solution\Source\Workflows\*.json directly
+# before pack/import: check Documentation\Backlog\DMP_COMMAND_Backlog.md for same-agent items that can be bundled
 pac solution pack --zipfile bin\DMP_COMMAND_Solution.zip --folder PowerAutomate\DMP_COMMAND_Solution\Source --packagetype Unmanaged
 pac solution import --path bin\DMP_COMMAND_Solution.zip
 ```
@@ -30,6 +34,7 @@ pac solution import --path bin\DMP_COMMAND_Solution.zip
 pac canvas download --name "DMP COMMAND" --file-name DMP_COMMAND.msapp --overwrite
 pac canvas unpack --msapp DMP_COMMAND.msapp --sources PowerApp\DMP_COMMAND\Source --layout SourceCode --overwrite
 # edit PowerApp\DMP_COMMAND\Source\Src\*.pa.yaml directly
+# before pack/import: check Documentation\Backlog\DMP_COMMAND_Backlog.md for same-screen/app items that can be bundled
 pac canvas pack --sources PowerApp\DMP_COMMAND\Source --msapp DMP_COMMAND_TEST.msapp --overwrite
 # import DMP_COMMAND_TEST.msapp via Power Apps portal > Apps > Import app > From file
 ```

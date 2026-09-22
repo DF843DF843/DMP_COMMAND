@@ -1,0 +1,10 @@
+"Titel (ScreenName)","Description"
+"scrStreamsOverview","Master status overview screen for the CoS Leader, aggregating all working sub streams (read-only for sub streams other than CoS Leader's own)."
+"scrChecklistCosLeader","Checklist screen for the CoS Leader sub stream, filtered by DMP Command Next Steps Role Assignments."
+"scrChecklistInfrastructure","Checklist screen for the Infrastructure Team sub stream (deferred until SharePoint site access is available)."
+"scrChecklistContent","Checklist screen for the Content Team sub stream (deferred until SharePoint site access is available)."
+"scrEmailTemplateEditor","Maintenance screen for e-mail templates with a rich-text editor and placeholder picker gallery."
+"popDefaultCaseContext","Mandatory popup form shown when switching from Normal/Pre-Default to DMP mode, capturing the default case context."
+"popEmailPlaceholderInput","Popup form for entering situation-dependent placeholder values before sending a checklist e-mail."
+"popStatusApproval","Four-eyes confirmation popup shown to approve or reject a proposed checklist status change."
+

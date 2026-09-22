@@ -403,7 +403,8 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =180
                               Size: =12
-                              Text: ="A single ring that is fully green when all 5 underlying items are OK, and shows a red slice for every one that is missing:" & Char(10) & "Emergency Report, Internal Domains, External Domains, Counter, Audit Trail File." & Char(10) & "Click the ring (or the info icon) to open the detailed legend popup, which lists each of the 5 items with its own OK/Missing status - this is the fastest way to see exactly what is wrong when the ring is not fully green."
+                              Text: |-
+                                ="A segmented ring: Status Check, Critical Events, Warnings, Operating State, Emergency Report processing, Internal Domains, External Domains, Counter and Audit Trail each have one segment. Every Agent Status row with an Agent_ key also receives its own segment - Agent 7 and future agents are added automatically." & Char(10) & "Green = OK; orange = warning or operation in progress; red = error. A missing Emergency Report is not an error; only failed report processing is red." & Char(10) & "Click the ring to open the detailed legend and identify non-green factors."
                               Wrap: =true
                   - conManualEmailsProcessed:
                       Control: GroupContainer@1.5.0
@@ -575,7 +576,265 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =220
                               Size: =12
-                              Text: ="- Cockpit - the main overview screen described above" & Char(10) & "- Agent Monitoring - live per-agent tiles (status, last run result and duration, message) straight from the DMP Command Agent Status list" & Char(10) & "- Help / Operational Manual - this page" & Char(10) & "- Audit Trail (Detail) - the full audit log with the Critical/Warnings drill-down" & Char(10) & "- Configuration (Lists) - direct access to the underlying SharePoint configuration lists" & Char(10) & "- Maintenance - system/connection diagnostics and useful admin links" & Char(10) & "- Admin Functions - counter resets and other administrative actions (use with care)"
+                              Text: ="- Cockpit - the main overview screen described above" & Char(10) & "- Agent Monitoring - live per-agent tiles (status, last run result and duration, message) straight from the DMP Command Agent Status list" & Char(10) & "- Help / Operational Manual - this page" & Char(10) & "- Audit Trail (Detail) - the full audit log with the Critical/Warnings drill-down" & Char(10) & "- Configuration (Lists) - direct access to the underlying SharePoint configuration lists" & Char(10) & "- Maintenance - system/connection diagnostics and useful admin links" & Char(10) & "- Admin Functions - counter resets and other administrative actions (use with care)" & Char(10) & "- Release Notes - app and per-agent version history (reachable from the Cockpit's version tag or the Maintenance screen, not from a sidebar button)"
+                              Wrap: =true
+                  - conManualAgentMonitoring:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualAgentMonitoringHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Agent Monitoring screen"
+                              Wrap: =false
+                        - lblManualAgentMonitoringNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =160
+                              Size: =12
+                              Text: ="Six tiles, one per agent (Agent 1-6), each bound to that agent's row in ""DMP Command Agent Status"":" & Char(10) & "- Status dot - grey while loading, amber and blinking while a refresh is in progress, green when CurrentStatus = Operational, red for any other status" & Char(10) & "- Agent name, current status word, and a last-run line (date/time, result, duration in seconds - shows a dash for any value not yet recorded)" & Char(10) & "- Status message - free text written by the agent itself (e.g. an error detail), blank if none" & Char(10) & "The tiles refresh automatically every time you open this screen - there is no separate manual refresh button."
+                              Wrap: =true
+                  - conManualAuditTrailDetail:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualAuditTrailDetailHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Audit Trail (Detail) screen"
+                              Wrap: =false
+                        - lblManualAuditTrailDetailNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =200
+                              Size: =12
+                              Text: ="Shows live totals (Critical, Warnings, total run-summary rows) plus the 10 most recent Critical and 10 most recent Warning rows, read directly from the central Audit Trail by Agent 4:" & Char(10) & "- Each row shows a UTC timestamp, the workflow/step name, and a short key-output description" & Char(10) & "- ""New since reset"" shows how many Critical/Warning rows have appeared since the corresponding baseline was last reset" & Char(10) & "- Reset Critical / Reset Warning / Reset All - resets the ""new since reset"" baseline via Agent 6; this does not delete any Audit Trail data" & Char(10) & "- Refresh now - re-runs Agent 4 immediately" & Char(10) & "- Open full Audit Trail file - opens AuditTrail.xlsx directly in SharePoint for anything beyond the 10 most recent rows shown here"
+                              Wrap: =true
+                  - conManualConfigLists:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualConfigListsHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Configuration (Lists) screen"
+                              Wrap: =false
+                        - lblManualConfigListsNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =180
+                              Size: =12
+                              Text: ="Direct, read-only access to the central SharePoint lists, each shown as a card with a live row count and View / New Entry links that open SharePoint in a new browser tab:" & Char(10) & "- DMP Command Configuration - active row count (rows with Active = Yes); View and New Entry" & Char(10) & "- DMP Command Agent Status - total row count; View only (its rows are written automatically by the agents, not created manually)" & Char(10) & "- DMP Command Internal Domains - active row count; View and New Entry" & Char(10) & "No data is edited inside the app itself - all editing happens in SharePoint; reopen or refresh this screen to pick up changes made there."
+                              Wrap: =true
+                  - conManualMaintenanceScreen:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualMaintenanceScreenHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Maintenance screen"
+                              Wrap: =false
+                        - lblManualMaintenanceScreenNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =160
+                              Size: =12
+                              Text: ="Connection diagnostics, a version overview, and admin portal links:" & Char(10) & "- Connection diagnostics - a green dot per central SharePoint list (Configuration, Agent Status, Internal Domains) confirms the app itself can read it; a red dot means the app lost its own SharePoint connection" & Char(10) & "- Versions - shows the running Cockpit app version (click to open Release Notes) and points to Release Notes / Agent Monitoring for per-agent versions" & Char(10) & "- Admin portal links - one-click access to the Power Automate flow list, the SharePoint site and the Power Apps maker portal, each opening in a new browser tab"
+                              Wrap: =true
+                  - conManualAdminFunctionsScreen:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualAdminFunctionsScreenHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Admin Functions screen"
+                              Wrap: =false
+                        - lblManualAdminFunctionsScreenNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =200
+                              Size: =12
+                              Text: ="Destructive, operator-confirmed actions only, calling Agent 6. Every action needs a first click to arm it and a second ""Yes, ..."" click to confirm - Cancel always aborts safely without changing anything:" & Char(10) & "- Mailbox cleanup - deletes the ""PA Processed Mails"" folder tree (including ""Agent 5 Alerts"") from the shared mailbox" & Char(10) & "- Reset e-mail counters - five buttons (No DMP / Internal Sender / External / Not Effected / Reset ALL); the previous value is written to the Audit Trail before the reset" & Char(10) & "- Diagnostics (blue, read-only) - live counter and audit-baseline values, plus Refresh now and Copy to Clipboard" & Char(10) & "A result line at the bottom always shows the message from the most recently completed action."
+                              Wrap: =true
+                  - conManualReleaseNotesScreen:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualReleaseNotesScreenHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="Release Notes screen"
+                              Wrap: =false
+                        - lblManualReleaseNotesScreenNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =160
+                              Size: =12
+                              Text: ="Documents the app's own version history and each agent's version history, in two tabs:" & Char(10) & "- App Changes - every released app version, newest first, with its release date and its list of changes; the single newest entry is marked (current)" & Char(10) & "- Agent (Flow) Changes - one entry per agent (Agent 1-6), each showing its current version and a chronological changelog of past changes" & Char(10) & "- Copy to Clipboard copies the currently visible tab's full text to the clipboard" & Char(10) & "Click any entry in the left-hand list to show its details on the right; both the list and the detail pane scroll independently."
                               Wrap: =true
             - conOperationalManualSplit:
                 Control: GroupContainer@1.5.0
@@ -808,6 +1067,114 @@ Screens:
                               RadiusTopRight: =6
                               Size: =11
                               Text: ="Sidebar navigation"
+                        - btnManualSectionAgentMonitoring:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="AgentMonitoring",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="AgentMonitoring",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="AgentMonitoring",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="AgentMonitoring",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"AgentMonitoring")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Agent Monitoring"
+                        - btnManualSectionAuditTrailDetail:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="AuditTrailDetail",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="AuditTrailDetail",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="AuditTrailDetail",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="AuditTrailDetail",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"AuditTrailDetail")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Audit Trail (Detail)"
+                        - btnManualSectionConfigLists:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="ConfigLists",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="ConfigLists",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="ConfigLists",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="ConfigLists",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"ConfigLists")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Configuration (Lists)"
+                        - btnManualSectionMaintenanceScreen:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="MaintenanceScreen",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="MaintenanceScreen",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="MaintenanceScreen",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="MaintenanceScreen",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"MaintenanceScreen")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Maintenance"
+                        - btnManualSectionAdminFunctionsScreen:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="AdminFunctionsScreen",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="AdminFunctionsScreen",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="AdminFunctionsScreen",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="AdminFunctionsScreen",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"AdminFunctionsScreen")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Admin Functions"
+                        - btnManualSectionReleaseNotesScreen:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="ReleaseNotesScreen",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="ReleaseNotesScreen",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="ReleaseNotesScreen",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="ReleaseNotesScreen",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"ReleaseNotesScreen")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="Release Notes"
                   - conManualDetail:
                       Control: GroupContainer@1.5.0
                       Variant: AutoLayout
@@ -839,7 +1206,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroHeader.Text, "GeneralColours", lblManualGeneralColoursHeader.Text, "TopBar", lblManualTopBarHeader.Text, "OperatingState", lblManualOperatingStateHeader.Text, "MaintenanceDomains", lblManualMaintenanceDomainsHeader.Text, "Files", lblManualFilesHeader.Text, "SystemHealth", lblManualSystemHealthHeader.Text, "EmailsProcessed", lblManualEmailsProcessedHeader.Text, "AutomationStatus", lblManualAutomationStatusHeader.Text, "NextSteps", lblManualNextStepsHeader.Text, "Sidebar", lblManualSidebarHeader.Text, lblManualIntroHeader.Text)
+                              Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroHeader.Text, "GeneralColours", lblManualGeneralColoursHeader.Text, "TopBar", lblManualTopBarHeader.Text, "OperatingState", lblManualOperatingStateHeader.Text, "MaintenanceDomains", lblManualMaintenanceDomainsHeader.Text, "Files", lblManualFilesHeader.Text, "SystemHealth", lblManualSystemHealthHeader.Text, "EmailsProcessed", lblManualEmailsProcessedHeader.Text, "AutomationStatus", lblManualAutomationStatusHeader.Text, "NextSteps", lblManualNextStepsHeader.Text, "Sidebar", lblManualSidebarHeader.Text, "AgentMonitoring", lblManualAgentMonitoringHeader.Text, "AuditTrailDetail", lblManualAuditTrailDetailHeader.Text, "ConfigLists", lblManualConfigListsHeader.Text, "MaintenanceScreen", lblManualMaintenanceScreenHeader.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenHeader.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenHeader.Text, lblManualIntroHeader.Text)
                               Wrap: =false
                         - conManualDetailBody:
                             Control: GroupContainer@1.5.0
@@ -891,5 +1258,5 @@ Screens:
                                     FillPortions: =1
                                     Font: =Font.'Arial'
                                     Size: =12
-                                    Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroNotes.Text, "GeneralColours", lblManualGeneralColoursNotes.Text, "TopBar", lblManualTopBarNotes.Text, "OperatingState", lblManualOperatingStateNotes.Text, "MaintenanceDomains", lblManualMaintenanceDomainsNotes.Text, "Files", lblManualFilesNotes.Text, "SystemHealth", lblManualSystemHealthNotes.Text, "EmailsProcessed", lblManualEmailsProcessedNotes.Text, "AutomationStatus", lblManualAutomationStatusNotes.Text, "NextSteps", lblManualNextStepsNotes.Text, "Sidebar", lblManualSidebarNotes.Text, lblManualIntroNotes.Text)
+                                    Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroNotes.Text, "GeneralColours", lblManualGeneralColoursNotes.Text, "TopBar", lblManualTopBarNotes.Text, "OperatingState", lblManualOperatingStateNotes.Text, "MaintenanceDomains", lblManualMaintenanceDomainsNotes.Text, "Files", lblManualFilesNotes.Text, "SystemHealth", lblManualSystemHealthNotes.Text, "EmailsProcessed", lblManualEmailsProcessedNotes.Text, "AutomationStatus", lblManualAutomationStatusNotes.Text, "NextSteps", lblManualNextStepsNotes.Text, "Sidebar", lblManualSidebarNotes.Text, "AgentMonitoring", lblManualAgentMonitoringNotes.Text, "AuditTrailDetail", lblManualAuditTrailDetailNotes.Text, "ConfigLists", lblManualConfigListsNotes.Text, "MaintenanceScreen", lblManualMaintenanceScreenNotes.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenNotes.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenNotes.Text, lblManualIntroNotes.Text)
                                     Wrap: =true
