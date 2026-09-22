@@ -10,7 +10,17 @@
 
 ---
 
-## 🟠 v1.22.23 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — Ring-Scope-Bug + Agent-7-Release-Notes + Label-Fix
+## 🟠 v1.22.24 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — YAML-Fix + erste Task-Occurrences-4-Augen-Demo
+
+1. **YAML-Fehler behoben (PA1001, „did not find expected key"):** Die in v1.22.23 hinzugefügte schließende Klammer für den Ring-Scope-Fix war exakt auf die Einrückung der folgenden `Width:`-Property eingerückt — Studios strengerer PaYaml-Parser beendete den Block-Skalar dadurch eine Zeile zu früh. Neu eingerückt; **`pac`s eigener Pack/Unpack-Rückvergleich hat das NICHT erkannt** (bekannte Grenze — nur Studio prüft PaYaml wirklich streng) — bei jeder künftigen mehrzeiligen Formel-Änderung besonders auf Einrückung achten.
+2. **Task Occurrences — erste 4-Augen-Workflow-Demo (C6/C7-Vorschau):** Die Vorschau-Gallery läuft jetzt auf einer echten, patchbaren lokalen Collection (`colTaskOccurrencesPreview`, exaktes Schema der Live-Liste) statt einer statischen `Table()`. Jede Zeile hat jetzt Propose/Approve/Reject: "Propose" setzt Status weiter + `ApprovalState=Pending`; "Approve"/"Reject" erscheinen nur für einen ANDEREN Nutzer als den Vorschlagenden (4-Augen-Prinzip technisch durchgesetzt). Noch nicht mit der echten Liste verbunden (gleicher manueller "Add data"-Schritt in Studio wie bei B3 nötig).
+   **Offene Design-Frage an den Nutzer:** Die echte Liste hat kein `PreviousStatus`-Feld — "Reject" setzt aktuell nur den Pending-Zustand zurück, macht die Status-Änderung selbst aber nicht rückgängig. Vor Live-Schaltung klären: neues Feld ergänzen, oder ist ein manuelles Neu-Vorschlagen nach Reject akzeptabel?
+
+Pack/Unpack-Rückvergleich: 0 Diff auf allen 4 geänderten Dateien.
+
+---
+
+## 🟠 v1.22.23 (2026-09-22, historisch, in v1.22.24 gefaltet) — Ring-Scope-Bug + Agent-7-Release-Notes + Label-Fix
 
 Aus dem 2. Live-Test-Feedback nach v1.22.22:
 

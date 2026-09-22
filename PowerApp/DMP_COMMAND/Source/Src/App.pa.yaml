@@ -42,7 +42,7 @@ App:
       // Switch case for any version after v1.22.13, so it silently always fell back to showing
       // v1.22.13 (found 2026-09-22 from user feedback "Agent 7 missing, shows old version").
       // Defaults to the newest App version now; keep this in sync with the current version.
-      Set(varSelectedAppRelease,"V12223");
+      Set(varSelectedAppRelease,"V12224");
       // Same bug, same fix, Agent tab: varSelectedAgentRelease was never initialized and had no
       // Switch case/menu button for Agent 7 - defaulted to Agent 1 instead of the newest agent.
       Set(varSelectedAgentRelease,"7");
@@ -59,6 +59,21 @@ App:
       Set(varDefaultCaseContextValidationError,"");
       ClearCollect(colDefaultCaseContextPending,[{CaseId:"",TerminationReason:"",DefaultedMemberId:"",DefaultedMemberName:"",TerminationDateTime:Now(),SetByUser:"",SetUtc:Now(),ModeAtCreation:""}]);
       Clear(colDefaultCaseContextPending);
+
+      // C6/C7 preview: Task Occurrences four-eyes status-change workflow (local simulation only).
+      // 'DMP Command Checklist Task Occurrences' already exists in SharePoint (confirmed
+      // 2026-09-22) but is not yet wired as a live Power App data source (same one-time manual
+      // "Add data" step in Studio as Default Case Context above). Until then this collection
+      // mirrors the real list's schema exactly, so scrTaskOccurrences can demonstrate/validate
+      // the intended Propose -> Approve/Reject flow before the real connection is made.
+      // Known open gap (flag to user before going live): the real list has no "PreviousStatus"
+      // field, so a Reject currently only clears the pending approval state - it does not revert
+      // Status to what it was before the proposal. Decide with the user whether a PreviousStatus
+      // field should be added, or whether Reject requiring a fresh manual re-propose is acceptable.
+      ClearCollect(colTaskOccurrencesPreview,
+          {OccurrenceId:"CASE-2026-001-20260921-21-MIDDAY",TaskId:"21",ScheduleSlot:"Midday",Status:"Not Started",DueUtc:"2026-09-21 12:00 UTC",ProposedBy:"",ProposedUtc:Blank(),ApprovedBy:"",ApprovedUtc:Blank(),ApprovalState:"Not Required"},
+          {OccurrenceId:"CASE-2026-001-20260921-22-EVENING",TaskId:"22",ScheduleSlot:"Evening",Status:"Not Started",DueUtc:"2026-09-21 18:00 UTC",ProposedBy:"",ProposedUtc:Blank(),ApprovedBy:"",ApprovedUtc:Blank(),ApprovalState:"Not Required"}
+      );
 
       // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles in scrHome's header):
       // varBaselineAcknowledged is set true exactly once, on the first successful status refresh
