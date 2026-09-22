@@ -244,6 +244,31 @@ Screens:
                         RadiusTopLeft: =12
                         RadiusTopRight: =12
                       Children:
+                        - lblReleaseV12221Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.21 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Wrap: =false
+                        - lblReleaseV12221Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =220
+                              Size: =12
+                              Text: |-
+                                ="- B3 Default Case Context popup (first implementation): a mandatory modal form now gates every Pre-Default -> DMP transition, capturing Case ID, Termination Reason, Defaulted Member ID/Name and Termination Date+Time" & Char(10) & "- Confirmed SharePoint list DMP Command Default Case Context already exists with matching columns; popup stages entries locally (colDefaultCaseContextPending) until the list is wired as a live data source in Studio" & Char(10) & "- Learned Classic/TextInput (not TextInput) is this app's correct input control convention, confirmed via a real Studio export, after a first guessed name was caught locally before shipping" & Char(10) & "- Bundled from v1.22.19/20 (never tested live): the real vGreenFixedSegments fix and the temporary Admin Functions TIMESTAMP DEBUG panel"
+                              Wrap: =true
                         - lblReleaseV12220Header:
                             Control: Label@2.5.1
                             Properties:
@@ -254,7 +279,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.20 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.20 - 2026-09-22 (superseded same day, folded into v1.22.21 above)"
                               Wrap: =false
                         - lblReleaseV12220Notes:
                             Control: Label@2.5.1
@@ -294,7 +319,7 @@ Screens:
                               Text: |-
                                 ="- Fixed vGreenFixedSegments for real: it still contained CountIf(Table(vStatusCheckColor, ..., vAuditTrailColor), Value=...), passing nine plain text values into Table() (invalid, confirmed by Studio's checker). The v1.22.17/v1.22.18 notes wrongly claimed this was already fixed - that edit was never actually saved. Now genuinely applied: CountIf(vFixedSegments, Color=...), reusing the already correctly-typed table"
                               Wrap: =true
-                        - lblReleaseV1221Header:
+                        - lblReleaseV12215Header:
                             Control: Label@2.5.1
                             Properties:
                               BorderColor: =RGBA(0,0,0,0)

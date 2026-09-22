@@ -39,6 +39,19 @@ App:
       Set(varReleaseNotesTab,"App");
       Set(varTriggerEmergencyUpload,false);
 
+      // B3 Default Case Context popup (mandatory form on Pre-Default -> DMP transition).
+      // 'DMP Command Default Case Context' SharePoint list confirmed to exist (2026-09-22,
+      // GUID 8fa1f858-3f89-4600-b3dc-86f9dfcaf4b8 on GO365_DMPCommunication-CoSLeader), but is
+      // not yet wired as a live Power App data source (requires one manual "Add data" step in
+      // Studio, same as every other new connection in this project). Until then, captured
+      // values are staged in colDefaultCaseContextPending with the exact same column shape, so
+      // switching to a real Patch('DMP Command Default Case Context', ...) later is a one-line change.
+      Set(varShowDefaultCaseContextPopup,false);
+      Set(varDefaultCaseContextConfirmedForThisAdvance,false);
+      Set(varDefaultCaseContextValidationError,"");
+      ClearCollect(colDefaultCaseContextPending,[{CaseId:"",TerminationReason:"",DefaultedMemberId:"",DefaultedMemberName:"",TerminationDateTime:Now(),SetByUser:"",SetUtc:Now(),ModeAtCreation:""}]);
+      Clear(colDefaultCaseContextPending);
+
       // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles in scrHome's header):
       // varBaselineAcknowledged is set true exactly once, on the first successful status refresh
       // (see scrHome.OnVisible) - that is when varLastAck* is populated with the then-current values.

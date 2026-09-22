@@ -10,14 +10,16 @@
 
 ---
 
-## 🟠 v1.22.20 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — gebündelter Fix + temporäres Debug-Panel
+## 🟠 v1.22.21 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — gebündelter Fix + Debug-Panel + B3-Popup
 
 - `vGreenFixedSegments` (System Health ring) enthielt trotz gegenteiliger Release-Notes-Behauptung (v1.22.17/18) weiterhin den ungültigen `Table(vStatusCheckColor, ...)`-Aufruf mit Text-Skalaren (vom Nutzer per Studio-Fehleranalyse gefunden) — jetzt echt korrigiert auf `CountIf(vFixedSegments, Color=...)`.
-- Neues temporäres Panel `conFuncTimestampDebug` auf dem Admin-Functions-Screen zeigt die reale, aktuellste Audit-Trail-Zeile mit 4 parallelen Datums-Parsing-Ansätzen (aktuelle Prod-Formel / immer-Excel-Serial / DateTimeValue System-Locale / DateTimeValue en-US) — soll helfen, den gemeldeten Audit-Trail-Datum/Uhrzeit-Bug anhand echter Live-Daten zu bestätigen, statt weiter zu raten. Nach Bestätigung des korrekten Ansatzes wieder entfernen.
-- Quellcode-Prüfung ergab: `scrAuditTrail.pa.yaml` enthält bereits die robuste numerische Vorprüfung (dokumentiert seit v1.22.13/17); ebenso ist Agent 7 in `scrReleaseNotes.pa.yaml` bereits vollständig gepflegt. Der vom Nutzer gemeldete Stand "v1.22.13, Agent 7 fehlt" stammt sehr wahrscheinlich aus der seit 2026-09-04 nicht neu geladenen Studio-Session, nicht aus fehlendem Code — **zu bestätigen, sobald `DMP_COMMAND_v1.22.20.msapp` frisch geladen wurde.**
-- Pack/Unpack-Rückvergleich: 0 Diff für beide geänderten Screens.
+- Temporäres Panel `conFuncTimestampDebug` auf dem Admin-Functions-Screen (4 parallele Datums-Parsing-Ansätze anhand echter Live-Daten) — Quellcode-Prüfung ergab, dass `scrAuditTrail.pa.yaml` bereits die robuste numerische Vorprüfung enthält und Agent 7 in den Release Notes bereits vollständig gepflegt ist; der gemeldete alte Stand stammt sehr wahrscheinlich aus einer seit 2026-09-04 nicht neu geladenen Studio-Session.
+- **B3 (Default Case Context) — erste Umsetzung:** `conDefaultCaseContextPopup` in `scrHome.pa.yaml` — Pflichtformular (Case ID, Termination Reason, Defaulted Member ID/Name, Termination Date+Time), das jetzt jeden Pre-Default→DMP-Übergang von `btnOperationalModeAdvance` gate't. **Korrektur zur bisherigen Doku:** Die Liste `DMP Command Default Case Context` (Achtung: realer Name OHNE „Checklist", anders als Recurrence Rules/Task Occurrences) existiert laut Nutzer-Screenshot bereits (Site `GO365_DMPCommunication-CoSLeader`, GUID `8fa1f858-3f89-4600-b3dc-86f9dfcaf4b8`), Spalten wurden vom Nutzer bestätigt (inkl. interner Feldname `TerminationDate` für die Anzeige-Spalte „TerminationDateTime"). Ebenso existieren laut Screenshot bereits ALLE anderen Streams-Listen (Email Templates, Recipient Groups, Role Assignments, Status Change Approvals, Email Placeholders) — die bisherige Annahme „nur Recurrence Rules/Task Occurrences existieren" war veraltet/falsch und ist hiermit korrigiert. Noch offen: Liste als echte Power-App-Datenquelle in Studio verbinden (manueller Schritt, wie bei Agent 7) — bis dahin schreibt das Popup nur in eine lokale Collection (`colDefaultCaseContextPending`, exakt gleiches Spaltenschema).
+- **Lessons Learned Control-Typ:** `Classic/TextInput` wurde in dieser App noch nie verwendet. Ein erster geratener Name (`TextInput@2.3.2` ohne „Classic/"-Präfix) wurde lokal erkannt (fehlte im gepackten Template-Register) und VOR dem Test an den Nutzer gestoppt; der Nutzer hat testweise ein Textfeld in Studio eingefügt und den echten Namen `Classic/TextInput@2.3.2` geliefert — damit korrigiert, alle 5 neuen Felder nutzen jetzt die verifizierte Deklaration.
+- Pack/Unpack-Rückvergleich: 0 Diff für alle 3 geänderten Screens (`scrHome`, `scrAdminFunctions`, `scrReleaseNotes`) + `App.pa.yaml`.
 
 ---
+
 
 ## 📌 Große Aufräum-Aktion am 2026-09-04
 

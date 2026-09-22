@@ -1616,27 +1616,33 @@ Screens:
                                             =If(
                                                 varSuppressToggleEvents,
                                                 false,
-                                                Set(varSuppressToggleEvents, true);
-                                                Set(varLedOperationalState, "Yellow");
-                                                Set(
-                                                    varOpModeResult,
-                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                        User().Email,
-                                                        If(varEnvironmentIsPROD, "PROD_", "SIMU_") & Switch(Mod(varOperationalStepCounter+1,4), 0, "NODMP", 1, "PREDEFAULT", 2, "DMP", "POSTDEFAULT")
-                                                    )
-                                                );
                                                 If(
-                                                    Coalesce(varOpModeResult.success, false),
-                                                    Set(varOperationalStepCounter, varOperationalStepCounter + 1);
-                                                    Set(varOperationalMode, Switch(Mod(varOperationalStepCounter,4), 0, "Normal", 1, "PreDefault", 2, "DMP", "PostDefault"));
-                                                    Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
-                                                    Set(varLedOperationalState, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                    Notify("Operating State advanced to " & varOperationalMode & ".", NotificationType.Success),
-                                                    Set(varLedOperationalState, "Red");
-                                                    Notify("Failed to advance Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                );
-                                                Set(varSuppressToggleEvents, false)
+                                                    Mod(varOperationalStepCounter+1,4)=2 && !varDefaultCaseContextConfirmedForThisAdvance,
+                                                    Set(varDefaultCaseContextValidationError, "");
+                                                    Set(varShowDefaultCaseContextPopup, true),
+                                                    Set(varSuppressToggleEvents, true);
+                                                    Set(varLedOperationalState, "Yellow");
+                                                    Set(
+                                                        varOpModeResult,
+                                                        'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
+                                                            User().Email,
+                                                            If(varEnvironmentIsPROD, "PROD_", "SIMU_") & Switch(Mod(varOperationalStepCounter+1,4), 0, "NODMP", 1, "PREDEFAULT", 2, "DMP", "POSTDEFAULT")
+                                                        )
+                                                    );
+                                                    If(
+                                                        Coalesce(varOpModeResult.success, false),
+                                                        Set(varOperationalStepCounter, varOperationalStepCounter + 1);
+                                                        Set(varOperationalMode, Switch(Mod(varOperationalStepCounter,4), 0, "Normal", 1, "PreDefault", 2, "DMP", "PostDefault"));
+                                                        Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
+                                                        Set(varLedOperationalState, "Green");
+                                                        Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
+                                                        Set(varDefaultCaseContextConfirmedForThisAdvance, false);
+                                                        Notify("Operating State advanced to " & varOperationalMode & ".", NotificationType.Success),
+                                                        Set(varLedOperationalState, "Red");
+                                                        Notify("Failed to advance Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                    );
+                                                    Set(varSuppressToggleEvents, false)
+                                                )
                                             )
                                           Text: =Switch(Mod(varOperationalStepCounter,4), 0, "Normal", 1, "Pre-Default", 2, "DMP", "Post-Default") & "  ->  " & Switch(Mod(varOperationalStepCounter+1,4), 0, "Normal", 1, "Pre-Default", 2, "DMP", "Post-Default")
                                           Size: =9
@@ -3185,3 +3191,246 @@ Screens:
             Width: =Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             X: =Parent.Width - Switch(varOperationalMode, "Normal", If(varEnvironmentIsPROD, 4, 3), "PreDefault", If(varEnvironmentIsPROD, 6, 5), "DMP", If(varEnvironmentIsPROD, 9, 6), "PostDefault", If(varEnvironmentIsPROD, 7, 5), 3)
             Y: =0
+      - conDefaultCaseContextPopup:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(0,0,0,0.55)
+            Height: =Parent.Height
+            Visible: =varShowDefaultCaseContextPopup
+            Width: =Parent.Width
+            X: =0
+            Y: =0
+          Children:
+            - conDefaultCaseContextCard:
+                Control: GroupContainer@1.5.0
+                Variant: AutoLayout
+                Properties:
+                  BorderColor: =If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1))
+                  BorderThickness: =3
+                  Fill: =If(varDarkMode,RGBA(24,22,32,1),RGBA(255,255,255,1))
+                  Height: =560
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =8
+                  LayoutOverflowY: =LayoutOverflow.Scroll
+                  PaddingBottom: =20
+                  PaddingLeft: =24
+                  PaddingRight: =24
+                  PaddingTop: =20
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                  Width: =460
+                  X: =(Parent.Width-460)/2
+                  Y: =(Parent.Height-560)/2
+                Children:
+                  - lblDefaultCaseContextTitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Bold
+                        Size: =15
+                        Text: ="DEFAULT CASE CONTEXT - REQUIRED BEFORE ENTERING DMP MODE"
+                        Wrap: =true
+                  - lblDefaultCaseContextSubtitle:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(180,178,190,1),RGBA(90,88,100,1))
+                        Font: =Font.'Arial'
+                        Size: =10
+                        Text: ="Captured locally for now (colDefaultCaseContextPending) - not yet written to the 'DMP Command Default Case Context' SharePoint list, pending its manual connection in Studio."
+                        Wrap: =true
+                  - lblDefaultCaseContextCaseIdLabel:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Case ID *"
+                        Wrap: =false
+                  - txtDefaultCaseContextCaseId:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(180,180,190,1)
+                        Default: =""
+                        Font: =Font.'Arial'
+                        HintText: ="e.g. CASE-2026-001"
+                        Height: =32
+                  - lblDefaultCaseContextReasonLabel:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Termination Reason *"
+                        Wrap: =false
+                  - txtDefaultCaseContextReason:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(180,180,190,1)
+                        Default: =""
+                        Font: =Font.'Arial'
+                        Height: =56
+                        Mode: =TextMode.MultiLine
+                  - lblDefaultCaseContextMemberIdLabel:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Defaulted Member ID"
+                        Wrap: =false
+                  - txtDefaultCaseContextMemberId:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(180,180,190,1)
+                        Default: =""
+                        Font: =Font.'Arial'
+                        Height: =32
+                  - lblDefaultCaseContextMemberNameLabel:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Defaulted Member Name *"
+                        Wrap: =false
+                  - txtDefaultCaseContextMemberName:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(180,180,190,1)
+                        Default: =""
+                        Font: =Font.'Arial'
+                        Height: =32
+                  - lblDefaultCaseContextDateTimeLabel:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =18
+                        Size: =11
+                        Text: ="Termination Date + Time (UTC, YYYY-MM-DD HH:MM) *"
+                        Wrap: =false
+                  - txtDefaultCaseContextDateTime:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        BorderColor: =RGBA(180,180,190,1)
+                        Default: =""
+                        Font: =Font.'Arial'
+                        HintText: ="e.g. 2026-09-22 14:30"
+                        Height: =32
+                  - lblDefaultCaseContextValidation:
+                      Control: Label@2.5.1
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(255,69,58,1)
+                        Font: =Font.'Arial'
+                        Size: =11
+                        Text: =varDefaultCaseContextValidationError
+                        Visible: =Len(varDefaultCaseContextValidationError)>0
+                        Wrap: =true
+                  - conDefaultCaseContextButtons:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =36
+                      Children:
+                        - btnDefaultCaseContextCancel:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(180,180,190,1)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =36
+                              HoverFill: =RGBA(0,0,0,0.06)
+                              OnSelect: =Set(varShowDefaultCaseContextPopup, false); Set(varDefaultCaseContextValidationError, "")
+                              Size: =12
+                              Text: ="Cancel"
+                              Width: =150
+                              X: =0
+                              Y: =0
+                        - btnDefaultCaseContextConfirm:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(255,255,255,1)
+                              Fill: =If(varEnvironmentIsPROD, RGBA(255,69,58,1), RGBA(102,52,142,1))
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =36
+                              HoverFill: =If(varEnvironmentIsPROD, RGBA(220,50,40,1), RGBA(85,40,120,1))
+                              OnSelect: |-
+                                =With(
+                                    {
+                                        vCaseId: Trim(txtDefaultCaseContextCaseId.Text),
+                                        vReason: Trim(txtDefaultCaseContextReason.Text),
+                                        vMemberName: Trim(txtDefaultCaseContextMemberName.Text),
+                                        vDT: Trim(txtDefaultCaseContextDateTime.Text)
+                                    },
+                                    If(
+                                        IsBlank(vCaseId) || IsBlank(vReason) || IsBlank(vMemberName) || !IsMatch(vDT, "^\d{4}-\d{2}-\d{2} ([01]\d|2[0-3]):[0-5]\d$"),
+                                        Set(varDefaultCaseContextValidationError, "Please fill in Case ID, Termination Reason and Defaulted Member Name, and enter the date/time exactly as YYYY-MM-DD HH:MM (24h)."),
+                                        Set(varDefaultCaseContextValidationError, "");
+                                        Collect(
+                                            colDefaultCaseContextPending,
+                                            {
+                                                CaseId: vCaseId,
+                                                TerminationReason: vReason,
+                                                DefaultedMemberId: Trim(txtDefaultCaseContextMemberId.Text),
+                                                DefaultedMemberName: vMemberName,
+                                                TerminationDateTime: DateAdd(DateAdd(Date(Value(Mid(vDT,1,4)), Value(Mid(vDT,6,2)), Value(Mid(vDT,9,2))), Value(Mid(vDT,12,2)), TimeUnit.Hours), Value(Mid(vDT,15,2)), TimeUnit.Minutes),
+                                                SetByUser: User().FullName,
+                                                SetUtc: Now(),
+                                                ModeAtCreation: If(varEnvironmentIsPROD, "PROD_DMP", "SIMU_DMP")
+                                            }
+                                        );
+                                        Reset(txtDefaultCaseContextCaseId);
+                                        Reset(txtDefaultCaseContextReason);
+                                        Reset(txtDefaultCaseContextMemberId);
+                                        Reset(txtDefaultCaseContextMemberName);
+                                        Reset(txtDefaultCaseContextDateTime);
+                                        Set(varDefaultCaseContextConfirmedForThisAdvance, true);
+                                        Set(varShowDefaultCaseContextPopup, false);
+                                        Select(btnOperationalModeAdvance)
+                                    )
+                                )
+                              Size: =12
+                              Text: ="Confirm & Switch to DMP"
+                              Width: =242
+                              X: =170
+                              Y: =0
