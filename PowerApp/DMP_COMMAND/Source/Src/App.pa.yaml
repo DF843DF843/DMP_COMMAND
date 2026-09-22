@@ -38,6 +38,11 @@ App:
       Set(varShowHeartbeatLegend,false);
       Set(varReleaseNotesTab,"App");
       Set(varTriggerEmergencyUpload,false);
+      // Release Notes detail-pane selector: previously never initialized and had no matching
+      // Switch case for any version after v1.22.13, so it silently always fell back to showing
+      // v1.22.13 (found 2026-09-22 from user feedback "Agent 7 missing, shows old version").
+      // Defaults to the newest App version now; keep this in sync with the current version.
+      Set(varSelectedAppRelease,"V12222");
 
       // B3 Default Case Context popup (mandatory form on Pre-Default -> DMP transition).
       // 'DMP Command Default Case Context' SharePoint list confirmed to exist (2026-09-22,

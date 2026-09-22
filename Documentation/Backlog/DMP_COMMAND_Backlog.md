@@ -10,7 +10,22 @@
 
 ---
 
-## 🟠 v1.22.21 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — gebündelter Fix + Debug-Panel + B3-Popup
+## 🟠 v1.22.22 (2026-09-22, lokal gepackt, noch nicht in Studio geladen) — 4 echte Root-Cause-Fixes aus Live-Test-Feedback
+
+Der Nutzer hat v1.22.21 tatsächlich in Studio getestet und 4 konkrete Findings gemeldet — alle 4 sind jetzt mit echter Ursachenanalyse behoben, nicht nur symptomatisch:
+
+1. **System Health Ring:** `CountIf(vFixedSegments, Color="rgb(...)")` scheiterte mit "Enum, Text nicht vergleichbar". Ursache: Das Feldname `Color` wird von Power Fx offenbar mit seinem eingebauten `Color`-Enum-Typ verwechselt, sobald es per `=` verglichen wird. Feld überall auf `SegColor` umbenannt — dabei eine ZWEITE, bisher unentdeckte Instanz desselben Bugs in der Sortier-Formel (`AddColumns(...,ColorRank, Switch(Color,...))`) gefunden und mitbehoben.
+2. **Timestamp-Bug (Jahr 3926):** Das Debug-Panel bewies live: `Date(1899,12,30)+Value(rawTs,"en-US")` liefert bei einer echten Zeile (`RAW=46287.3776736574`) `3926-09-23 00:00:00` statt `2026-09-...`. Root Cause: `Date(1899,12,30)` liegt außerhalb des von Power Apps unterstützten Datumsbereichs (Minimum 1900-01-01) und lieferte bisher STILLSCHWEIGEND Müll statt eines Fehlers — dieselbe kaputte Epoche steckt seit mindestens einem Commit vom 3. September unverändert im Code (nur die Zweig-Reihenfolge wurde damals geändert, nie die Mathematik selbst). Fix: Community-Standard-Konvertierung `DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds)`, an allen 20 Stellen in `scrAuditTrail.pa.yaml` plus im Debug-Panel angewendet.
+3. **Release Notes zeigt immer v1.22.13:** Root Cause gefunden — `varSelectedAppRelease` wurde nirgends initialisiert, und der große Versions-Switch hatte seit v1.22.13 KEINEN einzigen neuen Fall mehr bekommen (jede neue Version wurde nur der scrollbaren Liste hinzugefügt, nicht diesem separaten Detail-Pane-Switch) — das war also kein Stale-Studio-Problem, sondern ein echter, bisher unentdeckter App-Bug. Fix: Default auf aktuelle Version gesetzt + neuer Switch-Case/Menü-Button ergänzt (ältere Lücke v1.22.14–v1.22.20 bewusst nicht rückwirkend gefüllt — siehe Priorität 3).
+4. **B3-Popup:** Titel war lila Text auf ggf. dunklem Hintergrund (schwer lesbar im Dark Mode) — jetzt weißer Text auf farbigem Banner (gleiche Konvention wie beim Button-Kontrast-Fix aus v1.22.17). Datum/Zeit-Feld verlangte bisher UTC-Eingabe — jetzt lokale Zeit, Umrechnung nach UTC (`TimeZoneOffset`) erst beim Speichern in die Collection.
+
+**Bewusst zurückgestellt (Priorität 3):** Die Release-Notes-Menü-/Switch-Lücke für v1.22.14–v1.22.20 (8 Versionen) wurde nicht rückwirkend aufgefüllt, da für den gemeldeten Fehler nur "zeigt die aktuelle Version standardmäßig" nötig war — bei Bedarf nachträglich ergänzbar.
+
+Pack/Unpack-Rückvergleich: 0 Diff auf allen 5 geänderten Dateien.
+
+---
+
+## 🟠 v1.22.21 (2026-09-22, historisch, in v1.22.22 gefaltet) — gebündelter Fix + Debug-Panel + B3-Popup
 
 - `vGreenFixedSegments` (System Health ring) enthielt trotz gegenteiliger Release-Notes-Behauptung (v1.22.17/18) weiterhin den ungültigen `Table(vStatusCheckColor, ...)`-Aufruf mit Text-Skalaren (vom Nutzer per Studio-Fehleranalyse gefunden) — jetzt echt korrigiert auf `CountIf(vFixedSegments, Color=...)`.
 - Temporäres Panel `conFuncTimestampDebug` auf dem Admin-Functions-Screen (4 parallele Datums-Parsing-Ansätze anhand echter Live-Daten) — Quellcode-Prüfung ergab, dass `scrAuditTrail.pa.yaml` bereits die robuste numerische Vorprüfung enthält und Agent 7 in den Release Notes bereits vollständig gepflegt ist; der gemeldete alte Stand stammt sehr wahrscheinlich aus einer seit 2026-09-04 nicht neu geladenen Studio-Session.

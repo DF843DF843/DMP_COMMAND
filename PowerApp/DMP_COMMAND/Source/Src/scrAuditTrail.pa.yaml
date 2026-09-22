@@ -12,12 +12,12 @@ Screens:
       Fill: =If(varDarkMode,RGBA(11,11,13,1),RGBA(243,243,243,1))
       LoadingSpinnerColor: =RGBA(0, 206, 125, 1)
       OnVisible: |-
-        =// Nutzerwunsch (2026-09-04): kein eigener, separater Agent-4-Aufruf mehr beim Ã–ffnen dieses Tabs.
+        =// Nutzerwunsch (2026-09-04): kein eigener, separater Agent-4-Aufruf mehr beim Ãƒâ€“ffnen dieses Tabs.
         // Stattdessen wird nur der ohnehin vorhandene, zentrale Refresh-Mechanismus (tmrAutoRefreshTick/
-        // tmrPeriodicDataRefresh auf scrHome) angestoÃŸen - dieselbe Aktualisierung wie beim normalen
-        // Timer-Intervall, nur sofort statt erst beim nÃ¤chsten Countdown-Ablauf. varStatusResult (inkl.
+        // tmrPeriodicDataRefresh auf scrHome) angestoÃƒÅ¸en - dieselbe Aktualisierung wie beim normalen
+        // Timer-Intervall, nur sofort statt erst beim nÃƒÂ¤chsten Countdown-Ablauf. varStatusResult (inkl.
         // auditrecentcritical/auditrecentwarnings) ist bereits eine geteilte, globale Variable - die
-        // Labels unten lesen ohnehin direkt daraus, unabhÃ¤ngig davon, welcher Timer sie zuletzt befÃ¼llt hat.
+        // Labels unten lesen ohnehin direkt daraus, unabhÃƒÂ¤ngig davon, welcher Timer sie zuletzt befÃƒÂ¼llt hat.
         Set(varTriggerPeriodicRefresh, true)
     Children:
       - conAuditTrailRoot:
@@ -483,7 +483,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,1),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,1),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=1
                               Wrap: =true
                         - lblAuditTrailCritical02:
@@ -496,7 +496,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,2),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,2),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=2
                               Wrap: =true
                         - lblAuditTrailCritical03:
@@ -509,7 +509,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,3),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,3),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=3
                               Wrap: =true
                         - lblAuditTrailCritical04:
@@ -522,7 +522,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,4),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,4),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=4
                               Wrap: =true
                         - lblAuditTrailCritical05:
@@ -535,7 +535,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,5),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,5),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=5
                               Wrap: =true
                         - lblAuditTrailCritical06:
@@ -548,7 +548,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,6),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,6),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=6
                               Wrap: =true
                         - lblAuditTrailCritical07:
@@ -561,7 +561,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,7),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,7),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=7
                               Wrap: =true
                         - lblAuditTrailCritical08:
@@ -574,7 +574,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,8),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,8),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=8
                               Wrap: =true
                         - lblAuditTrailCritical09:
@@ -587,7 +587,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,9),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,9),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=9
                               Wrap: =true
                         - lblAuditTrailCritical10:
@@ -600,7 +600,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,10),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentcritical,10),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentcritical,Table()))>=10
                               Wrap: =true
                   - conAuditTrailWarningsPanel:
@@ -656,7 +656,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,1),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,1),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=1
                               Wrap: =true
                         - lblAuditTrailWarning02:
@@ -669,7 +669,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,2),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,2),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=2
                               Wrap: =true
                         - lblAuditTrailWarning03:
@@ -682,7 +682,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,3),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,3),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=3
                               Wrap: =true
                         - lblAuditTrailWarning04:
@@ -695,7 +695,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,4),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,4),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=4
                               Wrap: =true
                         - lblAuditTrailWarning05:
@@ -708,7 +708,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,5),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,5),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=5
                               Wrap: =true
                         - lblAuditTrailWarning06:
@@ -721,7 +721,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,6),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,6),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=6
                               Wrap: =true
                         - lblAuditTrailWarning07:
@@ -734,7 +734,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,7),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,7),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=7
                               Wrap: =true
                         - lblAuditTrailWarning08:
@@ -747,7 +747,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,8),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,8),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=8
                               Wrap: =true
                         - lblAuditTrailWarning09:
@@ -760,7 +760,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,9),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,9),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=9
                               Wrap: =true
                         - lblAuditTrailWarning10:
@@ -773,6 +773,6 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =32
                               Size: =11
-                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,10),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),Date(1899,12,30)+Value(rawTs,"en-US"),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
+                              Text: =With({r:IfError(Index(varStatusResult.auditrecentwarnings,10),Blank())},If(IsBlank(r),"",With({rawTs:Coalesce(r.timestamp,"")},With({parsedDt:If(IsMatch(rawTs,"^\d+(\.\d+)?$"),DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),IfError(DateTimeValue(rawTs,"en-US"),Blank()))},If(IsBlank(parsedDt),rawTs,Text(parsedDt,"yyyy-mm-dd hh:mm:ss") & " UTC")) & " - " & Coalesce(r.workflowpath,r.stepname,"") & " - " & Coalesce(r.keyoutput,""))))
                               Visible: =CountRows(Coalesce(varStatusResult.auditrecentwarnings,Table()))>=10
                               Wrap: =true

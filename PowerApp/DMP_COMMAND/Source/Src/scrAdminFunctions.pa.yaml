@@ -663,8 +663,8 @@ Screens:
                                     If(IsBlank(r), "No Critical/Warning row available to test.",
                                         With({rawTs: Coalesce(r.timestamp, "")},
                                             "RAW=" & rawTs & Char(10) &
-                                            "A) current prod formula (numeric-check first): " & IfError(If(IsMatch(rawTs,"^\d+(\.\d+)?$"), Text(Date(1899,12,30)+Value(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss"), Text(DateTimeValue(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss")), "ERROR") & Char(10) &
-                                            "B) always Excel-serial (Date(1899,12,30)+Value): " & IfError(Text(Date(1899,12,30)+Value(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss"), "ERROR") & Char(10) &
+                                            "A) current prod formula (1900 epoch, numeric-check first): " & IfError(If(IsMatch(rawTs,"^\d+(\.\d+)?$"), Text(DateAdd(Date(1900,1,1),(Value(rawTs,"en-US")-2)*86400,TimeUnit.Seconds),"yyyy-mm-dd hh:mm:ss"), Text(DateTimeValue(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss")), "ERROR") & Char(10) &
+                                            "B) OLD/buggy 1899 epoch (kept for comparison only): " & IfError(Text(Date(1899,12,30)+Value(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss"), "ERROR") & Char(10) &
                                             "C) DateTimeValue, app/system locale: " & IfError(Text(DateTimeValue(rawTs),"yyyy-mm-dd hh:mm:ss"), "ERROR") & Char(10) &
                                             "D) DateTimeValue, en-US forced: " & IfError(Text(DateTimeValue(rawTs,"en-US"),"yyyy-mm-dd hh:mm:ss"), "ERROR")
                                         )
