@@ -4,12 +4,20 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
+### v1.22.15 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+
+- Replaced the Normal/DMP Operating State toggle with a single colored "advance" button showing the current phase and the next one (e.g. "Normal -> Pre-Default"), enforcing the linear Normal -> Pre-Default -> DMP -> Post-Default -> Normal cycle - direct jumps between non-adjacent phases are no longer possible. Part of the Streams concept's B2 (5-mode rollout).
+- Switching Environment to PROD now always resets Operating State back to Normal for safety (previously this safety reset only fired from DMP); switching to SIMU now preserves any of the 4 phases, not just DMP/Normal.
+- New internal state model: `varOperationalMode` (text: Normal/PreDefault/DMP/PostDefault) and `varOperationalStepCounter` (a monotonically increasing step count, mod 4, used to bound the single-step advance) added alongside the existing `varOperationalModeIsDMP` (still derived/kept for backward compatibility with existing color/border formulas elsewhere in the app).
+- Deliberately did NOT introduce a native Power Apps Slider control for the "advance" interaction, despite the user's preference for a slide-switch look: this codebase has never used a Slider control before, and guessing its exact schema/version risked a repeat of past silent Power Fx/schema failures. Implemented instead as a styled `Classic/Button` (a proven, already-used control type in this app) that looks like a colored pill and always advances exactly one step per tap - functionally equivalent safety guarantee (only one step possible), lower deployment risk. A literal drag-slider can be added later if desired once this is confirmed working, ideally by having the user insert Studio's native Slider control visually and then wiring the same one-step-bounded logic to it.
+- Not yet packed/loaded/saved/tested by the user in Power Apps Studio this session - the previous confirmed-good app version remains v1.22.13.
+
 ### v1.22.14 - 2026-09-04 (published; P1 follow-up required)
 
 - Published the direct SharePoint counter refresh and zero-value Emails Processed ring fix.
 - Published the first System Health dynamic-segment implementation, but it has a live Power Fx type error ("Only record or table values can be used in that context") in the dynamic table composition. This implementation is not accepted as complete; its repair is the first P1 task of the next session.
 
-### v1.22.13 - 2026-09-04 (current)
+### v1.22.13 - 2026-09-04
 
 - Found and fixed the actual root cause of the non-responsive Admin Functions and Audit Trail Reset buttons - the app's internal reference to the Agent 6 flow was named "DMPAgent6(AdminFunctions)[1.1.0]" while all 5 button formulas called it without the version suffix; all 5 call sites corrected to the exact live connector name
 - Rebuilt the Audit Trail date/time parsing to be more robust - the raw timestamp is now checked first for being a plain number (Excel serial date) and converted directly; only genuine ISO-formatted text falls back to the text-based date parser, removing the previous unreliable "try text-parsing first" approach and its accompanying implausible-year workaround

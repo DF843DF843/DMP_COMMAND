@@ -23,6 +23,65 @@ Dieses Dokument war auf ca. 2650 Zeilen angewachsen (chronologisches Arbeitsprot
 
 # 🔴 Priorität 1 – Bereit zum Deploy, wartet auf grünes Licht des Nutzers
 
+## 🟢 B1/B2 (Streams-Konzept, Strang B – 5-Modus-Umstellung) – umgesetzt, Studio-Validierung durch Nutzer noch offen
+
+**B1 – Configuration-Erweiterung (Variante B, 8 Spalten):** Klargestellt und vorbereitet
+2026-09-22. `DMP Command Configuration` braucht 4 neue Spalten (`Value - PROD (Pre-Default)`,
+`Value - PROD (Post-Default)`, `Value - SIMU (Pre-Default)`, `Value - SIMU (Post-Default)`,
+Typ „Einzelne Zeile Text"), die der Nutzer manuell in SharePoint anlegen muss (kein PnP-/API-
+Zugriff verfügbar). Werte für 10 bereits vollständig vorbereitete Zeilen (`AuditModeDecision`,
+`AuditModeText`, `CurrentOperationMode`, `Agent2EffectiveModeMapping`,
+`OperationModeAllowedNextSteps`, `MailModeText`, `ModeIconName`, `OperationModeDescription`,
+`OperationModeDisplayName`, `OperationModeShortLabel`) sowie 16 neu ergänzte Zeilen
+(`DashboardStatusColor`, `DMPStateDisplayName`, `EnvironmentDisplayName`, `BannerText`,
+`BannerSubText`, `AlertEmailRecipient`, `MailImportanceActionRequired/Error/Info/Warning`,
+`SubjectPrefix`, `SharedDMPMailbox`, `ProcessedMailsRootFolderName`,
+`WaitSecondsBeforeSentMailSearch`, `Agent5AlertFolderName`, `WorkflowPathAgent5`) stehen fertig
+in `DMP Command Configuration.csv` (beide Kopien) — **noch nicht in die echte SharePoint-Liste
+übertragen, wartet auf Nutzer.** Kein dritter „TEST"-Umgebungswert nötig: `TEST` entspricht der
+bereits getrennten Power-Platform-Umgebung `DBG Team Productivity (Dev)`/`(UAT)`, nicht einem
+Konfigurationswert (Klarstellung 2026-09-22).
+
+**B2 – 5-Werte-Zustandsmodell in der App:** Implementiert 2026-09-22 in
+`PowerApp/DMP_COMMAND/Source/Src/scrHome.pa.yaml` + `App.pa.yaml` (App-Version `v1.22.15`,
+noch nicht vom Nutzer in Studio geladen/gespeichert/getestet). Der bisherige Normal/DMP-Toggle
+(`tglOperationalState`) wurde durch einen einzelnen „Weiter"-Button (`btnOperationalModeAdvance`,
+`Classic/Button`) ersetzt, der die aktuelle Phase und die nächste anzeigt (z. B. „Normal ->
+Pre-Default") und pro Klick genau einen Schritt im zyklischen Ablauf `Normal -> Pre-Default ->
+DMP -> Post-Default -> Normal` auslöst — ein direkter Sprung zwischen nicht benachbarten Phasen
+ist technisch ausgeschlossen. Neue Variablen `varOperationalMode` (Text) und
+`varOperationalStepCounter` (Zahl, monoton steigend, Anzeige via `Mod(...,4)`) ergänzen die
+bestehende `varOperationalModeIsDMP` (bleibt aus Kompatibilitätsgründen abgeleitet erhalten,
+u. a. für bestehende Farb-/Rahmen-Formeln). Environment-Wechsel zu PROD setzt weiterhin
+automatisch auf „Normal" zurück (jetzt aus allen 4 Phasen, nicht nur DMP); Wechsel zu SIMU
+erhält die aktuelle Phase (alle 4, nicht nur DMP/Normal).
+
+**Bewusst KEIN nativer Power-Apps-Slider-Control verwendet** (Nutzerwunsch war ein
+„Schiebeschalter"): Diese Codebasis hat noch nie einen Slider-Control-Typ verwendet; ein
+Rateversuch bei Control-Typ/Version hätte dasselbe Risiko wie frühere stille Power-Fx-/Schema-
+Fehler bedeutet. Stattdessen ein bereits im Screen 20+ Mal bewährter `Classic/Button`, farblich
+als Pille gestylt. Falls der Nutzer nach Sichtprüfung in Studio dennoch einen echten Drag-Slider
+möchte: Control in Studio selbst einfügen (garantiert korrektes Schema), danach die
+Min/Max-Begrenzungslogik (`[varOperationalStepCounter, varOperationalStepCounter+1]`) darauf
+verdrahten.
+
+**Solution-Version-Prüfsumme:** Durch die Agent-7-Label-Korrektur UND die Power-App-
+Versionsänderung zweimal neu berechnet und importiert: `7.11.48` → `7.34.46` → `7.34.48`
+(siehe Session Restart Guide für die vollständige Komponententabelle). Offene Frage an den
+Nutzer: ob künftig JEDER Power-App-Versions-Bump einen eigenen Solution-Reimport auslösen soll,
+oder ob das mit dem nächsten ohnehin fälligen Flow-Import gebündelt werden darf.
+
+**Noch offen:**
+1. Nutzer muss die 20 Configuration-Zeilen (B1) manuell in SharePoint anlegen/befüllen.
+2. Nutzer muss die Power App neu laden/speichern und den neuen Button in Studio visuell/
+   funktional prüfen (Layout wurde nicht Studio-validiert, nur JSON/YAML-seitig auf Klammern-
+   Balance und Referenz-Konsistenz geprüft).
+3. Agent 7 muss nach dem zweiten Reimport (`7.34.48`) erneut geöffnet/gespeichert/aktiviert
+   werden (Power Automate meldete wieder "deactivated and replaced").
+4. B3 (`DMP Command Checklist Default Case Context`-Liste + Popup `popDefaultCaseContext`),
+   B4 (Agent 5 Pre-/Post-Default-Mail-Logik), B5 (Agent 2 EffectiveMode-Mapping nutzen) folgen
+   erst nach B1/B2-Bestätigung durch den Nutzer.
+
 ## 🔵 Agent 7 occurrence generation – activated in Dev, final C5 contract pending
 
 **Deployed to Dev 2026-09-22, corrected to `7.34.46` same day:** Solution `7.11.48` was

@@ -16,7 +16,10 @@ App:
       Set(varRequestedMode,false);
       Set(varSuppressToggleEvents,true);
       Set(varStartDMPStatusRefresh,false);
-      Set(varOperationalModeIsDMP,true);
+      Set(varOperationalModeIsDMP,false);
+      Set(varOperationalMode,"Normal");
+      Set(varOperationalStepCounter,0);
+      Set(varOperationalModeWasNormalBeforeEnvSwitch,true);
       Set(varEnvironmentIsPROD,false);
       Set(varLedOperationalState,"Gray");
       Set(varLedApplicationMode,"Gray");

@@ -67,7 +67,9 @@ Screens:
                 If(varAgent6Healthy,1,0)
             );
             Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-            Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+            Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
+            Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
+            Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
             Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
             // Toggle.Default is only an INITIAL value in Power Apps - once a Classic/Toggle has rendered,
             // it does not reliably re-sync its visual position when the variable behind Default changes
@@ -78,7 +80,6 @@ Screens:
             // back to the stale pre-click value in the middle of that call, cancelling the user's action.
             If(
                 !varSuppressToggleEvents,
-                Reset(tglOperationalState);
                 Reset(tglApplicationMode)
             );
             Set(varLedOperationalState, If(varStatusCallError="", If(varLedOperationalState="Red", "Red", "Green"), "Gray"));
@@ -443,11 +444,12 @@ Screens:
                                     If(varAgent6Healthy,1,0)
                                 );
                                 Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-                                Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
+                                Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
+                                Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
                                 Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
                                 If(
                                     !varSuppressToggleEvents,
-                                    Reset(tglOperationalState);
                                     Reset(tglApplicationMode)
                                 );
                                 Set(varAutoRefreshSecondsRemaining, varAutoRefreshMinutes*60)
@@ -601,11 +603,12 @@ Screens:
                                         If(varAgent6Healthy,1,0)
                                     );
                                     Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-                                    Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                    Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
+                                    Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
+                                    Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
                                     Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
                                     If(
                                         !varSuppressToggleEvents,
-                                        Reset(tglOperationalState);
                                         Reset(tglApplicationMode)
                                     );
                                     Set(varLedOperationalState, If(varStatusCallError="", If(varLedOperationalState="Red", "Red", "Green"), "Gray"));
@@ -727,11 +730,12 @@ Screens:
                                         If(varAgent6Healthy,1,0)
                                     );
                                     Set(varSystemHealthPercent, RoundUp((varAgentsHealthyCount / 6) * 100, 0));
-                                    Set(varOperationalModeIsDMP, EndsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "_DMP"));
+                                    Set(varOperationalMode, With({m: Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP")}, Switch(true, EndsWith(m, "PREDEFAULT"), "PreDefault", EndsWith(m, "POSTDEFAULT"), "PostDefault", EndsWith(m, "_DMP"), "DMP", "Normal")));
+                                    Set(varOperationalStepCounter, Switch(varOperationalMode, "Normal", 0, "PreDefault", 1, "DMP", 2, "PostDefault", 3, 0));
+                                    Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
                                     Set(varEnvironmentIsPROD, StartsWith(Coalesce(varStatusResult.currentoperationmode, "PROD_NODMP"), "PROD"));
                                     If(
                                         !varSuppressToggleEvents,
-                                        Reset(tglOperationalState);
                                         Reset(tglApplicationMode)
                                     )
                                 )
@@ -1583,22 +1587,19 @@ Screens:
                                           Wrap: =false
                                           X: =16
                                           Y: =90
-                                    - tglOperationalState:
-                                        Control: Classic/Toggle@2.1.0
+                                    - btnOperationalModeAdvance:
+                                        Control: Classic/Button@2.2.0
                                         Properties:
                                           BorderColor: =RGBA(0,0,0,0)
                                           BorderStyle: =BorderStyle.None
                                           BorderThickness: =0
                                           Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
-                                          Default: =varOperationalModeIsDMP
-                                          FalseFill: =RGBA(0,206,125,1)
-                                          FalseText: ="Normal"
+                                          Fill: =Switch(Mod(varOperationalStepCounter,4), 0, RGBA(0,206,125,1), 1, RGBA(255,159,10,1), 2, RGBA(102,52,142,1), RGBA(60,125,190,1))
                                           Font: =Font.'Arial'
                                           FontWeight: =FontWeight.Semibold
                                           Height: =26
-                                          LabelPaddingLeft: =0
-                                          LabelPaddingRight: =0
-                                          OnCheck: |-
+                                          HoverFill: =Switch(Mod(varOperationalStepCounter,4), 0, RGBA(0,180,110,1), 1, RGBA(220,135,0,1), 2, RGBA(85,40,120,1), RGBA(45,105,165,1))
+                                          OnSelect: |-
                                             =If(
                                                 varSuppressToggleEvents,
                                                 false,
@@ -1608,49 +1609,25 @@ Screens:
                                                     varOpModeResult,
                                                     'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                         User().Email,
-                                                        If(tglApplicationMode.Value, "PROD_DMP", "SIMU_DMP")
+                                                        If(varEnvironmentIsPROD, "PROD_", "SIMU_") & Switch(Mod(varOperationalStepCounter+1,4), 0, "NODMP", 1, "PREDEFAULT", 2, "DMP", "POSTDEFAULT")
                                                     )
                                                 );
                                                 If(
                                                     Coalesce(varOpModeResult.success, false),
-                                                    Set(varOperationalModeIsDMP, true);
+                                                    Set(varOperationalStepCounter, varOperationalStepCounter + 1);
+                                                    Set(varOperationalMode, Switch(Mod(varOperationalStepCounter,4), 0, "Normal", 1, "PreDefault", 2, "DMP", "PostDefault"));
+                                                    Set(varOperationalModeIsDMP, varOperationalMode = "DMP");
                                                     Set(varLedOperationalState, "Green");
                                                     Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                    Notify("Operating State switched to DMP mode.", NotificationType.Success),
+                                                    Notify("Operating State advanced to " & varOperationalMode & ".", NotificationType.Success),
                                                     Set(varLedOperationalState, "Red");
-                                                    Reset(tglOperationalState);
-                                                    Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
+                                                    Notify("Failed to advance Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
                                                 );
                                                 Set(varSuppressToggleEvents, false)
                                             )
-                                          OnUncheck: |-
-                                            =If(
-                                                varSuppressToggleEvents,
-                                                false,
-                                                Set(varSuppressToggleEvents, true);
-                                                Set(varLedOperationalState, "Yellow");
-                                                Set(
-                                                    varOpModeResult,
-                                                    'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
-                                                        User().Email,
-                                                        If(tglApplicationMode.Value, "PROD_NODMP", "SIMU_NODMP")
-                                                    )
-                                                );
-                                                If(
-                                                    Coalesce(varOpModeResult.success, false),
-                                                    Set(varOperationalModeIsDMP, false);
-                                                    Set(varLedOperationalState, "Green");
-                                                    Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                    Notify("Operating State switched to Normal mode.", NotificationType.Success),
-                                                    Set(varLedOperationalState, "Red");
-                                                    Reset(tglOperationalState);
-                                                    Notify("Failed to switch Operating State. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
-                                                );
-                                                Set(varSuppressToggleEvents, false)
-                                            )
-                                          TrueFill: =RGBA(102,52,142,1)
-                                          TrueText: ="DMP"
-                                          Width: =110
+                                          Text: =Switch(Mod(varOperationalStepCounter,4), 0, "Normal", 1, "Pre-Default", 2, "DMP", "Post-Default") & "  ->  " & Switch(Mod(varOperationalStepCounter+1,4), 0, "Normal", 1, "Pre-Default", 2, "DMP", "Post-Default")
+                                          Size: =9
+                                          Width: =190
                                           X: =170
                                           Y: =82
                                     - dotLedOperationalState:
@@ -1666,7 +1643,7 @@ Screens:
                                           RadiusTopLeft: =9
                                           RadiusTopRight: =9
                                           Width: =18
-                                          X: =290
+                                          X: =370
                                           Y: =86
                                     - lblApplicationModeLabel:
                                         Control: Label@2.5.1
@@ -1704,7 +1681,7 @@ Screens:
                                                 false,
                                                 Set(varSuppressToggleEvents, true);
                                                 Set(varLedApplicationMode, "Yellow");
-                                                Set(varLedOperationalState, If(tglOperationalState.Value, "Yellow", varLedOperationalState));
+                                                Set(varLedOperationalState, If(varOperationalModeIsDMP, "Yellow", varLedOperationalState));
                                                 Set(
                                                     varOpModeResult,
                                                     'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
@@ -1714,12 +1691,15 @@ Screens:
                                                 );
                                                 If(
                                                     Coalesce(varOpModeResult.success, false),
+                                                    Set(varOperationalModeWasNormalBeforeEnvSwitch, Mod(varOperationalStepCounter,4) = 0);
                                                     Set(varEnvironmentIsPROD, true);
+                                                    Set(varOperationalStepCounter, 0);
+                                                    Set(varOperationalMode, "Normal");
                                                     Set(varOperationalModeIsDMP, false);
                                                     Set(varLedApplicationMode, "Green");
                                                     Set(varLedOperationalState, "Green");
                                                     Set(varLastChangedText, Text(Now(),"hh:mm") & " · " & User().FullName);
-                                                    Notify("Environment switched to PROD" & If(tglOperationalState.Value, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
+                                                    Notify("Environment switched to PROD" & If(!varOperationalModeWasNormalBeforeEnvSwitch, " (Operational Mode automatically reset to Normal for safety)", "") & ".", NotificationType.Success),
                                                     Set(varLedApplicationMode, "Red");
                                                     Reset(tglApplicationMode);
                                                     Notify("Failed to switch Environment. AuditOutcome=" & Coalesce(varOpModeResult.auditoutcome, "unknown"), NotificationType.Error)
@@ -1736,7 +1716,7 @@ Screens:
                                                     varOpModeResult,
                                                     'DMPAgent3.03(OperationalStateManagement)=>VS'.Run(
                                                         User().Email,
-                                                        If(tglOperationalState.Value, "SIMU_DMP", "SIMU_NODMP")
+                                                        "SIMU_" & Switch(Mod(varOperationalStepCounter,4), 0, "NODMP", 1, "PREDEFAULT", 2, "DMP", "POSTDEFAULT")
                                                     )
                                                 );
                                                 If(

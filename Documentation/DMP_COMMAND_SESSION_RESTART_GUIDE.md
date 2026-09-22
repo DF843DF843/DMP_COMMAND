@@ -140,7 +140,7 @@ After every deployment:
 ### Active deployment
 
 - Work only in `DBG Team Productivity (Dev)`. Production was not changed.
-- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.34.46`.
+- `DMP_COMMAND_Solution` is deployed and published in Dev at version `7.34.48`.
 - Agent 7 is present as `DMP Agent 7 (Streams & Milestone Management) [0.3.1]`.
 - The `[0.3.1]` suffix is Agent 7's own component version label, not the solution version —
   **but the solution version is not a free build counter either.** Per the checksum rule
@@ -163,8 +163,20 @@ After every deployment:
   own component label had also been left stale at `[0.2.0]` since `7.11.36` despite many real
   iterations. Corrected: Agent 7 → `[0.3.1]` (0.3.0 retroactively = the `7.11.47` contract
   rewrite, 0.3.1 = the `7.11.48` hardening), solution version recomputed and re-imported as
-  `7.34.46` (no functional flow change from `7.11.48`, only the version labels). See the
-  component table below.
+  `7.34.46` (no functional flow change from `7.11.48`, only the version labels).
+- **Second checksum update, same session (B2 Power App change):** the Power App itself was
+  changed (see "App Changes" below) and its own version bumped `v1.22.13` → `v1.22.15`
+  (skipping the already-used, buggy `v1.22.14`). Per the checksum rule the Power App counts
+  as one of the 8 components, so the solution version was recomputed again and re-imported
+  as **`7.34.48`** (Patch 46 → 48, +2 matching the Power App's patch delta) — again no
+  Power-Automate flow content change, purely the checksum reflecting the Power App bump.
+  `pac solution import --publish-changes` succeeded; Power Automate again reported "The
+  original workflow definition has been deactivated and replaced" for Agent 7, so **the user
+  needs to reopen/save/reactivate Agent 7 once more** before assuming it is live-current.
+  Open question not yet confirmed with the user: whether every future Power-App-only version
+  bump should trigger its own dedicated Solution re-import like this, or whether such
+  Power-App-only checksum updates may be batched into the next Solution import that has an
+  actual flow-content reason to run. Ask before assuming either way next time this comes up.
 
 **Solution-version checksum table (current, 2026-09-22):**
 
@@ -177,8 +189,8 @@ After every deployment:
 | Agent 5 | 1.1.6 | 1 | 1 | 6 |
 | Agent 6 | 1.3.1 | 1 | 3 | 1 |
 | Agent 7 | 0.3.1 | 0 | 3 | 1 |
-| Power App | 1.22.13 | 1 | 22 | 13 |
-| **Σ (= Solution version)** | **7.34.46** | **7** | **34** | **46** |
+| Power App | 1.22.15 | 1 | 22 | 15 |
+| **Σ (= Solution version)** | **7.34.48** | **7** | **34** | **48** |
 
 Recompute this table and the resulting solution version on every future component version
 bump — never bump the solution version number in isolation.
