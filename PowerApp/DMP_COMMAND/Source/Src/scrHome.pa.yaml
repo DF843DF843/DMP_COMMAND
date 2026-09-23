@@ -123,25 +123,39 @@ Screens:
         // for SeqNo/PredecessorTaskIds/IsMilestone; readiness = Not Started AND phase reached AND all
         // predecessors Done. Duplicated verbatim in tmrCosLeaderNextStepsRefresh below (established
         // per-trigger-point duplication convention already used for the Agent 4 refresh block above).
+        // Built via 3 materialized stages (separate ClearCollect calls), NOT one nested AddColumns
+        // expression - Studio rejected the single-expression version ("OverallProcessMatch"/"IsDoneCalc"
+        // etc. not recognized), since AddColumns column formulas can only see the ORIGINAL source
+        // table's own columns, never a column added by a nested/chained AddColumns passed as the
+        // Source argument - even one level deep. Each stage below is a real, already-resolved
+        // collection, so the next stage's AddColumns sees its columns as genuine source columns.
+        ClearCollect(
+            colCosLeaderStage1,
+            AddColumns(
+                'DMP Command Checklist CoS Leader',
+                "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
+            )
+        );
+        ClearCollect(
+            colCosLeaderStage2,
+            AddColumns(
+                colCosLeaderStage1,
+                "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
+                "IsDoneCalc", Status.Value = "Done",
+                "IsOngoingCalc", Status.Value = "Ongoing",
+                "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
+                "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
+                "PredecessorsOkCalc", If(
+                    IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
+                    true,
+                    CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                )
+            )
+        );
         ClearCollect(
             colCosLeaderNextSteps,
             AddColumns(
-                AddColumns(
-                    AddColumns(
-                        'DMP Command Checklist CoS Leader',
-                        "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
-                    ),
-                    "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
-                    "IsDoneCalc", Status.Value = "Done",
-                    "IsOngoingCalc", Status.Value = "Ongoing",
-                    "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
-                    "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
-                    "PredecessorsOkCalc", If(
-                        IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
-                        true,
-                        CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
-                    )
-                ),
+                colCosLeaderStage2,
                 "IsReadyCalc", Status.Value = "Not Started" && PredecessorsOkCalc && (varOperationalStepCounter >= PhaseIndexCalc),
                 "OpenSortKeyCalc", (If(IsOngoingCalc, 0, If(PredecessorsOkCalc && varOperationalStepCounter >= PhaseIndexCalc, 1, 2)) * 100000) + SeqNoCalc
             )
@@ -811,24 +825,32 @@ Screens:
                               Height: =1
                               OnTimerEnd: |-
                                 =ClearCollect(
+                                    colCosLeaderStage1,
+                                    AddColumns(
+                                        'DMP Command Checklist CoS Leader',
+                                        "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
+                                    )
+                                );
+                                ClearCollect(
+                                    colCosLeaderStage2,
+                                    AddColumns(
+                                        colCosLeaderStage1,
+                                        "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
+                                        "IsDoneCalc", Status.Value = "Done",
+                                        "IsOngoingCalc", Status.Value = "Ongoing",
+                                        "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
+                                        "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
+                                        "PredecessorsOkCalc", If(
+                                            IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
+                                            true,
+                                            CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                                        )
+                                    )
+                                );
+                                ClearCollect(
                                     colCosLeaderNextSteps,
                                     AddColumns(
-                                        AddColumns(
-                                            AddColumns(
-                                                'DMP Command Checklist CoS Leader',
-                                                "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
-                                            ),
-                                            "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
-                                            "IsDoneCalc", Status.Value = "Done",
-                                            "IsOngoingCalc", Status.Value = "Ongoing",
-                                            "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
-                                            "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
-                                            "PredecessorsOkCalc", If(
-                                                IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
-                                                true,
-                                                CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
-                                            )
-                                        ),
+                                        colCosLeaderStage2,
                                         "IsReadyCalc", Status.Value = "Not Started" && PredecessorsOkCalc && (varOperationalStepCounter >= PhaseIndexCalc),
                                         "OpenSortKeyCalc", (If(IsOngoingCalc, 0, If(PredecessorsOkCalc && varOperationalStepCounter >= PhaseIndexCalc, 1, 2)) * 100000) + SeqNoCalc
                                     )

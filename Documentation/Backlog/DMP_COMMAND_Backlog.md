@@ -10,6 +10,19 @@
 
 ---
 
+## 🟠 v1.22.34 (2026-09-23, lokal gepackt) — v1.22.33-Fix: verschachteltes AddColumns durch materialisierte Zwischen-Collections ersetzt
+
+Nutzer hat `v1.22.33` in Studio geladen — **108 App-Checker-Fehler** (5 rote Badges): "Die Funktion „AddColumns" weist ungültige Argumente auf" / "Der Name ist ungültig. „OverallProcessMatch"/„IsDoneCalc" wird nicht erkannt", außerdem Vermutung, ein neuer Timer lasse die blauen KPI-Change-LEDs (Critical/Warnings/Agents Active) blinken.
+
+1. **Root Cause:** `AddColumns` kann in Power Fx/Studio NUR auf die Spalten der ursprünglichen Quelltabelle zugreifen — NIE auf eine Spalte, die eine verschachtelte/vorgelagerte `AddColumns`-Aufruf als `Source`-Argument neu hinzugefügt hat, selbst nur eine Ebene tief nicht. Der 3-fach verschachtelte `AddColumns(AddColumns(AddColumns(...)))`-Aufruf aus v1.22.33 kompilierte deshalb nicht; alle nachgelagerten Verweise auf die berechneten Spalten (Gallery-Template) schlugen kaskadierend fehl.
+2. **Fix:** Formel auf 3 echte Zwischen-Collections umgebaut (`colCosLeaderStage1` → `colCosLeaderStage2` → `colCosLeaderNextSteps`), jede Stufe per eigenem `ClearCollect` materialisiert, bevor die nächste Stufe per `AddColumns` darauf zugreift — identisch in `OnVisible` und `tmrCosLeaderNextStepsRefresh` dupliziert.
+3. **Separater Fund (nicht durch diese Sitzung verursacht):** Die Live-Liste `DMP Command External Domains` hat aktuell **kein** `Active`-Feld mehr (nur Standard-SharePoint-Metadaten-Spalten) — verifiziert direkt in der aktualisierten `.msapr`/`DataSources.json` (GUID-genau, nicht über die verwirrenden `_1/_2/_3`-Duplikat-Einträge). Das erklärt die 3 separaten `scrConfiguration`-Fehler zu `lblConfigTileExternalDomainsCount`. Wurde erst durch den Schema-Refresh dieser Sitzung sichtbar (vorher lief die App mit einem veralteten Schema-Cache). **Nicht selbst behoben** — Agent 1 legt diese Liste bei jeder Emergency-Report-Extraktion komplett neu an; zu prüfen, ob dieser Prozess das `Active`-Feld verliert. Nutzer um Prüfung gebeten.
+4. **Blinkende KPI-LEDs:** Ursache nicht bestätigt — vermutlich Nebeneffekt des defekten Formel-Zustands in v1.22.33 (Studio verhält sich bei Kompilierfehlern teils unvorhersehbar), nicht direkt durch den neuen Timer verursacht (dieser setzt `varBlinkPhase` nirgends). Nutzer nach dem erneuten Laden bitten, zu prüfen, ob das Verhalten mit v1.22.34 verschwunden ist.
+5. Kontrollen vor Auslieferung: App-weite Control-Namens-Eindeutigkeit (866 Namen, 0 Duplikate), `": "`-Regex-Scan (0 Treffer), Pack→Unpack-Rückvergleich (0 Diff auf `scrHome`, `scrReleaseNotes`, `App`).
+6. `PowerApp_Version.txt` auf `v1.22.34` aktualisiert. Regel 9b: Backup bleibt bei `DMP_COMMAND_v1.22.32.msapp` (weder v1.22.33 noch v1.22.34 vom Nutzer bestätigt ladend). Solution unverändert bei `7.34.67`.
+
+---
+
 ## 🟢 v1.22.33 (2026-09-23, lokal gepackt) — Next Steps Phase 1: Cockpit-Panel jetzt live auf Basis der CoS-Leader-Checkliste
 
 Direkte Fortsetzung nach v1.22.32-Bestätigung ("Jetzt mit Next Steps weitermachen"). Umfangreicher Abstimmungsprozess mit dem Nutzer (siehe Punkt darunter unter Priorität 2 Punkt 1) zu Datenmodell-Lücken und Architekturfragen, dann konkrete Umsetzung:
