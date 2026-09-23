@@ -10,6 +10,19 @@
 
 ---
 
+## 🟢 v1.22.31 (2026-09-23, lokal gepackt) — 2 von 3 v1.22.30-Findings mit Redesign behoben, 1 Finding braucht Brainstorming
+
+Nutzer hat `v1.22.30` in Studio geladen (lädt fehlerfrei) und 3 Anmerkungen zu den v1.22.30-Fixes gegeben, während er 2h in einem Meeting war ("baue soviel wie möglich weiter, wo keine Interaktion nötig ist"):
+
+1. **System Health - Details: komplett neu gebaut, jetzt kompakt.** Die v1.22.30-Version nutzte `AutoLayout`-Karten mit 16px-Punkten/13px-Text, die viel zu groß und teils abgeschnitten rendern ("viel zu groß und unlesbar"). Umgebaut auf dasselbe kompakte Festlayout-Tabellen-Design wie der Cockpit-eigene "Automation Status"-Container (14px-Punkte, 11px-Text, 26px-Zeilenabstand, Breite `=Parent.Width` statt AutoLayout-Stretch). Alle 16 Status-Formeln 1:1 unverändert übernommen (nur Layout/Größe geändert, keine Logikänderung) — verifiziert per Vorher/Nachher-Kontrollzahlen (16 Punkte, 19 Labels inkl. 3 Section-Header, 3 Sections, unverändert).
+2. **Configuration (Lists): komplett neu gebaut, jetzt gruppiert und kompakt.** Die 17 Einzelkacheln (je 130px, ~2450px Gesamthöhe) waren "viel zu groß und unübersichtlich". Umgebaut auf 6 umrandete Abschnittskarten (eine je Thema) im Stil des Cockpit-eigenen "Maintenance - Domains"-Containers; jede Karte enthält jetzt eine kompakte Zeile je Liste (Erreichbarkeits-Punkt via `IfError(CountRows(...)>=0,...)`, Name, Live-Zeilenzahl, View-/New-Entry-Buttons; Beschreibungstext in das Tooltip des View-Buttons verschoben). Alle Namen/Zähl-Formeln/URLs 1:1 aus der v1.22.30-Version übernommen (automatisiert aus der Datei extrahiert, nicht neu abgetippt, um Tippfehler bei den 6 umbenannten Listen-URLs auszuschließen). Gesamthöhe ca. 890px statt 2450px.
+3. **Task Occurrences / "Next Steps"-Konzept - bewusst NICHT umgesetzt, siehe Priorität 2 Punkt 1.** Der Nutzer hat klargestellt, dass die eigentliche Anforderung über Lesbarkeit hinausgeht (CoS-Leader-Ansicht "erledigt/als nächstes" + automatischer E-Mail-Versand aus Vorlagen+Parametern). Das ist ein neues Feature-Konzept, kein Bugfix - braucht ein gemeinsames Brainstorming, bevor etwas gebaut wird. Klärungsfragen sind unter Priorität 2 Punkt 1 vorbereitet.
+4. Kontrollen vor Auslieferung: App-weite Control-Namens-Eindeutigkeit (827 Namen, 0 Duplikate — Rückgang gegenüber 847 durch das Entfernen der 16 Health-Row-Wrapper-Container und der 17 Configuration-Beschreibungs-Labels, teilweise ausgeglichen durch 17 neue Dot-Controls), Regex-Scan auf literales `": "` in einzeiligen `Text:`/`Tooltip:`-Formeln (0 Treffer in den neu geschriebenen Zeilen; 1 Treffer im neuen Release-Notes-Eintrag vorsorglich auf `" - "` umgestellt), alle 17 SharePoint-Listen als vorhandene Datenquellen in der lokalen `.msapr` verifiziert (keine neue Datenquelle nötig, da nur bereits verwendete Listen referenziert werden).
+5. `PowerApp_Version.txt` auf `v1.22.31` aktualisiert. Regel 9b: Backup auf `DMP_COMMAND_v1.22.30.msapp` rotiert (v1.22.30 gilt als vom Nutzer bestätigt ladend — lädt fehlerfrei in Studio, die 3 Anmerkungen betrafen nur UX, nicht Ladefehler).
+6. Solution unverändert bei `7.34.67`, keine Power-Automate-Änderungen diese Sitzung.
+
+---
+
 ## 🟢 v1.22.30 (2026-09-23, lokal gepackt) — 3 Findings aus v1.22.29-Test behoben (System-Health-Seite, Task-Occurrences-Lesbarkeit, Configuration-Tab-Vollständigkeit)
 
 Nutzer hat `v1.22.29` in Studio/App getestet (Screenshots) und 3 Findings gemeldet; das Schreiben in `DMP Command Default Case Context` (B3-Popup) war dabei **erfolgreich** (erster echter Live-Test der Person-/Choice-Spalten-Patches aus v1.22.29 - funktioniert).
@@ -364,6 +377,27 @@ C5-Teilumsetzung in Dev `7.11.46` aktiviert; die Task-Occurrences-Appseite ist l
 vorbereitet. Der übrige Streams-Umfang (Rollen, 4-Augen-Prinzip, E-Mail-Automatisierung,
 Master-/Teamseiten und vollständiger C5-Datumsbereichsvertrag) bleibt offen und wird in
 Etappen umgesetzt.
+
+**🟡 Neue Konkretisierung durch den Nutzer (2026-09-23, v1.22.30-Test, Finding 2):** Die
+bestehende Task-Occurrences-Seite (Lesbarkeits-Fix in v1.22.30, s.o.) ist NICHT das, was der
+Nutzer eigentlich braucht — der Nutzer sagt wörtlich: *"Ich möchte, dass der CoS Leader die
+Aufgaben im 'Next Steps'-Bereich sieht. Was ist erledigt, was kommt als nächstes. Von dort
+soll er automatisch E-Mails versenden können, basierend auf den Vorlagen und befüllt mit den
+Parametern aus den neuen SharePoint Listen!"* Das ist ein eigenständiges Feature-Konzept
+(CoS-Leader-Arbeitsansicht + E-Mail-Auslösung), keine reine Lesbarkeits-Korrektur — **explizit
+zurückgestellt, bis im Brainstorming-Modus mit dem Nutzer gemeinsam geklärt.** Noch nicht
+implementiert; die bestehende `scrTaskOccurrences.pa.yaml` (Propose/Approve/Reject,
+Vier-Augen-Prinzip) wurde in v1.22.30 nur lesbarer gemacht, aber inhaltlich nicht verändert.
+
+**Vorbereitete Klärungsfragen für das nächste Brainstorming (von der KI vorformuliert, 2026-09-23):**
+1. Ist die "Next Steps"-Ansicht ein Ersatz/Umbau der bestehenden `scrTaskOccurrences`-Seite, oder ein zusätzlicher, separater CoS-Leader-Screen (die bestehende Seite bliebe dann als reine Vier-Augen-Freigabe-Ansicht für alle Nutzer erhalten)?
+2. Was genau bedeutet "erledigt" vs. "als nächstes"? Nur der `ApprovalState`/Status der einzelnen Task Occurrence, oder soll auch der Status aus `Checklist Overall Process`/`Checklist CoS Leader` einfließen?
+3. Welche SharePoint-Liste(n) sollen die "Next Steps"-Liste inhaltlich speisen — nur `Checklist Task Occurrences`, oder zusätzlich `Checklist CoS Leader`/`Checklist Overall Process`?
+4. Soll der E-Mail-Versand direkt aus der Power App erfolgen (z. B. Office365-Outlook-Connector), oder soll die App nur einen Agent-7-Flow anstoßen, der den eigentlichen Versand übernimmt (Vorbild: bestehendes Freigabe-Muster mit Audit-Trail-Dokumentation)?
+5. Braucht der E-Mail-Versand ein Vier-Augen-Prinzip (wie Status-Änderungen), oder darf der CoS Leader allein per Klick versenden?
+6. Woher kommt die Auswahl des passenden `Email Templates` je Aufgabe — automatisch anhand eines Felds in der Task Occurrence, oder wählt der CoS Leader die Vorlage manuell aus?
+7. Welche Platzhalter-Quelle gilt je Vorlage — nur `Default Case Context` (Termination-Daten), oder auch `Recipient Groups` (Empfänger) und ggf. weitere Listen? Soll der Nutzer die befüllte E-Mail vor dem Versand noch sehen/anpassen können, oder komplett automatisch?
+8. Ist der Auslöser pro einzelner Task Occurrence gedacht (eine Aufgabe = eine E-Mail), oder eher meilenstein-/status-getrieben (z. B. sobald ein ganzer Stream auf "Done" wechselt)?
 
 ## 2. Audit Trail / Counter: Archivierung + Reset mit 4-Augen-Prinzip
 

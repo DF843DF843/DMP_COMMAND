@@ -4,7 +4,13 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.30 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+### v1.22.31 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+
+- **System Health (Details) page redesigned:** the v1.22.30 version used large `AutoLayout` cards with 16px dots and 13px text that rendered far too big and partly truncated (user feedback: "viel zu groß und unlesbar" after loading v1.22.30 in Studio). Rebuilt as a compact fixed-layout table matching the Cockpit's own "Automation Status" container style (14px dots, 11px text, 26px row spacing, same 3 groups: Core Status, Data Sources & Files, Agents 1-7) - all 16 status formulas copied verbatim, no logic change.
+- **Configuration (Lists) tab redesigned:** the 17 list tiles (130px each, ~2450px of scrolling) were reported too large/unwieldy ("viel zu groß und unübersichtlich"). Replaced the 17 individual tiles with 6 bordered section cards (one per theme) styled like the Cockpit's "Maintenance - Domains" container; each card now holds one compact row per list (reachability dot, name, live row count, View/New Entry buttons) with the description text moved to the View button's tooltip. Same 6 groupings, same counts/URLs - no data source or link changed.
+- **Task Occurrences / "Next Steps" concept - NOT changed this session, needs joint design:** the user clarified the real requirement goes beyond readability - a CoS-Leader-facing "Next Steps" view of done/upcoming tasks, from which template e-mails can be triggered, pre-filled with parameters from the new SharePoint lists (Email Templates, Recipient Groups, Default Case Context, etc.). This is a new feature concept, not a bug fix, and needs a joint brainstorming/design pass before implementation - see the Backlog for the prepared clarifying questions.
+
+### v1.22.30 - 2026-09-23 (confirmed loading in Studio; 3 findings addressed in v1.22.31 above)
 
 - **System Health legend moved to its own page:** the Cockpit ring's popup could only show a cramped, scrolling 300px box for all 16 monitored items (user feedback: legend not fully visible) - it is now a dedicated `scrSystemHealthDetails` page (new sidebar entry "System Health" + still reachable by clicking the ring), showing all 16 items grouped into Core Status, Data Sources & Files and Agents (1-7), with no size limit.
 - **Task Occurrences "Current view" panel - real readability bug found and fixed:** the description text's fixed 28px-tall box was far too short for its ~300-character content, so most of it rendered off-box and visually overlapped the row above (reported as unreadable). Box height/wrapping fixed, and the value label's near-black-on-dark hardcoded colour (also unreadable in dark mode) is now theme-aware. The same hardcoded-colour bug was also fixed on each row's Status label.
