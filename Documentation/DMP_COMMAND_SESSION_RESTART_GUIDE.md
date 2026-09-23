@@ -23,7 +23,27 @@ and the generally known risk of OneDrive's sync engine colliding with an active 
 repository's internal file writes. Do not propose moving the Git working copy into OneDrive
 again without re-raising this history first.
 
-## ⚡ Latest session recap (2026-09-22, continuation session - ring bug hunt, baseline logic, msapp backup rule)
+## ⚡ Latest session recap (2026-09-23, v1.22.27 confirmed + B1 SharePoint columns live)
+
+- **Power App:** the user loaded `PowerApp/DMP_COMMAND/DMP_COMMAND.msapp` (`v1.22.27`) fresh in
+  Studio and confirmed "funktioniert" - loads/works error-free. Rule 9b applied: local backup
+  copy rotated from `DMP_COMMAND_v1.22.26.msapp` to `DMP_COMMAND_v1.22.27.msapp` (rebuilt via
+  `git worktree add` on commit `652606d`, `pac canvas pack --sources Source --msapp
+  DMP_COMMAND_v1.22.27.msapp --overwrite`, moved into place, old `v1.22.26` backup deleted,
+  worktree removed). Exactly one backup file exists again, as required.
+- **B1 (Configuration columns):** the user confirmed the 4 new columns (`Value - PROD
+  (Pre-Default)`, `Value - PROD (Post-Default)`, `Value - SIMU (Pre-Default)`, `Value - SIMU
+  (Post-Default)`) are now live in the real SharePoint list `DMP Command Configuration`.
+  **Still open/unconfirmed:** whether the actual values for all 26 rows (10 originally
+  prepared + 16 newly added, per the CSV) were also entered into the list, or only the column
+  structure was created so far - not yet asked in this session, see the question at the end of
+  this recap for the next session to raise if the user hasn't already answered by then.
+- **Reminder established this session:** the user asked to be addressed in German going
+  forward for this project's conversation (documentation itself stays in its existing
+  language mix, English recap prose / German backlog prose, per rule G - not rewritten
+  ad hoc).
+
+## ⚡ Prior session recap (2026-09-22, continuation session - ring bug hunt, baseline logic, msapp backup rule)
 
 Continuation of the same-day evening session below, driven by the user loading each packed
 version in Studio and reporting exact behavior. Current true state:

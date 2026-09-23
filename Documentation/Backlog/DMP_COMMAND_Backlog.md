@@ -98,6 +98,12 @@ angelegt?** Die Survey-Datei (Stand vor diesem Update) zeigte dort noch nur die 
 ursprünglichen `Value - PROD/SIMU (NODMP/DMP)`-Spalten, keine der 4 neuen Pre-/Post-Default-
 Spalten. Solange das nicht bestätigt ist, bleibt B1 formal offen.
 
+**Update 2026-09-23:** Nutzer hat bestätigt, dass die 4 neuen Spalten jetzt live in der echten
+SharePoint-Liste `DMP Command Configuration` angelegt sind. **Noch offen:** ob für alle 26
+Zeilen (10 ursprünglich vorbereitete + 16 neu ergänzte) auch die tatsächlichen Werte in der
+Liste eingetragen wurden, oder bisher nur die Spaltenstruktur angelegt wurde - noch nicht
+erfragt, siehe Session Restart Guide. Solange das nicht geklärt ist, bleibt B1 formal offen.
+
 
 **B2 – 5-Werte-Zustandsmodell in der App:** Implementiert 2026-09-22 in
 `PowerApp/DMP_COMMAND/Source/Src/scrHome.pa.yaml` + `App.pa.yaml` (App-Version `v1.22.15`,
