@@ -10,6 +10,21 @@
 
 ---
 
+## 🟢 v1.22.33 (2026-09-23, lokal gepackt) — Next Steps Phase 1: Cockpit-Panel jetzt live auf Basis der CoS-Leader-Checkliste
+
+Direkte Fortsetzung nach v1.22.32-Bestätigung ("Jetzt mit Next Steps weitermachen"). Umfangreicher Abstimmungsprozess mit dem Nutzer (siehe Punkt darunter unter Priorität 2 Punkt 1) zu Datenmodell-Lücken und Architekturfragen, dann konkrete Umsetzung:
+
+1. **Datenmodell-Lücken geschlossen:** Nutzer hat 3 neue Spalten auf `DMP Command Checklist Overall Process` angelegt (`SeqNo` Zahl, `PredecessorTaskIds` Text, `IsMilestone` Auswahl Yes/No) und die Datenquelle in Studio aktualisiert+veröffentlicht. KI hat die veröffentlichte App heruntergeladen (`pac canvas download` + unpack), Identität verifiziert (bekannte v1.22.32-Marker), den Src-Diff als reine Studio-Reformatierung bestätigt (keine Inhaltsänderung) und **nur** die aktualisierte `.msapr`-Datei ins Repo übernommen.
+2. **Scope-Entscheidung:** Infrastructure Team/Content Team-Checklisten existieren noch nicht (kein Schreibzugriff auf die Team-Sites) — Nutzer hat sich entschieden, Next Steps vorerst NUR für den CoS-Leader-Substream zu bauen, Infrastructure/Content folgen später.
+3. **Architekturentscheidung Task-Status-Quelle:** Die bestehende Seite "Task Occurrences" ist explizit nur für wiederkehrende Aufgaben gedacht (von Agent 7 über Checklist Recurrence Rules gespeist) — die meisten CoS-Leader-Aufgaben sind aber einmalig und hätten nie eine Occurrence. Nutzer hat sich für Phase 1 entschieden: Live-Status direkt aus der CoS-Leader-Checkliste lesen (funktioniert sofort für alle Aufgaben); ein Agent/Job, der automatisch pro DMP-Fall eine Task Occurrence je Aufgabe anlegt, ist als eigener, späterer Schritt vorgemerkt.
+4. **Cockpit-Umsetzung:** Der alte statische "NEXT STEPS"-Container (`varNextMilestones`, aus Agent 4) wurde durch eine live berechnete Ansicht ersetzt: `ClearCollect` mit verschachtelten `AddColumns`/`LookUp`/`Filter(Split(...))` verknüpft jede CoS-Leader-Aufgabe mit ihrer Overall-Process-Zeile (per `Titel`), berechnet Phasen-Erreichbarkeit (`varOperationalStepCounter` vs. Aufgaben-`Phase`) und Vorgänger-Erfüllung, zeigt bis zu 5 zuletzt abgeschlossene + 8 offene Aufgaben (Ongoing zuerst, dann bereit, dann nicht bereit) mit Punkt+Text je Status (COMPLETED/ONGOING/PENDING/NOT STARTED). Neuer leichter Timer `tmrCosLeaderNextStepsRefresh` (30s) hält die Ansicht aktuell, unabhängig vom Agent-4-Refresh-Zyklus.
+5. **Bewusste Phase-1-Grenzen (kein Bug):** kein Rot/Overdue-Zustand (Checkliste hat kein Fälligkeitsdatum-Feld), keine In-App-Freigabe-Aktion (Statusänderungen weiterhin nur in SharePoint), Vorgänger müssen aktuell auf derselben CoS-Leader-Checkliste liegen.
+6. **Encoding-Stolperfalle gefunden und behoben:** Ein PowerShell-Skript zur Entfernung verwaister YAML-Zeilen hat beim Neuschreiben der gesamten Datei Sonderzeichen (`·`, `★`) durch falsches Encoding beschädigt (Mojibake, gleiches Muster wie die UTF-16-Falle vom Anfang dieser Sitzung). Über gezieltes `ReadAllText`/`WriteAllText` mit explizitem UTF-8 behoben, danach per Pack→Unpack-Diff verifiziert (0 Diff).
+7. Kontrollen vor Auslieferung: App-weite Control-Namens-Eindeutigkeit (866 Namen, 0 Duplikate), `": "`-Regex-Scan (0 Treffer), Pack→Unpack-Rückvergleich (0 Diff auf `scrHome`, `scrReleaseNotes`, `App`). **Erste Verwendung von verschachteltem `AddColumns`+`LookUp`+`Filter(Split(...))` in dieser App — noch nicht Studio-validiert, Nutzer bitten, nach dem Laden auf rote Fehler-Badges am Cockpit zu achten.**
+8. `PowerApp_Version.txt` auf `v1.22.33` aktualisiert. Regel 9b: Backup bleibt bei `DMP_COMMAND_v1.22.32.msapp` (v1.22.33 ist noch nicht vom Nutzer bestätigt ladend). Solution unverändert bei `7.34.67`, keine Power-Automate-Änderungen diese Sitzung.
+
+---
+
 ## 🟢 v1.22.32 (2026-09-23, vom Nutzer bestätigt ladend) — System Health/Configuration nach v1.22.31-Feedback erneut überarbeitet (Connection Diagnostics zusammengeführt, Kachel-Grid, Header-Bars)
 
 **Update (2026-09-23, gleiche Sitzung):** Nutzer hat `v1.22.32` erfolgreich in Studio geladen. System Health (Details) OK, Maintenance OK, Configuration (Lists) "erst mal ok, noch nicht optimal" (siehe Priorität 3 für 2 kosmetische Nachmeldungen: abgeschnittener Kartentitel + Container-Platzierung). Regel 9b: Backup auf `DMP_COMMAND_v1.22.32.msapp` rotiert (ersetzt `v1.22.31`).
@@ -454,6 +469,24 @@ Checklist.csv` / `DMP Command Streams Content Team Checklist.csv`). Verknüpfung
 Substream-Checkliste läuft weiterhin über identische `Titel`/TaskID-Werte (kein zusätzliches Link-Feld nötig —
 war schon 2026-09-03 so im README dokumentiert). **Nächster Schritt: Nutzer legt die Spalten/Listen in SharePoint
 an, danach Implementierung der Next-Steps-Screens.**
+
+**🟢 Update (2026-09-23, v1.22.33) — Phase 1 umgesetzt:** Nutzer hat die 3 Overall-Process-Spalten angelegt
+und die Datenquelle aktualisiert+veröffentlicht. Infrastructure-/Content-Team-Checklisten konnten NICHT
+angelegt werden (kein Schreibzugriff auf die Team-Sites) — Nutzer-Entscheidung: Next Steps vorerst nur für
+CoS Leader, Infrastructure/Content Team folgen später (entweder sobald Site-Zugriff da ist, oder alternativ
+auf der CoS-Leader-Site als Platzhalter). Zusätzliche Architekturfrage geklärt: die bestehende Task-Occurrences-
+Seite ist nur für wiederkehrende Aufgaben gedacht (Agent 7 + Recurrence Rules) — für Next Steps wird
+stattdessen direkt der Live-Status aus der jeweiligen Substream-Checkliste gelesen (Status/ConfirmedBy),
+nicht aus Task Occurrences. Cockpit-NEXT-STEPS-Panel ist jetzt live (siehe Release Notes v1.22.33).
+**Offen für eine spätere Sitzung:**
+- Infrastructure Team/Content Team-Checklisten anlegen, sobald Site-Zugriff geklärt ist.
+- Ein Agent/Job, der pro DMP-Fall automatisch eine Task Occurrence je Checklisten-Aufgabe anlegt (nicht nur
+  für wiederkehrende) — damit könnte Next Steps später auf die reichhaltigeren Task-Occurrences-Daten
+  (Fälligkeit, Fall-Bezug) umgestellt werden, inkl. echtem Rot/Overdue-Zustand.
+- In-App-Vorschlagen/Bestätigen (Vier-Augen) direkt aus dem Next-Steps-Panel heraus (aktuell nur Leseansicht,
+  Statusänderungen weiterhin nur in SharePoint).
+- "DMP Stream Tasks"-Navigationsbereich (§10 der Spezifikation) für die Substream-Detailarbeit.
+- E-Mail-Automatisierung über Agent 7 (§14-17 der Spezifikation).
 
 ## 2. Audit Trail / Counter: Archivierung + Reset mit 4-Augen-Prinzip
 

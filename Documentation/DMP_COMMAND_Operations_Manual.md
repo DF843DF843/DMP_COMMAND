@@ -426,12 +426,18 @@ A square card, mirroring the System Health card, containing a segmented circular
 
 #### 3.1.9 Next Steps panel
 
-A full-width card at the bottom of the Cockpit, titled **"NEXT STEPS · Default Management Process"**, listing up to five upcoming milestones sourced from the real-world DMP process tracker (Agent 4's status result). Each visible row shows:
+A full-width card at the bottom of the Cockpit, titled **"NEXT STEPS · CoS Leader · Default Management Process"**. As of `v1.22.33`, this is no longer the old static Agent-4-milestone display - it now reads live from the `DMP Command Checklist CoS Leader` list (joined by `Titel`/TaskID with `DMP Command Checklist Overall Process` for `SeqNo`/`PredecessorTaskIds`/`IsMilestone`), per the "Next Steps" feature specification (`DMP_COMMAND_Next_Steps_Anforderung.md`). **Phase 1 scope: CoS Leader sub stream only** - Infrastructure Team and Content Team are not yet represented (their checklists do not exist yet, see Backlog Priorität 2 Punkt 1).
 
-- An arrow-prefixed milestone name (e.g. "→ Notify counterparties"), shown in orange if that milestone's status is "ongoing", otherwise in the normal text colour.
-- A detail line to its right combining responsibility, phase and status (e.g. "Operations Team · Phase 2 · Pending").
+When no DMP case is active (`varOperationalMode = "Normal"`), the panel shows a single idle line: **"No active DMP case - Default Management Process is currently idle."** Otherwise it shows up to 5 recently completed tasks (sorted by confirmation time, most recent first) followed by up to 8 open tasks (sorted: ongoing first, then ready/executable, then not-yet-ready, each group by `SeqNo`). Each row shows a status dot, the task ID + description (milestone tasks prefixed with a ★), and a right-aligned status word:
 
-If there are no pending milestones, the panel instead shows a single line: **"No pending milestones - Default Management Process is currently idle."** Rows beyond the number of milestones actually returned (up to 5) are simply not shown.
+| Dot colour | Status word | Meaning |
+|---|---|---|
+| Green | COMPLETED | `Status = Done` |
+| Orange, slow-blinking | ONGOING | `Status = Ongoing` |
+| Orange, steady | PENDING | `Status = Not Started`, required DMP phase reached, and all `PredecessorTaskIds` are `Done` - task is executable now |
+| Grey | NOT STARTED | `Status = Not Started` but not yet executable (phase not reached and/or a predecessor is not yet `Done`) |
+
+A task's required phase is read from its own `Phase` column (`Pre-Default`/`DMP (Termination & Liquidation)`/`Post-Default`, compared against the app's current `varOperationalStepCounter`). **Known Phase 1 limitations (by design, not a bug):** no red "overdue/problem" state yet (the checklist has no due-date column - only `Task Occurrences`, a separate feature for recurring tasks, has `DueUtc`); no in-app propose/confirm action yet (status changes still happen directly in SharePoint); cross-sub-stream predecessors are not possible yet (both the depending task and its predecessor must currently be on the CoS Leader checklist, since no other sub stream checklist exists). A refresh runs on every Cockpit visit and every 30 seconds thereafter (`tmrCosLeaderNextStepsRefresh`), independent of the Agent 4 status-check cycle.
 
 #### 3.1.10 Ambient status border (screen frame)
 

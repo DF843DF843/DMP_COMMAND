@@ -1,4 +1,4 @@
-# ************************************************************************************************
+﻿# ************************************************************************************************
 # Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
 # Use the maker portal to create and edit your Power Apps.
 # 
@@ -91,7 +91,7 @@ Screens:
             // session. Later refreshes (tmrAutoRefreshTick) deliberately do NOT touch this baseline -
             // only the user clicking a KPI tile (btnAck*/lbl*OnSelect) does. This way, any drift away
             // from the acknowledged baseline (new warning, new critical, agent count change) lights the
-            // matching LED again, exactly as requested ("neue Warnung lässt die LED erneut leuchten").
+            // matching LED again, exactly as requested ("neue Warnung lÃ¤sst die LED erneut leuchten").
             If(
                 !varBaselineAcknowledged && varStatusCallError="",
                 Set(varLastAckCriticalCount, Coalesce(varAuditFailedCount,0));
@@ -116,7 +116,38 @@ Screens:
                 Set(varInitialRefreshAttempts, varInitialRefreshAttempts+1);
                 If(varInitialRefreshAttempts>=15, Set(varInitialRefreshDone, true))
             )
-        )
+        );
+        // NEXT STEPS (Cockpit widget) - CoS Leader Phase 1, see DMP_COMMAND_Next_Steps_Anforderung.md.
+        // Reads directly from the SharePoint lists (not from Agent 4), so this runs unconditionally,
+        // independent of the varInitialRefreshDone guard above. Joined with Overall Process (by Title)
+        // for SeqNo/PredecessorTaskIds/IsMilestone; readiness = Not Started AND phase reached AND all
+        // predecessors Done. Duplicated verbatim in tmrCosLeaderNextStepsRefresh below (established
+        // per-trigger-point duplication convention already used for the Agent 4 refresh block above).
+        ClearCollect(
+            colCosLeaderNextSteps,
+            AddColumns(
+                AddColumns(
+                    AddColumns(
+                        'DMP Command Checklist CoS Leader',
+                        "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
+                    ),
+                    "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
+                    "IsDoneCalc", Status.Value = "Done",
+                    "IsOngoingCalc", Status.Value = "Ongoing",
+                    "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
+                    "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
+                    "PredecessorsOkCalc", If(
+                        IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
+                        true,
+                        CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                    )
+                ),
+                "IsReadyCalc", Status.Value = "Not Started" && PredecessorsOkCalc && (varOperationalStepCounter >= PhaseIndexCalc),
+                "OpenSortKeyCalc", (If(IsOngoingCalc, 0, If(PredecessorsOkCalc && varOperationalStepCounter >= PhaseIndexCalc, 1, 2)) * 100000) + SeqNoCalc
+            )
+        );
+        ClearCollect(colNextStepsDisplay, FirstN(SortByColumns(Filter(colCosLeaderNextSteps, IsDoneCalc), "ConfirmedUtc", SortOrder.Descending), 5));
+        Collect(colNextStepsDisplay, FirstN(SortByColumns(Filter(colCosLeaderNextSteps, !IsDoneCalc), "OpenSortKeyCalc", SortOrder.Ascending), 8))
     Children:
       - ScreenContainer1:
           Control: GroupContainer@1.5.0
@@ -769,6 +800,47 @@ Screens:
                               Visible: =true
                               Width: =1
                               X: =8
+                              Y: =2
+                        - tmrCosLeaderNextStepsRefresh:
+                            Control: Timer@2.1.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Duration: =30000
+                              Fill: =RGBA(0,0,0,0)
+                              Height: =1
+                              OnTimerEnd: |-
+                                =ClearCollect(
+                                    colCosLeaderNextSteps,
+                                    AddColumns(
+                                        AddColumns(
+                                            AddColumns(
+                                                'DMP Command Checklist CoS Leader',
+                                                "OverallProcessMatch", LookUp('DMP Command Checklist Overall Process', Title = Title)
+                                            ),
+                                            "PhaseIndexCalc", Switch(Phase.Value, "Pre-Default", 1, "DMP (Termination & Liquidation)", 2, "Post-Default", 3, 0),
+                                            "IsDoneCalc", Status.Value = "Done",
+                                            "IsOngoingCalc", Status.Value = "Ongoing",
+                                            "SeqNoCalc", Coalesce(OverallProcessMatch.SeqNo, SeqNo, 9999),
+                                            "IsMilestoneCalc", !IsBlank(OverallProcessMatch) && OverallProcessMatch.IsMilestone.Value = "Yes",
+                                            "PredecessorsOkCalc", If(
+                                                IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
+                                                true,
+                                                CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                                            )
+                                        ),
+                                        "IsReadyCalc", Status.Value = "Not Started" && PredecessorsOkCalc && (varOperationalStepCounter >= PhaseIndexCalc),
+                                        "OpenSortKeyCalc", (If(IsOngoingCalc, 0, If(PredecessorsOkCalc && varOperationalStepCounter >= PhaseIndexCalc, 1, 2)) * 100000) + SeqNoCalc
+                                    )
+                                );
+                                ClearCollect(colNextStepsDisplay, FirstN(SortByColumns(Filter(colCosLeaderNextSteps, IsDoneCalc), "ConfirmedUtc", SortOrder.Descending), 5));
+                                Collect(colNextStepsDisplay, FirstN(SortByColumns(Filter(colCosLeaderNextSteps, !IsDoneCalc), "OpenSortKeyCalc", SortOrder.Ascending), 8))
+                              Repeat: =true
+                              AutoStart: =true
+                              Start: =true
+                              Visible: =true
+                              Width: =1
+                              X: =12
                               Y: =2
                         - tmrProcessExternalDomainsReplace:
                             Control: Timer@2.1.0
@@ -1912,7 +1984,7 @@ Screens:
                                           Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "–", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varEmergencyReportLastModified) Or varEmergencyReportLastModified="", "â€“", Text(DateTimeValue(varEmergencyReportLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varEmergencyReportLastModified)) <= -90, "CEST", "CET"))
                                           Width: =190
                                           Wrap: =false
                                           X: =280
@@ -1967,7 +2039,7 @@ Screens:
                                           Font: =Font.'Arial'
                                           Height: =18
                                           Size: =11
-                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "–", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
+                                          Text: =If(IsBlank(varStatusLastRefreshed) Or IsBlank(varAuditLastModified) Or varAuditLastModified="", "â€“", Text(DateTimeValue(varAuditLastModified), "dd.mm.yyyy hh:mm:ss") & " " & If(TimeZoneOffset(DateTimeValue(varAuditLastModified)) <= -90, "CEST", "CET"))
                                           Width: =190
                                           Wrap: =false
                                           X: =280
@@ -2495,7 +2567,7 @@ Screens:
                                                 FontWeight: =FontWeight.Bold
                                                 HoverFill: =RGBA(255,255,255,0.08)
                                                 OnSelect: =Set(varShowEmailsLegend, false)
-                                                Text: ="✕"
+                                                Text: ="âœ•"
                                                 Height: =18
                                                 Width: =20
                                                 X: =268
@@ -2674,234 +2746,74 @@ Screens:
                               FontWeight: =FontWeight.Semibold
                               Height: =18
                               Size: =11
-                              Text: ="NEXT STEPS  ·  Default Management Process"
-                        - conNoMilestonesRow:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
+                              Text: ="NEXT STEPS  ·  CoS Leader  ·  Default Management Process"
+                        - lblNextStepsIdle:
+                            Control: Label@2.5.1
                             Properties:
-                              Visible: =CountRows(varNextMilestones)=0
+                              Visible: =varOperationalMode="Normal"
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                              Font: =Font.'Arial'
+                              Height: =32
+                              Size: =12
+                              Text: ="No active DMP case - Default Management Process is currently idle."
+                        - galNextSteps:
+                            Control: Gallery@2.15.0
+                            Variant: Vertical
+                            Properties:
+                              Visible: =varOperationalMode<>"Normal"
+                              AccessibleLabel: ="Next steps for the CoS Leader sub stream"
                               Fill: =RGBA(0,0,0,0)
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
+                              Height: =CountRows(colNextStepsDisplay)*26+8
+                              Items: =colNextStepsDisplay
+                              TemplateSize: =26
+                              Width: =conRow1.Width-32
                             Children:
-                              - lblNoMilestones:
+                              - sqNextStepsDot:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =Switch(true, ThisItem.IsDoneCalc, RGBA(0,206,125,1), ThisItem.IsOngoingCalc, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.35)), ThisItem.IsReadyCalc, RGBA(255,159,10,1), RGBA(150,150,158,1))
+                                    Height: =12
+                                    RadiusBottomLeft: =6
+                                    RadiusBottomRight: =6
+                                    RadiusTopLeft: =6
+                                    RadiusTopRight: =6
+                                    Width: =12
+                                    X: =0
+                                    Y: =6
+                              - lblNextStepsTask:
                                   Control: Label@2.5.1
                                   Properties:
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Color: =If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                                     Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: ="No pending milestones - Default Management Process is currently idle."
-                        - conMilestoneRow1:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =CountRows(varNextMilestones)>=1
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblMilestone1:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},"→ " & m.milestone)
-                                    Width: =340
+                                    FontWeight: =If(ThisItem.IsMilestoneCalc,FontWeight.Bold,FontWeight.Normal)
+                                    Height: =20
+                                    Size: =11
+                                    Text: =If(ThisItem.IsMilestoneCalc,"★ ","") & ThisItem.Title & "  ·  " & ThisItem.TaskDescription
+                                    Width: =Parent.Width-170
                                     Wrap: =false
-                              - lblMilestone1Detail:
+                                    X: =20
+                                    Y: =3
+                              - lblNextStepsState:
                                   Control: Label@2.5.1
                                   Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Width: =1178
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=1,Index(varNextMilestones,1),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
-                        - conMilestoneRow2:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =CountRows(varNextMilestones)>=2
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblMilestone2:
-                                  Control: Label@2.5.1
-                                  Properties:
+                                    Align: =Align.Right
                                     BorderColor: =RGBA(0,0,0,0)
                                     BorderStyle: =BorderStyle.None
-                                    Color: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
+                                    Color: =Switch(true, ThisItem.IsDoneCalc, RGBA(0,206,125,1), ThisItem.IsOngoingCalc, RGBA(255,159,10,1), ThisItem.IsReadyCalc, RGBA(255,159,10,1), RGBA(150,150,158,1))
                                     Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},"→ " & m.milestone)
-                                    Width: =340
+                                    FontWeight: =FontWeight.Semibold
+                                    Height: =20
+                                    Size: =10
+                                    Text: =Switch(true, ThisItem.IsDoneCalc, "COMPLETED", ThisItem.IsOngoingCalc, "ONGOING", ThisItem.IsReadyCalc, "PENDING", "NOT STARTED")
+                                    Width: =140
                                     Wrap: =false
-                              - lblMilestone2Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Width: =1178
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=2,Index(varNextMilestones,2),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
-                        - conMilestoneRow3:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =CountRows(varNextMilestones)>=3
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblMilestone3:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},"→ " & m.milestone)
-                                    Width: =340
-                                    Wrap: =false
-                              - lblMilestone3Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Width: =1178
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=3,Index(varNextMilestones,3),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
-                        - conMilestoneRow4:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =CountRows(varNextMilestones)>=4
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblMilestone4:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},"→ " & m.milestone)
-                                    Width: =340
-                                    Wrap: =false
-                              - lblMilestone4Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Width: =1178
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=4,Index(varNextMilestones,4),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
-                        - conMilestoneRow5:
-                            Control: GroupContainer@1.5.0
-                            Variant: AutoLayout
-                            Properties:
-                              Visible: =CountRows(varNextMilestones)>=5
-                              Fill: =RGBA(0,0,0,0)
-                              FillPortions: =0
-                              Height: =36
-                              LayoutAlignItems: =LayoutAlignItems.Center
-                              LayoutDirection: =LayoutDirection.Horizontal
-                              LayoutGap: =16
-                              LayoutMaxHeight: =36
-                              LayoutMinHeight: =36
-                            Children:
-                              - lblMilestone5:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =RGBA(0,0,0,0)
-                                    BorderStyle: =BorderStyle.None
-                                    Color: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},If(Lower(m.status)="ongoing",RGBA(255,159,10,1),If(varDarkMode,RGBA(255,255,255,1),RGBA(20,20,24,1))))
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    Size: =12
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},"→ " & m.milestone)
-                                    Width: =340
-                                    Wrap: =false
-                              - lblMilestone5Detail:
-                                  Control: Label@2.5.1
-                                  Properties:
-                                    BorderColor: =If(varDarkMode,RGBA(255,255,255,0.1),RGBA(32,23,81,0.15))
-                                    BorderThickness: =3
-                                    Color: =If(varDarkMode,RGBA(200,195,225,1),RGBA(40,38,50,1))
-                                    Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(32,23,81,0.04))
-                                    FillPortions: =1
-                                    Font: =Font.'Arial'
-                                    Height: =32
-                                    PaddingLeft: =10
-                                    PaddingRight: =10
-                                    Size: =11.5
-                                    Width: =1178
-                                    Text: =With({m:If(CountRows(varNextMilestones)>=5,Index(varNextMilestones,5),Blank())},m.responsibility & "  ·  " & m.phase & "  ·  " & m.status)
+                                    X: =Parent.Width-150
+                                    Y: =3
       - conFrameTop:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
