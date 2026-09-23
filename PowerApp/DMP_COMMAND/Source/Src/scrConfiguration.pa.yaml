@@ -89,22 +89,21 @@ Screens:
                         Wrap: =false
                         X: =230
                         Y: =42
-            - conConfigTileConfiguration:
+            - conConfigurationBody:
                 Control: GroupContainer@1.5.0
-                Variant: ManualLayout
+                Variant: AutoLayout
                 Properties:
-                  BorderColor: =RGBA(0,206,125,0.7)
-                  BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =3
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                  FillPortions: =0
-                  Height: =130
-                  RadiusBottomLeft: =18
-                  RadiusBottomRight: =18
-                  RadiusTopLeft: =18
-                  RadiusTopRight: =18
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =1
+                  Height: =Parent.Height - 104
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  LayoutGap: =16
+                  LayoutMaxHeight: =Parent.Height - 104
+                  LayoutMinHeight: =Parent.Height - 104
+                  LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
-                  - lblConfigTileConfigurationName:
+                  - lblConfigSectionCore:
                       Control: Label@2.5.1
                       Properties:
                         BorderColor: =RGBA(0,0,0,0)
@@ -112,99 +111,269 @@ Screens:
                         Color: =RGBA(0,206,125,1)
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
-                        Height: =22
-                        Size: =14
-                        Text: ="DMP Command Configuration"
-                        Width: =480
+                        Height: =24
+                        Size: =15
+                        Text: ="Core Runtime Configuration & Monitoring"
                         Wrap: =false
-                        X: =16
-                        Y: =14
-                  - lblConfigTileConfigurationDesc:
-                      Control: Label@2.5.1
+                  - conConfigTileConfiguration:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Arial'
-                        Height: =18
-                        Size: =11
-                        Text: ="Runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...)"
-                        Width: =600
-                        Wrap: =false
-                        X: =16
-                        Y: =38
-                  - lblConfigTileConfigurationCount:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Arial'
-                        Height: =20
-                        Size: =12
-                        Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
-                        Width: =300
-                        Wrap: =false
-                        X: =16
-                        Y: =62
-                  - btnConfigTileConfigurationView:
-                      Control: Classic/Button@2.2.0
-                      Properties:
-                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderColor: =RGBA(0,206,125,0.7)
                         BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
-                        Color: =RGBA(0,206,125,1)
-                        Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Arial'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =32
-                        HoverFill: =RGBA(0,206,125,0.12)
-                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Configuration/AllItems.aspx")
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
-                        Text: ="View"
-                        Width: =110
-                        X: =16
-                        Y: =88
-                  - btnConfigTileConfigurationNew:
-                      Control: Classic/Button@2.2.0
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileConfigurationName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Configuration"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileConfigurationDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...)"
+                              Width: =600
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileConfigurationCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileConfigurationView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Configuration/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileConfigurationNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Configuration/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileAgentStatus:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderColor: =RGBA(0,206,125,0.7)
                         BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
-                        Color: =RGBA(0,206,125,1)
-                        Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Arial'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =32
-                        HoverFill: =RGBA(0,206,125,0.12)
-                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Configuration/NewForm.aspx")
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
-                        Text: ="New Entry"
-                        Width: =110
-                        X: =136
-                        Y: =88
-            - conConfigTileAgentStatus:
-                Control: GroupContainer@1.5.0
-                Variant: ManualLayout
-                Properties:
-                  BorderColor: =RGBA(0,206,125,0.7)
-                  BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =3
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                  FillPortions: =0
-                  Height: =130
-                  RadiusBottomLeft: =18
-                  RadiusBottomRight: =18
-                  RadiusTopLeft: =18
-                  RadiusTopRight: =18
-                Children:
-                  - lblConfigTileAgentStatusName:
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileAgentStatusName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Agent Status"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileAgentStatusDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Live status/health rows written by each agent - see the Agent Monitoring page for a friendlier view"
+                              Width: =600
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileAgentStatusCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Agent Status')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileAgentStatusView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Agent Status/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                  - conConfigTileCounters:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileCountersName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Counters"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileCountersDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Shared reference-number and cross-agent counters (see Admin Functions for resets)"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileCountersCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Counters')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileCountersView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Counters/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                  - lblConfigSectionDomain:
                       Control: Label@2.5.1
                       Properties:
                         BorderColor: =RGBA(0,0,0,0)
@@ -212,78 +381,211 @@ Screens:
                         Color: =RGBA(0,206,125,1)
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
-                        Height: =22
-                        Size: =14
-                        Text: ="DMP Command Agent Status"
-                        Width: =480
+                        Height: =24
+                        Size: =15
+                        Text: ="Domain Classification"
                         Wrap: =false
-                        X: =16
-                        Y: =14
-                  - lblConfigTileAgentStatusDesc:
-                      Control: Label@2.5.1
+                  - conConfigTileInternalDomains:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
-                        Font: =Font.'Arial'
-                        Height: =18
-                        Size: =11
-                        Text: ="Live status/health rows written by each agent - see the Agent Monitoring page for a friendlier view"
-                        Width: =600
-                        Wrap: =false
-                        X: =16
-                        Y: =38
-                  - lblConfigTileAgentStatusCount:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0,0,0,0)
-                        BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                        Font: =Font.'Arial'
-                        Height: =20
-                        Size: =12
-                        Text: ="Total rows:" & " " & CountRows('DMP Command Agent Status')
-                        Width: =300
-                        Wrap: =false
-                        X: =16
-                        Y: =62
-                  - btnConfigTileAgentStatusView:
-                      Control: Classic/Button@2.2.0
-                      Properties:
-                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderColor: =RGBA(0,206,125,0.7)
                         BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
-                        Color: =RGBA(0,206,125,1)
-                        Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Arial'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =32
-                        HoverFill: =RGBA(0,206,125,0.12)
-                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Agent Status/AllItems.aspx")
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
-                        Text: ="View"
-                        Width: =110
-                        X: =16
-                        Y: =88
-            - conConfigTileInternalDomains:
-                Control: GroupContainer@1.5.0
-                Variant: ManualLayout
-                Properties:
-                  BorderColor: =RGBA(0,206,125,0.7)
-                  BorderStyle: =BorderStyle.Solid
-                  BorderThickness: =3
-                  Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                  FillPortions: =0
-                  Height: =130
-                  RadiusBottomLeft: =18
-                  RadiusBottomRight: =18
-                  RadiusTopLeft: =18
-                  RadiusTopRight: =18
-                Children:
-                  - lblConfigTileInternalDomainsName:
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileInternalDomainsName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Internal Domains"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileInternalDomainsDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Domains treated as internal (Deutsche Boerse) by Agent 1 and Agent 2's classification logic"
+                              Width: =600
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileInternalDomainsCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileInternalDomainsView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileInternalDomainsNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileExternalDomains:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileExternalDomainsName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command External Domains"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileExternalDomainsDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Domains treated as external by Agent 1 and Agent 2's classification logic"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileExternalDomainsCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Active rows:" & " " & CountRows(Filter('DMP Command External Domains', Active.Value = "Yes"))
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileExternalDomainsView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command External Domains/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileExternalDomainsNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command External Domains/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - lblConfigSectionProcess:
                       Control: Label@2.5.1
                       Properties:
                         BorderColor: =RGBA(0,0,0,0)
@@ -291,80 +593,1201 @@ Screens:
                         Color: =RGBA(0,206,125,1)
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
-                        Height: =22
-                        Size: =14
-                        Text: ="DMP Command Internal Domains"
-                        Width: =480
+                        Height: =24
+                        Size: =15
+                        Text: ="Streams - Process & Checklists"
                         Wrap: =false
-                        X: =16
-                        Y: =14
-                  - lblConfigTileInternalDomainsDesc:
+                  - conConfigTileOverallProcess:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileOverallProcessName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Checklist Overall Process"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileOverallProcessDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Master status overview linking each Streams sub-checklist by TaskID"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileOverallProcessCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Overall Process')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileOverallProcessView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Checklist Overall Process/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileOverallProcessNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Checklist Overall Process/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileCosLeader:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileCosLeaderName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Checklist CoS Leader"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileCosLeaderDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="CoS Leader working checklist; status changes require four-eyes confirmation"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileCosLeaderCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Checklist CoS Leader')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileCosLeaderView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_CosLeaderChecklist/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileCosLeaderNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_CosLeaderChecklist/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - lblConfigSectionScheduling:
                       Control: Label@2.5.1
                       Properties:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                        Color: =RGBA(0,206,125,1)
                         Font: =Font.'Arial'
-                        Height: =18
-                        Size: =11
-                        Text: ="Domains treated as internal (Deutsche Boerse) by Agent 1 and Agent 2's classification logic"
-                        Width: =600
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        Size: =15
+                        Text: ="Streams - Case & Scheduling"
                         Wrap: =false
-                        X: =16
-                        Y: =38
-                  - lblConfigTileInternalDomainsCount:
+                  - conConfigTileDefaultCaseContext:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileDefaultCaseContextName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Default Case Context"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileDefaultCaseContextDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Case-specific context (member, termination reason/date) captured via the B3 popup"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileDefaultCaseContextCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Default Case Context')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileDefaultCaseContextView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_DefaultCaseContext/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileDefaultCaseContextNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_DefaultCaseContext/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileRecurrenceRules:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileRecurrenceRulesName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Checklist Recurrence Rules"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileRecurrenceRulesDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Rules driving Agent 7's automatic generation of recurring Task Occurrences"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileRecurrenceRulesCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Recurrence Rules')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileRecurrenceRulesView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/DMP Command Checklist Recurrence Rules/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileRecurrenceRulesNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/DMP Command Checklist Recurrence Rules/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileTaskOccurrences:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileTaskOccurrencesName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Checklist Task Occurrences"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileTaskOccurrencesDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Recurring task instances - see the dedicated Task Occurrences page for the working view"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileTaskOccurrencesCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Task Occurrences')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileTaskOccurrencesView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/DMP Command Checklist Task Occurrences/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                  - conConfigTileStatusChangeApprovals:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileStatusChangeApprovalsName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Status Change Approvals"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileStatusChangeApprovalsDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Four-eyes approval records for checklist status changes across all Streams"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileStatusChangeApprovalsCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Status Change Approvals')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileStatusChangeApprovalsView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_StatusChangeApprovals/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                  - lblConfigSectionComms:
                       Control: Label@2.5.1
                       Properties:
                         BorderColor: =RGBA(0,0,0,0)
                         BorderStyle: =BorderStyle.None
-                        Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                        Color: =RGBA(0,206,125,1)
                         Font: =Font.'Arial'
-                        Height: =20
-                        Size: =12
-                        Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
-                        Width: =300
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        Size: =15
+                        Text: ="Streams - Communication"
                         Wrap: =false
-                        X: =16
-                        Y: =62
-                  - btnConfigTileInternalDomainsView:
-                      Control: Classic/Button@2.2.0
+                  - conConfigTileEmailTemplates:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderColor: =RGBA(0,206,125,0.7)
                         BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
-                        Color: =RGBA(0,206,125,1)
-                        Fill: =RGBA(0,0,0,0)
-                        Font: =Font.'Arial'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =32
-                        HoverFill: =RGBA(0,206,125,0.12)
-                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/AllItems.aspx")
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
-                        Text: ="View"
-                        Width: =110
-                        X: =16
-                        Y: =88
-                  - btnConfigTileInternalDomainsNew:
-                      Control: Classic/Button@2.2.0
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileEmailTemplatesName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Email Templates"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileEmailTemplatesDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Parameterized {{placeholder}} e-mail templates used by the Streams checklists"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileEmailTemplatesCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Email Templates')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileEmailTemplatesView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_EmailTemplates/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileEmailTemplatesNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_EmailTemplates/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileEmailPlaceholders:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,206,125,0.6)
+                        BorderColor: =RGBA(0,206,125,0.7)
                         BorderStyle: =BorderStyle.Solid
-                        BorderThickness: =1
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileEmailPlaceholdersName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Email Placeholders"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileEmailPlaceholdersDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Catalog of valid {{placeholder}} keys used in Email Templates"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileEmailPlaceholdersCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Email Placeholders')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileEmailPlaceholdersView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/DMP Command Email Placeholders/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileEmailPlaceholdersNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/DMP Command Email Placeholders/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileRecipientGroups:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileRecipientGroupsName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Recipient Groups"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileRecipientGroupsDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Collective mailbox addresses referenced by Email Templates"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileRecipientGroupsCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Recipient Groups')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileRecipientGroupsView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_RecipientGroups/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileRecipientGroupsNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_RecipientGroups/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - lblConfigSectionAccess:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        BorderStyle: =BorderStyle.None
                         Color: =RGBA(0,206,125,1)
-                        Fill: =RGBA(0,0,0,0)
                         Font: =Font.'Arial'
-                        FontWeight: =FontWeight.Semibold
-                        Height: =32
-                        HoverFill: =RGBA(0,206,125,0.12)
-                        OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Internal Domains/NewForm.aspx")
-                        RadiusBottomLeft: =6
-                        RadiusBottomRight: =6
-                        RadiusTopLeft: =6
-                        RadiusTopRight: =6
-                        Text: ="New Entry"
-                        Width: =110
-                        X: =136
-                        Y: =88
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        Size: =15
+                        Text: ="Streams - Access Control & Catalogs"
+                        Wrap: =false
+                  - conConfigTileRoleAssignments:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileRoleAssignmentsName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Role Assignments"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileRoleAssignmentsDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Per-person screen/action permissions for the Streams checklists"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileRoleAssignmentsCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Role Assignments')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileRoleAssignmentsView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_RoleAssignments/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileRoleAssignmentsNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication-CoSLeader/Lists/NextSteps_RoleAssignments/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileScreensCatalog:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileScreensCatalogName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Screens Catalog"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileScreensCatalogDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Catalog of selectable screen names used by Role Assignments"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileScreensCatalogCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Screens Catalog')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileScreensCatalogView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Screens Catalog/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileScreensCatalogNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Screens Catalog/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88
+                  - conConfigTileActionsCatalog:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.7)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =3
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        FillPortions: =0
+                        Height: =130
+                        RadiusBottomLeft: =18
+                        RadiusBottomRight: =18
+                        RadiusTopLeft: =18
+                        RadiusTopRight: =18
+                      Children:
+                        - lblConfigTileActionsCatalogName:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              Size: =14
+                              Text: ="DMP Command Actions Catalog"
+                              Width: =480
+                              Wrap: =false
+                              X: =16
+                              Y: =14
+                        - lblConfigTileActionsCatalogDesc:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                              Font: =Font.'Arial'
+                              Height: =18
+                              Size: =11
+                              Text: ="Catalog of selectable action names used by Role Assignments"
+                              Width: =650
+                              Wrap: =false
+                              X: =16
+                              Y: =38
+                        - lblConfigTileActionsCatalogCount:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =20
+                              Size: =12
+                              Text: ="Total rows:" & " " & CountRows('DMP Command Actions Catalog')
+                              Width: =300
+                              Wrap: =false
+                              X: =16
+                              Y: =62
+                        - btnConfigTileActionsCatalogView:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Actions Catalog/AllItems.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="View"
+                              Width: =110
+                              X: =16
+                              Y: =88
+                        - btnConfigTileActionsCatalogNew:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,206,125,0.6)
+                              BorderStyle: =BorderStyle.Solid
+                              BorderThickness: =1
+                              Color: =RGBA(0,206,125,1)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Semibold
+                              Height: =32
+                              HoverFill: =RGBA(0,206,125,0.12)
+                              OnSelect: =Launch("https://deutscheboerse.sharepoint.com/teams/GO365_DMPCommunication/Lists/DMP Command Actions Catalog/NewForm.aspx")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Text: ="New Entry"
+                              Width: =110
+                              X: =136
+                              Y: =88

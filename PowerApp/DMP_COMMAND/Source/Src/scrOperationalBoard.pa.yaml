@@ -576,7 +576,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =220
                               Size: =12
-                              Text: ="- Cockpit - the main overview screen described above" & Char(10) & "- Agent Monitoring - live per-agent tiles (status, last run result and duration, message) straight from the DMP Command Agent Status list" & Char(10) & "- Help / Operational Manual - this page" & Char(10) & "- Audit Trail (Detail) - the full audit log with the Critical/Warnings drill-down" & Char(10) & "- Configuration (Lists) - direct access to the underlying SharePoint configuration lists" & Char(10) & "- Maintenance - system/connection diagnostics and useful admin links" & Char(10) & "- Admin Functions - counter resets and other administrative actions (use with care)" & Char(10) & "- Release Notes - app and per-agent version history (reachable from the Cockpit's version tag or the Maintenance screen, not from a sidebar button)"
+                              Text: ="- Cockpit - the main overview screen described above" & Char(10) & "- Agent Monitoring - live per-agent tiles (status, last run result and duration, message) straight from the DMP Command Agent Status list" & Char(10) & "- System Health - full, unlimited-size legend behind the Cockpit's System Health ring (added v1.22.30)" & Char(10) & "- Help / Operational Manual - this page" & Char(10) & "- Audit Trail (Detail) - the full audit log with the Critical/Warnings drill-down" & Char(10) & "- Configuration (Lists) - direct access to all 17 connected SharePoint lists, in 6 thematic sections" & Char(10) & "- Maintenance - system/connection diagnostics and useful admin links" & Char(10) & "- Task Occurrences - daily execution view for recurring DMP checklist tasks" & Char(10) & "- Admin Functions - counter resets and other administrative actions (use with care)" & Char(10) & "- Release Notes - app and per-agent version history (reachable from the Cockpit's version tag or the Maintenance screen, not from a sidebar button)"
                               Wrap: =true
                   - conManualAgentMonitoring:
                       Control: GroupContainer@1.5.0
@@ -620,6 +620,49 @@ Screens:
                               Height: =160
                               Size: =12
                               Text: ="Six tiles, one per agent (Agent 1-6), each bound to that agent's row in ""DMP Command Agent Status"":" & Char(10) & "- Status dot - grey while loading, amber and blinking while a refresh is in progress, green when CurrentStatus = Operational, red for any other status" & Char(10) & "- Agent name, current status word, and a last-run line (date/time, result, duration in seconds - shows a dash for any value not yet recorded)" & Char(10) & "- Status message - free text written by the agent itself (e.g. an error detail), blank if none" & Char(10) & "The tiles refresh automatically every time you open this screen - there is no separate manual refresh button."
+                              Wrap: =true
+                  - conManualSystemHealthScreen:
+                      Control: GroupContainer@1.5.0
+                      Variant: AutoLayout
+                      Properties:
+                        BorderColor: =RGBA(0,206,125,0.5)
+                        BorderThickness: =2
+                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        LayoutAlignItems: =LayoutAlignItems.Stretch
+                        LayoutDirection: =LayoutDirection.Vertical
+                        LayoutGap: =8
+                        PaddingBottom: =16
+                        PaddingLeft: =16
+                        PaddingRight: =16
+                        PaddingTop: =16
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - lblManualSystemHealthScreenHeader:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="System Health (Details) screen"
+                              Wrap: =false
+                        - lblManualSystemHealthScreenNotes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =160
+                              Size: =12
+                              Text: ="Added in v1.22.30 - reached by clicking the Cockpit's System Health ring or via this sidebar entry. Replaces the ring's old pop-up, which was fixed at 312x300px and could not show all 16 monitored items readably at once. Shows the same items and colours as the ring itself, grouped into three cards:" & Char(10) & "- Core Status - Status Check, Critical Events, Warnings, Operating State" & Char(10) & "- Data Sources & Files - Emergency Report Processing, Internal Domains, External Domains, Counter, Audit Trail" & Char(10) & "- Agents (1-7) - one row per agent, name plus Operational / Not Responding" & Char(10) & "No new logic - this screen only presents the existing ring formulas at full, unlimited size."
                               Wrap: =true
                   - conManualAuditTrailDetail:
                       Control: GroupContainer@1.5.0
@@ -705,7 +748,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =180
                               Size: =12
-                              Text: ="Direct, read-only access to the central SharePoint lists, each shown as a card with a live row count and View / New Entry links that open SharePoint in a new browser tab:" & Char(10) & "- DMP Command Configuration - active row count (rows with Active = Yes); View and New Entry" & Char(10) & "- DMP Command Agent Status - total row count; View only (its rows are written automatically by the agents, not created manually)" & Char(10) & "- DMP Command Internal Domains - active row count; View and New Entry" & Char(10) & "No data is edited inside the app itself - all editing happens in SharePoint; reopen or refresh this screen to pick up changes made there."
+                              Text: ="Direct, read-only access to the SharePoint lists behind DMP COMMAND, each shown as a card with a live row count and View / New Entry links that open SharePoint in a new browser tab. Since v1.22.30 this covers all 17 connected lists (was 3), scrollable, in 6 thematic sections:" & Char(10) & "- Core Runtime Configuration & Monitoring - Configuration, Agent Status, Counters" & Char(10) & "- Domain Classification - Internal Domains, External Domains" & Char(10) & "- Streams - Process & Checklists - Checklist Overall Process, Checklist CoS Leader" & Char(10) & "- Streams - Case & Scheduling - Default Case Context, Checklist Recurrence Rules, Checklist Task Occurrences, Status Change Approvals" & Char(10) & "- Streams - Communication - Email Templates, Email Placeholders, Recipient Groups" & Char(10) & "- Streams - Access Control & Catalogs - Role Assignments, Screens Catalog, Actions Catalog" & Char(10) & "Card counts read either ""Active rows"" (Configuration, Internal/External Domains, which have an Active choice column) or ""Total rows"" (every other list); ""New Entry"" is omitted on agent-populated lists (Agent Status, Counters, Task Occurrences, Status Change Approvals). No data is edited inside the app itself - all editing happens in SharePoint; reopen or refresh this screen to pick up changes made there."
                               Wrap: =true
                   - conManualMaintenanceScreen:
                       Control: GroupContainer@1.5.0
@@ -1085,6 +1128,24 @@ Screens:
                               RadiusTopRight: =6
                               Size: =11
                               Text: ="Agent Monitoring"
+                        - btnManualSectionSystemHealthScreen:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedManualSection="SystemHealthScreen",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedManualSection="SystemHealthScreen",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedManualSection="SystemHealthScreen",FontWeight.Bold,FontWeight.Normal)
+                              Height: =36
+                              HoverFill: =If(varSelectedManualSection="SystemHealthScreen",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedManualSection,"SystemHealthScreen")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="System Health"
                         - btnManualSectionAuditTrailDetail:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1206,7 +1267,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroHeader.Text, "GeneralColours", lblManualGeneralColoursHeader.Text, "TopBar", lblManualTopBarHeader.Text, "OperatingState", lblManualOperatingStateHeader.Text, "MaintenanceDomains", lblManualMaintenanceDomainsHeader.Text, "Files", lblManualFilesHeader.Text, "SystemHealth", lblManualSystemHealthHeader.Text, "EmailsProcessed", lblManualEmailsProcessedHeader.Text, "AutomationStatus", lblManualAutomationStatusHeader.Text, "NextSteps", lblManualNextStepsHeader.Text, "Sidebar", lblManualSidebarHeader.Text, "AgentMonitoring", lblManualAgentMonitoringHeader.Text, "AuditTrailDetail", lblManualAuditTrailDetailHeader.Text, "ConfigLists", lblManualConfigListsHeader.Text, "MaintenanceScreen", lblManualMaintenanceScreenHeader.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenHeader.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenHeader.Text, lblManualIntroHeader.Text)
+                              Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroHeader.Text, "GeneralColours", lblManualGeneralColoursHeader.Text, "TopBar", lblManualTopBarHeader.Text, "OperatingState", lblManualOperatingStateHeader.Text, "MaintenanceDomains", lblManualMaintenanceDomainsHeader.Text, "Files", lblManualFilesHeader.Text, "SystemHealth", lblManualSystemHealthHeader.Text, "EmailsProcessed", lblManualEmailsProcessedHeader.Text, "AutomationStatus", lblManualAutomationStatusHeader.Text, "NextSteps", lblManualNextStepsHeader.Text, "Sidebar", lblManualSidebarHeader.Text, "AgentMonitoring", lblManualAgentMonitoringHeader.Text, "SystemHealthScreen", lblManualSystemHealthScreenHeader.Text, "AuditTrailDetail", lblManualAuditTrailDetailHeader.Text, "ConfigLists", lblManualConfigListsHeader.Text, "MaintenanceScreen", lblManualMaintenanceScreenHeader.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenHeader.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenHeader.Text, lblManualIntroHeader.Text)
                               Wrap: =false
                         - conManualDetailBody:
                             Control: GroupContainer@1.5.0
@@ -1258,5 +1319,5 @@ Screens:
                                     FillPortions: =1
                                     Font: =Font.'Arial'
                                     Size: =12
-                                    Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroNotes.Text, "GeneralColours", lblManualGeneralColoursNotes.Text, "TopBar", lblManualTopBarNotes.Text, "OperatingState", lblManualOperatingStateNotes.Text, "MaintenanceDomains", lblManualMaintenanceDomainsNotes.Text, "Files", lblManualFilesNotes.Text, "SystemHealth", lblManualSystemHealthNotes.Text, "EmailsProcessed", lblManualEmailsProcessedNotes.Text, "AutomationStatus", lblManualAutomationStatusNotes.Text, "NextSteps", lblManualNextStepsNotes.Text, "Sidebar", lblManualSidebarNotes.Text, "AgentMonitoring", lblManualAgentMonitoringNotes.Text, "AuditTrailDetail", lblManualAuditTrailDetailNotes.Text, "ConfigLists", lblManualConfigListsNotes.Text, "MaintenanceScreen", lblManualMaintenanceScreenNotes.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenNotes.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenNotes.Text, lblManualIntroNotes.Text)
+                                    Text: =Switch(varSelectedManualSection, "Intro", lblManualIntroNotes.Text, "GeneralColours", lblManualGeneralColoursNotes.Text, "TopBar", lblManualTopBarNotes.Text, "OperatingState", lblManualOperatingStateNotes.Text, "MaintenanceDomains", lblManualMaintenanceDomainsNotes.Text, "Files", lblManualFilesNotes.Text, "SystemHealth", lblManualSystemHealthNotes.Text, "EmailsProcessed", lblManualEmailsProcessedNotes.Text, "AutomationStatus", lblManualAutomationStatusNotes.Text, "NextSteps", lblManualNextStepsNotes.Text, "Sidebar", lblManualSidebarNotes.Text, "AgentMonitoring", lblManualAgentMonitoringNotes.Text, "SystemHealthScreen", lblManualSystemHealthScreenNotes.Text, "AuditTrailDetail", lblManualAuditTrailDetailNotes.Text, "ConfigLists", lblManualConfigListsNotes.Text, "MaintenanceScreen", lblManualMaintenanceScreenNotes.Text, "AdminFunctionsScreen", lblManualAdminFunctionsScreenNotes.Text, "ReleaseNotesScreen", lblManualReleaseNotesScreenNotes.Text, lblManualIntroNotes.Text)
                                     Wrap: =true

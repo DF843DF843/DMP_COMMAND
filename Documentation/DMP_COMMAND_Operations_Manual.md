@@ -1,6 +1,6 @@
 # DMP COMMAND — Operations Manual
 
-**Scope:** This manual covers the complete DMP COMMAND system: all 6 backend agents (Power Automate flows), the DMP COMMAND Power App (Cockpit GUI, with 8 screens - Cockpit, Agent Monitoring, Help / Operational Manual, Audit Trail (Detail), Configuration (Lists), Maintenance, Admin Functions, Release Notes), the central SharePoint lists, and standard operating procedures including the Fire Drill / Emergency procedure.
+**Scope:** This manual covers the complete DMP COMMAND system: all 6 backend agents (Power Automate flows), the DMP COMMAND Power App (Cockpit GUI, with 10 screens - Cockpit, Agent Monitoring, System Health (Details), Help / Operational Manual, Audit Trail (Detail), Configuration (Lists), Maintenance, Task Occurrences, Admin Functions, Release Notes), the central SharePoint lists, and standard operating procedures including the Fire Drill / Emergency procedure.
 
 **Audience:** Operations team members responsible for running, monitoring, and troubleshooting DMP COMMAND day-to-day.
 
@@ -257,7 +257,7 @@ Agent Status row mapping (final): `CurrentStatus` = `Operational` / `Warning` / 
 
 ## 3. Power App (Cockpit) — User Guide
 
-The app has 8 screens, reachable from the left sidebar: **Cockpit** (home/dashboard), **Agent Monitoring**, **Help / Operational Manual**, **Audit Trail (Detail)**, **Configuration (Lists)**, **Maintenance**, **Admin Functions**, and **Release Notes** (reached from the Cockpit's version tag or the Maintenance screen's version link, not from a dedicated sidebar button).
+The app has 10 screens, reachable from the left sidebar: **Cockpit** (home/dashboard), **Agent Monitoring**, **System Health** (§3.13), **Help / Operational Manual**, **Audit Trail (Detail)**, **Configuration (Lists)**, **Maintenance**, **Task Occurrences**, **Admin Functions**, and **Release Notes** (reached from the Cockpit's version tag or the Maintenance screen's version link, not from a dedicated sidebar button).
 
 **Note on this section's content:** Every field, button, colour, and message described below is mirrored in the app's own **Help / Operational Manual** screen (§3.3) — the two are maintained as a single source, kept in sync in both directions (see the AI working rules for this project).
 
@@ -319,7 +319,7 @@ A square card bordered in green containing a circular "donut" gauge:
   | At least one non-green segment | Orange | Degraded; inspect the segment/legend |
   | No segment green | Red | Critical |
 
-- Clicking anywhere on the ring opens/closes a **legend popup** titled "SYSTEM HEALTH - DETAILS" (with a "✕" close button), listing the health inputs and their live status:
+- Clicking anywhere on the ring navigates to the dedicated **System Health** screen (§3.13; same destination as the "System Health" sidebar entry), which lists all of the health inputs below and their live status without a size/scroll limit (before `v1.22.30` this was a cramped 300px-tall pop-up that could not show all 16 items readably — user feedback led to moving it to its own page):
 
   | Row text | Dot colour rule |
   |---|---|
@@ -554,35 +554,43 @@ Both panels scroll independently if their content exceeds the visible card heigh
 ### 3.5 Configuration (Lists) screen
 
 #### Purpose and layout
-This screen gives direct, at-a-glance access to the three central SharePoint lists that back DMP COMMAND, each shown as its own card with a live row count and links out to SharePoint. No data is edited in-app — all editing happens in SharePoint via the "View" / "New Entry" links.
+This screen gives direct, at-a-glance access to the SharePoint lists that back DMP COMMAND, each shown as its own card with a live row count and links out to SharePoint. No data is edited in-app — all editing happens in SharePoint via the "View" / "New Entry" links. As of `v1.22.30` the screen covers **all 17 live-connected lists** (previously only 3 had a card), organized into a scrollable body with 6 thematic sections; each card's count reads either `"Active rows: " & <count>` (lists with an `Active` Yes/No choice column — currently Configuration, Internal Domains, External Domains) or `"Total rows: " & <count>` (all other lists, which have no such flag).
 
 **Header bar** (top, dark purple):
 - **"< Back to Cockpit" button** — returns to the Cockpit screen (`scrHome`) without a screen-transition animation.
 - **"Configuration (Lists)"** — page title.
 - **"DMP COMMAND - configuration and list management"** — page subtitle.
 
-#### Card 1 — DMP Command Configuration
-- **Title:** "DMP Command Configuration"
-- **Description:** "Runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...)"
-- **Active rows count:** `"Active rows: " & <count>` — the number of rows in the `DMP Command Configuration` list where the `Active` choice column equals `"Yes"`. Rows with `Active` set to anything else (e.g. `"No"`) are excluded from this count, so it reflects only the configuration parameters currently in effect, not the full row count of the list.
-- **View** button: opens the `DMP Command Configuration` list's "All Items" view directly in SharePoint (new tab).
-- **New Entry** button: opens the list's "New Item" form directly in SharePoint (new tab), for adding a new configuration parameter row.
+#### Section 1 — Core Runtime Configuration & Monitoring
+- **DMP Command Configuration** — runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...); Active rows count; View + New Entry.
+- **DMP Command Agent Status** — live status/health rows written by each agent (see Agent Monitoring for a friendlier view); Total rows count; View only (agents write these rows automatically).
+- **DMP Command Counters** — shared reference-number and cross-agent counters (see Admin Functions, §3.7, for resets); Total rows count; View only.
 
-#### Card 2 — DMP Command Agent Status
-- **Title:** "DMP Command Agent Status"
-- **Description:** "Live status/health rows written by each agent - see the Agent Monitoring page for a friendlier view"
-- **Total rows count:** `"Total rows: " & <count>` — the total number of rows in the `DMP Command Agent Status` list (unfiltered; this list has no "Active" flag since it is not a configuration list but a live-status table that each agent writes to).
-- **View** button: opens the `DMP Command Agent Status` list's "All Items" view directly in SharePoint (new tab).
-- No "New Entry" button on this card — rows in this list are written automatically by the agents, not created manually by operators.
+#### Section 2 — Domain Classification
+- **DMP Command Internal Domains** — domains treated as internal by Agent 1/Agent 2's classification logic; Active rows count; View + New Entry.
+- **DMP Command External Domains** — domains treated as external by Agent 1/Agent 2's classification logic; Active rows count; View + New Entry.
 
-#### Card 3 — DMP Command Internal Domains
-- **Title:** "DMP Command Internal Domains"
-- **Description:** "Domains treated as internal (Deutsche Boerse) by Agent 1 and Agent 2's classification logic"
-- **Active rows count:** `"Active rows: " & <count>` — the number of rows in the `DMP Command Internal Domains` list where the `Active` choice column equals `"Yes"`, i.e. the domains currently being applied by Agent 1 (Domains Extraction) and Agent 2 (E-Mail Inbox Treatment) when classifying senders as internal. Rows marked inactive are excluded from this count.
-- **View** button: opens the `DMP Command Internal Domains` list's "All Items" view directly in SharePoint (new tab).
-- **New Entry** button: opens the list's "New Item" form directly in SharePoint (new tab), for adding a new internal-domain entry.
+#### Section 3 — Streams: Process & Checklists
+- **DMP Command Checklist Overall Process** — master status overview linking each Streams sub-checklist by `TaskID`; Total rows count; View + New Entry.
+- **DMP Command Checklist CoS Leader** — CoS Leader working checklist; status changes require four-eyes confirmation; Total rows count; View + New Entry.
 
-All "View" and "New Entry" links behave identically across the three cards: they use `Launch()` to open the corresponding SharePoint list page in the user's default browser; no confirmation dialog or in-app notification is shown, and no data is refreshed on return — reopening or refreshing the Configuration screen will pick up any changes made in SharePoint.
+#### Section 4 — Streams: Case & Scheduling
+- **DMP Command Default Case Context** — case-specific context (defaulted member, termination reason/date) captured via the Cockpit's B3 popup on the Pre-Default → DMP transition; Total rows count; View + New Entry.
+- **DMP Command Checklist Recurrence Rules** — rules driving Agent 7's automatic generation of recurring Task Occurrences; Total rows count; View + New Entry.
+- **DMP Command Checklist Task Occurrences** — recurring task instances (see the dedicated Task Occurrences screen for the working Propose/Approve/Reject view); Total rows count; View only.
+- **DMP Command Status Change Approvals** — four-eyes approval records for checklist status changes across all Streams sub-checklists; Total rows count; View only.
+
+#### Section 5 — Streams: Communication
+- **DMP Command Email Templates** — parameterized `{{placeholder}}` e-mail templates used by the Streams checklists; Total rows count; View + New Entry.
+- **DMP Command Email Placeholders** — catalog of valid `{{placeholder}}` keys used in Email Templates; Total rows count; View + New Entry.
+- **DMP Command Recipient Groups** — collective mailbox addresses referenced by Email Templates; Total rows count; View + New Entry.
+
+#### Section 6 — Streams: Access Control & Catalogs
+- **DMP Command Role Assignments** — per-person screen/action permissions for the Streams checklists; Total rows count; View + New Entry.
+- **DMP Command Screens Catalog** — catalog of selectable screen names used by Role Assignments; Total rows count; View + New Entry.
+- **DMP Command Actions Catalog** — catalog of selectable action names used by Role Assignments; Total rows count; View + New Entry.
+
+All "View" and "New Entry" links behave identically across every card: they use `Launch()` to open the corresponding SharePoint list page in the user's default browser; no confirmation dialog or in-app notification is shown, and no data is refreshed on return — reopening or refreshing the Configuration screen will pick up any changes made in SharePoint. **Note on link targets:** six of the Streams lists (`Checklist CoS Leader`, `Default Case Context`, `Status Change Approvals`, `Email Templates`, `Recipient Groups`, `Role Assignments`) were renamed after creation — their SharePoint-internal URL segment is still the old pre-rename working name, not the current display title, so their links point to that internal name (confirmed against the live `.msapr`'s data source references, not guessed).
 
 ### 3.6 Maintenance screen
 
@@ -744,6 +752,14 @@ Click **Replace** next to the External row in the Maintenance – Domains panel 
 
 Use the toggle in the top-right of the header (§3.1.2) to switch between dark and light color themes. This is a purely visual, per-session, client-side setting.
 
+### 3.13 System Health (Details) screen
+
+Reached either by clicking the System Health ring on the Cockpit (§3.1.3) or via the **"System Health"** entry in the left navigation sidebar. Introduced in `v1.22.30` to replace the ring's old pop-up, which was fixed at 312×300px with an internal scrollbar and could not show all 16 monitored items readably at once (user feedback). The screen has the same "< Back to Cockpit" header pattern as the other detail screens, followed by a scrollable body with three bordered cards, grouping the same 16 items and status colours the ring itself is built from (green/amber/red, identical thresholds — this screen adds no new logic, it only presents the existing ring formulas at full size):
+
+- **Core Status:** Status Check, Critical Events, Warnings, Operating State.
+- **Data Sources & Files:** Emergency Report Processing, Internal Domains, External Domains, Counter, Audit Trail.
+- **Agents (1-7):** one row per agent, each showing the agent's display name and `Operational`/`Not Responding` state from `DMP Command Agent Status`.
+
 ---
 
 ## 4. Central Configuration List (`DMP Command Configuration`)
@@ -765,7 +781,7 @@ This SharePoint list is the single source of truth for every operational paramet
 
 **Related lists (each a separate SharePoint list, not part of `DMP Command Configuration` itself):**
 - **`DMP Command Internal Domains`:** one row per internal domain (`Title` = domain name, `Active` Choice column = `Yes`/`No`). Agent 1 writes/maintains it; Agent 2 (classification) and Agent 4 (status/count) both read it directly; the Power App's Maintenance - Domains panel and Configuration (Lists) screen both link to it.
-- **`DMP Command External Domains`:** one row per external domain. Fully deleted and recreated by Agent 1 on every Emergency Report extraction; Agent 2 (classification) and Agent 4 (status/count) both read it directly; the Power App's Maintenance - Domains panel and Configuration (Lists) screen link to it (Configuration (Lists), §3.5, only shows the three lists with dedicated cards — Configuration, Agent Status, Internal Domains — but External Domains and Counters are reachable via the Maintenance - Domains panel's View/Edit links and the Automation Status panel, §3.1.5/§3.1.7).
+- **`DMP Command External Domains`:** one row per external domain. Fully deleted and recreated by Agent 1 on every Emergency Report extraction; Agent 2 (classification) and Agent 4 (status/count) both read it directly; the Power App's Maintenance - Domains panel and Configuration (Lists) screen (§3.5, now has its own dedicated card, since `v1.22.30`) both link to it, as does the Automation Status panel (§3.1.5/§3.1.7).
 - **`DMP Command Counters`:** one row per e-mail-classification counter, keyed by `Title` (e.g. `'No DMP'`, `'DMP internal Sender'`, `'DMP effected Member'`, `'DMP not effected Sender'`), value column `NumberProcessedEmails`. Agent 2 increments the matching row per classified e-mail; Agent 6 resets one or all rows to 0 on operator request (§3.7); Agent 4 reads it for the Cockpit's Emails Processed ring (§3.1.8) and Automation Status panel (§3.1.7).
 
 **Alert folder parameters:** Each of Agent 3, 4, and 5 has its own dedicated `Agent3AlertFolderName` / `Agent4AlertFolderName` / `Agent5AlertFolderName` parameter with its own `Agent 03` / `Agent 04` / `Agent 05` scope — no agent shares an alert folder with another. See §9 for the naming design rule that formalizes this pattern for future agents.

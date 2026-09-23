@@ -83,9 +83,9 @@ Screens:
                 Variant: ManualLayout
                 Properties:
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(255,255,255,1))
-                  Height: =88
-                  LayoutMaxHeight: =88
-                  LayoutMinHeight: =88
+                  Height: =140
+                  LayoutMaxHeight: =140
+                  LayoutMinHeight: =140
                   RadiusBottomLeft: =12
                   RadiusBottomRight: =12
                   RadiusTopLeft: =12
@@ -99,30 +99,35 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: =28
                         Size: =14
-                        Text: ="Current view"
-                        Width: =180
+                        Text: ="Current view (fixed):"
+                        Width: =220
+                        Wrap: =false
                         X: =20
                         Y: =14
                   - lblTaskOccurrencesModeValue:
                       Control: Label@2.5.1
                       Properties:
-                        Color: =RGBA(32,23,81,1)
+                        Color: =If(varDarkMode,RGBA(0,230,140,1),RGBA(32,23,81,1))
                         Font: =Font.'Arial'
+                        FontWeight: =FontWeight.Semibold
                         Height: =28
                         Size: =14
-                        Text: ="Open and overdue occurrences"
-                        Width: =350
-                        X: =200
+                        Text: ="All non-rejected occurrences, soonest due first"
+                        Width: =600
+                        Wrap: =false
+                        X: =240
                         Y: =14
                   - lblTaskOccurrencesContract:
                       Control: Label@2.5.1
                       Properties:
                         Color: =If(varDarkMode,RGBA(215,210,235,1),RGBA(90,88,98,1))
                         Font: =Font.'Arial'
-                        Height: =28
+                        Height: =78
                         Size: =11
+                        VerticalAlign: =VerticalAlign.Top
                         Text: ="Connected directly to the 'DMP Command Checklist Task Occurrences' SharePoint list. Propose/Approve/Reject write real Patch() updates; four-eyes (proposer cannot self-approve) is enforced client-side. List is populated by Agent 7 - may show 0 rows until its first real run."
                         Width: =900
+                        Wrap: =true
                         X: =20
                         Y: =48
             - galTaskOccurrencesPreview:
@@ -131,7 +136,7 @@ Screens:
                 Properties:
                   AccessibleLabel: ="Task occurrence preview"
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(255,255,255,1))
-                  Height: =Parent.Height-208
+                  Height: =Parent.Height-260
                   Items: =SortByColumns(Filter('DMP Command Checklist Task Occurrences', ApprovalState.Value<>"Rejected"), "DueUtc", SortOrder.Ascending)
                   TemplateSize: =104
                   Width: =Parent.Width-40
@@ -162,7 +167,7 @@ Screens:
                   - lblOccurrenceStatus:
                       Control: Label@2.5.1
                       Properties:
-                        Color: =RGBA(32,23,81,1)
+                        Color: =If(varDarkMode,RGBA(0,230,140,1),RGBA(32,23,81,1))
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Bold
                         Height: =22

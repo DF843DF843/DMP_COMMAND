@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.29 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+### v1.22.30 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+
+- **System Health legend moved to its own page:** the Cockpit ring's popup could only show a cramped, scrolling 300px box for all 16 monitored items (user feedback: legend not fully visible) - it is now a dedicated `scrSystemHealthDetails` page (new sidebar entry "System Health" + still reachable by clicking the ring), showing all 16 items grouped into Core Status, Data Sources & Files and Agents (1-7), with no size limit.
+- **Task Occurrences "Current view" panel - real readability bug found and fixed:** the description text's fixed 28px-tall box was far too short for its ~300-character content, so most of it rendered off-box and visually overlapped the row above (reported as unreadable). Box height/wrapping fixed, and the value label's near-black-on-dark hardcoded colour (also unreadable in dark mode) is now theme-aware. The same hardcoded-colour bug was also fixed on each row's Status label.
+- **Task Occurrences "Current view" value corrected to match the real filter/sort logic:** was labelled "Open and overdue occurrences", which does not describe what the Gallery actually shows - now "All non-rejected occurrences, soonest due first".
+- **Configuration (Lists) tab reorganized into 6 thematic sections** (Core Runtime Configuration & Monitoring, Domain Classification, Streams - Process & Checklists, Streams - Case & Scheduling, Streams - Communication, Streams - Access Control & Catalogs) and now scrolls; added View/New tiles for all 14 previously-unlisted live SharePoint lists (External Domains, Counters, and all 12 Streams lists), so every connected list can be found and opened from this tab.
+
+### v1.22.29 - 2026-09-23 (confirmed loading in Studio; 3 findings addressed in v1.22.30 above)
 
 - **B3 (Default Case Context popup) - connected to the real SharePoint list:** the user added `DMP Command Default Case Context` as a live data source in Studio, so the popup's Confirm button now Patches the real list directly instead of a local collection (`colDefaultCaseContextPending` removed). Note: the list has no separate `CaseId` column - Case ID is stored in `Title`.
 - **Task Occurrences screen (C6/C7) - connected to the real SharePoint list `DMP Command Checklist Task Occurrences`:** the Gallery, Propose/Approve/Reject buttons and four-eyes check (proposer cannot self-approve) now read/write the real list via `Patch()` (`colTaskOccurrencesPreview` removed). Note: the list has no separate `OccurrenceId` column either - `Title` holds it. May show 0 rows until Agent 7 creates its first real occurrences.
