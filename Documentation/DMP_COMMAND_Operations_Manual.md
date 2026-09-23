@@ -554,7 +554,7 @@ Both panels scroll independently if their content exceeds the visible card heigh
 ### 3.5 Configuration (Lists) screen
 
 #### Purpose and layout
-This screen gives direct, at-a-glance access to the SharePoint lists that back DMP COMMAND. No data is edited in-app — all editing happens in SharePoint via the "View" / "New Entry" links. The screen covers **all 17 live-connected lists**, organized into a scrollable body with 6 thematic sections. As of `v1.22.31`, each section is a single bordered card (styled like the Cockpit's "Maintenance - Domains" panel, replacing the previous `v1.22.30` design of one large 130px tile per list, which was reported too big/unwieldy for 17 lists) holding one compact row per list: a small reachability dot (`IfError(CountRows(list)>=0, green, red)`), the list name, a live row-count label, and View / New Entry buttons. Each row's description text (what the list is used for) has moved into the View button's tooltip - hover it to read the description. Each row's count reads either `"Active rows: " & <count>` (lists with an `Active` Yes/No choice column — currently Configuration, Internal Domains, External Domains) or `"Total rows: " & <count>` (all other lists, which have no such flag).
+This screen gives direct, at-a-glance access to the SharePoint lists that back DMP COMMAND. No data is edited in-app — all editing happens in SharePoint via the "View" / "New Entry" links. The screen covers **all 17 live-connected lists**, organized into a scrollable body with 6 thematic sections. As of `v1.22.31`, each section was a single bordered card holding one compact row per list; as of `v1.22.32`, each card additionally has a solid dark-purple header bar with white bold text (previously the section title was plain colored text on the card background, reported as not standing out), and the per-list rows were replaced with a compact tile grid (up to 4 tiles per row within each card — every section has at most 4 lists, so each section is now exactly one tile row, with a uniform 140px card height regardless of list count). Each tile has a small reachability dot (`IfError(CountRows(list)>=0, green, red)`), the list name, a live row-count label, and View / New Entry buttons. Each list's description text (what it is used for) is in the View button's tooltip - hover it to read the description. Each tile's count reads either `"Active rows: " & <count>` (lists with an `Active` Yes/No choice column — currently Configuration, Internal Domains, External Domains) or `"Total rows: " & <count>` (all other lists, which have no such flag).
 
 **Header bar** (top, dark purple):
 - **"< Back to Cockpit" button** — returns to the Cockpit screen (`scrHome`) without a screen-transition animation.
@@ -594,7 +594,7 @@ All "View" and "New Entry" links behave identically across every row: they use `
 
 ### 3.6 Maintenance screen
 
-The Maintenance screen is reached from the Cockpit's "Maintenance" tile/link and gives operators a quick, read-only health check of the app's data connections, an overview of version numbers, and one-click access to the three administrative web portals behind DMP COMMAND. It uses the same dark-purple rounded header bar as every other screen, followed by three stacked, green-bordered "card" panels.
+The Maintenance screen is reached from the Cockpit's "Maintenance" tile/link and gives operators an overview of version numbers and one-click access to the three administrative web portals behind DMP COMMAND. It uses the same dark-purple rounded header bar as every other screen, followed by two stacked, green-bordered "card" panels. **As of `v1.22.32`, the former "Connection diagnostics" panel (Panel 1 below) was moved to the System Health (Details) screen (§3.13)**, where it now covers all 17 connected SharePoint lists instead of just 3 - per user feedback that connection diagnostics belongs functionally to System Health.
 
 #### Header bar
 
@@ -602,28 +602,16 @@ The Maintenance screen is reached from the Cockpit's "Maintenance" tile/link and
 |---|---|
 | **"< Back to Cockpit" button** | Top-left of the header. Returns immediately to the Home/Cockpit screen (no confirmation needed, non-destructive navigation). |
 | **Title: "Maintenance"** | Static page title, white bold text. |
-| **Subtitle** | Static text: *"DMP COMMAND - connection diagnostics, versions and admin links"* — a one-line summary of what the screen contains. |
+| **Subtitle** | Static text: *"DMP COMMAND - versions and admin links"* — a one-line summary of what the screen contains. |
 
-#### Panel 1 — "Connection diagnostics"
-
-A card with a bright green title "Connection diagnostics" and three status rows, each consisting of a small round colored dot followed by a fixed descriptive label. Each dot independently checks whether the app can currently read one of the three central SharePoint lists by counting its rows; if the count call throws an error (e.g., the list connection is broken or permissions were revoked) the dot turns red instead of green.
-
-| Row (label text, static) | Underlying check | Dot = green | Dot = red |
-|---|---|---|---|
-| "DMP Command Configuration list - reachable" | `CountRows('DMP Command Configuration')` succeeds | List is reachable | List is unreachable (connection/permission error) |
-| "DMP Command Agent Status list - reachable" | `CountRows('DMP Command Agent Status')` succeeds | List is reachable | List is unreachable |
-| "DMP Command Internal Domains list - reachable" | `CountRows('DMP Command Internal Domains')` succeeds | List is reachable | List is unreachable |
-
-Below the three rows, a smaller gray hint text explains the meaning of a red dot to the operator, shown verbatim as part of the screen's normal design: *"A red dot here means the app itself lost its SharePoint connection - refresh the app or check the connection under Power Apps > Settings."*
-
-#### Panel 2 — "Versions"
+#### Panel 1 — "Versions"
 
 | Element | Description |
 |---|---|
 | **"Cockpit app: `<version>` (see Release Notes)" button** | A text-style (borderless, green) button. The version portion is the app's own current version number (the same value shown on the Release Notes screen's subtitle, e.g. "1.22.12"; it can appear blank if the value has not yet been loaded). Clicking it navigates directly to the Release Notes screen. Tooltip on hover: "Open Release Notes". |
 | **Agent versions hint** | Static gray text: *"Agent versions - see Release Notes > Agent Changes, or Agent Monitoring for live per-agent status"* — tells the operator where to find per-agent (Agent 1–6 flow) version numbers, since this screen itself does not list them individually. |
 
-#### Panel 3 — "Admin portal links"
+#### Panel 2 — "Admin portal links"
 
 Three equally-sized, green-outlined pill buttons in a row, each opening an external site in a new browser tab/window via a direct link (no confirmation, non-destructive, read access only):
 
@@ -754,11 +742,13 @@ Use the toggle in the top-right of the header (§3.1.2) to switch between dark a
 
 ### 3.13 System Health (Details) screen
 
-Reached either by clicking the System Health ring on the Cockpit (§3.1.3) or via the **"System Health"** entry in the left navigation sidebar. Introduced in `v1.22.30` to replace the ring's old pop-up, which was fixed at 312×300px with an internal scrollbar and could not show all 16 monitored items readably at once (user feedback). The screen has the same "< Back to Cockpit" header pattern as the other detail screens, followed by a scrollable body with three bordered cards, grouping the same 16 items and status colours the ring itself is built from (green/amber/red, identical thresholds — this screen adds no new logic, it only presents the existing ring formulas at full size). As of `v1.22.31`, each card uses the same compact fixed-layout table style as the Cockpit's own "Automation Status" panel (14px dots, 11px labels, 26px row spacing) instead of the `v1.22.30` version's larger `AutoLayout` cards, which were reported too big and partly truncated for 16 items:
+Reached either by clicking the System Health ring on the Cockpit (§3.1.3) or via the **"System Health"** entry in the left navigation sidebar. Introduced in `v1.22.30` to replace the ring's old pop-up, which was fixed at 312×300px with an internal scrollbar and could not show all 16 monitored items readably at once (user feedback). The screen has the same "< Back to Cockpit" header pattern as the other detail screens, followed by a scrollable body of bordered cards, grouping the same 16 items and status colours the ring itself is built from (green/amber/red, identical thresholds - this screen adds no new logic for those items, it only presents the existing ring formulas at full size), plus (as of `v1.22.32`) the connection-reachability dots formerly on the Maintenance screen. As of `v1.22.32`, the cards are arranged as 3 horizontal rows of 2 cards each (per user feedback that "2-4 Bereiche" should sit side by side, instead of one full-width card per row):
 
-- **Core Status:** Status Check, Critical Events, Warnings, Operating State.
-- **Data Sources & Files:** Emergency Report Processing, Internal Domains, External Domains, Counter, Audit Trail.
-- **Agents (1-7):** one row per agent, each showing the agent's display name and `Operational`/`Not Responding` state from `DMP Command Agent Status`.
+- **Row 1 - Core Status | Data Sources & Files:** Status Check, Critical Events, Warnings, Operating State | Emergency Report Processing, Internal Domains, External Domains, Counter, Audit Trail.
+- **Row 2 - Agents (1-7) | Connection Diagnostics - Core & Domain Lists:** one row per agent, each showing the agent's display name and `Operational`/`Not Responding` state from `DMP Command Agent Status` | reachability dot (`IfError(CountRows(list)>=0, green, red)`) for 9 of the 17 connected SharePoint lists (Configuration, Agent Status, Counters, Internal/External Domains, Checklist Overall Process, Checklist CoS Leader, Default Case Context, Checklist Recurrence Rules).
+- **Row 3 - Connection Diagnostics - Streams Lists | About the dots:** reachability dot for the remaining 8 lists (Checklist Task Occurrences, Status Change Approvals, Email Templates, Email Placeholders, Recipient Groups, Role Assignments, Screens Catalog, Actions Catalog) | a short note explaining that a red dot means the app itself lost its own SharePoint connection to that list, not necessarily that the list is broken.
+
+Connection Diagnostics was moved here from the Maintenance screen in `v1.22.32` (previously covered only 3 of the 17 lists there) per user feedback that it belongs functionally to System Health rather than Maintenance.
 
 ---
 

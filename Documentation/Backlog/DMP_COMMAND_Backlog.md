@@ -10,6 +10,20 @@
 
 ---
 
+## 🟢 v1.22.32 (2026-09-23, lokal gepackt) — System Health/Configuration nach v1.22.31-Feedback erneut überarbeitet (Connection Diagnostics zusammengeführt, Kachel-Grid, Header-Bars)
+
+Nutzer hat `v1.22.31` in Studio geladen (Feedback zu UX, kein Ladefehler) und 3 Anmerkungen gegeben:
+
+1. **System Health - Details: Connection Diagnostics fachlich integriert + horizontales Grid.** Nutzer: "Diese Übersicht ist so nicht brauchbar. Vergleich mit Maintenance - Connection diagnostic! So ähnlich könnte das aussehen. Zudem gehört Connection diagnostic fachlich zu System Health! Auch hier: Es können 2-4 Bereiche horizontal nebeneinander." Nach Rückfrage (per `ask_user`) hat der Nutzer sich für **komplette Verschiebung** entschieden (nicht Duplizierung): Der komplette `conMaintenanceDiagnostics`-Block wurde aus `scrMaintenance.pa.yaml` entfernt und als neuer, auf alle 17 Listen erweiterter Bereich in `scrSystemHealthDetails.pa.yaml` neu aufgebaut (vorher nur 3 Listen: Configuration, Agent Status, Internal Domains). Layout von einer langen vertikalen Kartenkette auf 3 horizontale Zeilen zu je 2 Karten umgebaut (`conSystemHealthRow1/2/3`, `ManualLayout` mit `X`/`Width`-Formeln `=(Parent.Width-16)/2` statt AutoLayout, um die in v1.22.30/31 gemachten Erfahrungen mit AutoLayout-Größenproblemen nicht zu wiederholen): Row1 = Core Status | Data Sources & Files, Row2 = Agents (1-7) | Connection Diagnostics - Core & Domain Lists (9 Listen), Row3 = Connection Diagnostics - Streams Lists (8 Listen) | Hinweis-Karte ("About the dots above"). Alle 16 bestehenden Status-Formeln unverändert übernommen; die 17 neuen Connection-Diagnostics-Zeilen nutzen dieselbe `IfError(CountRows(...)>=0,...)`-Logik wie zuvor in Configuration/Maintenance.
+2. **Configuration (Lists): Header-Bars + Kachel-Grid statt Zeilen.** Nutzer: "Die Abschnittsüberschriften heben sich nicht hervor. Die Kacheln pro Liste sind viel zu groß. Jeden Abschnitt in einen eigenen Container. Pro Container die Kachel gruppieren, Horizontal maximal 4 nebeneinander." Jede der 6 Abschnittskarten hat jetzt eine eigene farbige Kopfleiste (`HeaderBar`, dunkelviolett `RGBA(32,23,81,1)`, weißer fetter Text) statt nur farbigem Text auf transparentem Hintergrund. Die bisherigen vollbreiten Einzeilen-pro-Liste wurden durch ein Kachel-Raster ersetzt (max. 4 Kacheln nebeneinander, `Width: =(Parent.Width-68)/4`); da jeder der 6 Abschnitte ohnehin höchstens 4 Listen enthält, passt jeder Abschnitt jetzt in genau eine Kachelzeile. Alle 17 Listennamen/Zähl-Formeln/View-/New-Entry-URLs/Tooltips 1:1 aus der v1.22.31-Datei extrahiert (PowerShell-Parser, kein manuelles Abtippen) und unverändert übernommen — nur Layout geändert. Kartenhöhe jetzt einheitlich 140px pro Abschnitt (vorher 110-170px je nach Listenzahl).
+3. **Maintenance: Connection Diagnostics entfernt (siehe Punkt 1).** Seite zeigt jetzt nur noch Versions + Admin-Portal-Links.
+4. Kontrollen vor Auslieferung: App-weite Control-Namens-Eindeutigkeit (874 Namen, 0 Duplikate), Regex-Scan auf literales `": "` in einzeiligen `Text:`/`Tooltip:`-Formeln (0 Treffer in allen neuen/geänderten Zeilen), Pack→Unpack-Rückvergleich (0 Diff auf allen 6 geänderten Dateien: `scrSystemHealthDetails`, `scrConfiguration`, `scrMaintenance`, `scrReleaseNotes`, `scrOperationalBoard`, `App`), Kontrollzahlen vor/nach (System Health: 16→33 Punkte, 21→42 Labels, 3→6 Abschnittskarten; Configuration: 17/17/17/17/13 Dots/Namen/Counts/View/New unverändert, 6 neue HeaderBars).
+5. `PowerApp_Version.txt` auf `v1.22.32` aktualisiert. Regel 9b: Backup auf `DMP_COMMAND_v1.22.31.msapp` rotiert (v1.22.31 gilt als vom Nutzer bestätigt ladend — die Anmerkungen betrafen nur UX, kein Ladefehler).
+6. Solution unverändert bei `7.34.67`, keine Power-Automate-Änderungen diese Sitzung.
+7. **Separat vom Nutzer geliefert, noch nicht umgesetzt:** eine vollständige 21-Abschnitte-Spezifikation für das "Next Steps"/CoS-Leader-Feature (`DMP_COMMAND_Next_Steps_Anforderung.md`, ersetzt die 8 offenen Klärungsfragen unter Priorität 2 Punkt 1). Gegen das echte Datenmodell geprüft (siehe Punkt darunter) — Umsetzung nächste Sitzung.
+
+---
+
 ## 🟢 v1.22.31 (2026-09-23, lokal gepackt) — 2 von 3 v1.22.30-Findings mit Redesign behoben, 1 Finding braucht Brainstorming
 
 Nutzer hat `v1.22.30` in Studio geladen (lädt fehlerfrei) und 3 Anmerkungen zu den v1.22.30-Fixes gegeben, während er 2h in einem Meeting war ("baue soviel wie möglich weiter, wo keine Interaktion nötig ist"):
@@ -398,6 +412,34 @@ Vier-Augen-Prinzip) wurde in v1.22.30 nur lesbarer gemacht, aber inhaltlich nich
 6. Woher kommt die Auswahl des passenden `Email Templates` je Aufgabe — automatisch anhand eines Felds in der Task Occurrence, oder wählt der CoS Leader die Vorlage manuell aus?
 7. Welche Platzhalter-Quelle gilt je Vorlage — nur `Default Case Context` (Termination-Daten), oder auch `Recipient Groups` (Empfänger) und ggf. weitere Listen? Soll der Nutzer die befüllte E-Mail vor dem Versand noch sehen/anpassen können, oder komplett automatisch?
 8. Ist der Auslöser pro einzelner Task Occurrence gedacht (eine Aufgabe = eine E-Mail), oder eher meilenstein-/status-getrieben (z. B. sobald ein ganzer Stream auf "Done" wechselt)?
+
+**🟢 Update (2026-09-23, gleiche Sitzung wie v1.22.32):** Der Nutzer hat statt einzelner Antworten auf die 8 Fragen eine vollständige, 21-Abschnitte-Spezifikation geliefert:
+[`DMP_COMMAND_Next_Steps_Anforderung.md`](../DMP_COMMAND_Next_Steps_Anforderung.md) (Kopie auch im
+OneDrive-Dokumentationsordner). Kernpunkte: Aktivierung ab Pre-Default; global-fachliche Reihenfolge
+ohne Zwangs-Sequenzialität (Sequenznummer ≠ Abhängigkeit); Mindestabhängigkeit jedes Tasks vom
+Erreichen von Pre-Default, zusätzlich UND-verknüpfte Vorgänger-/Meilenstein-Bedingungen (keine
+ODER-Verknüpfung); 5-Farben-Logik (Grau=noch nicht reif, Gelb=reif/PENDING, Gelb blinkend=ONGOING,
+Grün=COMPLETED, Rot=OVERDUE/PROBLEM übersteuert alles andere); NEXT STEPS zeigt ~5 letzte
+abgeschlossene + 5-12 offene Tasks mit zwingender Mindest-Repräsentation jedes aktiven Substreams
+(mind. 1 erledigter + 1 offener Task je Substream, auch wenn noch nicht reif); zusätzlicher
+Navigationsbereich "DMP Stream Tasks" für die Substream-Detailarbeit; bestehendes Vier-Augen-Prinzip
+und bestehende Task-Occurrences-Logik werden wiederverwendet, nicht ersetzt; E-Mail-Versand
+ausschließlich über Agent 7 (`SendChecklistEmail`), mit Vorschau vor Versand, kein zusätzliches
+Vier-Augen-Prinzip für den Versand selbst; Template-Auswahl automatisch über `EmailTemplateId`;
+manuelle Notfall-Backup-Vorlage pro E-Mail-Template gefordert (Format noch offen). Antworten auf
+alle 8 obigen Fragen sind in Abschnitt 20 des Dokuments explizit enthalten.
+
+**Abgleich gegen das echte Datenmodell (KI, 2026-09-23, aus der live `.msapr`/`DataSources.json`,
+nicht den CSV-Vorlagen):** `Task Occurrences.DueUtc` existiert bereits live (deckt Fristen/Überfälligkeit
+ab); `Role Assignments` hat bereits exakt die in Abschnitt 10 geforderten Felder (`SubStream`,
+`IsSubStreamLead`, `IsCosLeadOrDeputy`, `AllowedScreens`, `AllowedActions`); `EmailTemplateId` existiert
+bereits auf der CoS-Leader-Checkliste. **Es fehlt noch vollständig:** ein Vorgänger-/Abhängigkeits-Feld
+(kein `PredecessorTaskId`/`Dependency`/`Milestone`-Feld auf irgendeiner Liste); `SeqNo` fehlt auf
+`Checklist Overall Process` (existiert nur auf der CoS-Leader-Checkliste) — die im Dokument geforderte
+globale Reihenfolge kann aktuell nicht gespeichert werden. Das deckt sich mit Abschnitt 21 des
+Dokuments selbst, das genau diese Punkte als "noch nicht fachlich festgelegt" benennt. **Nächster
+Schritt:** vor Implementierungsbeginn mit dem Nutzer klären, welche neuen Felder/Listen für das
+Abhängigkeitsmodell angelegt werden (Regel: keine neuen Config-Felder ohne Rücksprache).
 
 ## 2. Audit Trail / Counter: Archivierung + Reset mit 4-Augen-Prinzip
 

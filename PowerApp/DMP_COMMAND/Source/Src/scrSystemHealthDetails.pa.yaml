@@ -103,522 +103,1118 @@ Screens:
                   LayoutMinHeight: =Parent.Height - 104
                   LayoutOverflowY: =LayoutOverflow.Scroll
                 Children:
-                  - conSystemHealthSectionCore:
+                  - conSystemHealthRow1:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,206,125,0.5)
-                        BorderThickness: =2
-                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        Height: =154
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
-                        Width: =Parent.Width
-                      Children:
-                        - lblHealthSectionCoreHeader:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =24
-                              Size: =15
-                              Text: ="Core Status"
-                              Width: =300
-                              Wrap: =false
-                              X: =16
-                              Y: =10
-                        - sqHealthStatusCheck:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(IsBlank(varStatusCallError) || varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =46
-                        - lblHealthStatusCheck:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Status Check - " & If(IsBlank(varStatusCallError) || varStatusCallError="", "OK", "Error")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =44
-                        - sqHealthCritical:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, RGBA(255,69,58,1), RGBA(0,206,125,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =72
-                        - lblHealthCritical:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Critical Events - " & If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, "Critical (" & Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0) & " new since reset)", "None")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =70
-                        - sqHealthWarnings:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =98
-                        - lblHealthWarnings:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Warnings - " & If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, "Warning (" & Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0) & " new since reset)", "None")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =96
-                        - sqHealthOperatingState:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedOperationalState="Red" || varLedApplicationMode="Red", RGBA(255,69,58,1), If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =124
-                        - lblHealthOperatingState:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Operating State - " & If(varLedOperationalState="Red" || varLedApplicationMode="Red", "Critical", If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", "Warning", "OK"))
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =122
-                  - conSystemHealthSectionData:
-                      Control: GroupContainer@1.5.0
-                      Variant: ManualLayout
-                      Properties:
-                        BorderColor: =RGBA(0,206,125,0.5)
-                        BorderThickness: =2
-                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                        Fill: =RGBA(0,0,0,0)
                         Height: =180
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
                         Width: =Parent.Width
                       Children:
-                        - lblHealthSectionDataHeader:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =24
-                              Size: =15
-                              Text: ="Data Sources & Files"
-                              Width: =300
-                              Wrap: =false
-                              X: =16
-                              Y: =10
-                        - sqHealthEmergencyReport:
+                        - conSystemHealthSectionCore:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedEmergencyReport="Red", RGBA(255,69,58,1), If(varLedEmergencyReport="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =46
-                        - lblHealthEmergencyReport:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Emergency Report Processing - " & If(varLedEmergencyReport="Red","Critical",If(varLedEmergencyReport="Yellow","Warning","OK")) & " (file " & If(varEmergencyReportExists,"present","missing") & ")"
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =44
-                        - sqHealthInternalDomains:
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =154
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblHealthSectionCoreHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="Core Status"
+                                    Width: =300
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - sqHealthStatusCheck:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(IsBlank(varStatusCallError) || varStatusCallError="", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =46
+                              - lblHealthStatusCheck:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Status Check - " & If(IsBlank(varStatusCallError) || varStatusCallError="", "OK", "Error")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =44
+                              - sqHealthCritical:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, RGBA(255,69,58,1), RGBA(0,206,125,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =72
+                              - lblHealthCritical:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Critical Events - " & If(Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0)>0, "Critical (" & Max(Coalesce(varAuditFailedCount, 0)-Coalesce(varCriticalCounterBaseline, 0), 0) & " new since reset)", "None")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =70
+                              - sqHealthWarnings:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =98
+                              - lblHealthWarnings:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Warnings - " & If(Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0)>0, "Warning (" & Max(Coalesce(varAuditWarningCount, 0)-Coalesce(varWarningCounterBaseline, 0), 0) & " new since reset)", "None")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =96
+                              - sqHealthOperatingState:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedOperationalState="Red" || varLedApplicationMode="Red", RGBA(255,69,58,1), If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =124
+                              - lblHealthOperatingState:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Operating State - " & If(varLedOperationalState="Red" || varLedApplicationMode="Red", "Critical", If(varLedOperationalState="Yellow" || varLedApplicationMode="Yellow", "Warning", "OK"))
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =122
+                        - conSystemHealthSectionData:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =72
-                        - lblHealthInternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Internal Domains - " & If(varInternalDomainsExists,"OK","Missing")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =70
-                        - sqHealthExternalDomains:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =98
-                        - lblHealthExternalDomains:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="External Domains - " & If(varExternalDomainsExists,"OK","Missing")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =96
-                        - sqHealthCounter:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =124
-                        - lblHealthCounter:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Counter - " & If(varCounterExists,"OK","Missing")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =122
-                        - sqHealthAuditTrail:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =150
-                        - lblHealthAuditTrail:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Audit Trail - " & If(varAuditTrailExists,"OK","Missing")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =148
-                  - conSystemHealthSectionAgents:
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =180
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =(Parent.Width-16)/2+16
+                              Y: =0
+                            Children:
+                              - lblHealthSectionDataHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="Data Sources & Files"
+                                    Width: =300
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - sqHealthEmergencyReport:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varLedEmergencyReport="Red", RGBA(255,69,58,1), If(varLedEmergencyReport="Yellow", RGBA(255,159,10,1), RGBA(0,206,125,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =46
+                              - lblHealthEmergencyReport:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Emergency Report Processing - " & If(varLedEmergencyReport="Red","Critical",If(varLedEmergencyReport="Yellow","Warning","OK")) & " (file " & If(varEmergencyReportExists,"present","missing") & ")"
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =44
+                              - sqHealthInternalDomains:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varInternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =72
+                              - lblHealthInternalDomains:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Internal Domains - " & If(varInternalDomainsExists,"OK","Missing")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =70
+                              - sqHealthExternalDomains:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varExternalDomainsExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =98
+                              - lblHealthExternalDomains:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="External Domains - " & If(varExternalDomainsExists,"OK","Missing")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =96
+                              - sqHealthCounter:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varCounterExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =124
+                              - lblHealthCounter:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Counter - " & If(varCounterExists,"OK","Missing")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =122
+                              - sqHealthAuditTrail:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varAuditTrailExists, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =150
+                              - lblHealthAuditTrail:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Audit Trail - " & If(varAuditTrailExists,"OK","Missing")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =148
+                  - conSystemHealthRow2:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
                       Properties:
-                        BorderColor: =RGBA(0,206,125,0.5)
-                        BorderThickness: =2
-                        Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        Height: =232
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =284
                         Width: =Parent.Width
                       Children:
-                        - lblHealthSectionAgentsHeader:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =24
-                              Size: =15
-                              Text: ="Agents (1-7)"
-                              Width: =300
-                              Wrap: =false
-                              X: =16
-                              Y: =10
-                        - sqHealthAgent1:
+                        - conSystemHealthSectionAgents:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =46
-                        - lblHealthAgent1:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 1 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =44
-                        - sqHealthAgent2:
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =232
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblHealthSectionAgentsHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="Agents (1-7)"
+                                    Width: =300
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - sqHealthAgent1:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =46
+                              - lblHealthAgent1:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 1 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_01").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_01").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =44
+                              - sqHealthAgent2:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =72
+                              - lblHealthAgent2:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 2 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =70
+                              - sqHealthAgent3:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =98
+                              - lblHealthAgent3:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 3 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =96
+                              - sqHealthAgent4:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =124
+                              - lblHealthAgent4:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 4 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =122
+                              - sqHealthAgent5:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =150
+                              - lblHealthAgent5:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 5 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =148
+                              - sqHealthAgent6:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varAgent6Healthy, RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =176
+                              - lblHealthAgent6:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =174
+                              - sqHealthAgent7:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =202
+                              - lblHealthAgent7:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent 7 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_07").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational","OK","Not Responding")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =200
+                        - conSystemHealthSectionConnA:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =72
-                        - lblHealthAgent2:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 2 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_02").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_02").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =70
-                        - sqHealthAgent3:
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =284
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =(Parent.Width-16)/2+16
+                              Y: =0
+                            Children:
+                              - lblHealthSectionConnAHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="Connection Diagnostics - Core & Domain Lists"
+                                    Width: =400
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - sqHealthConnConfiguration:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Configuration')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =46
+                              - lblHealthConnConfiguration:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Configuration - " & IfError(If(CountRows('DMP Command Configuration')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =44
+                              - sqHealthConnAgentStatus:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Agent Status')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =72
+                              - lblHealthConnAgentStatus:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Agent Status - " & IfError(If(CountRows('DMP Command Agent Status')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =70
+                              - sqHealthConnCounters:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Counters')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =98
+                              - lblHealthConnCounters:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Counters - " & IfError(If(CountRows('DMP Command Counters')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =96
+                              - sqHealthConnInternalDomains:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Internal Domains')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =124
+                              - lblHealthConnInternalDomains:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Internal Domains - " & IfError(If(CountRows('DMP Command Internal Domains')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =122
+                              - sqHealthConnExternalDomains:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command External Domains')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =150
+                              - lblHealthConnExternalDomains:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="External Domains - " & IfError(If(CountRows('DMP Command External Domains')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =148
+                              - sqHealthConnChecklistOverallProcess:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Checklist Overall Process')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =176
+                              - lblHealthConnChecklistOverallProcess:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Checklist Overall Process - " & IfError(If(CountRows('DMP Command Checklist Overall Process')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =174
+                              - sqHealthConnChecklistCosLeader:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Checklist CoS Leader')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =202
+                              - lblHealthConnChecklistCosLeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Checklist CoS Leader - " & IfError(If(CountRows('DMP Command Checklist CoS Leader')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =200
+                              - sqHealthConnDefaultCaseContext:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Default Case Context')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =228
+                              - lblHealthConnDefaultCaseContext:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Default Case Context - " & IfError(If(CountRows('DMP Command Default Case Context')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =226
+                              - sqHealthConnChecklistRecurrenceRules:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Checklist Recurrence Rules')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =254
+                              - lblHealthConnChecklistRecurrenceRules:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Checklist Recurrence Rules - " & IfError(If(CountRows('DMP Command Checklist Recurrence Rules')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =252
+                  - conSystemHealthRow3:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =258
+                        Width: =Parent.Width
+                      Children:
+                        - conSystemHealthSectionConnB:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =98
-                        - lblHealthAgent3:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 3 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_03").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_03").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =96
-                        - sqHealthAgent4:
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =258
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblHealthSectionConnBHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="Connection Diagnostics - Streams Lists"
+                                    Width: =400
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - sqHealthConnChecklistTaskOccurrences:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Checklist Task Occurrences')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =46
+                              - lblHealthConnChecklistTaskOccurrences:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Checklist Task Occurrences - " & IfError(If(CountRows('DMP Command Checklist Task Occurrences')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =44
+                              - sqHealthConnStatusChangeApprovals:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Status Change Approvals')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =72
+                              - lblHealthConnStatusChangeApprovals:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Status Change Approvals - " & IfError(If(CountRows('DMP Command Status Change Approvals')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =70
+                              - sqHealthConnEmailTemplates:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Email Templates')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =98
+                              - lblHealthConnEmailTemplates:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Email Templates - " & IfError(If(CountRows('DMP Command Email Templates')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =96
+                              - sqHealthConnEmailPlaceholders:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Email Placeholders')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =124
+                              - lblHealthConnEmailPlaceholders:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Email Placeholders - " & IfError(If(CountRows('DMP Command Email Placeholders')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =122
+                              - sqHealthConnRecipientGroups:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Recipient Groups')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =150
+                              - lblHealthConnRecipientGroups:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Recipient Groups - " & IfError(If(CountRows('DMP Command Recipient Groups')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =148
+                              - sqHealthConnRoleAssignments:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Role Assignments')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =176
+                              - lblHealthConnRoleAssignments:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Role Assignments - " & IfError(If(CountRows('DMP Command Role Assignments')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =174
+                              - sqHealthConnScreensCatalog:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Screens Catalog')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =202
+                              - lblHealthConnScreensCatalog:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Screens Catalog - " & IfError(If(CountRows('DMP Command Screens Catalog')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =200
+                              - sqHealthConnActionsCatalog:
+                                  Control: GroupContainer@1.5.0
+                                  Variant: ManualLayout
+                                  Properties:
+                                    Fill: =IfError(If(CountRows('DMP Command Actions Catalog')>=0,RGBA(0,206,125,1)),RGBA(255,69,58,1))
+                                    Height: =14
+                                    RadiusBottomLeft: =7
+                                    RadiusBottomRight: =7
+                                    RadiusTopLeft: =7
+                                    RadiusTopRight: =7
+                                    Width: =14
+                                    X: =17
+                                    Y: =228
+                              - lblHealthConnActionsCatalog:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                                    Font: =Font.'Arial'
+                                    Height: =18
+                                    Size: =11
+                                    Text: ="Actions Catalog - " & IfError(If(CountRows('DMP Command Actions Catalog')>=0,"reachable"),"unreachable")
+                                    Width: =Parent.Width - 56
+                                    Wrap: =false
+                                    X: =40
+                                    Y: =226
+                        - conSystemHealthConnHint:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
                             Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =124
-                        - lblHealthAgent4:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 4 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_04").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_04").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =122
-                        - sqHealthAgent5:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =150
-                        - lblHealthAgent5:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 5 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_05").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_05").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =148
-                        - sqHealthAgent6:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(varAgent6Healthy, RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =176
-                        - lblHealthAgent6:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 6 - " & If(varAgent6Healthy,"OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =174
-                        - sqHealthAgent7:
-                            Control: GroupContainer@1.5.0
-                            Variant: ManualLayout
-                            Properties:
-                              Fill: =If(IsBlank(varStatusLastRefreshed), RGBA(150,150,158,1), If(varIsRefreshing, If(varBlinkPhase, RGBA(255,159,10,1), RGBA(255,159,10,0.25)), If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational", RGBA(0,206,125,1), RGBA(255,69,58,1))))
-                              Height: =14
-                              RadiusBottomLeft: =7
-                              RadiusBottomRight: =7
-                              RadiusTopLeft: =7
-                              RadiusTopRight: =7
-                              Width: =14
-                              X: =17
-                              Y: =202
-                        - lblHealthAgent7:
-                            Control: Label@2.5.1
-                            Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
-                              Font: =Font.'Arial'
-                              Height: =18
-                              Size: =11
-                              Text: ="Agent 7 - " & LookUp('DMP Command Agent Status', AgentKey="Agent_07").AgentDisplayName & " - " & If(LookUp('DMP Command Agent Status', AgentKey="Agent_07").CurrentStatus.Value="Operational","OK","Not Responding")
-                              Width: =Parent.Width - 56
-                              Wrap: =false
-                              X: =40
-                              Y: =200
+                              BorderColor: =RGBA(0,206,125,0.5)
+                              BorderThickness: =2
+                              Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
+                              Height: =258
+                              RadiusBottomLeft: =12
+                              RadiusBottomRight: =12
+                              RadiusTopLeft: =12
+                              RadiusTopRight: =12
+                              Width: =(Parent.Width-16)/2
+                              X: =(Parent.Width-16)/2+16
+                              Y: =0
+                            Children:
+                              - lblSystemHealthConnHintHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(0,206,125,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =24
+                                    Size: =15
+                                    Text: ="About the dots above"
+                                    Width: =400
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =10
+                              - lblSystemHealthConnHintBody:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
+                                    Font: =Font.'Arial'
+                                    Height: =202
+                                    Size: =11
+                                    Text: ="A red dot means the app itself lost its own SharePoint connection to that list - refresh the app or check the connection under Power Apps > Settings. It does not necessarily mean the list itself is broken or that other users are affected."
+                                    Width: =Parent.Width - 32
+                                    Wrap: =true
+                                    X: =16
+                                    Y: =44

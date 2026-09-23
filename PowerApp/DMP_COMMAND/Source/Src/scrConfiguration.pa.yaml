@@ -118,21 +118,35 @@ Screens:
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionCoreHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionCoreHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Core Runtime Configuration & Monitoring"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionCoreHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Core Runtime Configuration & Monitoring"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowConfiguration:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -144,8 +158,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileConfigurationName:
                             Control: Label@2.5.1
                             Properties:
@@ -154,13 +168,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Configuration"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Configuration"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileConfigurationCount:
                             Control: Label@2.5.1
                             Properties:
@@ -168,13 +182,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Configuration', Active.Value = "Yes"))
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileConfigurationView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -195,9 +209,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Runtime configuration parameters used by the agents (Mode, Environment, thresholds, ...)"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileConfigurationNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -216,10 +230,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowAgentStatus:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -231,8 +245,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileAgentStatusName:
                             Control: Label@2.5.1
                             Properties:
@@ -241,13 +255,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Agent Status"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Agent Status"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileAgentStatusCount:
                             Control: Label@2.5.1
                             Properties:
@@ -255,13 +269,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Agent Status')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileAgentStatusView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -282,9 +296,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Live status/health rows written by each agent - see the Agent Monitoring page for a friendlier view"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((Parent.Width-68)/4)-20
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - dotConfigRowCounters:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -296,8 +310,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =108
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileCountersName:
                             Control: Label@2.5.1
                             Properties:
@@ -306,13 +320,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Counters"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Counters"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileCountersCount:
                             Control: Label@2.5.1
                             Properties:
@@ -320,13 +334,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Counters')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileCountersView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -347,9 +361,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Shared reference-number and cross-agent counters (see Admin Functions for resets)"
-                              Width: =60
-                              X: =600
-                              Y: =102
+                              Width: =((Parent.Width-68)/4)-20
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                   - conConfigSectionDomain:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -358,28 +372,42 @@ Screens:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        Height: =110
+                        Height: =140
                         RadiusBottomLeft: =18
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionDomainHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionDomainHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Domain Classification"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionDomainHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Domain Classification"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowInternalDomains:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -391,8 +419,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileInternalDomainsName:
                             Control: Label@2.5.1
                             Properties:
@@ -401,13 +429,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Internal Domains"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Internal Domains"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileInternalDomainsCount:
                             Control: Label@2.5.1
                             Properties:
@@ -415,13 +443,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Active rows:" & " " & CountRows(Filter('DMP Command Internal Domains', Active.Value = "Yes"))
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileInternalDomainsView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -442,9 +470,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Domains treated as internal (Deutsche Boerse) by Agent 1 and Agent 2's classification logic"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileInternalDomainsNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -463,10 +491,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowExternalDomains:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -478,8 +506,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileExternalDomainsName:
                             Control: Label@2.5.1
                             Properties:
@@ -488,13 +516,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command External Domains"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="External Domains"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileExternalDomainsCount:
                             Control: Label@2.5.1
                             Properties:
@@ -502,13 +530,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Active rows:" & " " & CountRows(Filter('DMP Command External Domains', Active.Value = "Yes"))
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileExternalDomainsView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -529,9 +557,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Domains treated as external by Agent 1 and Agent 2's classification logic"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileExternalDomainsNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -550,10 +578,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =72
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                   - conConfigSectionProcess:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -562,28 +590,42 @@ Screens:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        Height: =110
+                        Height: =140
                         RadiusBottomLeft: =18
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionProcessHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionProcessHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Streams - Process & Checklists"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionProcessHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Streams - Process & Checklists"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowOverallProcess:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -595,8 +637,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileOverallProcessName:
                             Control: Label@2.5.1
                             Properties:
@@ -605,13 +647,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Checklist Overall Process"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Checklist Overall Process"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileOverallProcessCount:
                             Control: Label@2.5.1
                             Properties:
@@ -619,13 +661,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Overall Process')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileOverallProcessView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -646,9 +688,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Master status overview linking each Streams sub-checklist by TaskID"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileOverallProcessNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -667,10 +709,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowCosLeader:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -682,8 +724,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileCosLeaderName:
                             Control: Label@2.5.1
                             Properties:
@@ -692,13 +734,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Checklist CoS Leader"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Checklist CoS Leader"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileCosLeaderCount:
                             Control: Label@2.5.1
                             Properties:
@@ -706,13 +748,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Checklist CoS Leader')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileCosLeaderView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -733,9 +775,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="CoS Leader working checklist; status changes require four-eyes confirmation"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileCosLeaderNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -754,10 +796,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =72
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                   - conConfigSectionScheduling:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -766,28 +808,42 @@ Screens:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =3
                         Fill: =If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05))
-                        Height: =170
+                        Height: =140
                         RadiusBottomLeft: =18
                         RadiusBottomRight: =18
                         RadiusTopLeft: =18
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionSchedulingHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionSchedulingHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Streams - Case & Scheduling"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionSchedulingHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Streams - Case & Scheduling"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowDefaultCaseContext:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -799,8 +855,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileDefaultCaseContextName:
                             Control: Label@2.5.1
                             Properties:
@@ -809,13 +865,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Default Case Context"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Default Case Context"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileDefaultCaseContextCount:
                             Control: Label@2.5.1
                             Properties:
@@ -823,13 +879,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Default Case Context')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileDefaultCaseContextView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -850,9 +906,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Case-specific context (member, termination reason/date) captured via the B3 popup"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileDefaultCaseContextNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -871,10 +927,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowRecurrenceRules:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -886,8 +942,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileRecurrenceRulesName:
                             Control: Label@2.5.1
                             Properties:
@@ -896,13 +952,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Checklist Recurrence Rules"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Checklist Recurrence Rules"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileRecurrenceRulesCount:
                             Control: Label@2.5.1
                             Properties:
@@ -910,13 +966,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Recurrence Rules')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileRecurrenceRulesView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -937,9 +993,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Rules driving Agent 7's automatic generation of recurring Task Occurrences"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileRecurrenceRulesNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -958,10 +1014,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =72
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowTaskOccurrences:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -973,8 +1029,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =108
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileTaskOccurrencesName:
                             Control: Label@2.5.1
                             Properties:
@@ -983,13 +1039,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Checklist Task Occurrences"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Checklist Task Occurrences"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileTaskOccurrencesCount:
                             Control: Label@2.5.1
                             Properties:
@@ -997,13 +1053,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Checklist Task Occurrences')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileTaskOccurrencesView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1024,9 +1080,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Recurring task instances - see the dedicated Task Occurrences page for the working view"
-                              Width: =60
-                              X: =600
-                              Y: =102
+                              Width: =((Parent.Width-68)/4)-20
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - dotConfigRowStatusChangeApprovals:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1038,8 +1094,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =138
+                              X: =16+3*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileStatusChangeApprovalsName:
                             Control: Label@2.5.1
                             Properties:
@@ -1048,13 +1104,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Status Change Approvals"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Status Change Approvals"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =134
+                              X: =16+3*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileStatusChangeApprovalsCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1062,13 +1118,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Status Change Approvals')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =134
+                              X: =16+3*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileStatusChangeApprovalsView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1089,9 +1145,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Four-eyes approval records for checklist status changes across all Streams"
-                              Width: =60
-                              X: =600
-                              Y: =132
+                              Width: =((Parent.Width-68)/4)-20
+                              X: =16+3*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                   - conConfigSectionComms:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -1107,21 +1163,35 @@ Screens:
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionCommsHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionCommsHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Streams - Communication"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionCommsHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Streams - Communication"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowEmailTemplates:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1133,8 +1203,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileEmailTemplatesName:
                             Control: Label@2.5.1
                             Properties:
@@ -1143,13 +1213,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Email Templates"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Email Templates"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileEmailTemplatesCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1157,13 +1227,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Email Templates')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileEmailTemplatesView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1184,9 +1254,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Parameterized {{placeholder}} e-mail templates used by the Streams checklists"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileEmailTemplatesNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1205,10 +1275,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowEmailPlaceholders:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1220,8 +1290,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileEmailPlaceholdersName:
                             Control: Label@2.5.1
                             Properties:
@@ -1230,13 +1300,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Email Placeholders"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Email Placeholders"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileEmailPlaceholdersCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1244,13 +1314,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Email Placeholders')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileEmailPlaceholdersView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1271,9 +1341,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Catalog of valid {{placeholder}} keys used in Email Templates"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileEmailPlaceholdersNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1292,10 +1362,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =72
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowRecipientGroups:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1307,8 +1377,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =108
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileRecipientGroupsName:
                             Control: Label@2.5.1
                             Properties:
@@ -1317,13 +1387,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Recipient Groups"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Recipient Groups"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileRecipientGroupsCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1331,13 +1401,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Recipient Groups')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileRecipientGroupsView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1358,9 +1428,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Collective mailbox addresses referenced by Email Templates"
-                              Width: =60
-                              X: =600
-                              Y: =102
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileRecipientGroupsNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1379,10 +1449,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =102
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                   - conConfigSectionAccess:
                       Control: GroupContainer@1.5.0
                       Variant: ManualLayout
@@ -1398,21 +1468,35 @@ Screens:
                         RadiusTopRight: =18
                         Width: =Parent.Width
                       Children:
-                        - lblConfigSectionAccessHeader:
-                            Control: Label@2.5.1
+                        - conConfigSectionAccessHeaderBar:
+                            Control: GroupContainer@1.5.0
+                            Variant: ManualLayout
                             Properties:
-                              BorderColor: =RGBA(0,0,0,0)
-                              BorderStyle: =BorderStyle.None
-                              Color: =RGBA(0,206,125,1)
-                              Font: =Font.'Arial'
-                              FontWeight: =FontWeight.Bold
-                              Height: =22
-                              Size: =14
-                              Text: ="Streams - Access Control & Catalogs"
-                              Width: =500
-                              Wrap: =false
-                              X: =16
-                              Y: =10
+                              Fill: =RGBA(32,23,81,1)
+                              Height: =32
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =18
+                              RadiusTopRight: =18
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                            Children:
+                              - lblConfigSectionAccessHeader:
+                                  Control: Label@2.5.1
+                                  Properties:
+                                    BorderColor: =RGBA(0,0,0,0)
+                                    BorderStyle: =BorderStyle.None
+                                    Color: =RGBA(255,255,255,1)
+                                    Font: =Font.'Arial'
+                                    FontWeight: =FontWeight.Bold
+                                    Height: =22
+                                    Size: =13
+                                    Text: ="Streams - Access Control & Catalogs"
+                                    Width: =Parent.Width - 32
+                                    Wrap: =false
+                                    X: =16
+                                    Y: =5
                         - dotConfigRowRoleAssignments:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1424,8 +1508,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =48
+                              X: =16+10
+                              Y: =52
                         - lblConfigTileRoleAssignmentsName:
                             Control: Label@2.5.1
                             Properties:
@@ -1434,13 +1518,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Role Assignments"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Role Assignments"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =44
+                              X: =16+26
+                              Y: =48
                         - lblConfigTileRoleAssignmentsCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1448,13 +1532,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Role Assignments')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =44
+                              X: =16+10
+                              Y: =72
                         - btnConfigTileRoleAssignmentsView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1475,9 +1559,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Per-person screen/action permissions for the Streams checklists"
-                              Width: =60
-                              X: =600
-                              Y: =42
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10
+                              Y: =92
                         - btnConfigTileRoleAssignmentsNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1496,10 +1580,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =42
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowScreensCatalog:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1511,8 +1595,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =78
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileScreensCatalogName:
                             Control: Label@2.5.1
                             Properties:
@@ -1521,13 +1605,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Screens Catalog"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Screens Catalog"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileScreensCatalogCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1535,13 +1619,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Screens Catalog')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =74
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileScreensCatalogView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1562,9 +1646,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Catalog of selectable screen names used by Role Assignments"
-                              Width: =60
-                              X: =600
-                              Y: =72
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileScreensCatalogNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1583,10 +1667,10 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =72
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+1*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
                         - dotConfigRowActionsCatalog:
                             Control: GroupContainer@1.5.0
                             Variant: ManualLayout
@@ -1598,8 +1682,8 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Width: =12
-                              X: =16
-                              Y: =108
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =52
                         - lblConfigTileActionsCatalogName:
                             Control: Label@2.5.1
                             Properties:
@@ -1608,13 +1692,13 @@ Screens:
                               Color: =RGBA(0,206,125,1)
                               Font: =Font.'Arial'
                               FontWeight: =FontWeight.Semibold
-                              Height: =20
-                              Size: =11
-                              Text: ="DMP Command Actions Catalog"
-                              Width: =360
+                              Height: =16
+                              Size: =10
+                              Text: ="Actions Catalog"
+                              Width: =((Parent.Width-68)/4)-34
                               Wrap: =false
-                              X: =36
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+26
+                              Y: =48
                         - lblConfigTileActionsCatalogCount:
                             Control: Label@2.5.1
                             Properties:
@@ -1622,13 +1706,13 @@ Screens:
                               BorderStyle: =BorderStyle.None
                               Color: =If(varDarkMode,RGBA(154,154,160,1),RGBA(90,88,100,1))
                               Font: =Font.'Arial'
-                              Height: =20
-                              Size: =10
+                              Height: =14
+                              Size: =9
                               Text: ="Total rows:" & " " & CountRows('DMP Command Actions Catalog')
-                              Width: =190
+                              Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
-                              X: =400
-                              Y: =104
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =72
                         - btnConfigTileActionsCatalogView:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1649,9 +1733,9 @@ Screens:
                               Size: =10
                               Text: ="View"
                               Tooltip: ="Catalog of selectable action names used by Role Assignments"
-                              Width: =60
-                              X: =600
-                              Y: =102
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10
+                              Y: =92
                         - btnConfigTileActionsCatalogNew:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -1670,7 +1754,7 @@ Screens:
                               RadiusTopLeft: =6
                               RadiusTopRight: =6
                               Size: =10
-                              Text: ="New Entry"
-                              Width: =70
-                              X: =668
-                              Y: =102
+                              Text: ="New"
+                              Width: =((((Parent.Width-68)/4)-28)/2)
+                              X: =16+2*(((Parent.Width-68)/4)+12)+10+(((((Parent.Width-68)/4)-28)/2))+8
+                              Y: =92
