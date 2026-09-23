@@ -37,7 +37,7 @@ Nutzer hat `DMP Command Default Case Context` UND `DMP Command Checklist Task Oc
 
 **Noch offen:**
 1. ~~Power App `DMP_COMMAND.msapp` (v1.22.28) muss vom Nutzer in Studio geladen/gespeichert/bestätigt werden.~~ Erledigt - Nutzer hat geladen, Datenquellen ergänzt, gespeichert und veröffentlicht (siehe v1.22.29-Eintrag oben).
-2. ~~Solution 7.34.67 muss importiert werden~~ Von der KI selbst importiert/veröffentlicht (siehe Regel-Korrektur). Weiterhin offen: Agent 1,2,3,4,5,6 müssen vom Nutzer jeweils einmal im Power-Automate-Designer geöffnet/gespeichert werden (erwartetes "deactivated and replaced").
+2. ~~Solution 7.34.67 muss importiert werden~~ Von der KI selbst importiert/veröffentlicht (siehe Regel-Korrektur). **Update 2026-09-23:** Nutzer hat bestätigt, die Agenten waren (weiterhin) aktiv - diesmal war entgegen früherer Sessions KEIN manuelles Öffnen/Speichern im Power-Automate-Designer nötig. Erledigt.
 3. B5 ist damit fachlich korrigiert, aber die ursprüngliche B5-Idee (Agent-2-Mapping über eine `EffectiveMode`-Konfigurationszeile) wurde NICHT umgesetzt - stattdessen wurden die echten neuen B1-Spalten direkt eingebunden (technisch der robustere Weg, da SIMU Pre-/Post-Default eigene Werte brauchen). Der in Backlog/Guide erwähnte Parameter `Agent2EffectiveModeMapping` existiert nicht als echte Config-Zeile und wird nicht mehr benötigt - aus Doku entfernen, sobald dieser Fund final bestätigt ist.
 4. B4 (Agent 5 ruft bei DMP-Übergang zuerst Agent-7-Aktion `SetDefaultCaseContext` auf) weiterhin offen - diese Agent-7-Aktion existiert noch nicht.
 

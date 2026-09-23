@@ -35,9 +35,10 @@ again without re-raising this history first.
   mismatch; fixed (file now `v1.22.29`) and the rule reinforced in the Mission doc.
 - **v1.22.28 confirmed by the user:** loaded, new data sources added, saved and published in
   Studio. Rule 9b backup rotated to `DMP_COMMAND_v1.22.28.msapp` (replacing `v1.22.27`).
-- **Solution `7.34.67` imported and published by the AI** (not the user). Still open: the 6
-  changed flows (Agent 1,2,3,4,5,6) need one open+save each in the Power Automate designer
-  ("deactivated and replaced") - genuinely no CLI equivalent found, real user action.
+- **Solution `7.34.67` imported and published by the AI** (not the user). **Update:** the user
+  confirmed all 6 changed flows (Agent 1,2,3,4,5,6) stayed active - this time no manual
+  open+save in the Power Automate designer was needed (unlike some earlier sessions' Agent 7
+  incidents). Do not assume this is guaranteed for every future import - keep checking/asking.
 - **B3 + Task Occurrences (C6/C7) now live-wired, packed as `v1.22.29`:** the user added `DMP
   Command Default Case Context` AND `DMP Command Checklist Task Occurrences` (plus several
   other Streams lists) as real data sources in Studio. The AI downloaded the just-published live
