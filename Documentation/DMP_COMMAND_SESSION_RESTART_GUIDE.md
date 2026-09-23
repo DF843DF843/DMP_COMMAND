@@ -439,7 +439,7 @@ After every deployment:
 2. State version numbers before/after.
 3. State validation performed.
 4. State the required live test.
-5. Remind the user to continue in a new session to reduce token/credit usage.
+5. Remind the user to continue in a new session to reduce token/credit usage, AND output a ready-to-paste handover prompt (see the Mission/Working Rules doc, "NEUE REGEL" 2026-09-23) — this applies at the end of every session with DMP COMMAND changes, not only after a deployment.
 
 ## Current important state as of 2026-09-22 07:52
 
