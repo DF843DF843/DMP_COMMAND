@@ -532,7 +532,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =14
                               Size: =9
-                              Text: ="Active rows:" & " " & CountRows(Filter('DMP Command External Domains', Active.Value = "Yes"))
+                              Text: ="Total rows:" & " " & CountRows('DMP Command External Domains')
                               Width: =((Parent.Width-68)/4)-20
                               Wrap: =false
                               X: =16+1*(((Parent.Width-68)/4)+12)+10

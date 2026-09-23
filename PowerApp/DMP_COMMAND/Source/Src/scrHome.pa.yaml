@@ -148,7 +148,7 @@ Screens:
                 "PredecessorsOkCalc", If(
                     IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
                     true,
-                    CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                    CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Value)).Status.Value <> "Done")) = 0
                 )
             )
         );
@@ -843,7 +843,7 @@ Screens:
                                         "PredecessorsOkCalc", If(
                                             IsBlank(OverallProcessMatch) || IsBlank(OverallProcessMatch.PredecessorTaskIds) || OverallProcessMatch.PredecessorTaskIds = "",
                                             true,
-                                            CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Result)).Status.Value <> "Done")) = 0
+                                            CountRows(Filter(Split(OverallProcessMatch.PredecessorTaskIds, ";"), LookUp('DMP Command Checklist CoS Leader', Title = Trim(Value)).Status.Value <> "Done")) = 0
                                         )
                                     )
                                 );

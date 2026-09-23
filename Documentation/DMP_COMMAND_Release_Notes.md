@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.34 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+### v1.22.35 - 2026-09-23 (current, NOT tested by the user - session ended before Studio reload)
+
+- **Fixed a second v1.22.33/34 compile bug:** the `PredecessorTaskIds` check used `Split(...)`'s single-column result table with the wrong implicit column name `Result` - the correct name is `Value` (confirmed against the Power Fx documentation). This is likely why the 5 red error badges persisted even after v1.22.34's `AddColumns` fix. Fixed in both `OnVisible` and `tmrCosLeaderNextStepsRefresh`.
+- **Fixed a genuine, pre-existing Configuration (Lists) bug, confirmed by the user:** `DMP Command External Domains` has no `Active` column by design (Agent 1 fully rewrites the list on every Emergency Report extraction) - the count formula incorrectly filtered on `Active.Value = "Yes"` anyway. Changed to a plain `Total rows` count. Updated the Operations Manual and in-app Operational Manual notes to match.
+- **Still open:** the blue KPI change-notification LED blinking the user reported alongside the v1.22.33 errors has not been root-caused; please re-check whether it is still present once v1.22.35 loads without errors.
+- **This version was not loaded/tested in Studio before the session ended** - next session should start by asking the user to load `v1.22.35` and report the current App Checker state.
+
+### v1.22.34 - 2026-09-23 (superseded by v1.22.35 above - 5 error badges remained)
 
 - **Fixed v1.22.33 compile errors (108 App-Checker errors):** the nested `AddColumns(AddColumns(AddColumns(...)))` expression used to build the Next Steps collection did not compile in Studio (`AddColumns` column formulas can only see the original source table's own columns, never a column added by a nested/chained `AddColumns` used as its `Source` argument - even one level deep). Rebuilt as 3 separate materialized stages (`colCosLeaderStage1` → `colCosLeaderStage2` → `colCosLeaderNextSteps`), each a real `ClearCollect`'d collection before the next stage references it.
 - **Separately found (not caused by this session's changes):** the live `DMP Command External Domains` SharePoint list currently has no `Active` column at all - only became visible once the app's data source schema was refreshed this session. Flagged for investigation (Agent 1 recreates this list on every Emergency Report extraction).

@@ -10,6 +10,18 @@
 
 ---
 
+## 🟠 v1.22.35 (2026-09-23, lokal gepackt, NICHT mehr im Studio getestet — Sitzungsende) — zweiter v1.22.34-Fix (Split()-Spaltenname) + echter External-Domains-Bug behoben
+
+Nutzer: v1.22.34 geladen — die 5 roten Fehler-Badges waren weiterhin da, ebenso das blaue Blinken der KPI-Change-LEDs. Nutzer hat zudem bestätigt: `DMP Command External Domains` hat **per Design kein** `Active`-Feld (Liste wird bei jeder Emergency-Report-Extraktion komplett neu geschrieben) — der 3-Fehler-Fund aus v1.22.33/34 war also ein echter, vorbestehender App-Bug, keine Fehlinterpretation.
+
+1. **Zweite Ursache für die 5 Fehler-Badges gefunden:** `Split(Text, Separator)` gibt laut offizieller Power-Fx-Doku eine Tabelle mit Spaltenname **`Value`** zurück — die Formel aus v1.22.33/34 verwendete fälschlich **`Result`** (`Filter(Split(...), LookUp(...Title = Trim(Result))...)`). Das dürfte der eigentliche, bisher unentdeckte Grund sein, warum die Fehler nach dem AddColumns-Fix (v1.22.34) weiterhin bestanden — der AddColumns-Fix allein war korrekt, aber die Formel scheiterte danach an dieser zweiten, unabhängigen Stelle. Behoben in `OnVisible` und `tmrCosLeaderNextStepsRefresh`.
+2. **Echter External-Domains-Bug behoben:** `lblConfigTileExternalDomainsCount` filterte auf `Active.Value = "Yes"`, obwohl die Liste dieses Feld nie hatte (Nutzer-Bestätigung). Auf schlichtes `"Total rows:" & CountRows(...)` umgestellt (gleiches Muster wie bei allen anderen Listen ohne `Active`-Spalte). Operations Manual (§3.5-Tabelle + Panel-Beschreibung) und die in-App-Beschreibung (`scrOperationalBoard.pa.yaml`) entsprechend korrigiert.
+3. **Blaues Blinken:** Ursache weiterhin nicht bestätigt — bleibt ein offener Beobachtungspunkt für die nächste Sitzung, nachdem beide obigen Fixes greifen.
+4. Kontrollen vor Auslieferung: App-weite Control-Namens-Eindeutigkeit (869 Namen, 0 Duplikate), `": "`-Regex-Scan (0 Treffer), Pack→Unpack-Rückvergleich (0 Diff auf allen 5 geänderten Dateien).
+5. `PowerApp_Version.txt` auf `v1.22.35` aktualisiert. Regel 9b: Backup bleibt bei `DMP_COMMAND_v1.22.32.msapp` (v1.22.33/34/35 alle noch nicht vom Nutzer bestätigt ladend). Solution unverändert bei `7.34.67`. **Sitzung endete hier auf Wunsch des Nutzers — v1.22.35 wurde NICHT mehr in Studio getestet.**
+
+---
+
 ## 🟠 v1.22.34 (2026-09-23, lokal gepackt) — v1.22.33-Fix: verschachteltes AddColumns durch materialisierte Zwischen-Collections ersetzt
 
 Nutzer hat `v1.22.33` in Studio geladen — **108 App-Checker-Fehler** (5 rote Badges): "Die Funktion „AddColumns" weist ungültige Argumente auf" / "Der Name ist ungültig. „OverallProcessMatch"/„IsDoneCalc" wird nicht erkannt", außerdem Vermutung, ein neuer Timer lasse die blauen KPI-Change-LEDs (Critical/Warnings/Agents Active) blinken.
