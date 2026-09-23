@@ -244,6 +244,31 @@ Screens:
                         RadiusTopLeft: =12
                         RadiusTopRight: =12
                       Children:
+                        - lblReleaseV12228Header:
+                            Control: Label@2.5.1
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =RGBA(0,206,125,1)
+                              Font: =Font.'Arial'
+                              FontWeight: =FontWeight.Bold
+                              Height: =26
+                              Size: =16
+                              Text: ="v1.22.28 - 2026-09-23 (current, not yet loaded/saved by user in Studio)"
+                              Wrap: =false
+                        - lblReleaseV12228Notes:
+                            Control: Label@2.5.1
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
+                              Font: =Font.'Arial'
+                              Height: =220
+                              Size: =12
+                              Text: |-
+                                ="- Admin Functions - removed the temporary 'TIMESTAMP DEBUG' panel (conFuncTimestampDebug) added in v1.22.21 to diagnose the Audit Trail year-3926 timestamp bug; that bug's root cause was found and user-confirmed fixed, so the panel is no longer needed and has been torn out again" & Char(10) & "- B1 (DMP Command Configuration - 4 new Pre-/Post-Default value columns) confirmed complete: the user confirmed the columns are live in the real SharePoint list, and a full programmatic check of DMP Command Configuration.csv found no gaps caused by the B1 extension (5 unrelated, pre-existing empty '...OpenUrl' rows logged separately in the Backlog)" & Char(10) & "- B5 real bug found and fixed in all 6 non-Agent-7 flows (see Agent tab, v1.0.9/1.0.10/1.1.5/1.4.5/1.1.7/1.3.2): the mode-dependent Configuration value lookup only knew 4 modes and silently fell through to the SIMU_DMP column whenever the app was in Pre-Default or Post-Default - fixed using the real SharePoint internal field names for the 4 new B1 columns, confirmed via a live GET_DMP_Command_Configuration run export" & Char(10) & "- Agent 2 - added explicit maximumWaitingRuns=100 on the shared-mailbox trigger (previously implicit default 10); degree of parallelism intentionally left at 1 (sequential) to protect the shared counter increment from race conditions"
+                              Wrap: =true
                         - lblReleaseV12227Header:
                             Control: Label@2.5.1
                             Properties:
@@ -254,7 +279,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="v1.22.27 - 2026-09-22 (current, not yet loaded/saved by user in Studio)"
+                              Text: ="v1.22.27 - 2026-09-22 (confirmed working by the user; superseded by v1.22.28 above for the Admin Diagnostics cleanup)"
                               Wrap: =false
                         - lblReleaseV12227Notes:
                             Control: Label@2.5.1
@@ -1864,7 +1889,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 2 (E-Mail Inbox Treatment) - v1.0.9 (current)"
+                              Text: ="Agent 2 (E-Mail Inbox Treatment) - v1.0.10 (current)"
                               Wrap: =false
                         - lblAgentNote2Notes:
                             Control: Label@2.5.1
@@ -1877,7 +1902,7 @@ Screens:
                               Height: =400
                               Size: =12
                               Text: |-
-                                ="- v1.0.9 (2026-09-04) - Hotfix for invalid inline @select(...) expressions in internal/external domains classification; both parse actions now use real Query/Filter-array operations, and a mandatory critical technical main-flow failure alert e-mail [EC:A2-MAINFLOW-FAILED] was added" & Char(10) & "- v1.0.8 (2026-09-02) - Counter increment and external domains read now use the ""DMP Command Counters""/""DMP Command External Domains"" SharePoint lists instead of Counter.xlsx/External_Domains.txt. Follow-up finding: the attempted runtime-crash fix using select() was invalid in Power Automate expressions and is superseded by v1.0.9" & Char(10) & "- v1.0.7 (2026-09-01) - Internal sender classification now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail" & Char(10) & "- v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting"
+                                ="- v1.0.10 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns. Trigger: explicit maximumWaitingRuns=100 added for the shared-mailbox trigger (previously implicit default 10); degree of parallelism stays at 1 (sequential) to protect the shared counter increment from race conditions" & Char(10) & "- v1.0.9 (2026-09-04) - Hotfix for invalid inline @select(...) expressions in internal/external domains classification; both parse actions now use real Query/Filter-array operations, and a mandatory critical technical main-flow failure alert e-mail [EC:A2-MAINFLOW-FAILED] was added" & Char(10) & "- v1.0.8 (2026-09-02) - Counter increment and external domains read now use the ""DMP Command Counters""/""DMP Command External Domains"" SharePoint lists instead of Counter.xlsx/External_Domains.txt. Follow-up finding: the attempted runtime-crash fix using select() was invalid in Power Automate expressions and is superseded by v1.0.9" & Char(10) & "- v1.0.7 (2026-09-01) - Internal sender classification now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail" & Char(10) & "- v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting"
                               Wrap: =true
                   - conAgentNote4:
                       Control: GroupContainer@1.5.0
@@ -1910,7 +1935,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 4 (Status Check) - v1.4.4 (current)"
+                              Text: ="Agent 4 (Status Check) - v1.4.5 (current)"
                               Wrap: =false
                         - lblAgentNote4Notes:
                             Control: Label@2.5.1
@@ -1922,7 +1947,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =300
                               Size: =12
-                              Text: ="- v1.4.4 (2026-09-04) - Fixed 2 separate bugs found via the real flow run history - (1) the Audit Trail read now requests dateTimeFormat=ISO 8601 like every write action already does, instead of returning raw Excel serial numbers for TimestampUtc; (2) replaced 6 uses of the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) in the Counter card and Critical/Warning baseline reads with proper Query actions - this was silently breaking the No DMP/Internal Sender/Not Effected/Effected counters and both baseline reads" & Char(10) & "- v1.4.3 (2026-09-03) - Fixed the Internal/External Domains and Counter ""Last Updated"" fields silently failing every run (""The template function 'select' is not defined or not valid"") - replaced the select()/max() expression with a simple $orderby=Modified desc on the existing list read, no extra API call needed" & Char(10) & "- v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature" & Char(10) & "- v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the ""DMP Command Counters""/""DMP Command External Domains"" SharePoint lists instead of Counter.xlsx/External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating" & Char(10) & "- v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page" & Char(10) & "- v1.3.0 (2026-09-01) - Internal Domains status check now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before"
+                              Text: ="- v1.4.5 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns" & Char(10) & "- v1.4.4 (2026-09-04) - Fixed 2 separate bugs found via the real flow run history - (1) the Audit Trail read now requests dateTimeFormat=ISO 8601 like every write action already does, instead of returning raw Excel serial numbers for TimestampUtc; (2) replaced 6 uses of the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) in the Counter card and Critical/Warning baseline reads with proper Query actions - this was silently breaking the No DMP/Internal Sender/Not Effected/Effected counters and both baseline reads" & Char(10) & "- v1.4.3 (2026-09-03) - Fixed the Internal/External Domains and Counter ""Last Updated"" fields silently failing every run (""The template function 'select' is not defined or not valid"") - replaced the select()/max() expression with a simple $orderby=Modified desc on the existing list read, no extra API call needed" & Char(10) & "- v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature" & Char(10) & "- v1.4.1 (2026-09-02) - Counter and External Domains status checks now read the ""DMP Command Counters""/""DMP Command External Domains"" SharePoint lists instead of Counter.xlsx/External_Domains.txt - fixes the Cockpit's Emails Processed counter and External Domains status not updating" & Char(10) & "- v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page" & Char(10) & "- v1.3.0 (2026-09-01) - Internal Domains status check now reads the ""DMP Command Internal Domains"" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before"
                               Wrap: =true
                   - conAgentNote1:
                       Control: GroupContainer@1.5.0
@@ -1955,7 +1980,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 1 (Domains Extraction) - v1.0.8 (current)"
+                              Text: ="Agent 1 (Domains Extraction) - v1.0.9 (current)"
                               Wrap: =false
                         - lblAgentNote1Notes:
                             Control: Label@2.5.1
@@ -1967,7 +1992,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =300
                               Size: =12
-                              Text: ="- v1.0.8 (2026-09-02) - External domains write now uses a full-sync rewrite (delete all rows, then create one row per extracted domain) against the ""DMP Command External Domains"" SharePoint list instead of writing External_Domains.txt" & Char(10) & "- Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added (feeds the Cockpit's Critical/Warning/Total-runs figures via Agent 4)" & Char(10) & "- 2026-08-13 - renumbered from ""Agent 1"" (unchanged number, but part of the system-wide sequential renumbering and Select+Join config-loading rebuild applied to all agents)"
+                              Text: ="- v1.0.9 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns" & Char(10) & "- v1.0.8 (2026-09-02) - External domains write now uses a full-sync rewrite (delete all rows, then create one row per extracted domain) against the ""DMP Command External Domains"" SharePoint list instead of writing External_Domains.txt" & Char(10) & "- Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added (feeds the Cockpit's Critical/Warning/Total-runs figures via Agent 4)" & Char(10) & "- 2026-08-13 - renumbered from ""Agent 1"" (unchanged number, but part of the system-wide sequential renumbering and Select+Join config-loading rebuild applied to all agents)"
                               Wrap: =true
                   - conAgentNote3:
                       Control: GroupContainer@1.5.0
@@ -2000,7 +2025,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 3 (Emergency Report Management) - v1.1.4 (current)"
+                              Text: ="Agent 3 (Emergency Report Management) - v1.1.5 (current)"
                               Wrap: =false
                         - lblAgentNote3Notes:
                             Control: Label@2.5.1
@@ -2012,7 +2037,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =300
                               Size: =12
-                              Text: ="- Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.01"" as part of the system-wide sequential renumbering"
+                              Text: ="- v1.1.5 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns" & Char(10) & "- Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.01"" as part of the system-wide sequential renumbering"
                               Wrap: =true
                   - conAgentNote5:
                       Control: GroupContainer@1.5.0
@@ -2045,7 +2070,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 5 (Operational State Management) - v1.1.6 (current)"
+                              Text: ="Agent 5 (Operational State Management) - v1.1.7 (current)"
                               Wrap: =false
                         - lblAgentNote5Notes:
                             Control: Label@2.5.1
@@ -2057,7 +2082,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =300
                               Size: =12
-                              Text: ="- Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.03 (YES File Management)"" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value"
+                              Text: ="- v1.1.7 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column, e.g. wrong mail-mode texts while in Pre-/Post-Default); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns" & Char(10) & "- Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit" & Char(10) & "- 2026-08-24 - Agent Audit Summary per-outcome step/run counters added" & Char(10) & "- 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)" & Char(10) & "- 2026-08-13 - renamed from ""Agent 3.03 (YES File Management)"" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value"
                               Wrap: =true
                   - conAgentNote6:
                       Control: GroupContainer@1.5.0
@@ -2090,7 +2115,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: ="Agent 6 (Admin Functions) - v1.3.1 (current)"
+                              Text: ="Agent 6 (Admin Functions) - v1.3.2 (current)"
                               Wrap: =false
                         - lblAgentNote6Notes:
                             Control: Label@2.5.1
@@ -2102,7 +2127,7 @@ Screens:
                               Font: =Font.'Arial'
                               Height: =300
                               Size: =12
-                              Text: ="- v1.3.1 (2026-09-04) - Fixed the Reset All action's Critical/Warning baseline row lookup, which used the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) and silently failed - replaced with a proper Query action, same pattern as the individual Reset Critical/Reset Warning actions already used" & Char(10) & "- v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset" & Char(10) & "- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0" & Char(10) & "- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page"
+                              Text: ="- v1.3.2 (2026-09-23) - Configuration value lookup (Select_ConfigEntries) now also handles PROD_PREDEFAULT/PROD_POSTDEFAULT/SIMU_PREDEFAULT/SIMU_POSTDEFAULT (introduced by the 5-mode switch but not yet wired here - previously fell through to the SIMU_DMP column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns" & Char(10) & "- v1.3.1 (2026-09-04) - Fixed the Reset All action's Critical/Warning baseline row lookup, which used the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) and silently failed - replaced with a proper Query action, same pattern as the individual Reset Critical/Reset Warning actions already used" & Char(10) & "- v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset" & Char(10) & "- v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0" & Char(10) & "- v1.10.1 - was stuck in Draft/Inactive state in Dataverse (unrelated to a code change) - activated" & Char(10) & "- Handles Admin Functions such as mailbox folder deletion and counter resets, triggered from the Cockpit's Admin Functions page"
                               Wrap: =true
                   - conAgentNote7:
                       Control: GroupContainer@1.5.0
@@ -2184,6 +2209,25 @@ Screens:
                         RadiusTopRight: =12
                         Width: =170
                       Children:
+                        - btnAppReleaseV12228:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(0,0,0,0)
+                              BorderStyle: =BorderStyle.None
+                              Color: =If(varSelectedAppRelease="V12228",RGBA(11,11,13,1),If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1)))
+                              Fill: =If(varSelectedAppRelease="V12228",RGBA(0,206,125,1),If(varDarkMode,RGBA(255,255,255,0.06),RGBA(32,23,81,0.05)))
+                              Font: =Font.'Arial'
+                              FontWeight: =If(varSelectedAppRelease="V12228",FontWeight.Bold,FontWeight.Normal)
+                              Height: =32
+                              HoverFill: =If(varSelectedAppRelease="V12228",RGBA(45,230,155,1),If(varDarkMode,RGBA(255,255,255,0.12),RGBA(32,23,81,0.1)))
+                              OnSelect: =Set(varSelectedAppRelease,"V12228")
+                              RadiusBottomLeft: =6
+                              RadiusBottomRight: =6
+                              RadiusTopLeft: =6
+                              RadiusTopRight: =6
+                              Size: =11
+                              Text: ="v1.22.28"
+                              Width: =154
                         - btnAppReleaseV12227:
                             Control: Classic/Button@2.2.0
                             Properties:
@@ -2978,7 +3022,7 @@ Screens:
                               FontWeight: =FontWeight.Bold
                               Height: =26
                               Size: =16
-                              Text: =Switch(varSelectedAppRelease, "V12227", lblReleaseV12227Header.Text, "V12226", lblReleaseV12226Header.Text, "V12225", lblReleaseV12225Header.Text, "V12224", lblReleaseV12224Header.Text, "V12223", lblReleaseV12223Header.Text, "V12222", lblReleaseV12222Header.Text, "V12221", lblReleaseV12221Header.Text, "V12213", lblReleaseV12213Header.Text, "V12212", lblReleaseV12212Header.Text, "V12211", lblReleaseV12211Header.Text, "V12210", lblReleaseV12210Header.Text, "V1229", lblReleaseV1229Header.Text, "V1228", lblReleaseV1228Header.Text, "V1227", lblReleaseV1227Header.Text, "V1226", lblReleaseV1226Header.Text, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV12213Header.Text)
+                              Text: =Switch(varSelectedAppRelease, "V12228", lblReleaseV12228Header.Text, "V12227", lblReleaseV12227Header.Text, "V12226", lblReleaseV12226Header.Text, "V12225", lblReleaseV12225Header.Text, "V12224", lblReleaseV12224Header.Text, "V12223", lblReleaseV12223Header.Text, "V12222", lblReleaseV12222Header.Text, "V12221", lblReleaseV12221Header.Text, "V12213", lblReleaseV12213Header.Text, "V12212", lblReleaseV12212Header.Text, "V12211", lblReleaseV12211Header.Text, "V12210", lblReleaseV12210Header.Text, "V1229", lblReleaseV1229Header.Text, "V1228", lblReleaseV1228Header.Text, "V1227", lblReleaseV1227Header.Text, "V1226", lblReleaseV1226Header.Text, "V1225", lblReleaseV1225Header.Text, "V1224", lblReleaseV1224Header.Text, "V1223", lblReleaseV1223Header.Text, "V1222", lblReleaseV1222Header.Text, "V1221", lblReleaseV1221Header.Text, "V1220", lblReleaseV1220Header.Text, "V1210", lblReleaseV1210Header.Text, "V1200", lblReleaseV1200Header.Text, "V1190", lblReleaseV1190Header.Text, "V1180", lblReleaseV1180Header.Text, "V1171", lblReleaseV1171Header.Text, "V1170", lblReleaseV1170Header.Text, "V1161", lblReleaseV1161Header.Text, "V1160", lblReleaseV1160Header.Text, "V1150", lblReleaseV1150Header.Text, "V1140", lblReleaseV1140Header.Text, "V1131", lblReleaseV1131Header.Text, "V1130", lblReleaseV1130Header.Text, "V1121", lblReleaseV1121Header.Text, "V1120", lblReleaseV1120Header.Text, "V1100", lblReleaseV1100Header.Text, "V190", lblReleaseV190Header.Text, "V180", lblReleaseV180Header.Text, "V170", lblReleaseV170Header.Text, "V164", lblReleaseV164Header.Text, "V161to163", lblReleaseV161to163Header.Text, "Older", lblReleaseOlderHeader.Text, lblReleaseV12213Header.Text)
                               Wrap: =false
                         - lblReleaseDetailAppNotes:
                             Control: Label@2.5.1
@@ -2989,7 +3033,7 @@ Screens:
                               Color: =If(varDarkMode,RGBA(220,218,230,1),RGBA(40,38,50,1))
                               Font: =Font.'Arial'
                               Size: =12
-                              Text: =Switch(varSelectedAppRelease, "V12227", lblReleaseV12227Notes.Text, "V12226", lblReleaseV12226Notes.Text, "V12225", lblReleaseV12225Notes.Text, "V12224", lblReleaseV12224Notes.Text, "V12223", lblReleaseV12223Notes.Text, "V12222", lblReleaseV12222Notes.Text, "V12221", lblReleaseV12221Notes.Text, "V12213", lblReleaseV12213Notes.Text, "V12212", lblReleaseV12212Notes.Text, "V12211", lblReleaseV12211Notes.Text, "V12210", lblReleaseV12210Notes.Text, "V1229", lblReleaseV1229Notes.Text, "V1228", lblReleaseV1228Notes.Text, "V1227", lblReleaseV1227Notes.Text, "V1226", lblReleaseV1226Notes.Text, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV12213Notes.Text)
+                              Text: =Switch(varSelectedAppRelease, "V12228", lblReleaseV12228Notes.Text, "V12227", lblReleaseV12227Notes.Text, "V12226", lblReleaseV12226Notes.Text, "V12225", lblReleaseV12225Notes.Text, "V12224", lblReleaseV12224Notes.Text, "V12223", lblReleaseV12223Notes.Text, "V12222", lblReleaseV12222Notes.Text, "V12221", lblReleaseV12221Notes.Text, "V12213", lblReleaseV12213Notes.Text, "V12212", lblReleaseV12212Notes.Text, "V12211", lblReleaseV12211Notes.Text, "V12210", lblReleaseV12210Notes.Text, "V1229", lblReleaseV1229Notes.Text, "V1228", lblReleaseV1228Notes.Text, "V1227", lblReleaseV1227Notes.Text, "V1226", lblReleaseV1226Notes.Text, "V1225", lblReleaseV1225Notes.Text, "V1224", lblReleaseV1224Notes.Text, "V1223", lblReleaseV1223Notes.Text, "V1222", lblReleaseV1222Notes.Text, "V1221", lblReleaseV1221Notes.Text, "V1220", lblReleaseV1220Notes.Text, "V1210", lblReleaseV1210Notes.Text, "V1200", lblReleaseV1200Notes.Text, "V1190", lblReleaseV1190Notes.Text, "V1180", lblReleaseV1180Notes.Text, "V1171", lblReleaseV1171Notes.Text, "V1170", lblReleaseV1170Notes.Text, "V1161", lblReleaseV1161Notes.Text, "V1160", lblReleaseV1160Notes.Text, "V1150", lblReleaseV1150Notes.Text, "V1140", lblReleaseV1140Notes.Text, "V1131", lblReleaseV1131Notes.Text, "V1130", lblReleaseV1130Notes.Text, "V1121", lblReleaseV1121Notes.Text, "V1120", lblReleaseV1120Notes.Text, "V1100", lblReleaseV1100Notes.Text, "V190", lblReleaseV190Notes.Text, "V180", lblReleaseV180Notes.Text, "V170", lblReleaseV170Notes.Text, "V164", lblReleaseV164Notes.Text, "V161to163", lblReleaseV161to163Notes.Text, "Older", lblReleaseOlderNotes.Text, lblReleaseV12213Notes.Text)
                               Wrap: =true
             - conReleaseNotesSplitAgents:
                 Control: GroupContainer@1.5.0

@@ -4,7 +4,15 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.27 - 2026-09-22 (current, not yet loaded/saved by user in Studio)
+### v1.22.28 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+
+- **Admin Functions - removed the temporary "TIMESTAMP DEBUG" panel** (`conFuncTimestampDebug`, added in v1.22.21) now that the Audit Trail year-3926 timestamp bug is confirmed fixed.
+- **B1 (Configuration - 4 new Pre-/Post-Default value columns) confirmed complete:** user confirmed the columns are live in the real SharePoint list; a full programmatic check of `DMP Command Configuration.csv` found no gaps caused by the B1 extension (5 unrelated, pre-existing empty `...OpenUrl` rows logged separately in the Backlog).
+- **B5 - real bug found and fixed in 6 of 7 Power Automate flows** (see Agent Changes below, v1.0.9/1.0.10/1.1.5/1.4.5/1.1.7/1.3.2): the mode-dependent Configuration value lookup only knew 4 modes and silently fell through to the `SIMU_DMP` column whenever the app was in Pre-Default or Post-Default - fixed using the confirmed real SharePoint internal field names for the 4 new B1 columns (confirmed via a live `GET_DMP_Command_Configuration` run export, since they were not derivable from the display name).
+- **Agent 2 - added explicit `maximumWaitingRuns=100`** on the shared-mailbox trigger (previously implicit default 10); degree of parallelism intentionally left at 1 (sequential) to protect the shared counter increment from race conditions.
+- Solution version recomputed to **7.34.67** (not yet imported).
+
+### v1.22.27 - 2026-09-22 (confirmed working by the user; superseded by v1.22.28 above for the Admin Diagnostics cleanup)
 
 - **System Health ring/legend - real fix #5 (user-confirmed v1.22.26 working, two follow-up issues reported):** Critical Events and Warnings were shown as red/orange purely from the raw Audit Trail counters (`varAuditFailedCount`/`varAuditWarningCount`), ignoring the existing "Reset Critical/Warning Counter Baseline" confirm mechanism (Agent 6 AdminFunctions action, wired in `scrAuditTrail.pa.yaml`) - so a confirmed/reset event stayed red in the ring even though the rest of the app (the Critical/Warnings KPI tiles further down this same screen) already treats it as cleared. Both the ring segments and the legend rows now use the same `Max(raw-baseline,0)>0` logic already established for those KPI tiles, so a confirmed event turns green consistently everywhere.
 - **System Health details popup - readability fix:** reported unreadable (no scrollbar) after being extended to all 9 fixed categories + all 7 agents in v1.22.26. Gave the popup a fixed height (300px) with vertical scroll (`LayoutOverflowY`), matching the scrollable-panel convention already used elsewhere in this app.
@@ -412,15 +420,17 @@ Backend:
   generation, active-case/mode validation, response counters, live Power App binding, and
   Dev idempotency test.
 
-### Agent 2 (E-Mail Inbox Treatment) - v1.0.9 (current)
+### Agent 2 (E-Mail Inbox Treatment) - v1.0.10 (current)
 
+- v1.0.10 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (introduced by the 5-mode switch but not yet wired here - previously fell through to the `SIMU_DMP` column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns. Trigger: explicit `maximumWaitingRuns=100` added (previously implicit default 10); degree of parallelism stays at 1 (sequential) to protect the shared counter increment from race conditions.
 - v1.0.9 (2026-09-04) - Hotfix for the invalid inline `@select(...)` Power-Automate expressions in internal/external domains classification. Replaced both parse actions with real Query/Filter-array operations and added a mandatory critical technical main-flow failure alert e-mail `[EC:A2-MAINFLOW-FAILED]`. Solution 7.11.35 imported and published in DBG Team Productivity (Dev).
 - v1.0.8 (2026-09-02) - Counter increment (all 4 workflow paths) and external domains read now use the "DMP Command Counters" and "DMP Command External Domains" SharePoint lists instead of Counter.xlsx and External_Domains.txt. Follow-up finding on 2026-09-04: the attempted runtime-crash fix for "Parse internal domains file + create array" is still faulty because `select()` is not a valid inline Power-Automate template function in this context; Agent 2 needs a follow-up flow fix using a real Data Operation Select or equivalent non-`select()` expression logic.
 - v1.0.7 (2026-09-01) - Internal sender classification now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - one fewer SharePoint call per e-mail
 - v1.0.6 and earlier - audit counter writes batched (one combined read/write per run instead of per event), retry policies added to the critical Excel calls, error-ID codes ([EC:A2-...]) added for faster troubleshooting
 
-### Agent 4 (Status Check) - v1.4.4 (current)
+### Agent 4 (Status Check) - v1.4.5 (current)
 
+- v1.4.5 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (previously fell through to the `SIMU_DMP` column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns.
 - v1.4.4 (2026-09-04) - Fixed 2 separate bugs found via the real flow run history: (1) the Audit Trail read now requests dateTimeFormat=ISO 8601 like every write action already does, instead of returning raw Excel serial numbers for TimestampUtc; (2) replaced 6 uses of the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) in the Counter card and Critical/Warning baseline reads with proper Query actions - this was silently breaking the No DMP/Internal Sender/Not Effected/Effected counters and both baseline reads
 - v1.4.3 (2026-09-03) - Fixed the Internal/External Domains and Counter "Last Updated" fields silently failing every run ("The template function 'select' is not defined or not valid") - replaced the select()/max() expression with a simple $orderby=Modified desc on the existing list read, no extra API call needed
 - v1.4.2 (2026-09-02) - Enabled pagination on the Audit Trail read so the Recent Critical/Warning lists always reflect the true last 10 rows, not just rows within the table's first page - added CriticalCounterBaseline/WarningCounterBaseline to the response, read from the same Counters list already loaded for the Counter card, used by the Cockpit's new Critical/Warning reset feature
@@ -428,29 +438,33 @@ Backend:
 - v1.4.0 - now also reads the central Audit Trail table directly and returns the 20 most recent Critical (Failed) and Warning rows, used by the new Audit Trail (Detail) Cockpit page
 - v1.3.0 (2026-09-01) - Internal Domains status check now reads the "DMP Command Internal Domains" SharePoint list (Active = Yes) instead of the flat Internal_Domains.txt file - same output fields (Exists/Count/LastModified) as before
 
-### Agent 1 (Domains Extraction) - v1.0.8 (current)
+### Agent 1 (Domains Extraction) - v1.0.9 (current)
 
+- v1.0.9 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (previously fell through to the `SIMU_DMP` column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns.
 - v1.0.8 (2026-09-02) - External domains write now uses a full-sync rewrite (delete all rows, then create one row per extracted domain) against the "DMP Command External Domains" SharePoint list instead of writing External_Domains.txt
 - Audit counter writes batched (one combined read/write per run instead of per event), error-ID codes ([EC:A1-...]) added for faster troubleshooting
 - 2026-08-24 - Agent Audit Summary per-outcome step/run counters added (feeds the Cockpit's Critical/Warning/Total-runs figures via Agent 4)
 - 2026-08-13 - renumbered from "Agent 1" (unchanged number, but part of the system-wide sequential renumbering and Select+Join config-loading rebuild applied to all agents)
 
-### Agent 3 (Emergency Report Management) - v1.1.4 (current)
+### Agent 3 (Emergency Report Management) - v1.1.5 (current)
 
+- v1.1.5 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (previously fell through to the `SIMU_DMP` column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns.
 - Handles Emergency Report uploads triggered from the Cockpit's Replace button, then regenerates External Domains
 - 2026-08-24 - Agent Audit Summary per-outcome step/run counters added
 - 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2)
 - 2026-08-13 - renamed from "Agent 3.01" as part of the system-wide sequential renumbering
 
-### Agent 5 (Operational State Management) - v1.1.6 (current)
+### Agent 5 (Operational State Management) - v1.1.7 (current)
 
+- v1.1.7 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (previously fell through to the `SIMU_DMP` column, e.g. wrong mail-mode texts while in Pre-/Post-Default); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns.
 - Handles the Operating State toggle (Normal / DMP Operation) triggered from the Cockpit
 - 2026-08-24 - Agent Audit Summary per-outcome step/run counters added
 - 2026-08-14 - alert-mail-then-move-to-folder error pattern added (matches Agents 1/2/3)
 - 2026-08-13 - renamed from "Agent 3.03 (YES File Management)" - the legacy Yes.txt file mechanism was fully decommissioned in favour of the CurrentOperationMode config value
 
-### Agent 6 (Admin Functions) - v1.3.1 (current)
+### Agent 6 (Admin Functions) - v1.3.2 (current)
 
+- v1.3.2 (2026-09-23) - Configuration value lookup (`Select_ConfigEntries`) now also handles `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/`SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT` (previously fell through to the `SIMU_DMP` column); uses the confirmed real SharePoint internal field names for the 4 new Configuration value columns.
 - v1.3.1 (2026-09-04) - Fixed the Reset All action's Critical/Warning baseline row lookup, which used the non-existent template function filter() (confirmed invalid via the official Workflow Definition Language reference) and silently failed - replaced with a proper Query action, same pattern as the individual Reset Critical/Reset Warning actions already used
 - v1.3.0 (2026-09-02) - added Critical/Warning counter reset actions for the Cockpit's Audit Trail screen - each captures the current lifetime Critical/Warning total (from Agent Audit Summary) as a new baseline in the DMP Command Counters SharePoint list, so the Cockpit's KPI shows only new events since the reset
 - v1.2.0 - added counter reset actions (No DMP / Internal Sender / External / Not Effected / Reset ALL) - each writes the previous value to the Audit Trail as an Operational History record before resetting to 0

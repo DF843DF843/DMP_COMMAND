@@ -23,7 +23,7 @@ and the generally known risk of OneDrive's sync engine colliding with an active 
 repository's internal file writes. Do not propose moving the Git working copy into OneDrive
 again without re-raising this history first.
 
-## ⚡ Latest session recap (2026-09-23, v1.22.27 confirmed + B1 SharePoint columns live)
+## ⚡ Latest session recap (2026-09-23, v1.22.27 confirmed + B1 closed + B5 systemic fix, v1.22.28/Solution 7.34.67 not yet deployed)
 
 - **Power App:** the user loaded `PowerApp/DMP_COMMAND/DMP_COMMAND.msapp` (`v1.22.27`) fresh in
   Studio and confirmed "funktioniert" - loads/works error-free. Rule 9b applied: local backup
@@ -41,6 +41,42 @@ again without re-raising this history first.
   already empty in ALL 8 columns plus `CurrentValue` even before the B1 column extension (an
   unrelated, pre-existing gap, now logged as its own low-priority Backlog item under
   Priorität 3, not a B1 defect). B1 is therefore marked done/confirmed in the Backlog.
+- **v1.22.28 prepared (Power App, not yet deployed):** the temporary "TIMESTAMP DEBUG"
+  Admin Functions panel (`conFuncTimestampDebug`, added in v1.22.21) was removed now that its
+  bug is confirmed fixed. Pack→Unpack round-trip: 0 diff.
+- **B5 - real systemic bug found and fixed in 6 of 7 Power Automate flows (Solution 7.34.67,
+  not yet imported):** while resuming B5 (Agent 2 EffectiveMode mapping), discovered that
+  Agent 1, 2, 3 (Emergency Report), 4 (Status Check), 5 (Operational State Management) and 6
+  (Admin Functions) - every flow except Agent 7 - share one config-value-resolution mechanism
+  (`Select_ConfigEntries`) that only ever recognised 4 modes (`PROD_NODMP`/`PROD_DMP`/
+  `SIMU_NODMP`/else-`SIMU_DMP`). Since B2 introduced `PROD_PREDEFAULT`/`PROD_POSTDEFAULT`/
+  `SIMU_PREDEFAULT`/`SIMU_POSTDEFAULT`, every mode-dependent Configuration value (mail texts,
+  subject prefixes, folder names, etc.) silently fell through to the `SIMU_DMP` column value
+  whenever the app was actually in Pre-Default or Post-Default - a real, already-live bug since
+  B2 shipped, not yet noticed because nobody had tested a mail-generating agent while the app
+  was in Pre-/Post-Default. The CSV showed the user had already deliberately prepared distinct
+  SIMU Pre-/Post-Default mail texts (fire-drill wording), so the fix could not just alias
+  Pre-/Post-Default to NODMP - the real new B1 columns had to be read correctly. **Internal
+  SharePoint field names were NOT derivable from the display name** (unlike the original 4
+  columns, whose internal names merely strip spaces/hex-encode punctuation, the new 4 got
+  auto-truncated by SharePoint to 26-27 characters with a collision-disambiguation suffix on
+  2 of them): confirmed via a live `GET_DMP_Command_Configuration` run's raw JSON output that
+  the user exported and pasted in -
+  `Value_x0020__x002d__x0020_PROD_x` = PROD Pre-Default,
+  `Value_x0020__x002d__x0020_PROD_x0` = PROD Post-Default,
+  `Value_x0020__x002d__x0020_SIMU_x` = SIMU Pre-Default,
+  `Value_x0020__x002d__x0020_SIMU_x0` = SIMU Post-Default (cross-validated against 2 different
+  config rows). Fixed identically in all 6 flows (Agent 2's variant additionally wraps each
+  branch in its own `coalesce(...,'')` and uses variable name `CurrentOperationMode` instead of
+  `OperationMode` - handled separately). All 6 `.json` files + their `.json.data.xml` version
+  labels bumped (patch+1 each); `Solution.xml` recomputed to **`7.34.67`**. **Not yet imported
+  into Dev - this whole bundle (App + Solution) is still pending the next deploy.**
+- **Agent 2 - trigger concurrency changed on explicit user request:** `runtimeConfiguration.
+  concurrency.maximumWaitingRuns` set to `100` (was implicit default `10`); degree of
+  parallelism (`runs`) deliberately kept at `1` (sequential) - Agent 2 increments a shared
+  SharePoint counter per mail with a read-then-write pattern with no locking, so raising `runs`
+  above 1 would risk duplicate counter/reference values under concurrent execution. Flagged to
+  the user, not changed without being asked.
 - **Reminder established this session:** the user asked to be addressed in German going
   forward for this project's conversation (documentation itself stays in its existing
   language mix, English recap prose / German backlog prose, per rule G - not rewritten
@@ -403,19 +439,30 @@ After every deployment:
   Power-App-only checksum updates may be batched into the next Solution import that has an
   actual flow-content reason to run. Ask before assuming either way next time this comes up.
 
-**Solution-version checksum table (current, 2026-09-22):**
+**Solution-version checksum table (current, 2026-09-23):**
 
 | Component | Version | Major | Minor | Patch |
 |---|---|---|---|---|
-| Agent 1 | 1.0.8 | 1 | 0 | 8 |
-| Agent 2 | 1.0.9 | 1 | 0 | 9 |
-| Agent 3 | 1.1.4 | 1 | 1 | 4 |
-| Agent 4 | 1.4.4 | 1 | 4 | 4 |
-| Agent 5 | 1.1.6 | 1 | 1 | 6 |
-| Agent 6 | 1.3.1 | 1 | 3 | 1 |
+| Agent 1 | 1.0.9 | 1 | 0 | 9 |
+| Agent 2 | 1.0.10 | 1 | 0 | 10 |
+| Agent 3 | 1.1.5 | 1 | 1 | 5 |
+| Agent 4 | 1.4.5 | 1 | 4 | 5 |
+| Agent 5 | 1.1.7 | 1 | 1 | 7 |
+| Agent 6 | 1.3.2 | 1 | 3 | 2 |
 | Agent 7 | 0.3.1 | 0 | 3 | 1 |
-| Power App | 1.22.15 | 1 | 22 | 15 |
-| **Σ (= Solution version)** | **7.34.48** | **7** | **34** | **48** |
+| Power App | 1.22.28 | 1 | 22 | 28 |
+| **Σ (= Solution version)** | **7.34.67** | **7** | **34** | **67** |
+
+Bumped 2026-09-23: Agents 1,2,3,4,5,6 all patched for the same real bug (see B5 entry in the
+Backlog) - the mode-dependent Configuration value lookup only recognised 4 modes and silently
+fell through to the SIMU_DMP column for PROD/SIMU Pre-Default/Post-Default; fixed using the
+confirmed real SharePoint internal field names for the 4 new B1 columns
+(`Value_x0020__x002d__x0020_PROD_x`/`_x0`, `Value_x0020__x002d__x0020_SIMU_x`/`_x0` for
+Pre-/Post-Default respectively - confirmed via a live `GET_DMP_Command_Configuration` run
+export, NOT derivable from the display name, since SharePoint truncated/de-duplicated the
+auto-generated internal names). Agent 2 additionally got `maximumWaitingRuns: 100` on its
+trigger (explicit, previously implicit default 10); `runs` (degree of parallelism)
+deliberately left at `1` to protect the shared counter increment from race conditions.
 
 Recompute this table and the resulting solution version on every future component version
 bump — never bump the solution version number in isolation.
