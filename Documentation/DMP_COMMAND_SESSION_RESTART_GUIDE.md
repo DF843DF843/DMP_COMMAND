@@ -23,7 +23,41 @@ and the generally known risk of OneDrive's sync engine colliding with an active 
 repository's internal file writes. Do not propose moving the Git working copy into OneDrive
 again without re-raising this history first.
 
-## ⚡ Latest session recap (2026-09-23, v1.22.27 confirmed + B1 closed + B5 systemic fix, v1.22.28/Solution 7.34.67 not yet deployed)
+## ⚡ Latest session recap (2026-09-23, v1.22.28 confirmed + B3/Task Occurrences live-wired as v1.22.29 + Solution 7.34.67 imported by AI)
+
+- **AI capability corrections this session (read before assuming "no access" again):** (1) The
+  AI has an active, authenticated `pac` session against `DBG Team Productivity (Dev)` - `pac
+  solution import --publish-changes` is run by the AI directly, NOT the user (user had to
+  correct this). (2) `PowerApp_Version.txt` (read by Agent 4, drives the Cockpit Status Panel's
+  displayed version) is directly writable by the AI and must be kept in sync on EVERY Power App
+  version bump - this was missed for v1.22.25-28 this session (regression against an existing
+  rule from 2026-08-26) and caused a real, user-noticed Status-Panel-vs-Audit-Trail version
+  mismatch; fixed (file now `v1.22.29`) and the rule reinforced in the Mission doc.
+- **v1.22.28 confirmed by the user:** loaded, new data sources added, saved and published in
+  Studio. Rule 9b backup rotated to `DMP_COMMAND_v1.22.28.msapp` (replacing `v1.22.27`).
+- **Solution `7.34.67` imported and published by the AI** (not the user). Still open: the 6
+  changed flows (Agent 1,2,3,4,5,6) need one open+save each in the Power Automate designer
+  ("deactivated and replaced") - genuinely no CLI equivalent found, real user action.
+- **B3 + Task Occurrences (C6/C7) now live-wired, packed as `v1.22.29`:** the user added `DMP
+  Command Default Case Context` AND `DMP Command Checklist Task Occurrences` (plus several
+  other Streams lists) as real data sources in Studio. The AI downloaded the just-published live
+  app (`pac canvas download`), refreshed the repo's `.msapr` from it (checklist rule A.1), then
+  rewired both screens from their local preview collections to real `Patch()`/`Filter()` calls.
+  **Two schema surprises found by inspecting the live `.msapr`'s `DataSources.json` directly**
+  (not guessed): neither list has a dedicated business-key column - `DMP Command Default Case
+  Context` has no `CaseId` column (the Case ID goes in `Title`), and `DMP Command Checklist Task
+  Occurrences` has no `OccurrenceId` column either (same pattern, `Title` holds it). Person
+  columns (`SetByUser`, `ProposedBy`, `ApprovedBy`) and Choice columns (`ModeAtCreation`,
+  `Status`, `ScheduleSlot`, `ApprovalState`) are patched as SharePoint-connector records
+  (`{Claims:...,DisplayName:...,Email:...}` / `{Value:...}`) - confirmed against the live
+  DataSources.json schema (`type: object` for both). **This is the first live Patch() against
+  SharePoint Person/Choice columns anywhere in this app - not yet Studio-tested,** flag to the
+  user to specifically test the B3 popup confirm and (if any row exists) Task Occurrences
+  Propose/Approve/Reject after loading `v1.22.29`. The Task Occurrences gallery will likely show
+  0 rows until Agent 7 actually creates real occurrences (expected, not a bug).
+  `colDefaultCaseContextPending`/`colTaskOccurrencesPreview` both fully removed.
+
+## ⚡ Prior session recap (2026-09-23, v1.22.27 confirmed + B1 closed + B5 systemic fix, v1.22.28/Solution 7.34.67 not yet deployed)
 
 - **Power App:** the user loaded `PowerApp/DMP_COMMAND/DMP_COMMAND.msapp` (`v1.22.27`) fresh in
   Studio and confirmed "funktioniert" - loads/works error-free. Rule 9b applied: local backup

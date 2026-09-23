@@ -42,38 +42,30 @@ App:
       // Switch case for any version after v1.22.13, so it silently always fell back to showing
       // v1.22.13 (found 2026-09-22 from user feedback "Agent 7 missing, shows old version").
       // Defaults to the newest App version now; keep this in sync with the current version.
-      Set(varSelectedAppRelease,"V12228");
+      Set(varSelectedAppRelease,"V12229");
       // Same bug, same fix, Agent tab: varSelectedAgentRelease was never initialized and had no
       // Switch case/menu button for Agent 7 - defaulted to Agent 1 instead of the newest agent.
       Set(varSelectedAgentRelease,"7");
 
       // B3 Default Case Context popup (mandatory form on Pre-Default -> DMP transition).
-      // 'DMP Command Default Case Context' SharePoint list confirmed to exist (2026-09-22,
-      // GUID 8fa1f858-3f89-4600-b3dc-86f9dfcaf4b8 on GO365_DMPCommunication-CoSLeader), but is
-      // not yet wired as a live Power App data source (requires one manual "Add data" step in
-      // Studio, same as every other new connection in this project). Until then, captured
-      // values are staged in colDefaultCaseContextPending with the exact same column shape, so
-      // switching to a real Patch('DMP Command Default Case Context', ...) later is a one-line change.
+      // 'DMP Command Default Case Context' SharePoint list connected as a live Power App data
+      // source 2026-09-23 (site GO365_DMPCommunication-CoSLeader, GUID
+      // 8fa1f858-3f89-4600-b3dc-86f9dfcaf4b8). Popup now Patches this list directly - no local
+      // collection is used any more (colDefaultCaseContextPending removed).
       Set(varShowDefaultCaseContextPopup,false);
       Set(varDefaultCaseContextConfirmedForThisAdvance,false);
       Set(varDefaultCaseContextValidationError,"");
-      ClearCollect(colDefaultCaseContextPending,[{CaseId:"",TerminationReason:"",DefaultedMemberId:"",DefaultedMemberName:"",TerminationDateTime:Now(),SetByUser:"",SetUtc:Now(),ModeAtCreation:""}]);
-      Clear(colDefaultCaseContextPending);
+      Set(varDefaultCaseContextPatchResult,Blank());
 
-      // C6/C7 preview: Task Occurrences four-eyes status-change workflow (local simulation only).
-      // 'DMP Command Checklist Task Occurrences' already exists in SharePoint (confirmed
-      // 2026-09-22) but is not yet wired as a live Power App data source (same one-time manual
-      // "Add data" step in Studio as Default Case Context above). Until then this collection
-      // mirrors the real list's schema exactly, so scrTaskOccurrences can demonstrate/validate
-      // the intended Propose -> Approve/Reject flow before the real connection is made.
+      // C6/C7: Task Occurrences four-eyes status-change workflow.
+      // 'DMP Command Checklist Task Occurrences' connected as a live Power App data source
+      // 2026-09-23. scrTaskOccurrences now Patches this list directly - no local collection is
+      // used any more (colTaskOccurrencesPreview removed). Note: Title holds the OccurrenceId
+      // business key (the list has no separate OccurrenceId column).
       // Known open gap (flag to user before going live): the real list has no "PreviousStatus"
       // field, so a Reject currently only clears the pending approval state - it does not revert
       // Status to what it was before the proposal. Decide with the user whether a PreviousStatus
       // field should be added, or whether Reject requiring a fresh manual re-propose is acceptable.
-      ClearCollect(colTaskOccurrencesPreview,
-          {OccurrenceId:"CASE-2026-001-20260921-21-MIDDAY",TaskId:"21",ScheduleSlot:"Midday",Status:"Not Started",DueUtc:"2026-09-21 12:00 UTC",ProposedBy:"",ProposedUtc:Blank(),ApprovedBy:"",ApprovedUtc:Blank(),ApprovalState:"Not Required"},
-          {OccurrenceId:"CASE-2026-001-20260921-22-EVENING",TaskId:"22",ScheduleSlot:"Evening",Status:"Not Started",DueUtc:"2026-09-21 18:00 UTC",ProposedBy:"",ProposedUtc:Blank(),ApprovedBy:"",ApprovedUtc:Blank(),ApprovalState:"Not Required"}
-      );
 
       // Change-notification LEDs (Critical/Warnings/Agents Active KPI tiles in scrHome's header):
       // varBaselineAcknowledged is set true exactly once, on the first successful status refresh

@@ -3635,7 +3635,7 @@ Screens:
                         Color: =If(varDarkMode,RGBA(180,178,190,1),RGBA(90,88,100,1))
                         Font: =Font.'Arial'
                         Size: =10
-                        Text: ="Captured locally for now (colDefaultCaseContextPending) - not yet written to the 'DMP Command Default Case Context' SharePoint list, pending its manual connection in Studio."
+                        Text: ="Saved directly to the 'DMP Command Default Case Context' SharePoint list."
                         Wrap: =true
                   - lblDefaultCaseContextCaseIdLabel:
                       Control: Label@2.5.1
@@ -3794,30 +3794,38 @@ Screens:
                                         IsBlank(vCaseId) || IsBlank(vReason) || IsBlank(vMemberName) || !IsMatch(vDT, "^\d{4}-\d{2}-\d{2} ([01]\d|2[0-3]):[0-5]\d$"),
                                         Set(varDefaultCaseContextValidationError, "Please fill in Case ID, Termination Reason and Defaulted Member Name, and enter the date/time exactly as YYYY-MM-DD HH:MM (24h)."),
                                         Set(varDefaultCaseContextValidationError, "");
-                                        Collect(
-                                            colDefaultCaseContextPending,
-                                            With(
-                                                {vParsedLocal: DateAdd(DateAdd(Date(Value(Mid(vDT,1,4)), Value(Mid(vDT,6,2)), Value(Mid(vDT,9,2))), Value(Mid(vDT,12,2)), TimeUnit.Hours), Value(Mid(vDT,15,2)), TimeUnit.Minutes)},
-                                                {
-                                                    CaseId: vCaseId,
-                                                    TerminationReason: vReason,
-                                                    DefaultedMemberId: Trim(txtDefaultCaseContextMemberId.Text),
-                                                    DefaultedMemberName: vMemberName,
-                                                    TerminationDateTime: DateAdd(vParsedLocal, -TimeZoneOffset(vParsedLocal), TimeUnit.Minutes),
-                                                    SetByUser: User().FullName,
-                                                    SetUtc: Now(),
-                                                    ModeAtCreation: If(varEnvironmentIsPROD, "PROD_DMP", "SIMU_DMP")
-                                                }
+                                        With(
+                                            {vParsedLocal: DateAdd(DateAdd(Date(Value(Mid(vDT,1,4)), Value(Mid(vDT,6,2)), Value(Mid(vDT,9,2))), Value(Mid(vDT,12,2)), TimeUnit.Hours), Value(Mid(vDT,15,2)), TimeUnit.Minutes)},
+                                            Set(
+                                                varDefaultCaseContextPatchResult,
+                                                Patch(
+                                                    'DMP Command Default Case Context',
+                                                    Defaults('DMP Command Default Case Context'),
+                                                    {
+                                                        Title: vCaseId,
+                                                        TerminationReason: vReason,
+                                                        DefaultedMemberId: Trim(txtDefaultCaseContextMemberId.Text),
+                                                        DefaultedMemberName: vMemberName,
+                                                        TerminationDateTime: DateAdd(vParsedLocal, -TimeZoneOffset(vParsedLocal), TimeUnit.Minutes),
+                                                        SetByUser: {Claims: "i:0#.f|membership|" & Lower(User().Email), Department: "", DisplayName: User().FullName, Email: User().Email, JobTitle: "", Picture: ""},
+                                                        SetUtc: Now(),
+                                                        ModeAtCreation: {Value: If(varEnvironmentIsPROD, "PROD_DMP", "SIMU_DMP")}
+                                                    }
+                                                )
                                             )
                                         );
-                                        Reset(txtDefaultCaseContextCaseId);
-                                        Reset(txtDefaultCaseContextReason);
-                                        Reset(txtDefaultCaseContextMemberId);
-                                        Reset(txtDefaultCaseContextMemberName);
-                                        Reset(txtDefaultCaseContextDateTime);
-                                        Set(varDefaultCaseContextConfirmedForThisAdvance, true);
-                                        Set(varShowDefaultCaseContextPopup, false);
-                                        Select(btnOperationalModeAdvance)
+                                        If(
+                                            IsBlank(varDefaultCaseContextPatchResult),
+                                            Set(varDefaultCaseContextValidationError, "Failed to save to SharePoint: " & Coalesce(First(Errors('DMP Command Default Case Context')).Message, "unknown error")),
+                                            Reset(txtDefaultCaseContextCaseId);
+                                            Reset(txtDefaultCaseContextReason);
+                                            Reset(txtDefaultCaseContextMemberId);
+                                            Reset(txtDefaultCaseContextMemberName);
+                                            Reset(txtDefaultCaseContextDateTime);
+                                            Set(varDefaultCaseContextConfirmedForThisAdvance, true);
+                                            Set(varShowDefaultCaseContextPopup, false);
+                                            Select(btnOperationalModeAdvance)
+                                        )
                                     )
                                 )
                               Size: =12

@@ -121,7 +121,7 @@ Screens:
                         Font: =Font.'Arial'
                         Height: =28
                         Size: =11
-                        Text: ="Live SharePoint binding will be connected after the flow contract is imported; Propose/Approve/Reject below already demonstrates the real four-eyes workflow logic against local preview data."
+                        Text: ="Connected directly to the 'DMP Command Checklist Task Occurrences' SharePoint list. Propose/Approve/Reject write real Patch() updates; four-eyes (proposer cannot self-approve) is enforced client-side. List is populated by Agent 7 - may show 0 rows until its first real run."
                         Width: =900
                         X: =20
                         Y: =48
@@ -132,7 +132,7 @@ Screens:
                   AccessibleLabel: ="Task occurrence preview"
                   Fill: =If(varDarkMode,RGBA(255,255,255,0.04),RGBA(255,255,255,1))
                   Height: =Parent.Height-208
-                  Items: =colTaskOccurrencesPreview
+                  Items: =SortByColumns(Filter('DMP Command Checklist Task Occurrences', ApprovalState.Value<>"Rejected"), "DueUtc", SortOrder.Ascending)
                   TemplateSize: =104
                   Width: =Parent.Width-40
                 Children:
@@ -144,7 +144,7 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: =24
                         Size: =12
-                        Text: =ThisItem.OccurrenceId
+                        Text: =ThisItem.Title
                         Width: =430
                         X: =16
                         Y: =8
@@ -155,7 +155,7 @@ Screens:
                         Font: =Font.'Arial'
                         Height: =22
                         Size: =11
-                        Text: ="Task " & ThisItem.TaskId & " - " & ThisItem.ScheduleSlot
+                        Text: ="Task " & ThisItem.TaskId & " - " & ThisItem.ScheduleSlot.Value
                         Width: =300
                         X: =470
                         Y: =10
@@ -167,7 +167,7 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: =22
                         Size: =11
-                        Text: =ThisItem.Status
+                        Text: =ThisItem.Status.Value
                         Width: =160
                         X: =800
                         Y: =10
@@ -178,19 +178,19 @@ Screens:
                         Font: =Font.'Arial'
                         Height: =22
                         Size: =11
-                        Text: =ThisItem.DueUtc
+                        Text: =Text(ThisItem.DueUtc,"yyyy-mm-dd hh:mm") & " UTC"
                         Width: =220
                         X: =980
                         Y: =10
                   - lblOccurrenceApprovalState:
                       Control: Label@2.5.1
                       Properties:
-                        Color: =Switch(ThisItem.ApprovalState, "Pending", RGBA(255,159,10,1), "Approved", RGBA(0,206,125,1), "Rejected", RGBA(255,69,58,1), RGBA(150,150,158,1))
+                        Color: =Switch(ThisItem.ApprovalState.Value, "Pending", RGBA(255,159,10,1), "Approved", RGBA(0,206,125,1), "Rejected", RGBA(255,69,58,1), RGBA(150,150,158,1))
                         Font: =Font.'Arial'
                         FontWeight: =FontWeight.Semibold
                         Height: =22
                         Size: =10.5
-                        Text: ="[" & ThisItem.ApprovalState & "]" & If(Len(ThisItem.ProposedBy)>0, " proposed by " & ThisItem.ProposedBy, "")
+                        Text: ="[" & ThisItem.ApprovalState.Value & "]" & If(!IsBlank(ThisItem.ProposedBy), " proposed by " & ThisItem.ProposedBy.DisplayName, "")
                         Width: =430
                         X: =16
                         Y: =38
@@ -203,7 +203,7 @@ Screens:
                         Height: =22
                         Text: |-
                           ="Awaiting a different approver (four-eyes: proposer cannot self-approve)"
-                        Visible: =ThisItem.ApprovalState="Pending" && ThisItem.ProposedBy=User().FullName
+                        Visible: =ThisItem.ApprovalState.Value="Pending" && ThisItem.ProposedBy.Email=User().Email
                         Width: =430
                         X: =470
                         Y: =38
@@ -220,15 +220,15 @@ Screens:
                         Height: =28
                         HoverFill: =RGBA(0,120,215,0.12)
                         OnSelect: |-
-                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {Status: Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", ThisItem.Status), ProposedBy: User().FullName, ProposedUtc: Now(), ApprovalState: "Pending", ApprovedBy: "", ApprovedUtc: Blank()})
+                          =Patch('DMP Command Checklist Task Occurrences', ThisItem, {Status: {Value: Switch(ThisItem.Status.Value, "Not Started", "Ongoing", "Ongoing", "Done", ThisItem.Status.Value)}, ProposedBy: {Claims: "i:0#.f|membership|" & Lower(User().Email), Department: "", DisplayName: User().FullName, Email: User().Email, JobTitle: "", Picture: ""}, ProposedUtc: Now(), ApprovalState: {Value: "Pending"}, ApprovedBy: Blank(), ApprovedUtc: Blank()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
                         Size: =10.5
                         Text: |-
-                          ="Propose: " & Switch(ThisItem.Status, "Not Started", "Ongoing", "Ongoing", "Done", "Done")
-                        Visible: =ThisItem.Status<>"Done" && ThisItem.ApprovalState<>"Pending"
+                          ="Propose: " & Switch(ThisItem.Status.Value, "Not Started", "Ongoing", "Ongoing", "Done", "Done")
+                        Visible: =ThisItem.Status.Value<>"Done" && ThisItem.ApprovalState.Value<>"Pending"
                         Width: =150
                         X: =900
                         Y: =36
@@ -244,14 +244,14 @@ Screens:
                         Height: =28
                         HoverFill: =RGBA(0,180,110,1)
                         OnSelect: |-
-                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Approved", ApprovedBy: User().FullName, ApprovedUtc: Now()})
+                          =Patch('DMP Command Checklist Task Occurrences', ThisItem, {ApprovalState: {Value: "Approved"}, ApprovedBy: {Claims: "i:0#.f|membership|" & Lower(User().Email), Department: "", DisplayName: User().FullName, Email: User().Email, JobTitle: "", Picture: ""}, ApprovedUtc: Now()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
                         Size: =10.5
                         Text: ="Approve"
-                        Visible: =ThisItem.ApprovalState="Pending" && ThisItem.ProposedBy<>User().FullName
+                        Visible: =ThisItem.ApprovalState.Value="Pending" && ThisItem.ProposedBy.Email<>User().Email
                         Width: =90
                         X: =900
                         Y: =36
@@ -267,14 +267,14 @@ Screens:
                         Height: =28
                         HoverFill: =RGBA(220,50,40,1)
                         OnSelect: |-
-                          =UpdateIf(colTaskOccurrencesPreview, OccurrenceId=ThisItem.OccurrenceId, {ApprovalState: "Rejected", ApprovedBy: User().FullName, ApprovedUtc: Now()})
+                          =Patch('DMP Command Checklist Task Occurrences', ThisItem, {ApprovalState: {Value: "Rejected"}, ApprovedBy: {Claims: "i:0#.f|membership|" & Lower(User().Email), Department: "", DisplayName: User().FullName, Email: User().Email, JobTitle: "", Picture: ""}, ApprovedUtc: Now()})
                         RadiusBottomLeft: =6
                         RadiusBottomRight: =6
                         RadiusTopLeft: =6
                         RadiusTopRight: =6
                         Size: =10.5
                         Text: ="Reject"
-                        Visible: =ThisItem.ApprovalState="Pending" && ThisItem.ProposedBy<>User().FullName
+                        Visible: =ThisItem.ApprovalState.Value="Pending" && ThisItem.ProposedBy.Email<>User().Email
                         Width: =90
                         X: =1000
                         Y: =36

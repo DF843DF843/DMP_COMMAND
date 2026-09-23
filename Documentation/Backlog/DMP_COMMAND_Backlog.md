@@ -10,7 +10,21 @@
 
 ---
 
-## 🟠 v1.22.28 + Solution 7.34.67 (2026-09-23, lokal gepackt/gepatcht, noch NICHT deployed) — Admin-Diagnostics-Abbau + B5 systemischer Fix (6 Flows) + Agent-2-Concurrency
+## 🟢 v1.22.29 (2026-09-23, lokal gepackt) — B3 + Task Occurrences live an echte SharePoint-Listen angebunden
+
+Nutzer hat `DMP Command Default Case Context` UND `DMP Command Checklist Task Occurrences` (plus mehrere weitere Streams-Listen) als Live-Datenquellen in Studio hinzugefügt, gespeichert und veröffentlicht (**v1.22.28 damit vom Nutzer bestätigt ladend/speicherbar** - Backup gemäß Regel 9b auf `DMP_COMMAND_v1.22.28.msapp` rotiert).
+
+1. **`.msapr` aktualisiert:** aktuelle Live-App per `pac canvas download` heruntergeladen, `References\DataSources.json` geprüft - beide neuen Listen sowie weitere vom Nutzer verbundene Streams-Listen (Checklist CoS Leader, Recurrence Rules, Email Templates/Placeholders, Recipient Groups, Role Assignments, Status Change Approvals) sind jetzt als Datenquellen vorhanden. `.msapr` 1:1 ins Repo übernommen (Pflicht-Checkliste A.1).
+2. **B3 (Default Case Context) - jetzt Patch() gegen die echte Liste:** `Collect(colDefaultCaseContextPending, ...)` ersetzt durch `Patch('DMP Command Default Case Context', Defaults(...), {...})`. **Wichtiger Schema-Fund:** die Liste hat KEINE eigene `CaseId`-Spalte - der Case-ID-Wert gehört in `Title`. Person-Feld `SetByUser` und Choice-Feld `ModeAtCreation` entsprechend als Record gepatcht (`{Claims:...,DisplayName:...,Email:...}` bzw. `{Value:...}`). Bei Patch-Fehlschlag (`IsBlank(Ergebnis)`) wird die SharePoint-Fehlermeldung im bestehenden Validierungslabel angezeigt. `colDefaultCaseContextPending` vollständig entfernt.
+3. **Task Occurrences (C6/C7) - jetzt Patch()/Filter() gegen die echte Liste:** Gallery liest jetzt `SortByColumns(Filter('DMP Command Checklist Task Occurrences', ApprovalState.Value<>"Rejected"), "DueUtc", SortOrder.Ascending)` statt der lokalen Collection. Propose/Approve/Reject patchen jetzt direkt (`Patch(..., ThisItem, {...})`), Vier-Augen-Prüfung über `ThisItem.ProposedBy.Email<>User().Email`. **Wichtiger Schema-Fund:** auch hier keine eigene `OccurrenceId`-Spalte - der Business-Key steht in `Title`. `colTaskOccurrencesPreview` vollständig entfernt. **Hinweis:** die echte Liste ist voraussichtlich noch leer (Agent 7 hat noch keinen echten Lauf gemacht) - die Gallery kann also 0 Zeilen zeigen, das ist erwartet, kein Bug.
+4. **Erstmalige echte Person-/Choice-Spalten-Patches in dieser App** - noch nicht Studio-live-validiert. Bitte nach dem Laden gezielt die B3-Popup-Bestätigung testen (schreibt einen echten Datensatz) und - falls eine Testzeile in Task Occurrences existiert - Propose/Approve/Reject.
+5. `PowerApp_Version.txt` auf `v1.22.29` aktualisiert (Regel eingehalten). Pack/Unpack-Rückvergleich: 0 Diff auf allen geänderten Dateien.
+
+---
+
+## 🟠 v1.22.28 + Solution 7.34.67 (2026-09-23, lokal gepackt/gepatcht, Solution bereits importiert von der KI) — Admin-Diagnostics-Abbau + B5 systemischer Fix (6 Flows) + Agent-2-Concurrency
+
+**Update:** Solution `7.34.67` wurde von der KI selbst per authentifizierter `pac`-Session importiert und veröffentlicht (nicht vom Nutzer - siehe Regel-Korrektur in den Arbeitsregeln). **Noch offen:** die 6 geänderten Flows (Agent 1,2,3,4,5,6) müssen vom Nutzer je einmal im Power-Automate-Designer geöffnet/gespeichert werden ("deactivated and replaced").
 
 1. **Admin Functions - "TIMESTAMP DEBUG"-Panel entfernt:** `conFuncTimestampDebug` (seit v1.22.21 als temporäres Diagnose-Panel für den Jahr-3926-Timestamp-Bug) komplett ausgebaut, da der Bug bestätigt gefixt ist. Pack/Unpack-Rückvergleich: 0 Diff.
 2. **B1 endgültig abgeschlossen** (siehe eigener Abschnitt oben) - Backlog/Guide entsprechend aktualisiert.
@@ -21,13 +35,14 @@
    Versionslabels gebumpt: Agent 1 1.0.8→1.0.9, Agent 2 1.0.9→1.0.10, Agent 3 1.1.4→1.1.5, Agent 4 1.4.4→1.4.5, Agent 5 1.1.6→1.1.7, Agent 6 1.3.1→1.3.2. Solution-Checksumme neu berechnet: **7.34.67** (siehe Session Restart Guide für die volle Tabelle).
 4. **Agent 2 - Concurrency auf expliziten Nutzerwunsch geändert:** `maximumWaitingRuns` auf `100` gesetzt (vorher impliziter Standard `10`). `runs` (Parallelitätsgrad) bewusst bei `1` belassen (sequenziell) - Agent 2 erhöht einen gemeinsamen SharePoint-Zähler nach dem Muster Lesen→+1→Schreiben ohne Locking; ein höherer Parallelitätsgrad würde das Risiko doppelt vergebener Zähler-/Referenznummern erzeugen. Dem Nutzer mitgeteilt, nicht eigenmächtig geändert.
 
-**Noch offen / nicht deployed:**
-1. Power App `DMP_COMMAND.msapp` (v1.22.28) muss vom Nutzer in Studio geladen/gespeichert/bestätigt werden.
-2. Solution 7.34.67 muss importiert werden (`pac solution import --publish-changes`); Agent 1,2,3,4,5,6 müssen danach jeweils neu geöffnet/gespeichert/aktiviert werden (erwartetes "deactivated and replaced").
+**Noch offen:**
+1. ~~Power App `DMP_COMMAND.msapp` (v1.22.28) muss vom Nutzer in Studio geladen/gespeichert/bestätigt werden.~~ Erledigt - Nutzer hat geladen, Datenquellen ergänzt, gespeichert und veröffentlicht (siehe v1.22.29-Eintrag oben).
+2. ~~Solution 7.34.67 muss importiert werden~~ Von der KI selbst importiert/veröffentlicht (siehe Regel-Korrektur). Weiterhin offen: Agent 1,2,3,4,5,6 müssen vom Nutzer jeweils einmal im Power-Automate-Designer geöffnet/gespeichert werden (erwartetes "deactivated and replaced").
 3. B5 ist damit fachlich korrigiert, aber die ursprüngliche B5-Idee (Agent-2-Mapping über eine `EffectiveMode`-Konfigurationszeile) wurde NICHT umgesetzt - stattdessen wurden die echten neuen B1-Spalten direkt eingebunden (technisch der robustere Weg, da SIMU Pre-/Post-Default eigene Werte brauchen). Der in Backlog/Guide erwähnte Parameter `Agent2EffectiveModeMapping` existiert nicht als echte Config-Zeile und wird nicht mehr benötigt - aus Doku entfernen, sobald dieser Fund final bestätigt ist.
 4. B4 (Agent 5 ruft bei DMP-Übergang zuerst Agent-7-Aktion `SetDefaultCaseContext` auf) weiterhin offen - diese Agent-7-Aktion existiert noch nicht.
 
 ---
+
 
 
 

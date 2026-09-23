@@ -4,7 +4,14 @@ Automatisch aus der In-App Release-Notes-Seite (scrReleaseNotes.pa.yaml) exporti
 
 ## App Changes
 
-### v1.22.28 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+### v1.22.29 - 2026-09-23 (current, not yet loaded/saved by user in Studio)
+
+- **B3 (Default Case Context popup) - connected to the real SharePoint list:** the user added `DMP Command Default Case Context` as a live data source in Studio, so the popup's Confirm button now Patches the real list directly instead of a local collection (`colDefaultCaseContextPending` removed). Note: the list has no separate `CaseId` column - Case ID is stored in `Title`.
+- **Task Occurrences screen (C6/C7) - connected to the real SharePoint list `DMP Command Checklist Task Occurrences`:** the Gallery, Propose/Approve/Reject buttons and four-eyes check (proposer cannot self-approve) now read/write the real list via `Patch()` (`colTaskOccurrencesPreview` removed). Note: the list has no separate `OccurrenceId` column either - `Title` holds it. May show 0 rows until Agent 7 creates its first real occurrences.
+- Both are the first real `Patch()` calls in this app against SharePoint Person and Choice columns - not yet Studio-validated live, please test the B3 popup and a manual Task Occurrences row (if any exist) after loading this version.
+- `.msapr` data source references refreshed from the just-published live app (both new lists plus several other Streams lists the user also connected).
+
+### v1.22.28 - 2026-09-23 (confirmed working by the user; superseded by v1.22.29 above for the B3/Task Occurrences live wiring)
 
 - **Admin Functions - removed the temporary "TIMESTAMP DEBUG" panel** (`conFuncTimestampDebug`, added in v1.22.21) now that the Audit Trail year-3926 timestamp bug is confirmed fixed.
 - **B1 (Configuration - 4 new Pre-/Post-Default value columns) confirmed complete:** user confirmed the columns are live in the real SharePoint list; a full programmatic check of `DMP Command Configuration.csv` found no gaps caused by the B1 extension (5 unrelated, pre-existing empty `...OpenUrl` rows logged separately in the Backlog).
