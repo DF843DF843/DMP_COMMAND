@@ -10,7 +10,9 @@
 
 ---
 
-## 🟢 v1.22.32 (2026-09-23, lokal gepackt) — System Health/Configuration nach v1.22.31-Feedback erneut überarbeitet (Connection Diagnostics zusammengeführt, Kachel-Grid, Header-Bars)
+## 🟢 v1.22.32 (2026-09-23, vom Nutzer bestätigt ladend) — System Health/Configuration nach v1.22.31-Feedback erneut überarbeitet (Connection Diagnostics zusammengeführt, Kachel-Grid, Header-Bars)
+
+**Update (2026-09-23, gleiche Sitzung):** Nutzer hat `v1.22.32` erfolgreich in Studio geladen. System Health (Details) OK, Maintenance OK, Configuration (Lists) "erst mal ok, noch nicht optimal" (siehe Priorität 3 für 2 kosmetische Nachmeldungen: abgeschnittener Kartentitel + Container-Platzierung). Regel 9b: Backup auf `DMP_COMMAND_v1.22.32.msapp` rotiert (ersetzt `v1.22.31`).
 
 Nutzer hat `v1.22.31` in Studio geladen (Feedback zu UX, kein Ladefehler) und 3 Anmerkungen gegeben:
 
@@ -441,6 +443,18 @@ Dokuments selbst, das genau diese Punkte als "noch nicht fachlich festgelegt" be
 Schritt:** vor Implementierungsbeginn mit dem Nutzer klären, welche neuen Felder/Listen für das
 Abhängigkeitsmodell angelegt werden (Regel: keine neuen Config-Felder ohne Rücksprache).
 
+**🟢 Update (2026-09-23, direkt im Anschluss):** Konkrete Vorschlagsliste erarbeitet und in
+[`Streams_ListTemplates/README.md`](../Streams_ListTemplates/README.md) dokumentiert (Nutzer hat sich für
+"Vorschlagsliste vorbereiten, dann in einem Rutsch in SharePoint anlegen" entschieden): 3 neue Spalten auf der
+bereits live existierenden Liste `DMP Command Checklist Overall Process` (`SeqNo`, `PredecessorTaskIds`,
+`IsMilestone`) sowie 2 neue Checklisten-Listen (`DMP Command Checklist Infrastructure Team`,
+`DMP Command Checklist Content Team` — Schema war schon seit 2026-09-03 vorbereitet, nur wegen fehlendem
+SharePoint-Site-Zugriff zurückgestellt; CSV-Vorlagen jetzt ergänzt: `DMP Command Streams Infrastructure Team
+Checklist.csv` / `DMP Command Streams Content Team Checklist.csv`). Verknüpfung Overall Process ↔
+Substream-Checkliste läuft weiterhin über identische `Titel`/TaskID-Werte (kein zusätzliches Link-Feld nötig —
+war schon 2026-09-03 so im README dokumentiert). **Nächster Schritt: Nutzer legt die Spalten/Listen in SharePoint
+an, danach Implementierung der Next-Steps-Screens.**
+
 ## 2. Audit Trail / Counter: Archivierung + Reset mit 4-Augen-Prinzip
 
 Ein - in den Einstellungen versteckter - Schalter wird benötigt, um Audit Trail und Counter zu archivieren und danach zurückzusetzen, idealerweise mit 4-Augen-Prinzip (zweite Person bestätigt vor Ausführung). **Wichtig bei Umsetzung:** Das 4-Augen-Prinzip-Muster, das für DMP Command Streams (Team-Status-Freigabe) entwickelt wird, sollte hier wiederverwendet werden statt eine zweite, eigenständige Lösung zu bauen.
@@ -463,6 +477,7 @@ Nutzer sollen künftig eigene Akzent-/Themenfarben in den App-Einstellungen fest
 
 # 🟢 Priorität 3 – Kleinere technische Restposten (niedrige Priorität)
 
+- **v1.22.32-Feedback, kosmetisch, noch nicht behoben (2026-09-23):** Nutzer bestätigte v1.22.32 lädt fehlerfrei, meldete aber 2 rein optische Punkte, bewusst nicht sofort behoben, um mit "Next Steps" weiterzumachen: (1) In System Health (Details) ist der Kartentitel "Connection Diagnostics - Core & Domain Lists" abgeschnitten (Label `Width: =400` reicht bei 15pt Bold nicht für den vollen Text - Fix: Width erhöhen oder Text kürzen). (2) Die Karten/Container in System Health (Details) sind "nicht gut platziert" (genaue Abweichung vom Nutzer nicht spezifiziert - beim nächsten Öffnen genauer nachfragen/Screenshot einholen, bevor gefixt wird).
 - **Hardcodierte AuditTrail-Datei-/Tabellen-IDs statt Config:** In Agent 1 (Finding A), Agent 2 (Item 4) und Agent 3 nutzen die `WRITE AuditEvent`/`AUDIT_*`-Aktionen weiterhin SharePoint-interne Datei-/Tabellen-IDs statt zentraler Config-Werte. Bewusst zurückgestellt (kein akutes Risiko, da sich diese IDs praktisch nie ändern), aber technische Schuld.
 - **Agent 2, Item 3 – Mailbox-Ordner-Setup-Optimierung:** 4 Aktionen (Ordner anlegen/IDs abrufen) laufen bei jeder einzelnen E-Mail neu, obwohl sich die Ordnerstruktur nach dem ersten Lauf nicht mehr ändert (~2-6 Sek. Laufzeit-Ersparnis möglich pro Mail). Gleiches Muster auch bei Agent 1. Abwägung (Stale-Cache-Risiko bei manueller Ordner-Umbenennung) im Archiv dokumentiert. Nicht umgesetzt, niedrige Priorität.
 - **Tote Config-Variablen bereinigen:** Einige ungenutzte Einträge (u. a. `CounterFolder`, `CounterFileName`) in `DMP Command Configuration` sollten bei Gelegenheit identifiziert und entfernt werden.

@@ -1,12 +1,20 @@
 # DMP Command Checklist – SharePoint List Templates
 
 These CSV files contain ONLY the column headers (empty templates) for the new SharePoint lists from the concept
-[DMP_Command_Streams_Feature_Konzept.md](../Backlog/DMP_Command_Streams_Feature_Konzept.md) (Section 3, data model).
+[DMP_Command_Streams_Feature_Konzept.md](../Backlog/DMP_Command_Streams_Feature_Konzept.md) (Section 3, data model)
+and, since 2026-09-23, from [DMP_COMMAND_Next_Steps_Anforderung.md](../DMP_COMMAND_Next_Steps_Anforderung.md).
 
-## Status (as of 2026-09-03)
+## Status (as of 2026-09-23)
 
 - **All lists already created and published by the user, except Infrastructure/Content Checklist** (deferred – no
-  SharePoint site access yet for those two team sites).
+  SharePoint site access yet for those two team sites at the time; **please re-check this session whether those
+  team sites now exist** - if not yet, say so before creating the lists so an alternative placement can be agreed).
+- **New this session (2026-09-23), needed for the "Next Steps" feature - 3 new columns on the already-created
+  `DMP Command Checklist Overall Process` list:** `SeqNo`, `PredecessorTaskIds`, `IsMilestone` (see the updated
+  column table below). These close a data-model gap found while checking
+  [DMP_COMMAND_Next_Steps_Anforderung.md](../DMP_COMMAND_Next_Steps_Anforderung.md) against the live app: the
+  document's dependency/readiness model (§6) and global task ordering (§3) cannot currently be stored anywhere.
+  **Please add these 3 columns to the existing live list** (do not recreate the list - just add columns).
 - **Action required on the already-created lists:** (1) rename each list from its previous title to the new
   naming convention below (SharePoint: **List settings → List name and description → rename** – this only
   changes the display name/title, no data is lost, the internal URL/list ID stays the same), and (2) apply the
@@ -59,19 +67,23 @@ For `Auswahl` columns the concrete option values are listed (please create them 
 
 ---
 
-### 1) DMP Command Checklist Overall Process ✅ already set up
+### 1) DMP Command Checklist Overall Process ✅ already set up — 🆕 3 new columns needed (2026-09-23)
 
 **List description (English):**
 "Aggregated master task list of the Default Management Process across all four working sub streams (CoS Leader, Infrastructure Team, Content Team, Hotline Team). Status is derived automatically from the individual team checklists once four-eyes approval is complete. Read-only reference for the CoS Leader master overview screen."
 
 | Spalte | Typ | Description |
 |---|---|---|
-| **Titel** (= TaskID) | Titel | Unique technical identifier of the task (e.g. `COS-001`, `INF-014`). Referenced by all team checklists to link the same process step. Must not change after creation. |
+| **Titel** (= TaskID) | Titel | Unique technical identifier of the task (e.g. `COS-001`, `INF-014`). Referenced by all team checklists to link the same process step (identical `Titel` value in both lists). Must not change after creation. |
 | Phase | Auswahl: `Pre-Default`, `DMP (Termination & Liquidation)`, `Post-Default` | DMP process phase this task belongs to. Drives grouping/sorting in the overview and must match the app's current 5-mode operating state. |
+| 🆕 SeqNo | Zahl | **New 2026-09-23.** Global sequence number across all sub streams (the "globale fachliche DMP-Reihenfolge" from the Next Steps spec, §3). NOT an automatic dependency by itself - only determines display order. |
 | TaskShortDescription | Mehrere Zeilen Text | Short description of the task for the overview, as shown e.g. to the CoS Leader on the master page. |
 | ResponsibleSubStream | Auswahl: `COS Leader`, `Infrastructure Team`, `Content Team`, `Hotline Team` | Working sub stream responsible for completing this task. |
+| 🆕 PredecessorTaskIds | Einzelne Zeile Text | **New 2026-09-23.** Semicolon-separated list of `Titel`/TaskID values (e.g. `COS-001;INF-003`) that must all reach `Status = Done` before this task becomes executable (Next Steps spec §6, AND-only, no OR). Leave empty if this task's only precondition is reaching Pre-Default. |
+| 🆕 IsMilestone | Ja/Nein | **New 2026-09-23.** Marks this task as a cross-team milestone that other tasks' `PredecessorTaskIds` can reference (Next Steps spec §8.2 point 4, §9). Default `No`. |
 | Status | Auswahl: `Not Started`, `Ongoing`, `Done` | Current processing status of the task. Updated automatically from the respective team checklist once the four-eyes approval is complete – do not edit directly here. |
 | LastChangedUtc | Datum und Uhrzeit | Timestamp (UTC) of the last status change, for traceability and potential escalation on tasks left open too long. |
+
 
 ### 2) DMP Command Checklist CoS Leader ✅ already set up
 
@@ -98,9 +110,13 @@ the display title was ever renamed). Columns confirmed 1:1 against the table bel
 | ConfirmedBy | Person oder Gruppe | Person who confirmed the status change under the four-eyes principle. Must be a different person than `LastChangedBy` and a member of the same sub stream or CoS Lead/Deputy. |
 | ConfirmedUtc | Datum und Uhrzeit | Timestamp (UTC) of the confirmation by the second person. |
 
-### 3) DMP Command Checklist Infrastructure / Content Checklist ⏸ DEFERRED
+### 3) DMP Command Checklist Infrastructure / Content Checklist 🆕 ready to create (2026-09-23)
 
-**Reason:** No SharePoint site access yet for the Infrastructure Team / Content Team sites (user feedback, 2026-09-03). Create later using the same structure as the CoS Leader Checklist, plus one extra column:
+**Update 2026-09-23:** previously deferred for lack of SharePoint site access for the Infrastructure Team / Content
+Team sites - please confirm this session whether those sites now exist. If they do, these 2 lists can be created
+now using the CSV templates in this folder (`DMP Command Streams Infrastructure Team Checklist.csv` /
+`DMP Command Streams Content Team Checklist.csv`); the "Next Steps" feature's mandatory per-sub-stream
+representation (spec §9) needs both to show a real, non-empty view for these 2 sub streams, not just CoS Leader.
 
 **List description (English, adjust sub stream name accordingly):**
 "Working checklist of the Infrastructure Team sub stream (respectively Content Team). Each task references a unique TaskID linked to DMP Command Checklist Overall Process. Status changes require four-eyes confirmation before they become effective."

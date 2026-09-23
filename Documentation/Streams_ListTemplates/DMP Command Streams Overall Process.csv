@@ -1,1 +1,1 @@
-"Titel (TaskID)","Phase","TaskShortDescription","ResponsibleSubStream","Status","LastChangedUtc"
+"Titel (TaskID)","Phase","SeqNo","TaskShortDescription","ResponsibleSubStream","PredecessorTaskIds","IsMilestone","Status","LastChangedUtc"
