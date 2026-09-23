@@ -31,13 +31,16 @@ again without re-raising this history first.
   `git worktree add` on commit `652606d`, `pac canvas pack --sources Source --msapp
   DMP_COMMAND_v1.22.27.msapp --overwrite`, moved into place, old `v1.22.26` backup deleted,
   worktree removed). Exactly one backup file exists again, as required.
-- **B1 (Configuration columns):** the user confirmed the 4 new columns (`Value - PROD
-  (Pre-Default)`, `Value - PROD (Post-Default)`, `Value - SIMU (Pre-Default)`, `Value - SIMU
-  (Post-Default)`) are now live in the real SharePoint list `DMP Command Configuration`.
-  **Still open/unconfirmed:** whether the actual values for all 26 rows (10 originally
-  prepared + 16 newly added, per the CSV) were also entered into the list, or only the column
-  structure was created so far - not yet asked in this session, see the question at the end of
-  this recap for the next session to raise if the user hasn't already answered by then.
+- **B1 (Configuration columns) - CLOSED 2026-09-23:** the user confirmed the 4 new columns
+  (`Value - PROD (Pre-Default)`, `Value - PROD (Post-Default)`, `Value - SIMU (Pre-Default)`,
+  `Value - SIMU (Post-Default)`) are live in the real SharePoint list `DMP Command
+  Configuration`, and asked to verify CSV completeness programmatically rather than by asking
+  again. A full check of all 8 value columns across all 106 rows in `DMP Command
+  Configuration.csv` found only 5 rows with any gap (`AuditTrailOpenUrl`, `CounterOpenUrl`,
+  `EmergencyReportOpenUrl`, `ExternalDomainsOpenUrl`, `InternalDomainsOpenUrl`) - and those were
+  already empty in ALL 8 columns plus `CurrentValue` even before the B1 column extension (an
+  unrelated, pre-existing gap, now logged as its own low-priority Backlog item under
+  Priorität 3, not a B1 defect). B1 is therefore marked done/confirmed in the Backlog.
 - **Reminder established this session:** the user asked to be addressed in German going
   forward for this project's conversation (documentation itself stays in its existing
   language mix, English recap prose / German backlog prose, per rule G - not rewritten

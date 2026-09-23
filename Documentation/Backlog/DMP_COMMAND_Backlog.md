@@ -71,7 +71,7 @@ Dieses Dokument war auf ca. 2650 Zeilen angewachsen (chronologisches Arbeitsprot
 
 # 🔴 Priorität 1 – Bereit zum Deploy, wartet auf grünes Licht des Nutzers
 
-## 🟢 B1/B2 (Streams-Konzept, Strang B – 5-Modus-Umstellung) – umgesetzt, Studio-Validierung durch Nutzer noch offen
+## ✅ B1/B2 (Streams-Konzept, Strang B – 5-Modus-Umstellung) – umgesetzt und vom Nutzer bestätigt
 
 **B1 – Configuration-Erweiterung (Variante B, 8 Spalten):** Klargestellt und vorbereitet
 2026-09-22. `DMP Command Configuration` braucht 4 neue Spalten (`Value - PROD (Pre-Default)`,
@@ -99,10 +99,13 @@ ursprünglichen `Value - PROD/SIMU (NODMP/DMP)`-Spalten, keine der 4 neuen Pre-/
 Spalten. Solange das nicht bestätigt ist, bleibt B1 formal offen.
 
 **Update 2026-09-23:** Nutzer hat bestätigt, dass die 4 neuen Spalten jetzt live in der echten
-SharePoint-Liste `DMP Command Configuration` angelegt sind. **Noch offen:** ob für alle 26
-Zeilen (10 ursprünglich vorbereitete + 16 neu ergänzte) auch die tatsächlichen Werte in der
-Liste eingetragen wurden, oder bisher nur die Spaltenstruktur angelegt wurde - noch nicht
-erfragt, siehe Session Restart Guide. Solange das nicht geklärt ist, bleibt B1 formal offen.
+SharePoint-Liste `DMP Command Configuration` angelegt sind. Auf Nutzerhinweis wurde die CSV
+programmatisch auf Vollständigkeit der 8 Werte-Spalten über alle 106 Zeilen geprüft: bis auf 5
+Zeilen (`AuditTrailOpenUrl`, `CounterOpenUrl`, `EmergencyReportOpenUrl`,
+`ExternalDomainsOpenUrl`, `InternalDomainsOpenUrl`) sind alle Zeilen vollständig befüllt. Diese
+5 Zeilen sind bereits seit vor der B1-Erweiterung durchgängig in ALLEN 8 Werte-Spalten UND in
+`CurrentValue` leer (kein B1-spezifisches Problem, siehe neuer Punkt in Priorität 3 unten).
+**B1 damit erledigt und vom Nutzer bestätigt.**
 
 
 **B2 – 5-Werte-Zustandsmodell in der App:** Implementiert 2026-09-22 in
@@ -339,6 +342,7 @@ Nutzer sollen künftig eigene Akzent-/Themenfarben in den App-Einstellungen fest
 - **Hardcodierte AuditTrail-Datei-/Tabellen-IDs statt Config:** In Agent 1 (Finding A), Agent 2 (Item 4) und Agent 3 nutzen die `WRITE AuditEvent`/`AUDIT_*`-Aktionen weiterhin SharePoint-interne Datei-/Tabellen-IDs statt zentraler Config-Werte. Bewusst zurückgestellt (kein akutes Risiko, da sich diese IDs praktisch nie ändern), aber technische Schuld.
 - **Agent 2, Item 3 – Mailbox-Ordner-Setup-Optimierung:** 4 Aktionen (Ordner anlegen/IDs abrufen) laufen bei jeder einzelnen E-Mail neu, obwohl sich die Ordnerstruktur nach dem ersten Lauf nicht mehr ändert (~2-6 Sek. Laufzeit-Ersparnis möglich pro Mail). Gleiches Muster auch bei Agent 1. Abwägung (Stale-Cache-Risiko bei manueller Ordner-Umbenennung) im Archiv dokumentiert. Nicht umgesetzt, niedrige Priorität.
 - **Tote Config-Variablen bereinigen:** Einige ungenutzte Einträge (u. a. `CounterFolder`, `CounterFileName`) in `DMP Command Configuration` sollten bei Gelegenheit identifiziert und entfernt werden.
+- **5 durchgängig leere `...OpenUrl`-Parameter (gefunden 2026-09-23 bei der B1-Vollständigkeitsprüfung):** `AuditTrailOpenUrl`, `CounterOpenUrl`, `EmergencyReportOpenUrl`, `ExternalDomainsOpenUrl`, `InternalDomainsOpenUrl` (Kategorie GUI) haben in `DMP Command Configuration.csv` weder `CurrentValue` noch irgendeine der 8 Werte-Spalten befüllt und werden aktuell nirgends im App-/Agenten-Code referenziert. Kein B1-Regressionsproblem (die Zeilen waren schon vor der B1-Spaltenerweiterung komplett leer), sondern vermutlich vorbereitete, aber nie mit den echten SharePoint-/Teams-Links befüllte Platzhalter. Nicht umgesetzt, niedrige Priorität — bei Bedarf mit dem Nutzer klären, ob diese Parameter noch gebraucht werden oder entfernt werden können.
 - **Agent 3 – `WorkFileCleanupStillLocked`-Wartezeit:** Offene Detailfrage, ob die aktuell konfigurierte Wartezeit vor dem Cleanup-Retry ausreichend bemessen ist. Minor, kein bekannter Vorfall.
 - **E-Mail-Importance-Konsistenz:** Bei jeder künftigen neuen E-Mail-Aktion (auch in Agent 1/2/3) prüfen, ob `emailMessage/Importance` bereits korrekt auf `MailImportanceInfo/Warning/Error` (Config) verweist statt hartkodiert `"Normal"`.
 - **Agent 2 – irreführende Benennung `EmailsProcessed_DMP`/`EmailsProcessed_NoDMP` (gefunden + klargestellt 2026-09-22):** In `DMPAgent2E-MailInboxTreatmentVS-...json` klassifiziert die interne Variable `Detected Workflow Path` jede Mail in einen von vier Werten: `"No DMP"` (Standard-/Normalfall – NICHT, wie zunächst angenommen, ein Fallback für eine fehlende Referenzdatei, sondern der eigentliche produktive Regelfall, solange kein aktiver DMP-Fall läuft), `"DMP internal Sender"`, `"DMP not effected Sender"`, `"DMP effected Member"` (diese drei nur relevant, wenn tatsächlich ein DMP-Fall aktiv ist). Die beiden Zähler-Spalten in `DMP Command Agent Status` sind dazu vertauscht benannt: `item/EmailsProcessed_DMP` wird bei `"No DMP"` hochgezählt, `item/EmailsProcessed_NoDMP` bei `"DMP internal Sender"` (Zeilen ~9629-9630). Nutzer-Klarstellung 2026-09-22: der Name "DMP" für den Nicht-DMP-Standardfall ist irreführend; korrekter wäre `NDMP`/`NODMP` (passend zur bestehenden Konvention `PROD_NODMP`/`Value - PROD (NODMP)` an anderer Stelle in der App). **Nicht umgesetzt, bewusst zurückgestellt:** eine Korrektur würde SharePoint-Spaltenumbenennung (manueller Schritt, kein PnP-/API-Zugriff), Anpassung der Flow-JSON-Referenzen, Solution-Reimport und Prüfung aller lesenden Stellen (Dashboard/Ring) erfordern – hohes Fehlerpotential und Aufwand für eine rein kosmetische Korrektur. Nur als mögliche künftige Verbesserung vorgemerkt, nicht als Bug behandeln.
